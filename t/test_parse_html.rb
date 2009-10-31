@@ -9,11 +9,13 @@ class Map
 	def parse_token(str)
 		tokens = []
 		s = StringScanner.new(str)
-		until s.eos?
-			if s.scan /\S+/mx
+		until s.eos? || s.scan(/\)/)
+			if s.scan /(["'])(.*?)(\1|$)/
+				tokens << s[2]
+			elsif s.scan /\S+/mx
 				tokens << s[0]
 			else
-				s.scan(/./)
+				s.scan(/\s+/)
 			end
 		end
 		tokens
@@ -34,6 +36,16 @@ class TC_Parse_HTML < Test::Unit::TestCase
 			['foo','bar','baz'],
 			@map.instance_eval { parse_token('foo bar baz') },
 			'Map#parse_token shoud be able to parse unquoted tokens into array'
+		)
+		assert_equal(
+			['foo','bar','baz baz'],
+			@map.instance_eval { parse_token('foo "bar" "baz baz"') },
+			'Map#parse_token shoud be able to parse quoted tokens'
+		)
+		assert_equal(
+			['foo','bar','baz'],
+			@map.instance_eval { parse_token("foo 'bar' baz") },
+			'Map#parse_token shoud be able to parse quoted tokens'
 		)
 	end
 

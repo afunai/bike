@@ -3,24 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-require 'strscan'
-class Map
-	private
-	def parse_token(str)
-		tokens = []
-		s = StringScanner.new(str)
-		until s.eos? || s.scan(/\)/)
-			if s.scan /(["'])(.*?)(\1|$)/
-				tokens << s[2]
-			elsif s.scan /\S+/mx
-				tokens << s[0]
-			else
-				s.scan(/\s+/)
-			end
-		end
-		tokens
-	end
-end
+Dir['./field/*.rb'].sort.each {|file| require file }
 
 class TC_Parse_HTML < Test::Unit::TestCase
 
@@ -31,21 +14,32 @@ class TC_Parse_HTML < Test::Unit::TestCase
 	def teardown
 	end
 
-	def test_parse_token
+	def test_parse_tokens
 		assert_equal(
 			['foo','bar','baz'],
-			@map.instance_eval { parse_token('foo bar baz') },
-			'Map#parse_token shoud be able to parse unquoted tokens into array'
+			@map.instance_eval { parse_tokens('foo bar baz') },
+			'Map#parse_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
 			['foo','bar','baz baz'],
-			@map.instance_eval { parse_token('foo "bar" "baz baz"') },
-			'Map#parse_token shoud be able to parse quoted tokens'
+			@map.instance_eval { parse_tokens('foo "bar" "baz baz"') },
+			'Map#parse_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
 			['foo','bar','baz'],
-			@map.instance_eval { parse_token("foo 'bar' baz") },
-			'Map#parse_token shoud be able to parse quoted tokens'
+			@map.instance_eval { parse_tokens("foo 'bar' baz") },
+			'Map#parse_tokens should be able to parse quoted tokens'
+		)
+
+		assert_equal(
+			['foo','bar','baz'],
+			@map.instance_eval { parse_tokens("foo 'bar' baz) qux") },
+			'Map#parse_tokens should stop scanning at an ending bracket'
+		)
+		assert_equal(
+			['foo','bar (bar?)','baz'],
+			@map.instance_eval { parse_tokens("foo 'bar (bar?)' baz) qux") },
+			'Map#parse_tokens should ignore brackets inside quoted tokens'
 		)
 	end
 

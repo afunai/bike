@@ -75,6 +75,32 @@ _html
 		)
 	end
 
+	def test_obscure_markup
+		result = @map.send(:parse_html,'hello foo:(bar baz:(1) baz) world')
+		assert_equal(
+			{'foo' => ['bar','baz:(1']},
+			result[:meta],
+			'Map#parse_html should not parse nested empty tag'
+		)
+		assert_equal(
+			'hello %%foo%% baz) world',
+			result[:tmpl],
+			'Map#parse_html[:tmpl] should be a proper template'
+		)
+
+		result = @map.send(:parse_html,'hello foo:(bar baz world')
+		assert_equal(
+			{'foo' => ['bar','baz','world']},
+			result[:meta],
+			'Map#parse_html should be able to parse a tag that is not closed'
+		)
+		assert_equal(
+			'hello %%foo%%',
+			result[:tmpl],
+			'Map#parse_html should be able to parse a tag that is not closed'
+		)
+	end
+
 	def test_parse_duplicate_tag
 		result = @map.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo)!')
 		assert_equal(

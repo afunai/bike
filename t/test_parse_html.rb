@@ -44,10 +44,48 @@ class TC_Parse_HTML < Test::Unit::TestCase
 	end
 
 	def test_parse_empty_tag
+		result = @map.send(:parse_html,'hello foo:(bar "baz baz") world')
 		assert_equal(
 			{'foo' => ['bar','baz baz']},
-			@map.send(:parse_html,'hello foo:(bar "baz baz") world')[:meta],
+			result[:meta],
 			'Map#parse_html should be able to parse empty sofa tags'
+		)
+		assert_equal(
+			'hello %%foo%% world',
+			result[:tmpl],
+			'Map#parse_html[:tmpl] should be a proper template'
+		)
+
+		result = @map.send(:parse_html,<<'_html')
+<h1>foo:(bar "baz baz")</h1>
+<p>bar:(1 2 3)</p>
+_html
+		assert_equal(
+			{'foo' => ['bar','baz baz'],'bar' => ['1','2','3']},
+			result[:meta],
+			'Map#parse_html should be able to parse empty sofa tags'
+		)
+		assert_equal(
+			<<'_html',
+<h1>%%foo%%</h1>
+<p>%%bar%%</p>
+_html
+			result[:tmpl],
+			'Map#parse_html[:tmpl] should be a proper template'
+		)
+	end
+
+	def test_parse_duplicate_tag
+		result = @map.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo)!')
+		assert_equal(
+			{'foo' => ['boo']},
+			result[:meta],
+			'definition tags are overridden by a preceding definition'
+		)
+		assert_equal(
+			'hello %%foo%% world %%foo%%!',
+			result[:tmpl],
+			'Map#parse_html[:tmpl] should be a proper template'
 		)
 	end
 

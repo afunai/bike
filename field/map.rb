@@ -15,11 +15,11 @@ class Map
 
 		s = StringScanner.new str
 		until s.eos?
-			if s.scan /(.*?)(\w+):\(/
-				tmpl << s[1]
+			if s.scan /([\w\W]*?)(\w+):\(/
+				tmpl << "#{s[1]}%%#{s[2]}%%"
 				meta[s[2]] = parse_tokens(s)
 			else
-				tmpl << s.scan(/.+/)
+				tmpl << s.scan(/[\w\W]+/)
 			end
 		end
 		{

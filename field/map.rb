@@ -56,7 +56,7 @@ class Map
 			gen += 1 if s[2] == "<#{tag}"
 			gen -= 1 if s[2] == "</#{tag}>"
 		end
-		contents.gsub(/(\A\n+|^\s*<\/#{tag}>\z)/,'')
+		contents.gsub(/(\A\n+|[\t ]*<\/#{tag}>\z)/,'')
 	end
 
 end

@@ -117,6 +117,22 @@ _html
 
 	def test_parse_block_tag
 		result = @map.send(:parse_html,<<'_html')
+<ul class="sofa-blog" id="foo"><li>hello</li></ul>
+_html
+		assert_equal(
+			{'foo' => ['list','blog','<li>hello</li>']},
+			result[:meta],
+			'Map#parse_html should be able to parse block sofa tags'
+		)
+		assert_equal(
+			<<'_html',
+%%foo%%
+_html
+			result[:tmpl],
+			'Map#parse_html[:tmpl] should be a proper template'
+		)
+
+		result = @map.send(:parse_html,<<'_html')
 <ul class="sofa-blog" id="foo">
 	<li>hello</li>
 </ul>
@@ -125,6 +141,48 @@ _html
 			{'foo' => ['list','blog',"\t<li>hello</li>\n"]},
 			result[:meta],
 			'Map#parse_html should be able to parse block sofa tags'
+		)
+		assert_equal(
+			<<'_html',
+%%foo%%
+_html
+			result[:tmpl],
+			'Map#parse_html[:tmpl] should be a proper template'
+		)
+
+		result = @map.send(:parse_html,<<'_html')
+hello <ul class="sofa-blog" id="foo"><li>hello</li></ul> world
+_html
+		assert_equal(
+			{'foo' => ['list','blog','<li>hello</li>']},
+			result[:meta],
+			'Map#parse_html should be able to parse block sofa tags'
+		)
+		assert_equal(
+			<<'_html',
+hello %%foo%% world
+_html
+			result[:tmpl],
+			'Map#parse_html[:tmpl] should be a proper template'
+		)
+	end
+
+	def test_nested_block_tags
+		result = @map.send(:parse_html,<<'_html')
+<ul class="sofa-blog" id="foo">
+	<li>
+		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
+	</li>
+</ul>
+_html
+		assert_equal(
+			{'foo' => ['list','blog',<<'_html']},
+	<li>
+		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
+	</li>
+_html
+			result[:meta],
+			'Map#parse_html should be able to parse nested block sofa tags'
 		)
 		assert_equal(
 			<<'_html',

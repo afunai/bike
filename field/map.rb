@@ -21,8 +21,9 @@ class Map
 			elsif s.scan /<(\w+)(.+?class="[^"]*?sofa-(\w+).+?)>/
 				tag = s[1]
 				id  = s[2].match(/id="(.+?)"/)[1]
-# scan til the end of the block
-				meta[id] = [s[3]]
+
+				tmpl << "%%#{id}%%"
+				meta[id] = ['list',s[3],parse_contents(s,tag)]
 			else
 				tmpl << s.scan(/.+?(?=\w|<|\z)/m)
 			end
@@ -45,6 +46,17 @@ class Map
 			end
 		end
 		tokens
+	end
+
+	def parse_contents(s,tag)
+		contents = ''
+		gen = 1
+		until s.eos? || (gen < 1)
+			contents << s.scan(/(.*?)(<#{tag}|<\/#{tag}>|\z)/m)
+			gen += 1 if s[2] == "<#{tag}"
+			gen -= 1 if s[2] == "</#{tag}>"
+		end
+		contents.gsub(/(\A\n+|^\s*<\/#{tag}>\z)/,'')
 	end
 
 end

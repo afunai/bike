@@ -116,14 +116,13 @@ _html
 	end
 
 	def test_parse_block_tag
-return
 		result = @map.send(:parse_html,<<'_html')
-<ul class="sofa-list" sofa-id="foo" sofa-bar="baz">
+<ul class="sofa-blog" sofa-id="foo" sofa-bar="baz">
 	<li>hello</li>
 </ul>
 _html
 		assert_equal(
-			{'foo' => {'bar' => 'baz'}},
+			{'foo' => ['blog']},
 			result[:meta],
 			'Map#parse_html should be able to parse block sofa tags'
 		)

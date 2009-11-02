@@ -18,6 +18,11 @@ class Map
 			if s.scan /(\w+):\(/m
 				tmpl << "%%#{s[1]}%%"
 				meta[s[1]] = parse_tokens(s)
+			elsif s.scan /<(\w+)(.+?class="[^"]*?sofa-(\w+).+?)>/
+				tag = s[1]
+				id  = s[2].match(/id="(.+?)"/)[1]
+# scan til the end of the block
+				meta[id] = [s[3]]
 			else
 				tmpl << s.scan(/.+?(?=\w|<|\z)/m)
 			end

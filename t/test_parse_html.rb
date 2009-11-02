@@ -193,4 +193,40 @@ _html
 		)
 	end
 
+	def test_combination
+		result = @map.send(:parse_html,<<'_html')
+<html>
+	<h1>title:(text 32)</h1>
+	<ul class="sofa-blog" id="foo">
+		<li>
+			subject:(text 64)
+			body:(textarea 72*10)
+			<ul><li>qux</li></ul>
+		</li>
+	</ul>
+</html>
+_html
+		assert_equal(
+			{'title' => ['text','32'],'foo' => ['list','blog',<<'_html']},
+		<li>
+			subject:(text 64)
+			body:(textarea 72*10)
+			<ul><li>qux</li></ul>
+		</li>
+_html
+			result[:meta],
+			'Map#parse_html should be able to parse combination of mixed sofa tags'
+		)
+		assert_equal(
+			<<'_html',
+<html>
+	<h1>%%title%%</h1>
+	%%foo%%
+</html>
+_html
+			result[:tmpl],
+			'Map#parse_html[:tmpl] should be a proper template'
+		)
+	end
+
 end

@@ -97,6 +97,18 @@ _html
 			result[:tmpl],
 			'Set#parse_html should be able to parse a tag that is not closed'
 		)
+
+		result = @set.send(:parse_html,'hello foo:(bar "baz"world)')
+		assert_equal(
+			{'foo' => ['bar','baz','world']},
+			result[:meta],
+			'Set#parse_html should be able to parse tokens without a delimiter'
+		)
+		assert_equal(
+			'hello %%foo%%',
+			result[:tmpl],
+			'Set#parse_html should be able to parse tokens without a delimiter'
+		)
 	end
 
 	def test_csv

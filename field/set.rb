@@ -54,14 +54,19 @@ class Sofa::Field::Set
 		tokens = []
 		until s.eos? || s.scan(/\)/)
 			is_csv = s.scan /,/
-			token = s[2] if s.scan /(["'])(.*?)(\1|$)/
-			token = s[0] if s.scan /[^\s\)\,]+/
+			if s.scan /(["'])(.*?)(\1|$)/
+				token = s[2]
+			elsif s.scan /[^\s\)\,]+/
+				token = s[0]
+			end
+
 			if is_csv
 				tokens[-1] = tokens[-1].to_a unless tokens[-1].is_a? ::Array
 				tokens[-1] << token
 			else
 				tokens << token
 			end
+
 			s.scan /\s+/
 		end
 		tokens

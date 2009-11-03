@@ -99,7 +99,7 @@ _html
 		)
 	end
 
-	def ptest_csv
+	def test_csv
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
 		assert_equal(
 			{'foo' => ['bar',['baz baz','world','hi'],'qux']},

@@ -80,15 +80,20 @@ class Sofa::Field::Set
 				meta[:options] ||= []
 				meta[:options] << token
 			when ':'
-				meta[:default] = token
+				if meta[:default]
+					meta[:default] = meta[:default].to_a
+					meta[:default] << token
+				else
+					meta[:default] = token
+				end
 			else
 				case token
 					when /(\d+)\.\.(\d+)/
-						meta[:min] = $1
-						meta[:max] = $2
+						meta[:min] = $1.to_i
+						meta[:max] = $2.to_i
 					when /(\d+)\*(\d+)/
-						meta[:width]  = $1
-						meta[:height] = $2
+						meta[:width]  = $1.to_i
+						meta[:height] = $2.to_i
 					else
 						meta[:token] = token
 				end

@@ -111,6 +111,41 @@ _html
 		)
 	end
 
+	def test_parse_meta
+		assert_equal(
+			{:width => 160,:height => 120},
+			@set.send(:parse_meta,nil,'160*120'),
+			'Set#parse_meta should be able to parse dimension tokens'
+		)
+		assert_equal(
+			{:min => 1,:max => 32},
+			@set.send(:parse_meta,nil,'1..32'),
+			'Set#parse_meta should be able to parse range tokens'
+		)
+
+		assert_equal(
+			{:options => ['foo']},
+			@set.send(:parse_meta,',','foo'),
+			'Set#parse_meta should be able to parse option tokens'
+		)
+		assert_equal(
+			{:options => ['foo','bar']},
+			@set.send(:parse_meta,',','bar',{:options => ['foo']}),
+			'Set#parse_meta should be able to parse option tokens'
+		)
+
+		assert_equal(
+			{:default => 'foo'},
+			@set.send(:parse_meta,':','foo'),
+			'Set#parse_meta should be able to parse default tokens'
+		)
+		assert_equal(
+			{:default => ['foo','bar']},
+			@set.send(:parse_meta,':','bar',{:default => ['foo']}),
+			'Set#parse_meta should be able to parse default tokens'
+		)
+	end
+
 	def test_csv
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
 		assert_equal(

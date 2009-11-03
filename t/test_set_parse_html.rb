@@ -182,7 +182,7 @@ _html
 <ul class="sofa-blog" id="foo"><li>hello</li></ul>
 _html
 		assert_equal(
-			{'foo' => ['list','blog','<li>hello</li>']},
+			{'foo' => {:klass =>'list',:workflow => 'blog',:html => '<li>hello</li>'}},
 			result[:meta],
 			'Set#parse_html should be able to parse block sofa tags'
 		)
@@ -200,7 +200,7 @@ _html
 </ul>
 _html
 		assert_equal(
-			{'foo' => ['list','blog',"\t<li>hello</li>\n"]},
+			{'foo' => {:klass =>'list',:workflow => 'blog',:html => "\t<li>hello</li>\n"}},
 			result[:meta],
 			'Set#parse_html should be able to parse block sofa tags'
 		)
@@ -216,7 +216,7 @@ _html
 hello <ul class="sofa-blog" id="foo"><li>hello</li></ul> world
 _html
 		assert_equal(
-			{'foo' => ['list','blog','<li>hello</li>']},
+			{'foo' => {:klass =>'list',:workflow => 'blog',:html => '<li>hello</li>'}},
 			result[:meta],
 			'Set#parse_html should be able to parse block sofa tags'
 		)
@@ -238,7 +238,7 @@ _html
 </ul>
 _html
 		assert_equal(
-			{'foo' => ['list','blog',<<'_html']},
+			{'foo' => {:klass =>'list',:workflow => 'blog',:html => <<'_html'}},
 	<li>
 		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
 	</li>
@@ -271,7 +271,7 @@ _html
 		assert_equal(
 			{
 				'title' => {:tokens => ['text','32']},
-				'foo'   => {:tokens => ['list','blog',<<'_html']},
+				'foo'   => {:klass =>'list',:workflow => 'blog',:html => <<'_html'},
 		<li>
 			subject:(text 64)
 			body:(textarea 72*10)

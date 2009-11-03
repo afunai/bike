@@ -39,7 +39,11 @@ class Sofa::Field::Set
 				id  = s[2].match(/id="(.+?)"/)[1]
 
 				tmpl << "%%#{id}%%"
-				meta[id] = ['list',s[3],parse_contents(s,tag)]
+				meta[id] = {
+					:klass    => 'list',
+					:workflow => s[3],
+					:html     => parse_contents(s,tag),
+				}
 			else
 				tmpl << s.scan(/.+?(?=\w|<|\z)/m)
 			end

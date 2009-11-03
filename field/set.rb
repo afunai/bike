@@ -7,23 +7,18 @@ require 'strscan'
 
 class Sofa::Field::Set
 
-	def initialize(meta = [])
-		parent,workflow,html = *meta
-
-		@meta = {
-			:parent   => parent,
-			:workflow => workflow,
-			:html     => html,
-		}
-
-		result = parse_html(@meta[:html].to_s)
-		@meta[:item_metas] = result[:meta]
-		@meta[:tmpl]       = result[:tmpl]
-
-#		load_items(@meta[:item_metas])
+	def initialize(meta = {})
+		@meta = meta.merge parse_html(meta[:html].to_s)
+		load_items @meta[:meta]
 	end
 
 	private
+
+	def load_items(meta)
+		@item_objects = {}
+		meta.each {|m|
+		}
+	end
 
 	def parse_html(html)
 		meta = {}

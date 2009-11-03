@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class TC_Parse_HTML < Test::Unit::TestCase
+class TC_Set_Parse_HTML < Test::Unit::TestCase
 
 	def setup
 		@set = Sofa::Field::Set.new
@@ -89,6 +89,20 @@ _html
 		result = @set.send(:parse_html,'hello foo:(bar baz world')
 		assert_equal(
 			{'foo' => ['bar','baz','world']},
+			result[:meta],
+			'Set#parse_html should be able to parse a tag that is not closed'
+		)
+		assert_equal(
+			'hello %%foo%%',
+			result[:tmpl],
+			'Set#parse_html should be able to parse a tag that is not closed'
+		)
+	end
+
+	def ptest_csv
+		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
+		assert_equal(
+			{'foo' => ['bar',['baz baz','world','hi'],'qux']},
 			result[:meta],
 			'Set#parse_html should be able to parse a tag that is not closed'
 		)

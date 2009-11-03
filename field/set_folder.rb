@@ -7,11 +7,11 @@ require 'strscan'
 
 class Sofa::Field::Set::Folder < Sofa::Field::Set
 
-	def initialize(meta = {})
-		@meta = meta
-		@meta[:html] = load_html(meta[:dir]) || ''
+	def initialize(meta = [],parent = nil)
+		id,workflow,dir = *meta
 
-		super
+		html = load_html(dir) || ''
+		super([id,workflow,html],parent)
 	end
 
 	private

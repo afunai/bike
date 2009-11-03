@@ -12,6 +12,24 @@ class Sofa::Field
 
 	Dir['./field/*.rb'].sort.each {|file| require file }
 
+
+
+
+def [](name)
+	@meta[name]
+end
+
+def dir
+	if my[:parent]
+		my[:dir] ? (my[:parent][:dir] + '/' + my[:dir]) : my[:parent][:dir]
+	else
+		
+	end
+end
+
+
+
+
 	def initialize(meta = {})
 		@meta = self.class.meta_val.merge meta
 		@val  = val_cast(nil)

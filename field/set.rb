@@ -7,36 +7,23 @@ require 'strscan'
 
 class Sofa::Field::Set
 
-	def pinitialize(meta = {},parent = nil)
+	def initialize(meta = [])
+		parent,workflow,html = *meta
+
 		@meta = {
 			:parent   => parent,
-			:workflow => meta[0],
-			:html     => meta[1],
+			:workflow => workflow,
+			:html     => html,
 		}
 
 		result = parse_html(@meta[:html].to_s)
 		@meta[:item_metas] = result[:meta]
 		@meta[:tmpl]       = result[:tmpl]
 
-		load_items(@meta[:item_metas])
+#		load_items(@meta[:item_metas])
 	end
-
-def [](name)
-	@meta[name]
-end
-
-def dir
-	if my[:parent]
-		my[:dir] ? (my[:parent][:dir] + '/' + my[:dir]) : my[:parent][:dir]
-	else
-		
-	end
-end
 
 	private
-
-	def load_html(dir)
-	end
 
 	def parse_html(html)
 		meta = {}
@@ -68,8 +55,8 @@ end
 		until s.eos? || s.scan(/\)/)
 			if s.scan /(["'])(.*?)(\1|$)/
 				tokens << s[2]
-			elsif s.scan /[^\s\)]+/
-				tokens << s[0]
+			elsif s.scan /([^\s\)]+)/
+				tokens << s[1]
 			else
 				s.scan /\s+/
 			end

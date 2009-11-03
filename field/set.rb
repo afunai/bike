@@ -53,23 +53,47 @@ class Sofa::Field::Set
 	def parse_tokens(s)
 		tokens = []
 		until s.eos? || s.scan(/\)/)
-			is_csv = s.scan /,/
+			prefix = s.scan /,?/
 			if s.scan /(["'])(.*?)(\1|$)/
 				token = s[2]
 			elsif s.scan /[^\s\)\,]+/
 				token = s[0]
 			end
+			prefix = ',' if s.scan /(?=,)/
 
-			if is_csv
-				tokens[-1] = tokens[-1].to_a unless tokens[-1].is_a? ::Array
-				tokens[-1] << token
-			else
-				tokens << token
-			end
+                       if prefix == ','
+                              tokens << [] unless tokens[-1].is_a? ::Array
+                               tokens[-1] << token
+                       else
+                               tokens << token
+                       end
+
 
 			s.scan /\s+/
 		end
 		tokens
+	end
+
+	def parse_meta(prefix,token,meta = {})
+		case prefix
+			when ','
+				meta[:options] ||= []
+				meta[:options] << token
+			when ':'
+				meta[:default] = token
+			else
+				case token
+					when /(\d+)\.\.(\d+)/
+						meta[:min] = $1
+						meta[:max] = $2
+					when /(\d+)\*(\d+)/
+						meta[:width]  = $1
+						meta[:height] = $2
+					else
+						meta[:token] = token
+				end
+		end
+		meta
 	end
 
 	def parse_contents(s,tag)

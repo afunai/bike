@@ -40,7 +40,7 @@ class Sofa::Field::Set
 
 				tmpl << "%%#{id}%%"
 				meta[id] = {
-					:klass    => 'list',
+					:klass    => 'List',
 					:workflow => s[3],
 					:html     => parse_contents(s,tag),
 				}

@@ -5,7 +5,7 @@
 
 require 'strscan'
 
-class Map
+class Set
 
 	private
 

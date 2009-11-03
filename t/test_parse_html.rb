@@ -8,7 +8,7 @@ Dir['./field/*.rb'].sort.each {|file| require file }
 class TC_Parse_HTML < Test::Unit::TestCase
 
 	def setup
-		@map = Map.new
+		@set = Set.new
 	end
 
 	def teardown
@@ -17,53 +17,53 @@ class TC_Parse_HTML < Test::Unit::TestCase
 	def test_parse_tokens
 		assert_equal(
 			['foo','bar','baz'],
-			@map.send(:parse_tokens,StringScanner.new('foo bar baz')),
-			'Map#parse_tokens should be able to parse unquoted tokens into array'
+			@set.send(:parse_tokens,StringScanner.new('foo bar baz')),
+			'Set#parse_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
 			['foo','bar','baz baz'],
-			@map.send(:parse_tokens,StringScanner.new('foo "bar" "baz baz"')),
-			'Map#parse_tokens should be able to parse quoted tokens'
+			@set.send(:parse_tokens,StringScanner.new('foo "bar" "baz baz"')),
+			'Set#parse_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
 			['foo','bar','baz'],
-			@map.send(:parse_tokens,StringScanner.new("foo 'bar' baz")),
-			'Map#parse_tokens should be able to parse quoted tokens'
+			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz")),
+			'Set#parse_tokens should be able to parse quoted tokens'
 		)
 
 		assert_equal(
 			['foo','bar','baz'],
-			@map.send(:parse_tokens,StringScanner.new("foo 'bar' baz) qux")),
-			'Map#parse_tokens should stop scanning at an ending bracket'
+			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz) qux")),
+			'Set#parse_tokens should stop scanning at an ending bracket'
 		)
 		assert_equal(
 			['foo','bar (bar?)','baz'],
-			@map.send(:parse_tokens,StringScanner.new("foo 'bar (bar?)' baz) qux")),
-			'Map#parse_tokens should ignore brackets inside quoted tokens'
+			@set.send(:parse_tokens,StringScanner.new("foo 'bar (bar?)' baz) qux")),
+			'Set#parse_tokens should ignore brackets inside quoted tokens'
 		)
 	end
 
 	def test_parse_empty_tag
-		result = @map.send(:parse_html,'hello foo:(bar "baz baz") world')
+		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world')
 		assert_equal(
 			{'foo' => ['bar','baz baz']},
 			result[:meta],
-			'Map#parse_html should be able to parse empty sofa tags'
+			'Set#parse_html should be able to parse empty sofa tags'
 		)
 		assert_equal(
 			'hello %%foo%% world',
 			result[:tmpl],
-			'Map#parse_html[:tmpl] should be a proper template'
+			'Set#parse_html[:tmpl] should be a proper template'
 		)
 
-		result = @map.send(:parse_html,<<'_html')
+		result = @set.send(:parse_html,<<'_html')
 <h1>foo:(bar "baz baz")</h1>
 <p>bar:(1 2 3)</p>
 _html
 		assert_equal(
 			{'foo' => ['bar','baz baz'],'bar' => ['1','2','3']},
 			result[:meta],
-			'Map#parse_html should be able to parse empty sofa tags'
+			'Set#parse_html should be able to parse empty sofa tags'
 		)
 		assert_equal(
 			<<'_html',
@@ -71,38 +71,38 @@ _html
 <p>%%bar%%</p>
 _html
 			result[:tmpl],
-			'Map#parse_html[:tmpl] should be a proper template'
+			'Set#parse_html[:tmpl] should be a proper template'
 		)
 	end
 
 	def test_obscure_markup
-		result = @map.send(:parse_html,'hello foo:(bar baz:(1) baz) world')
+		result = @set.send(:parse_html,'hello foo:(bar baz:(1) baz) world')
 		assert_equal(
 			{'foo' => ['bar','baz:(1']},
 			result[:meta],
-			'Map#parse_html should not parse nested empty tag'
+			'Set#parse_html should not parse nested empty tag'
 		)
 		assert_equal(
 			'hello %%foo%% baz) world',
 			result[:tmpl],
-			'Map#parse_html[:tmpl] should be a proper template'
+			'Set#parse_html[:tmpl] should be a proper template'
 		)
 
-		result = @map.send(:parse_html,'hello foo:(bar baz world')
+		result = @set.send(:parse_html,'hello foo:(bar baz world')
 		assert_equal(
 			{'foo' => ['bar','baz','world']},
 			result[:meta],
-			'Map#parse_html should be able to parse a tag that is not closed'
+			'Set#parse_html should be able to parse a tag that is not closed'
 		)
 		assert_equal(
 			'hello %%foo%%',
 			result[:tmpl],
-			'Map#parse_html should be able to parse a tag that is not closed'
+			'Set#parse_html should be able to parse a tag that is not closed'
 		)
 	end
 
 	def test_parse_duplicate_tag
-		result = @map.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo)!')
+		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo)!')
 		assert_equal(
 			{'foo' => ['boo']},
 			result[:meta],
@@ -111,28 +111,28 @@ _html
 		assert_equal(
 			'hello %%foo%% world %%foo%%!',
 			result[:tmpl],
-			'Map#parse_html[:tmpl] should be a proper template'
+			'Set#parse_html[:tmpl] should be a proper template'
 		)
 	end
 
 	def test_parse_block_tag
-		result = @map.send(:parse_html,<<'_html')
+		result = @set.send(:parse_html,<<'_html')
 <ul class="sofa-blog" id="foo"><li>hello</li></ul>
 _html
 		assert_equal(
 			{'foo' => ['list','blog','<li>hello</li>']},
 			result[:meta],
-			'Map#parse_html should be able to parse block sofa tags'
+			'Set#parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
 			<<'_html',
 %%foo%%
 _html
 			result[:tmpl],
-			'Map#parse_html[:tmpl] should be a proper template'
+			'Set#parse_html[:tmpl] should be a proper template'
 		)
 
-		result = @map.send(:parse_html,<<'_html')
+		result = @set.send(:parse_html,<<'_html')
 <ul class="sofa-blog" id="foo">
 	<li>hello</li>
 </ul>
@@ -140,35 +140,35 @@ _html
 		assert_equal(
 			{'foo' => ['list','blog',"\t<li>hello</li>\n"]},
 			result[:meta],
-			'Map#parse_html should be able to parse block sofa tags'
+			'Set#parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
 			<<'_html',
 %%foo%%
 _html
 			result[:tmpl],
-			'Map#parse_html[:tmpl] should be a proper template'
+			'Set#parse_html[:tmpl] should be a proper template'
 		)
 
-		result = @map.send(:parse_html,<<'_html')
+		result = @set.send(:parse_html,<<'_html')
 hello <ul class="sofa-blog" id="foo"><li>hello</li></ul> world
 _html
 		assert_equal(
 			{'foo' => ['list','blog','<li>hello</li>']},
 			result[:meta],
-			'Map#parse_html should be able to parse block sofa tags'
+			'Set#parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
 			<<'_html',
 hello %%foo%% world
 _html
 			result[:tmpl],
-			'Map#parse_html[:tmpl] should be a proper template'
+			'Set#parse_html[:tmpl] should be a proper template'
 		)
 	end
 
 	def test_nested_block_tags
-		result = @map.send(:parse_html,<<'_html')
+		result = @set.send(:parse_html,<<'_html')
 <ul class="sofa-blog" id="foo">
 	<li>
 		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
@@ -182,22 +182,22 @@ _html
 	</li>
 _html
 			result[:meta],
-			'Map#parse_html should be able to parse nested block sofa tags'
+			'Set#parse_html should be able to parse nested block sofa tags'
 		)
 		assert_equal(
 			<<'_html',
 %%foo%%
 _html
 			result[:tmpl],
-			'Map#parse_html[:tmpl] should be a proper template'
+			'Set#parse_html[:tmpl] should be a proper template'
 		)
 	end
 
 	def test_combination
-		result = @map.send(:parse_html,<<'_html')
+		result = @set.send(:parse_html,<<'_html')
 <html>
 	<h1>title:(text 32)</h1>
-	<ul class="sofa-blog" id="foo">
+	<ul id="foo" class="sofa-blog">
 		<li>
 			subject:(text 64)
 			body:(textarea 72*10)
@@ -215,7 +215,7 @@ _html
 		</li>
 _html
 			result[:meta],
-			'Map#parse_html should be able to parse combination of mixed sofa tags'
+			'Set#parse_html should be able to parse combination of mixed sofa tags'
 		)
 		assert_equal(
 			<<'_html',
@@ -225,7 +225,7 @@ _html
 </html>
 _html
 			result[:tmpl],
-			'Map#parse_html[:tmpl] should be a proper template'
+			'Set#parse_html[:tmpl] should be a proper template'
 		)
 	end
 

@@ -5,15 +5,44 @@
 
 require 'strscan'
 
-class Set
+class Sofa::Field::Set
+
+	def pinitialize(meta = {},parent = nil)
+		@meta = {
+			:parent   => parent,
+			:workflow => meta[0],
+			:html     => meta[1],
+		}
+
+		result = parse_html(@meta[:html].to_s)
+		@meta[:item_metas] = result[:meta]
+		@meta[:tmpl]       = result[:tmpl]
+
+		load_items(@meta[:item_metas])
+	end
+
+def [](name)
+	@meta[name]
+end
+
+def dir
+	if my[:parent]
+		my[:dir] ? (my[:parent][:dir] + '/' + my[:dir]) : my[:parent][:dir]
+	else
+		
+	end
+end
 
 	private
 
-	def parse_html(str)
+	def load_html(dir)
+	end
+
+	def parse_html(html)
 		meta = {}
 		tmpl = ''
 
-		s = StringScanner.new str
+		s = StringScanner.new html
 		until s.eos?
 			if s.scan /(\w+):\(/m
 				tmpl << "%%#{s[1]}%%"

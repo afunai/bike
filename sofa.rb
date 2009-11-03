@@ -1,16 +1,22 @@
 require 'rubygems'
 require 'sinatra'
 
-get %r{(/.*/)(.*).(html)} do
-	<<_html	
+class Sofa
+
+	require 'field'
+
+	get %r{(/.*/)(.*).(html)} do
+		<<_html	
 <h1>Hello cruel world!</h1>
 #{params[:captures].join ','}
 _html
+	end
+
 end
 
 __END__
 
-class Map
+class Set
 	def initialize(params)
 		params[:html] = load_html(dir) if params[:dir]
 		@meta,@tmpl = parse_html(params[:html])
@@ -23,7 +29,7 @@ end
 
 ---
 
-class Item
+class List
 	attr :items
 	def initialize(dir,parent = nil)
 		@tmpl = ...

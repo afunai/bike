@@ -8,4 +8,6 @@ require 'test/unit'
 require 'rubygems'
 require 'mocha'
 
+require 'sofa'
+
 result = Test::Unit::AutoRunner.run(true,'t/')

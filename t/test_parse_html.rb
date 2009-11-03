@@ -3,12 +3,10 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-Dir['./field/*.rb'].sort.each {|file| require file }
-
 class TC_Parse_HTML < Test::Unit::TestCase
 
 	def setup
-		@set = Set.new
+		@set = Sofa::Field::Set.new
 	end
 
 	def teardown

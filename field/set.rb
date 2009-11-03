@@ -92,8 +92,12 @@ class Sofa::Field::Set
 						meta[:width]  = $1.to_i
 						meta[:height] = $2.to_i
 					else
-						meta[:tokens] ||= []
-						meta[:tokens] << token
+						if meta[:klass]
+							meta[:tokens] ||= []
+							meta[:tokens] << token
+						else
+							meta[:klass] = token.capitalize
+						end
 				end
 		end
 		meta

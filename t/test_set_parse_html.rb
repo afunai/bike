@@ -14,28 +14,28 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 
 	def test_parse_tokens
 		assert_equal(
-			{:tokens => ['foo','bar','baz']},
+			{:klass => 'Foo',:tokens => ['bar','baz']},
 			@set.send(:parse_tokens,StringScanner.new('foo bar baz')),
 			'Set#parse_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
-			{:tokens => ['foo','bar','baz baz']},
+			{:klass => 'Foo',:tokens => ['bar','baz baz']},
 			@set.send(:parse_tokens,StringScanner.new('foo "bar" "baz baz"')),
 			'Set#parse_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
-			{:tokens => ['foo','bar','baz']},
+			{:klass => 'Foo',:tokens => ['bar','baz']},
 			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz")),
 			'Set#parse_tokens should be able to parse quoted tokens'
 		)
 
 		assert_equal(
-			{:tokens => ['foo','bar','baz']},
+			{:klass => 'Foo',:tokens => ['bar','baz']},
 			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz) qux")),
 			'Set#parse_tokens should stop scanning at an ending bracket'
 		)
 		assert_equal(
-			{:tokens => ['foo','bar (bar?)','baz']},
+			{:klass => 'Foo',:tokens => ['bar (bar?)','baz']},
 			@set.send(:parse_tokens,StringScanner.new("foo 'bar (bar?)' baz) qux")),
 			'Set#parse_tokens should ignore brackets inside quoted tokens'
 		)
@@ -44,7 +44,7 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 	def test_parse_empty_tag
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world')
 		assert_equal(
-			{'foo' => {:tokens => ['bar','baz baz']}},
+			{'foo' => {:klass => 'Bar',:tokens => ['baz baz']}},
 			result[:meta],
 			'Set#parse_html should be able to parse empty sofa tags'
 		)
@@ -60,8 +60,8 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 _html
 		assert_equal(
 			{
-				'foo' => {:tokens => ['bar','baz baz']},
-				'bar' => {:tokens => ['a','b','c']},
+				'foo' => {:klass => 'Bar',:tokens => ['baz baz']},
+				'bar' => {:klass => 'A',:tokens => ['b','c']},
 			},
 			result[:meta],
 			'Set#parse_html should be able to parse empty sofa tags'
@@ -79,7 +79,7 @@ _html
 	def test_obscure_markup
 		result = @set.send(:parse_html,'hello foo:(bar baz:(1) baz) world')
 		assert_equal(
-			{'foo' => {:default => '(1',:tokens => ['bar','baz']}},
+			{'foo' => {:klass => 'Bar',:default => '(1',:tokens => ['baz']}},
 			result[:meta],
 			'Set#parse_html should not parse nested empty tag'
 		)
@@ -91,7 +91,7 @@ _html
 
 		result = @set.send(:parse_html,'hello foo:(bar baz world')
 		assert_equal(
-			{'foo' => {:tokens => ['bar','baz','world']}},
+			{'foo' => {:klass => 'Bar',:tokens => ['baz','world']}},
 			result[:meta],
 			'Set#parse_html should be able to parse a tag that is not closed'
 		)
@@ -103,7 +103,7 @@ _html
 
 		result = @set.send(:parse_html,'hello foo:(bar "baz"world)')
 		assert_equal(
-			{'foo' => {:tokens => ['bar','baz','world']}},
+			{'foo' => {:klass => 'Bar',:tokens => ['baz','world']}},
 			result[:meta],
 			'Set#parse_html should be able to parse tokens without a delimiter'
 		)
@@ -152,7 +152,7 @@ _html
 	def test_parse_options
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
 		assert_equal(
-			{'foo' => {:options => ['baz baz','world','hi'],:tokens => ['bar','qux']}},
+			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:meta],
 			'Set#parse_html should be able to parse a tag that is not closed'
 		)
@@ -166,7 +166,7 @@ _html
 	def test_parse_duplicate_tag
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo)!')
 		assert_equal(
-			{'foo' => {:tokens => ['boo']}},
+			{'foo' => {:klass => 'Boo'}},
 			result[:meta],
 			'definition tags are overridden by a preceding definition'
 		)
@@ -270,7 +270,7 @@ _html
 _html
 		assert_equal(
 			{
-				'title' => {:tokens => ['text','32']},
+				'title' => {:klass => 'Text',:tokens => ['32']},
 				'foo'   => {:klass =>'list',:workflow => 'blog',:html => <<'_html'},
 		<li>
 			subject:(text 64)

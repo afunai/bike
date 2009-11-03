@@ -51,7 +51,7 @@ class Sofa::Field::Set
 	end
 
 	def parse_tokens(s)
-		tokens = []
+		meta = {}
 		until s.eos? || s.scan(/\)/)
 			prefix = s.scan /[:,]?/
 			if s.scan /(["'])(.*?)(\1|$)/
@@ -59,26 +59,16 @@ class Sofa::Field::Set
 			elsif s.scan /[^\s\):,]+/
 				token = s[0]
 			end
-			prefix = ',' if s.scan /(?=,)/
+			prefix = ',' if s.scan /(?=,)/ # 1st element of options
 
-                       if prefix == ','
-                              tokens << [] unless tokens[-1].is_a? ::Array
-                               tokens[-1] << token
-                       else
-                               tokens << token
-                       end
-
-
+			parse_meta(prefix,token,meta)
 			s.scan /\s+/
 		end
-		tokens
+		meta
 	end
 
 	def parse_meta(prefix,token,meta = {})
 		case prefix
-			when ','
-				meta[:options] ||= []
-				meta[:options] << token
 			when ':'
 				if meta[:default]
 					meta[:default] = meta[:default].to_a
@@ -86,6 +76,9 @@ class Sofa::Field::Set
 				else
 					meta[:default] = token
 				end
+			when ','
+				meta[:options] ||= []
+				meta[:options] << token
 			else
 				case token
 					when /(\d+)\.\.(\d+)/
@@ -95,7 +88,8 @@ class Sofa::Field::Set
 						meta[:width]  = $1.to_i
 						meta[:height] = $2.to_i
 					else
-						meta[:token] = token
+						meta[:tokens] ||= []
+						meta[:tokens] << token
 				end
 		end
 		meta

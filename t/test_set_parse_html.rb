@@ -76,7 +76,7 @@ _html
 	def test_obscure_markup
 		result = @set.send(:parse_html,'hello foo:(bar baz:(1) baz) world')
 		assert_equal(
-			{'foo' => ['bar','baz:(1']},
+			{'foo' => ['bar','baz','(1']},
 			result[:meta],
 			'Set#parse_html should not parse nested empty tag'
 		)

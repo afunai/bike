@@ -53,10 +53,10 @@ class Sofa::Field::Set
 	def parse_tokens(s)
 		tokens = []
 		until s.eos? || s.scan(/\)/)
-			prefix = s.scan /,?/
+			prefix = s.scan /[:,]?/
 			if s.scan /(["'])(.*?)(\1|$)/
 				token = s[2]
-			elsif s.scan /[^\s\)\,]+/
+			elsif s.scan /[^\s\):,]+/
 				token = s[0]
 			end
 			prefix = ',' if s.scan /(?=,)/

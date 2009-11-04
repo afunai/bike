@@ -7,14 +7,16 @@ require 'strscan'
 
 class Sofa::Field::Set::Folder < Sofa::Field::Set
 
-	def initialize(meta = [],parent = nil)
-		id,workflow,dir = *meta
-
-		html = load_html(dir) || ''
-		super([id,workflow,html],parent)
+	def initialize(meta = {})
+		meta[:html] = load_html(meta[:dir]) || ''
+		super
 	end
 
 	private
+
+	def item
+# seek the real directory, then @item_object
+	end
 
 	def load_html(dir)
 	end

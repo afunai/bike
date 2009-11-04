@@ -5,7 +5,9 @@
 
 require 'strscan'
 
-class Sofa::Field::Set
+class Sofa::Field::Set < Sofa::Field
+
+	include Sofa::Field::Collection
 
 	def initialize(meta = {})
 		@meta = meta.merge parse_html(meta[:html].to_s)
@@ -14,9 +16,28 @@ class Sofa::Field::Set
 
 	private
 
+def _val
+	inject({}) {|v,item|
+		v[item[:id]] = item.val if item_has_val?(item) && !item.persistent?
+		v
+	}
+end
+
+def collect_item(conditions = :all,&block)
+	items = @item_object.keys
+	unless conditions == :all
+		# select item(s) by id
+		items &= conditions.to_a.select {|c| c.is_a? ::String }
+	end
+	items.collect {|id|
+		@item_object[id] ||= Field.instance(@meta[:meta][id])
+		block ? block.call(@item_object[id]) : @item_object[id]
+	}
+end
+
 	def load_items(meta)
 		@item_objects = {}
-		meta.each {|m|
+		meta.each {|id,m|
 		}
 	end
 

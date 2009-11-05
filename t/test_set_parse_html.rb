@@ -150,25 +150,41 @@ _html
 	end
 
 	def test_parse_csv
-		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
-		assert_equal(
-			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
-			result[:item],
-			'Set#parse_html should be able to parse a sequence of CSV'
-		)
-		assert_equal(
-			'hello %%foo%%',
-			result[:tmpl],
-			'Set#parse_html should be able to parse a sequence of CSV'
-		)
-
 		result = @set.send(:parse_html,'hello foo:(bar ,"baz baz","world",hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should be able to parse a sequence of CSV'
 		)
+
+		result = @set.send(:parse_html,'hello foo:(bar "baz baz", "world", hi qux)')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should allow spaces after the comma'
+		)
+
+		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should be able to parse a sequence of CSV'
+		)
 	end
+
+def ptest_parse_defaults
+	result = @set.send(:parse_html,'hello foo:(bar :"baz baz","world",hi qux)')
+	assert_equal(
+		{'foo' => {:klass => 'Bar',:default => ['baz baz','world','hi'],:tokens => ['qux']}},
+		result[:item],
+		'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
+	)
+	assert_equal(
+		'hello %%foo%%',
+		result[:tmpl],
+		'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
+	)
+end
 
 	def test_parse_duplicate_tag
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo)!')

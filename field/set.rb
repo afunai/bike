@@ -67,7 +67,7 @@ end
 	def parse_tokens(s)
 		meta = {}
 		until s.eos? || s.scan(/\)/)
-			prefix = s.scan /[:,]?/
+			prefix = s[1] if s.scan /([:,])?\s?/
 			if s.scan /(["'])(.*?)(\1|$)/
 				token = s[2]
 			elsif s.scan /[^\s\):,]+/

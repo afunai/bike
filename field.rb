@@ -23,33 +23,37 @@ class Sofa::Field
 		@val  = val_cast(nil)
 	end
 
-
-
-
-
-def dir
-	if my[:parent]
-		my[:dir] ? (my[:parent][:dir] + '/' + my[:dir]) : my[:parent][:dir]
-	else
-		
+	def inspect
+		caller.grep(/`inspect'/).empty? ? super : "<#{self.class} name=\"#{my[:name]}\">"
 	end
+
+	def [](id)
+		respond_to?("meta_#{id}") ? __send__("meta_#{id}") : @meta[id]
+	end
+
+	def val
+		@val
+	end
+
+	def item(*item_steps)
+		item_steps.empty? ? self : nil # scalar has no item
+	end
+
+	private
+
+	def my
+		self
+	end
+
+	def val_cast(v)
+		v
+	end
+
 end
 
 
+__END__
 
-
-
-def inspect
-	caller.grep(/`inspect'/).empty? ? super : "<#{self.class} name=\"#{my[:name]}\">"
-end
-
-def val
-	@val
-end
-
-def [](id)
-	respond_to?("meta_#{id}") ? __send__("meta_#{id}") : @meta[id]
-end
 
 def []=(id,v)
 	@meta[id] = v
@@ -67,9 +71,16 @@ def owners
 	my[:parent] ? (my[:parent].owners() | my[:owner].to_a) : my[:owner].to_a
 end
 
-def item(*item_steps)
-	item_steps.empty? ? self : nil # scalar has no item
+
+def dir
+	if my[:parent]
+		my[:dir] ? (my[:parent][:dir] + '/' + my[:dir]) : my[:parent][:dir]
+	else
+		
+	end
 end
+
+
 
 def load_default
 	post('load_default')
@@ -149,11 +160,9 @@ def get(arg = {})
 	end
 end
 
+
 private
 
-def my
-	self
-end
 
 def _post(action,v)
 	case action
@@ -199,9 +208,4 @@ def get_read(arg = nil)
 	Rack::Utils.escape_html(val().to_s)
 end
 
-def val_cast(v)
-	v
-end
-
-end
 

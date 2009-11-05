@@ -39,8 +39,24 @@ _html
 _html
 				},
 			},
-			set[:meta],
+			set[:item],
 			'Set#initialize should load @meta'
+		)
+	end
+
+	def test_item
+		set = Sofa::Field::Set.new(:html => <<'_html')
+<html>
+	<h1>title:(text 32)</h1>
+	<ul id="foo" class="sofa-blog">
+	</ul>
+</html>
+_html
+return
+		assert_instance_of(
+			Sofa::Field::Text,
+			set.item('title'),
+			'Set#item() should return the child item on the fly'
 		)
 	end
 

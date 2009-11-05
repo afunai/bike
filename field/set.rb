@@ -11,7 +11,7 @@ class Sofa::Field::Set < Sofa::Field
 
 	def initialize(meta = {})
 		@meta = meta.merge parse_html(meta[:html].to_s)
-		load_items @meta[:meta]
+		@item_objects = {}
 	end
 
 	private
@@ -24,48 +24,42 @@ def _val
 end
 
 def collect_item(conditions = :all,&block)
-	items = @item_object.keys
+	items = @meta[:items].keys
 	unless conditions == :all
 		# select item(s) by id
-		items &= conditions.to_a.select {|c| c.is_a? ::String }
+		items &= conditions.to_a
 	end
 	items.collect {|id|
-		@item_object[id] ||= Field.instance(@meta[:meta][id])
+		@item_object[id] ||= Field.instance(@meta[:items][id])
 		block ? block.call(@item_object[id]) : @item_object[id]
 	}
 end
 
-	def load_items(meta)
-		@item_objects = {}
-		meta.each {|id,m|
-		}
-	end
-
 	def parse_html(html)
-		meta = {}
+		item = {}
 		tmpl = ''
 
 		s = StringScanner.new html
 		until s.eos?
 			if s.scan /(\w+):\(/m
 				tmpl << "%%#{s[1]}%%"
-				meta[s[1]] = parse_tokens(s)
+				item[s[1]] = parse_tokens(s)
 			elsif s.scan /<(\w+)(.+?class="[^"]*?sofa-(\w+).+?)>/
 				tag = s[1]
 				id  = s[2].match(/id="(.+?)"/)[1]
 
 				tmpl << "%%#{id}%%"
-				meta[id] = {
+				item[id] = {
 					:klass    => 'List',
 					:workflow => s[3],
-					:html     => parse_contents(s,tag),
+					:html     => parse_inner_html(s,tag),
 				}
 			else
 				tmpl << s.scan(/.+?(?=\w|<|\z)/m)
 			end
 		end
 		{
-			:meta => meta,
+			:item => item,
 			:tmpl => tmpl,
 		}
 	end
@@ -81,13 +75,13 @@ end
 			end
 			prefix = ',' if s.scan /(?=,)/ # 1st element of options
 
-			parse_meta(prefix,token,meta)
+			parse_token(prefix,token,meta)
 			s.scan /\s+/
 		end
 		meta
 	end
 
-	def parse_meta(prefix,token,meta = {})
+	def parse_token(prefix,token,meta = {})
 		case prefix
 			when ':'
 				if meta[:default]
@@ -119,7 +113,7 @@ end
 		meta
 	end
 
-	def parse_contents(s,tag)
+	def parse_inner_html(s,tag)
 		contents = ''
 		gen = 1
 		until s.eos? || (gen < 1)

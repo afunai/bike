@@ -12,6 +12,17 @@ class Sofa::Field
 
 	Dir['./field/*.rb'].sort.each {|file| require file }
 
+	def self.instance(meta = {})
+		meta[:klass].to_s.split(/::/).inject(self) {|c,name|
+			c.const_get(name)
+		}.new meta
+	end
+
+	def initialize(meta = {})
+		@meta = meta
+		@val  = val_cast(nil)
+	end
+
 
 
 
@@ -27,10 +38,6 @@ end
 
 
 
-def initialize(meta = {})
-	@meta = self.class.meta_val.merge meta
-	@val  = val_cast(nil)
-end
 
 def inspect
 	caller.grep(/`inspect'/).empty? ? super : "<#{self.class} name=\"#{my[:name]}\">"

@@ -11,7 +11,7 @@ class Sofa::Field::Set < Sofa::Field
 
 	def initialize(meta = {})
 		@meta = meta.merge parse_html(meta[:html].to_s)
-		@item_objects = {}
+		@item_object = {}
 	end
 
 	private
@@ -24,14 +24,13 @@ def _val
 end
 
 def collect_item(conditions = :all,&block)
-	items = @meta[:items].keys
+	items = my[:item].keys
 	unless conditions == :all
-		# select item(s) by id
-		items &= conditions.to_a
+		items &= conditions.to_a # select item(s) by id
 	end
 	items.collect {|id|
-		@item_object[id] ||= Field.instance(@meta[:items][id])
-		block ? block.call(@item_object[id]) : @item_object[id]
+		item = @item_object[id] ||= Sofa::Field.instance(my[:item][id])
+		block ? block.call(item) : item
 	}
 end
 

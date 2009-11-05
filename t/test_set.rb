@@ -52,7 +52,6 @@ _html
 	</ul>
 </html>
 _html
-return
 		assert_instance_of(
 			Sofa::Field::Text,
 			set.item('title'),

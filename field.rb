@@ -19,6 +19,8 @@ class Sofa::Field
 		}.new meta
 	end
 
+	attr_reader :queue
+
 	def initialize(meta = {})
 		@meta = meta
 		@val  = val_cast(nil)
@@ -32,6 +34,10 @@ class Sofa::Field
 		respond_to?("meta_#{id}") ? __send__("meta_#{id}") : @meta[id]
 	end
 
+	def []=(id,v)
+		@meta[id] = v
+	end
+
 	def val
 		@val
 	end
@@ -40,10 +46,61 @@ class Sofa::Field
 		item_steps.empty? ? self : nil # scalar has no item
 	end
 
+	def load_default
+		post :load_default
+	end
+
+	def load(v = nil)
+		post :load,v
+	end
+
+	def create(v = nil)
+		post :create,v
+	end
+
+	def update(v = nil)
+		post :update,v
+	end
+
+	def delete
+		post :delete
+	end
+
+	def post(action,v = nil)
+		_post action,val_cast(v)
+		@queue = action unless action == :load || action == :load_default
+		self
+	end
+
+	def modified?
+		queue ? true : false
+	end
+
+	def deleted?
+		@queue == 'delete'
+	end
+
+	def valid?
+		errors.empty?
+	end
+
+	def errors
+		[]
+	end
+
 	private
 
 	def my
 		self
+	end
+
+	def _post(action,v)
+		case action
+			when :load_default
+				@val = val_cast(my[:defaults] || my[:default])
+			when :load,:create,:update
+				@val = v
+		end
 	end
 
 	def val_cast(v)

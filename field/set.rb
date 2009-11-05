@@ -67,13 +67,14 @@ end
 	def parse_tokens(s)
 		meta = {}
 		until s.eos? || s.scan(/\)/)
-			prefix = s[1] if s.scan /([:,])?\s?/
+			prefix = s[1] if s.scan /([:;,])?\s?/
 			if s.scan /(["'])(.*?)(\1|$)/
 				token = s[2]
-			elsif s.scan /[^\s\):,]+/
+			elsif s.scan /[^\s\):;,]+/
 				token = s[0]
 			end
-			prefix = ',' if s.scan /(?=,)/ # 1st element of options
+			prefix ||= ',' if s.scan /(?=,)/ # 1st element of options
+			prefix ||= ';' if s.scan /(?=;)/ # 1st element of defaults
 
 			parse_token(prefix,token,meta)
 			s.scan /\s+/
@@ -84,12 +85,10 @@ end
 	def parse_token(prefix,token,meta = {})
 		case prefix
 			when ':'
-				if meta[:default]
-					meta[:default] = meta[:default].to_a
-					meta[:default] << token
-				else
-					meta[:default] = token
-				end
+				meta[:default] = token
+			when ';'
+				meta[:defaults] ||= []
+				meta[:defaults] << token
 			when ','
 				meta[:options] ||= []
 				meta[:options] << token

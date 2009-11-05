@@ -143,9 +143,9 @@ _html
 			'Set#parse_token should be able to parse default tokens'
 		)
 		assert_equal(
-			{:default => ['foo','bar']},
-			@set.send(:parse_token,':','bar',{:default => ['foo']}),
-			'Set#parse_token should be able to parse default tokens'
+			{:defaults => ['foo','bar']},
+			@set.send(:parse_token,';','bar',{:defaults => ['foo']}),
+			'Set#parse_token should be able to parse defaults tokens'
 		)
 	end
 
@@ -172,19 +172,20 @@ _html
 		)
 	end
 
-def ptest_parse_defaults
-	result = @set.send(:parse_html,'hello foo:(bar :"baz baz","world",hi qux)')
-	assert_equal(
-		{'foo' => {:klass => 'Bar',:default => ['baz baz','world','hi'],:tokens => ['qux']}},
-		result[:item],
-		'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
-	)
-	assert_equal(
-		'hello %%foo%%',
-		result[:tmpl],
-		'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
-	)
-end
+	def test_parse_defaults
+		result = @set.send(:parse_html,'hello foo:(bar ;"baz baz";"world";hi qux)')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
+		)
+		result = @set.send(:parse_html,'hello foo:(bar "baz baz";"world";hi qux)')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
+		)
+	end
 
 	def test_parse_duplicate_tag
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo)!')

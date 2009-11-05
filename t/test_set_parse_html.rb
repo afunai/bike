@@ -157,6 +157,13 @@ _html
 			'Set#parse_html should be able to parse a sequence of CSV'
 		)
 
+		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should be able to parse a sequence of CSV'
+		)
+
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz", "world", hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
@@ -164,11 +171,30 @@ _html
 			'Set#parse_html should allow spaces after the comma'
 		)
 
-		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
+		result = @set.send(:parse_html,<<'_eos')
+hello foo:(bar
+	"baz baz",
+	"world",
+	hi
+	qux)
+_eos
 		assert_equal(
 			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
-			'Set#parse_html should be able to parse a sequence of CSV'
+			'Set#parse_html should allow spaces after the comma'
+		)
+
+		result = @set.send(:parse_html,'hello foo:(bar ,"world" qux)')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:options => ['world'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should be able to parse options with single element'
+		)
+		result = @set.send(:parse_html,'hello foo:(bar , "world" qux)')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:options => ['world'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should be able to parse options with single element'
 		)
 	end
 
@@ -179,11 +205,38 @@ _html
 			result[:item],
 			'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
+
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz";"world";hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'Bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
+		)
+
+		result = @set.send(:parse_html,<<'_eos')
+hello foo:(bar
+	"baz baz";
+	"world";
+	hi
+	qux)
+_eos
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should allow spaces after the semicolon'
+		)
+
+		result = @set.send(:parse_html,'hello foo:(bar ;"world" qux)')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:defaults => ['world'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should be able to parse defaults with single element'
+		)
+		result = @set.send(:parse_html,'hello foo:(bar ; "world" qux)')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:defaults => ['world'],:tokens => ['qux']}},
+			result[:item],
+			'Set#parse_html should be able to parse defaults with single element'
 		)
 	end
 

@@ -49,7 +49,7 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 			'Set#parse_html should be able to parse empty sofa tags'
 		)
 		assert_equal(
-			'hello %%foo%% world',
+			'hello $(foo) world',
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'
 		)
@@ -68,8 +68,8 @@ _html
 		)
 		assert_equal(
 			<<'_html',
-<h1>%%foo%%</h1>
-<p>%%bar%%</p>
+<h1>$(foo)</h1>
+<p>$(bar)</p>
 _html
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'
@@ -84,7 +84,7 @@ _html
 			'Set#parse_html should not parse nested empty tag'
 		)
 		assert_equal(
-			'hello %%foo%% baz) world',
+			'hello $(foo) baz) world',
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'
 		)
@@ -96,7 +96,7 @@ _html
 			'Set#parse_html should be able to parse a tag that is not closed'
 		)
 		assert_equal(
-			'hello %%foo%%',
+			'hello $(foo)',
 			result[:tmpl],
 			'Set#parse_html should be able to parse a tag that is not closed'
 		)
@@ -108,7 +108,7 @@ _html
 			'Set#parse_html should be able to parse tokens without a delimiter'
 		)
 		assert_equal(
-			'hello %%foo%%',
+			'hello $(foo)',
 			result[:tmpl],
 			'Set#parse_html should be able to parse tokens without a delimiter'
 		)
@@ -273,7 +273,7 @@ _eos
 			'definition tags are overridden by a preceding definition'
 		)
 		assert_equal(
-			'hello %%foo%% world %%foo%%!',
+			'hello $(foo) world $(foo)!',
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'
 		)
@@ -290,7 +290,7 @@ _html
 		)
 		assert_equal(
 			<<'_html',
-%%foo%%
+$(foo)
 _html
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'
@@ -308,7 +308,7 @@ _html
 		)
 		assert_equal(
 			<<'_html',
-%%foo%%
+$(foo)
 _html
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'
@@ -324,7 +324,7 @@ _html
 		)
 		assert_equal(
 			<<'_html',
-hello %%foo%% world
+hello $(foo) world
 _html
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'
@@ -350,7 +350,7 @@ _html
 		)
 		assert_equal(
 			<<'_html',
-%%foo%%
+$(foo)
 _html
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'
@@ -387,8 +387,8 @@ _html
 		assert_equal(
 			<<'_html',
 <html>
-	<h1>%%title%%</h1>
-	%%foo%%
+	<h1>$(title)</h1>
+	$(foo)
 </html>
 _html
 			result[:tmpl],

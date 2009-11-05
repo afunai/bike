@@ -41,13 +41,13 @@ end
 		s = StringScanner.new html
 		until s.eos?
 			if s.scan /(\w+):\(/m
-				tmpl << "%%#{s[1]}%%"
+				tmpl << "$(#{s[1]})"
 				item[s[1]] = parse_tokens(s)
 			elsif s.scan /<(\w+)(.+?class="[^"]*?sofa-(\w+).+?)>/
 				tag = s[1]
 				id  = s[2].match(/id="(.+?)"/)[1]
 
-				tmpl << "%%#{id}%%"
+				tmpl << "$(#{id})"
 				item[id] = {
 					:klass    => 'list',
 					:workflow => s[3],

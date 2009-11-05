@@ -5,6 +5,9 @@
 
 class Sofa::Field::Foo < Sofa::Field
 	class Bar < Sofa::Field
+		def _get_test(arg)
+			'just a test.'
+		end
 	end
 end
 
@@ -149,6 +152,37 @@ class TC_Field < Test::Unit::TestCase
 			'hello',
 			@f.get,
 			'Field#get should return @val by default'
+		)
+
+		assert_equal(
+			'just a test.',
+			@f.get(:action => :test),
+			'Field#get should relay the result of _get_*()'
+		)
+
+		@f[:tmpl_foo] = 'foo foo'
+		assert_equal(
+			'foo foo',
+			@f.get(:action => :foo),
+			'Field#get should look for [:tmpl_*]'
+		)
+	end
+
+	def test_get_by_tmpl
+		@f.instance_variable_set(:@val,'hello')
+
+		@f[:tmpl_foo] = 'foo $() foo'
+		assert_equal(
+			'foo hello foo',
+			@f.get(:action => :foo),
+			'Field#_get_by_tmpl should replace %() with @val'
+		)
+
+		@f[:tmpl_foo] = 'foo @(baz) foo'
+		assert_equal(
+			'foo 1234 foo',
+			@f.get(:action => :foo),
+			'Field#_get_by_tmpl should replace @(...) with @meta[...]'
 		)
 	end
 

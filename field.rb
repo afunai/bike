@@ -47,10 +47,8 @@ class Sofa::Field
 	end
 
 	def get(arg = {})
-		return _get_by_tmpl(arg,arg[:tmpl]) if arg[:tmpl]
-
 		action = arg[:action]
-		action = arg[:action] = 'read' unless my[:"tmpl_#{action}"] || respond_to?("get_#{action}",true)
+		action = arg[:action] = 'read' unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)
 		if tmpl = my[:"tmpl_#{action}"]
 			_get_by_tmpl(arg,tmpl)
 		else
@@ -108,7 +106,19 @@ class Sofa::Field
 
 	def _get(arg)
 		m = "_get_#{arg[:action]}"
-		respond_to?(m,true) ? __send__(m,arg) : get_read(arg)
+		respond_to?(m,true) ? __send__(m,arg) : _get_read(arg)
+	end
+
+	def _get_by_tmpl(arg,tmpl = '')
+		tmpl.gsub(/(@|\$)\((.*?)\)/) {
+			if $1 == '@'
+				my[$2.intern]
+			elsif item = item($2)
+				item.get(:action => arg[:action])
+			else
+				_get(arg)
+			end
+		}
 	end
 
 	def _get_read(arg)

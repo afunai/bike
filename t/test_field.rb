@@ -137,6 +137,19 @@ class TC_Field < Test::Unit::TestCase
 			@f.queue,
 			'Field#delete should set @queue'
 		)
+		assert(
+			@f.deleted?,
+			'Field#delete should set the result of deleted?() to true'
+		)
+	end
+
+	def test_get
+		@f.instance_variable_set(:@val,'hello')
+		assert_equal(
+			'hello',
+			@f.get,
+			'Field#get should return @val by default'
+		)
 	end
 
 end

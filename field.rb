@@ -46,6 +46,18 @@ class Sofa::Field
 		item_steps.empty? ? self : nil # scalar has no item
 	end
 
+	def get(arg = {})
+		return _get_by_tmpl(arg,arg[:tmpl]) if arg[:tmpl]
+
+		action = arg[:action]
+		action = arg[:action] = 'read' unless my[:"tmpl_#{action}"] || respond_to?("get_#{action}",true)
+		if tmpl = my[:"tmpl_#{action}"]
+			_get_by_tmpl(arg,tmpl)
+		else
+			_get(arg)
+		end
+	end
+
 	def load_default
 		post :load_default
 	end
@@ -73,11 +85,11 @@ class Sofa::Field
 	end
 
 	def modified?
-		queue ? true : false
+		@queue ? true : false
 	end
 
 	def deleted?
-		@queue == 'delete'
+		@queue == :delete
 	end
 
 	def valid?
@@ -92,6 +104,15 @@ class Sofa::Field
 
 	def my
 		self
+	end
+
+	def _get(arg)
+		m = "_get_#{arg[:action]}"
+		respond_to?(m,true) ? __send__(m,arg) : get_read(arg)
+	end
+
+	def _get_read(arg)
+		Rack::Utils.escape_html val.to_s
 	end
 
 	def _post(action,v)

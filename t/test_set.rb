@@ -48,13 +48,30 @@ _html
 		set = Sofa::Field::Set.new(:html => <<'_html')
 <html>
 	<h1>title:(text 32)</h1>
-	<ul id="foo" class="sofa-blog">
+	<ul id="main" class="sofa-blog">
+		<li>hi</li>
 	</ul>
 </html>
 _html
 		assert_instance_of(
 			Sofa::Field::Text,
 			set.item('title'),
+			'Set#item() should return the child item on the fly'
+		)
+		assert_instance_of(
+			Sofa::Field::List,
+			set.item('main'),
+			'Set#item() should return the child item on the fly'
+		)
+
+		assert_equal(
+			32,
+			set.item('title')[:size],
+			'Set#item() should return the child item on the fly'
+		)
+		assert_equal(
+			"\t\t<li>hi</li>\n",
+			set.item('main')[:html],
 			'Set#item() should return the child item on the fly'
 		)
 	end

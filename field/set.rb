@@ -16,23 +16,23 @@ class Sofa::Field::Set < Sofa::Field
 
 	private
 
-def _val
+def val
 	inject({}) {|v,item|
 		v[item[:id]] = item.val if item_has_val?(item) && !item.persistent?
 		v
 	}
 end
 
-def collect_item(conditions = :all,&block)
-	items = my[:item].keys
-	unless conditions == :all
-		items &= conditions.to_a # select item(s) by id
+	def collect_item(conditions = :all,&block)
+		items = my[:item].keys
+		unless conditions == :all
+			items &= conditions.to_a # select item(s) by id
+		end
+		items.collect {|id|
+			item = @item_object[id] ||= Sofa::Field.instance(my[:item][id])
+			block ? block.call(item) : item
+		}
 	end
-	items.collect {|id|
-		item = @item_object[id] ||= Sofa::Field.instance(my[:item][id])
-		block ? block.call(item) : item
-	}
-end
 
 	def parse_html(html)
 		item = {}
@@ -82,6 +82,10 @@ end
 	end
 
 	def parse_token(prefix,token,meta = {})
+		unless meta[:klass]
+			meta[:klass] = token.capitalize
+			return meta
+		end
 		case prefix
 			when ':'
 				meta[:default] = token
@@ -100,12 +104,8 @@ end
 						meta[:width]  = $1.to_i
 						meta[:height] = $2.to_i
 					else
-						if meta[:klass]
-							meta[:tokens] ||= []
-							meta[:tokens] << token
-						else
-							meta[:klass] = token.capitalize
-						end
+						meta[:tokens] ||= []
+						meta[:tokens] << token
 				end
 		end
 		meta

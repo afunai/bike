@@ -112,39 +112,52 @@ _html
 			result[:tmpl],
 			'Set#parse_html should be able to parse tokens without a delimiter'
 		)
+
+		result = @set.send(:parse_html,'hello foo:(bar,"baz")')
+		assert_equal(
+			{'foo' => {:klass => 'Bar',:options => ['baz']}},
+			result[:item],
+			'The first token should be regarded as [:klass]'
+		)
 	end
 
 	def test_parse_token
 		assert_equal(
-			{:width => 160,:height => 120},
-			@set.send(:parse_token,nil,'160*120'),
+			{:klass => 'Foo'},
+			@set.send(:parse_token,nil,'foo',{}),
+			'The first token should be regarded as [:klass]'
+		)
+
+		assert_equal(
+			{:klass => 'Foo',:width => 160,:height => 120},
+			@set.send(:parse_token,nil,'160*120',{:klass => 'Foo'}),
 			'Set#parse_token should be able to parse dimension tokens'
 		)
 		assert_equal(
-			{:min => 1,:max => 32},
-			@set.send(:parse_token,nil,'1..32'),
+			{:klass => 'Foo',:min => 1,:max => 32},
+			@set.send(:parse_token,nil,'1..32',{:klass => 'Foo'}),
 			'Set#parse_token should be able to parse range tokens'
 		)
 
 		assert_equal(
-			{:options => ['foo']},
-			@set.send(:parse_token,',','foo'),
+			{:klass => 'Foo',:options => ['foo']},
+			@set.send(:parse_token,',','foo',{:klass => 'Foo'}),
 			'Set#parse_token should be able to parse option tokens'
 		)
 		assert_equal(
-			{:options => ['foo','bar']},
-			@set.send(:parse_token,',','bar',{:options => ['foo']}),
+			{:klass => 'Foo',:options => ['foo','bar']},
+			@set.send(:parse_token,',','bar',{:klass => 'Foo',:options => ['foo']}),
 			'Set#parse_token should be able to parse option tokens'
 		)
 
 		assert_equal(
-			{:default => 'foo'},
-			@set.send(:parse_token,':','foo'),
+			{:klass => 'Foo',:default => 'foo'},
+			@set.send(:parse_token,':','foo',{:klass => 'Foo'}),
 			'Set#parse_token should be able to parse default tokens'
 		)
 		assert_equal(
-			{:defaults => ['foo','bar']},
-			@set.send(:parse_token,';','bar',{:defaults => ['foo']}),
+			{:klass => 'Foo',:defaults => ['foo','bar']},
+			@set.send(:parse_token,';','bar',{:klass => 'Foo',:defaults => ['foo']}),
 			'Set#parse_token should be able to parse defaults tokens'
 		)
 	end

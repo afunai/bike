@@ -49,7 +49,7 @@ end
 
 				tmpl << "%%#{id}%%"
 				item[id] = {
-					:klass    => 'List',
+					:klass    => 'list',
 					:workflow => s[3],
 					:html     => parse_inner_html(s,tag),
 				}
@@ -83,7 +83,7 @@ end
 
 	def parse_token(prefix,token,meta = {})
 		unless meta[:klass]
-			meta[:klass] = token.capitalize
+			meta[:klass] = token
 			return meta
 		end
 		case prefix

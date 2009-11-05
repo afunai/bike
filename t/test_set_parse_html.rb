@@ -14,28 +14,28 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 
 	def test_parse_tokens
 		assert_equal(
-			{:klass => 'Foo',:tokens => ['bar','baz']},
+			{:klass => 'foo',:tokens => ['bar','baz']},
 			@set.send(:parse_tokens,StringScanner.new('foo bar baz')),
 			'Set#parse_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
-			{:klass => 'Foo',:tokens => ['bar','baz baz']},
+			{:klass => 'foo',:tokens => ['bar','baz baz']},
 			@set.send(:parse_tokens,StringScanner.new('foo "bar" "baz baz"')),
 			'Set#parse_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
-			{:klass => 'Foo',:tokens => ['bar','baz']},
+			{:klass => 'foo',:tokens => ['bar','baz']},
 			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz")),
 			'Set#parse_tokens should be able to parse quoted tokens'
 		)
 
 		assert_equal(
-			{:klass => 'Foo',:tokens => ['bar','baz']},
+			{:klass => 'foo',:tokens => ['bar','baz']},
 			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz) qux")),
 			'Set#parse_tokens should stop scanning at an ending bracket'
 		)
 		assert_equal(
-			{:klass => 'Foo',:tokens => ['bar (bar?)','baz']},
+			{:klass => 'foo',:tokens => ['bar (bar?)','baz']},
 			@set.send(:parse_tokens,StringScanner.new("foo 'bar (bar?)' baz) qux")),
 			'Set#parse_tokens should ignore brackets inside quoted tokens'
 		)
@@ -44,7 +44,7 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 	def test_parse_empty_tag
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:tokens => ['baz baz']}},
+			{'foo' => {:klass => 'bar',:tokens => ['baz baz']}},
 			result[:item],
 			'Set#parse_html should be able to parse empty sofa tags'
 		)
@@ -60,8 +60,8 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 _html
 		assert_equal(
 			{
-				'foo' => {:klass => 'Bar',:tokens => ['baz baz']},
-				'bar' => {:klass => 'A',:tokens => ['b','c']},
+				'foo' => {:klass => 'bar',:tokens => ['baz baz']},
+				'bar' => {:klass => 'a',:tokens => ['b','c']},
 			},
 			result[:item],
 			'Set#parse_html should be able to parse empty sofa tags'
@@ -79,7 +79,7 @@ _html
 	def test_obscure_markup
 		result = @set.send(:parse_html,'hello foo:(bar baz:(1) baz) world')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:default => '(1',:tokens => ['baz']}},
+			{'foo' => {:klass => 'bar',:default => '(1',:tokens => ['baz']}},
 			result[:item],
 			'Set#parse_html should not parse nested empty tag'
 		)
@@ -91,7 +91,7 @@ _html
 
 		result = @set.send(:parse_html,'hello foo:(bar baz world')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:tokens => ['baz','world']}},
+			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
 			'Set#parse_html should be able to parse a tag that is not closed'
 		)
@@ -103,7 +103,7 @@ _html
 
 		result = @set.send(:parse_html,'hello foo:(bar "baz"world)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:tokens => ['baz','world']}},
+			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
 			'Set#parse_html should be able to parse tokens without a delimiter'
 		)
@@ -115,7 +115,7 @@ _html
 
 		result = @set.send(:parse_html,'hello foo:(bar,"baz")')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:options => ['baz']}},
+			{'foo' => {:klass => 'bar',:options => ['baz']}},
 			result[:item],
 			'The first token should be regarded as [:klass]'
 		)
@@ -123,41 +123,46 @@ _html
 
 	def test_parse_token
 		assert_equal(
-			{:klass => 'Foo'},
+			{:klass => 'foo'},
+			@set.send(:parse_token,nil,'foo',{}),
+			'The first token should be regarded as [:klass]'
+		)
+		assert_equal(
+			{:klass => 'foo'},
 			@set.send(:parse_token,nil,'foo',{}),
 			'The first token should be regarded as [:klass]'
 		)
 
 		assert_equal(
-			{:klass => 'Foo',:width => 160,:height => 120},
-			@set.send(:parse_token,nil,'160*120',{:klass => 'Foo'}),
+			{:klass => 'foo',:width => 160,:height => 120},
+			@set.send(:parse_token,nil,'160*120',{:klass => 'foo'}),
 			'Set#parse_token should be able to parse dimension tokens'
 		)
 		assert_equal(
-			{:klass => 'Foo',:min => 1,:max => 32},
-			@set.send(:parse_token,nil,'1..32',{:klass => 'Foo'}),
+			{:klass => 'foo',:min => 1,:max => 32},
+			@set.send(:parse_token,nil,'1..32',{:klass => 'foo'}),
 			'Set#parse_token should be able to parse range tokens'
 		)
 
 		assert_equal(
-			{:klass => 'Foo',:options => ['foo']},
-			@set.send(:parse_token,',','foo',{:klass => 'Foo'}),
+			{:klass => 'foo',:options => ['foo']},
+			@set.send(:parse_token,',','foo',{:klass => 'foo'}),
 			'Set#parse_token should be able to parse option tokens'
 		)
 		assert_equal(
-			{:klass => 'Foo',:options => ['foo','bar']},
-			@set.send(:parse_token,',','bar',{:klass => 'Foo',:options => ['foo']}),
+			{:klass => 'foo',:options => ['foo','bar']},
+			@set.send(:parse_token,',','bar',{:klass => 'foo',:options => ['foo']}),
 			'Set#parse_token should be able to parse option tokens'
 		)
 
 		assert_equal(
-			{:klass => 'Foo',:default => 'foo'},
-			@set.send(:parse_token,':','foo',{:klass => 'Foo'}),
+			{:klass => 'foo',:default => 'bar'},
+			@set.send(:parse_token,':','bar',{:klass => 'foo'}),
 			'Set#parse_token should be able to parse default tokens'
 		)
 		assert_equal(
-			{:klass => 'Foo',:defaults => ['foo','bar']},
-			@set.send(:parse_token,';','bar',{:klass => 'Foo',:defaults => ['foo']}),
+			{:klass => 'foo',:defaults => ['bar','baz']},
+			@set.send(:parse_token,';','baz',{:klass => 'foo',:defaults => ['bar']}),
 			'Set#parse_token should be able to parse defaults tokens'
 		)
 	end
@@ -165,13 +170,13 @@ _html
 	def test_parse_options
 		result = @set.send(:parse_html,'hello foo:(bar ,"baz baz","world",hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should be able to parse a sequence of CSV'
 		)
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should be able to parse a sequence of CSV'
 		)
@@ -180,19 +185,19 @@ _html
 	def test_parse_options_with_spaces
 		result = @set.send(:parse_html,'hello foo:(bar world, qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:options => ['world','qux']}},
+			{'foo' => {:klass => 'bar',:options => ['world','qux']}},
 			result[:item],
 			'Set#parse_html should allow spaces after the comma'
 		)
 		result = @set.send(:parse_html,'hello foo:(bar world ,qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:options => ['qux'],:tokens => ['world']}},
+			{'foo' => {:klass => 'bar',:options => ['qux'],:tokens => ['world']}},
 			result[:item],
 			'Set#parse_html should not allow spaces before the comma'
 		)
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz", "world", hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should allow spaces after the comma'
 		)
@@ -205,7 +210,7 @@ hello foo:(bar
 	qux)
 _eos
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should allow spaces after the comma'
 		)
@@ -214,13 +219,13 @@ _eos
 	def test_parse_defaults
 		result = @set.send(:parse_html,'hello foo:(bar ;"baz baz";"world";hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz";"world";hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
@@ -229,19 +234,19 @@ _eos
 	def test_parse_defaults_with_spaces
 		result = @set.send(:parse_html,'hello foo:(bar world; qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:defaults => ['world','qux']}},
+			{'foo' => {:klass => 'bar',:defaults => ['world','qux']}},
 			result[:item],
 			'Set#parse_html should allow spaces after the semicolon'
 		)
 		result = @set.send(:parse_html,'hello foo:(bar world ;qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:defaults => ['qux'],:tokens => ['world']}},
+			{'foo' => {:klass => 'bar',:defaults => ['qux'],:tokens => ['world']}},
 			result[:item],
 			'Set#parse_html should not allow spaces before the semicolon'
 		)
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz"; "world"; hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should allow spaces after the comma'
 		)
@@ -254,7 +259,7 @@ hello foo:(bar
 	qux)
 _eos
 		assert_equal(
-			{'foo' => {:klass => 'Bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set#parse_html should allow spaces after the comma'
 		)
@@ -263,7 +268,7 @@ _eos
 	def test_parse_duplicate_tag
 		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo)!')
 		assert_equal(
-			{'foo' => {:klass => 'Boo'}},
+			{'foo' => {:klass => 'boo'}},
 			result[:item],
 			'definition tags are overridden by a preceding definition'
 		)
@@ -279,7 +284,7 @@ _eos
 <ul class="sofa-blog" id="foo"><li>hello</li></ul>
 _html
 		assert_equal(
-			{'foo' => {:klass => 'List',:workflow => 'blog',:html => '<li>hello</li>'}},
+			{'foo' => {:klass => 'list',:workflow => 'blog',:html => '<li>hello</li>'}},
 			result[:item],
 			'Set#parse_html should be able to parse block sofa tags'
 		)
@@ -297,7 +302,7 @@ _html
 </ul>
 _html
 		assert_equal(
-			{'foo' => {:klass => 'List',:workflow => 'blog',:html => "\t<li>hello</li>\n"}},
+			{'foo' => {:klass => 'list',:workflow => 'blog',:html => "\t<li>hello</li>\n"}},
 			result[:item],
 			'Set#parse_html should be able to parse block sofa tags'
 		)
@@ -313,7 +318,7 @@ _html
 hello <ul class="sofa-blog" id="foo"><li>hello</li></ul> world
 _html
 		assert_equal(
-			{'foo' => {:klass => 'List',:workflow => 'blog',:html => '<li>hello</li>'}},
+			{'foo' => {:klass => 'list',:workflow => 'blog',:html => '<li>hello</li>'}},
 			result[:item],
 			'Set#parse_html should be able to parse block sofa tags'
 		)
@@ -335,7 +340,7 @@ _html
 </ul>
 _html
 		assert_equal(
-			{'foo' => {:klass => 'List',:workflow => 'blog',:html => <<'_html'}},
+			{'foo' => {:klass => 'list',:workflow => 'blog',:html => <<'_html'}},
 	<li>
 		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
 	</li>
@@ -367,8 +372,8 @@ _html
 _html
 		assert_equal(
 			{
-				'title' => {:klass => 'Text',:tokens => ['32']},
-				'foo'   => {:klass => 'List',:workflow => 'blog',:html => <<'_html'},
+				'title' => {:klass => 'text',:tokens => ['32']},
+				'foo'   => {:klass => 'list',:workflow => 'blog',:html => <<'_html'},
 		<li>
 			subject:(text 64)
 			body:(textarea 72*10)

@@ -13,7 +13,8 @@ class Sofa::Field
 	Dir['./field/*.rb'].sort.each {|file| require file }
 
 	def self.instance(meta = {})
-		meta[:klass].to_s.split(/::/).inject(self) {|c,name|
+		meta[:klass].to_s.split(/-/).inject(self) {|c,name|
+			name = name.capitalize
 			c.const_get(name)
 		}.new meta
 	end

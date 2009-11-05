@@ -26,9 +26,9 @@ class TC_Set < Test::Unit::TestCase
 _html
 		assert_equal(
 			{
-				'title' => {:klass => 'Text',:tokens => ['32']},
+				'title' => {:klass => 'text',:tokens => ['32']},
 				'foo'   => {
-					:klass    => 'List',
+					:klass    => 'list',
 					:workflow => 'blog',
 					:html     => <<'_html',
 		<li>
@@ -53,26 +53,38 @@ _html
 	</ul>
 </html>
 _html
+		title = set.item('title')
 		assert_instance_of(
 			Sofa::Field::Text,
-			set.item('title'),
+			title,
 			'Set#item() should return the child item on the fly'
 		)
-		assert_instance_of(
-			Sofa::Field::List,
-			set.item('main'),
-			'Set#item() should return the child item on the fly'
+		assert_equal(
+			title.object_id,
+			set.item('title').object_id,
+			'Set#item() should cache the loaded items'
 		)
-
 		assert_equal(
 			32,
-			set.item('title')[:size],
+			title[:size],
+			'Set#item() should load the metas of child items'
+		)
+
+		main = set.item('main')
+		assert_instance_of(
+			Sofa::Field::List,
+			main,
 			'Set#item() should return the child item on the fly'
+		)
+		assert_equal(
+			main.object_id,
+			set.item('main').object_id,
+			'Set#item() should cache the loaded items'
 		)
 		assert_equal(
 			"\t\t<li>hi</li>\n",
-			set.item('main')[:html],
-			'Set#item() should return the child item on the fly'
+			main[:html],
+			'Set#item() should load the metas of child items'
 		)
 	end
 

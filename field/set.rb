@@ -14,7 +14,6 @@ class Sofa::Field::Set < Sofa::Field
 		@item_object = {}
 	end
 
-	private
 
 def val
 	inject({}) {|v,item|
@@ -23,13 +22,24 @@ def val
 	}
 end
 
+	private
+
+	def _post(action,v = {})
+		each {|item|
+			id = item[:id]
+			item.post(action,v[id]) if (
+				action == :load_default || action == :create || v.has_key?(id)
+			)
+		}
+	end
+
 	def collect_item(conditions = :all,&block)
 		items = my[:item].keys
 		unless conditions == :all
 			items &= conditions.to_a # select item(s) by id
 		end
 		items.collect {|id|
-			item = @item_object[id] ||= Sofa::Field.instance(my[:item][id])
+			item = @item_object[id] ||= Sofa::Field.instance(my[:item][id].merge :id => id)
 			block ? block.call(item) : item
 		}
 	end
@@ -122,5 +132,35 @@ end
 		contents.gsub(/(\A\n+|[\t ]*<\/#{tag}>\z)/,'')
 	end
 
+	def val_cast(v)
+		v.is_a?(::Hash) ? v : {:self => v}
+	end
+
 end
+
+
+__END__
+
+
+
+	def _post(action,v = {})
+		each {|item|
+			id = item[:id]
+			item.post(action,v[id]) if (
+				action == 'load_default' || action == 'create' || v.has_key?(id)
+			)
+		}
+	end
+
+	def _commit(q,option)
+		q.keys.sort.each {|id|
+			item = q[id]
+			item.commit(option)
+		}
+		q
+	end
+
+	def val_cast(v)
+		v.is_a?(::Hash) ? v : {:self => v}
+	end
 

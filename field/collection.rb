@@ -44,3 +44,68 @@ def each(&block)
 end
 
 end
+
+
+__END__
+
+	def modified?
+		(!queue.empty? || @queue) ? true : false
+	end
+
+	def queue
+		@item_object.keys.inject({}) {|h,id|
+			h[id] = @item_object[id] if @item_object[id].modified?
+			h
+		}
+	end
+
+	def errors
+		errors = {}
+		@item_object.each_pair {|id,item|
+			errors[id] = item.errors if item.errors
+		}
+		errors unless errors.empty?
+	end
+
+
+	def commit(option = {})
+		return self unless modified?
+
+		if valid?
+			if persistent? || option[:item_steps] || !my[:parent]
+				option[:item_steps] ||= []
+				item = item(option[:item_steps].shift) if option[:item_steps].first
+				q    = item ? {item[:id] => item} : queue()
+				@result = _commit(q,option)
+				@queue  = nil # for create/delete
+			else
+				persistent_commit
+			end
+		else
+			@result = {}
+		end
+		self
+	end
+
+	def collect(&block)
+		collect_item(:all,&block)
+	end
+
+	def each(&block)
+		collect_item(:all).each &block
+	end
+
+	def traverse(item = self,&block)
+		base = self
+		name = item[:full_name][/^#{base[:full_name]}-(.+)/,1]
+		result = block_given? ? yield(name,item) : item
+		if item.is_a?(Field::Collection) && result != :skip
+			[
+				result,
+				item.collect {|sub_item| base.traverse(sub_item,&block) }
+			]
+		else
+			result
+		end
+	end
+

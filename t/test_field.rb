@@ -170,7 +170,6 @@ class TC_Field < Test::Unit::TestCase
 
 	def test_get_by_tmpl
 		@f.instance_variable_set(:@val,'hello')
-
 		@f[:tmpl_foo] = 'foo $() foo'
 		assert_equal(
 			'foo hello foo',

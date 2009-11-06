@@ -88,4 +88,32 @@ _html
 		)
 	end
 
+	def test_load_default
+		set = Sofa::Field::Set.new(:html => <<'_html')
+<li>
+	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+</li>
+_html
+		set.load_default
+		assert_equal(
+			'nobody',
+			set.item('name').val,
+			'Set#load_default should load all the child items with their [:default]'
+		)
+		assert_equal(
+			'peek a boo',
+			set.item('comment').val,
+			'Set#load_default should load all the child items with their [:default]'
+		)
+	end
+
+	def tttt
+		set.post(:load,'name' => 'frank','comment' => 'cut the schmuck some slack.')
+		assert_equal(
+			'frank',
+			set.item('name').val,
+			'Set#post should distribute given vals to the child items'
+		)
+	end
+
 end

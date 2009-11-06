@@ -167,4 +167,50 @@ _html
 		)
 	end
 
+	def test_update
+		set = Sofa::Field::Set.new(:html => <<'_html')
+<li>
+	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+</li>
+_html
+		set.update('name' => 'carl')
+		assert_equal(
+			{'name' => 'carl'},
+			set.val,
+			'Set#update should not touch the item for which value is not given'
+		)
+		set.update('name' => 'frank','comment' => 'cut the schmuck some slack.')
+		assert_equal(
+			{'name' => 'frank','comment' => 'cut the schmuck some slack.'},
+			set.val,
+			'Set#udpate should load the items at once'
+		)
+		set.update('name' => 'carl')
+		assert_equal(
+			{'name' => 'carl','comment' => 'cut the schmuck some slack.'},
+			set.val,
+			'Set#update should not touch the item for which value is not given'
+		)
+	end
+
+	def test_delete
+		set = Sofa::Field::Set.new(:html => <<'_html')
+<li>
+	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+</li>
+_html
+		set.item('name').load 'foo'
+
+		set.delete
+		assert(
+			set.deleted?,
+			'Set#delete should set deleted?() to true'
+		)
+		assert_equal(
+			{'name' => 'foo'},
+			set.val,
+			'Set#delete should not touch any item'
+		)
+	end
+
 end

@@ -48,7 +48,7 @@ class Sofa::Field
 
 	def get(arg = {})
 		action = arg[:action]
-		action = arg[:action] = 'read' unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)
+		action = 'read' unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)
 		if tmpl = my[:"tmpl_#{action}"]
 			_get_by_tmpl(arg,tmpl)
 		else

@@ -124,6 +124,32 @@ _html
 			set.get,
 			'Set#get should return the html by [:tmpl]'
 		)
+
+		comment = set.item('comment')
+		def comment._get_foo(arg)
+			'foo foo'
+		end
+		assert_equal('foo foo',set.item('comment').get(:action => 'foo'))
+		assert_equal(
+			<<'_html',
+<li>
+	nobody: foo foo
+</li>
+_html
+			set.get(:action => 'foo'),
+			'Set#get should pass :action to the child items'
+		)
+	end
+
+	def test_recursive_tmpl
+		set = Sofa::Field::Set.new(:html => <<'_html')
+<li>$()</li>
+_html
+		assert_nothing_raised(
+			'Set#get should avoid recursive reference to [:tmpl]'
+		) {
+			set.get
+		}
 	end
 
 	def test_load_default

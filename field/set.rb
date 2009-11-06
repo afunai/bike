@@ -14,6 +14,10 @@ class Sofa::Field::Set < Sofa::Field
 		@item_object = {}
 	end
 
+	def get(arg = {})
+		_get_by_tmpl(arg,my[:tmpl])
+	end
+
 	private
 
 	def _val
@@ -21,10 +25,6 @@ class Sofa::Field::Set < Sofa::Field
 			v[item[:id]] = item.val unless item.empty?
 			v
 		}
-	end
-
-	def _get(arg)
-		_get_by_tmpl(arg,my[:tmpl])
 	end
 
 	def _post(action,v = {})

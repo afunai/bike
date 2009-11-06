@@ -108,6 +108,24 @@ _html
 		)
 	end
 
+	def test_get
+		set = Sofa::Field::Set.new(:html => <<'_html')
+<li>
+	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+</li>
+_html
+		set.load_default
+		assert_equal(
+			<<'_html',
+<li>
+	nobody: peek a boo
+</li>
+_html
+			set.get,
+			'Set#get should return the html by [:tmpl]'
+		)
+	end
+
 	def test_load_default
 		set = Sofa::Field::Set.new(:html => <<'_html')
 <li>

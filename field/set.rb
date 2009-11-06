@@ -14,14 +14,18 @@ class Sofa::Field::Set < Sofa::Field
 		@item_object = {}
 	end
 
-def val
-	inject({}) {|v,item|
-		v[item[:id]] = item.val unless item.empty?
-		v
-	}
-end
-
 	private
+
+	def _val
+		inject({}) {|v,item|
+			v[item[:id]] = item.val unless item.empty?
+			v
+		}
+	end
+
+	def _get(arg)
+		_get_by_tmpl(arg,my[:tmpl])
+	end
 
 	def _post(action,v = {})
 		each {|item|

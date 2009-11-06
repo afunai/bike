@@ -94,6 +94,10 @@ class Sofa::Field
 		errors.empty?
 	end
 
+	def empty?
+		val.to_s == ''
+	end
+
 	def errors
 		[]
 	end

@@ -6,7 +6,7 @@
 class Sofa::Field::Text < Sofa::Field
 
 	def initialize(meta = {})
-		meta[:size] = $&.to_i if meta[:tokens].first =~ /^\d+$/
+		meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
 		super
 	end
 

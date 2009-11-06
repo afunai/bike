@@ -35,13 +35,13 @@ def errors
 	errors unless errors.empty?
 end
 
-def collect(&block)
-	collect_item(:all,&block)
-end
+	def collect(&block)
+		collect_item(:all,&block)
+	end
 
-def each(&block)
-	collect_item(:all).each &block
-end
+	def each(&block)
+		collect_item(:all).each &block
+	end
 
 end
 

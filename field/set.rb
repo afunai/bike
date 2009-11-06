@@ -14,10 +14,9 @@ class Sofa::Field::Set < Sofa::Field
 		@item_object = {}
 	end
 
-
 def val
 	inject({}) {|v,item|
-		v[item[:id]] = item.val if item_has_val?(item) && !item.persistent?
+		v[item[:id]] = item.val unless item.empty?
 		v
 	}
 end

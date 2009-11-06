@@ -88,6 +88,26 @@ _html
 		)
 	end
 
+	def test_val
+		set = Sofa::Field::Set.new(:html => <<'_html')
+<li>
+	name:(text): comment:(text)
+</li>
+_html
+		set.item('name').load 'foo'
+		assert_equal(
+			{'name' => 'foo'},
+			set.val,
+			'Set#val should not include the value of the empty item'
+		)
+		set.item('comment').load 'bar'
+		assert_equal(
+			{'name' => 'foo','comment' => 'bar'},
+			set.val,
+			'Set#val should not include the value of the empty item'
+		)
+	end
+
 	def test_load_default
 		set = Sofa::Field::Set.new(:html => <<'_html')
 <li>

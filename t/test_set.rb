@@ -127,12 +127,43 @@ _html
 		)
 	end
 
-	def tttt
-		set.post(:load,'name' => 'frank','comment' => 'cut the schmuck some slack.')
+	def test_load
+		set = Sofa::Field::Set.new(:html => <<'_html')
+<li>
+	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+</li>
+_html
+		set.load('name' => 'carl')
 		assert_equal(
-			'frank',
-			set.item('name').val,
-			'Set#post should distribute given vals to the child items'
+			{'name' => 'carl'},
+			set.val,
+			'Set#load should not touch the item for which value is not given'
+		)
+		set.load('name' => 'frank','comment' => 'cut the schmuck some slack.')
+		assert_equal(
+			{'name' => 'frank','comment' => 'cut the schmuck some slack.'},
+			set.val,
+			'Set#load should load the items at once'
+		)
+		set.load('name' => 'carl')
+		assert_equal(
+			{'name' => 'carl','comment' => 'cut the schmuck some slack.'},
+			set.val,
+			'Set#load should not touch the item for which value is not given'
+		)
+	end
+
+	def test_create
+		set = Sofa::Field::Set.new(:html => <<'_html')
+<li>
+	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+</li>
+_html
+		set.create('name' => 'carl')
+		assert_equal(
+			{'name' => 'carl'},
+			set.val,
+			'Set#create should not touch the item for which value is not given'
 		)
 	end
 

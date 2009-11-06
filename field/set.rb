@@ -56,15 +56,26 @@ class Sofa::Field::Set < Sofa::Field
 			if s.scan /(\w+):\(/m
 				tmpl << "$(#{s[1]})"
 				item[s[1]] = parse_tokens(s)
-			elsif s.scan /<(\w+)(.+?class="[^"]*?sofa-(\w+).+?)>/
-				tag = s[1]
-				id  = s[2].match(/id="(.+?)"/)[1]
+			elsif s.scan /<(\w+).+?class="[^"]*?sofa-(\w+).+?>/
+				tag      = s[0]
+				name     = s[1]
+				workflow = s[2]
+				id       = tag.match(/id="(.+?)"/)[1]
 
 				tmpl << "$(#{id})"
+
+				inner_html = parse_inner_html(s,name)
+				if inner_html.sub(/<tbody.*?<\/tbody>/im,'$()')
+				else
+					html = <<_html
+#{tag}
+</#{tag}>
+_html
+				end
 				item[id] = {
 					:klass    => 'list',
-					:workflow => s[3],
-					:html     => parse_inner_html(s,tag),
+					:workflow => workflow,
+					:html     => inner_html,
 				}
 			else
 				tmpl << s.scan(/.+?(?=\w|<|\z)/m)
@@ -124,15 +135,15 @@ class Sofa::Field::Set < Sofa::Field
 		meta
 	end
 
-	def parse_inner_html(s,tag)
+	def parse_inner_html(s,name)
 		contents = ''
 		gen = 1
 		until s.eos? || (gen < 1)
-			contents << s.scan(/(.*?)(<#{tag}|<\/#{tag}>|\z)/m)
-			gen += 1 if s[2] == "<#{tag}"
-			gen -= 1 if s[2] == "</#{tag}>"
+			contents << s.scan(/(.*?)(<#{name}|<\/#{name}>|\z)/m)
+			gen += 1 if s[2] == "<#{name}"
+			gen -= 1 if s[2] == "</#{name}>"
 		end
-		contents.gsub(/(\A\n+|[\t ]*<\/#{tag}>\z)/,'')
+		contents.gsub(/(\A\n+|[\t ]*<\/#{name}>\z)/,'')
 	end
 
 	def val_cast(v)

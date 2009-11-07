@@ -6,7 +6,7 @@
 class Sofa::Field::Set::Folder < Sofa::Field::Set
 
 	def initialize(meta = {})
-		meta[:html] = load_html(meta[:dir]) || ''
+		meta[:html] = load_html meta
 		super
 	end
 
@@ -16,7 +16,11 @@ class Sofa::Field::Set::Folder < Sofa::Field::Set
 # seek the real directory, then @item_object
 	end
 
-	def load_html(dir)
+	def load_html(meta)
+		meta[:dir] = meta[:parent] ? File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
+		File.open(File.join Sofa::ROOT_DIR,meta[:dir],'_.html') {|f|
+			f.read
+		}
 	end
 
 end

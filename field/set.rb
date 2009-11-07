@@ -42,7 +42,9 @@ class Sofa::Field::Set < Sofa::Field
 			items &= conditions.to_a # select item(s) by id
 		end
 		items.collect {|id|
-			item = @item_object[id] ||= Sofa::Field.instance(my[:item][id].merge :id => id)
+			item = @item_object[id] ||= Sofa::Field.instance(
+				my[:item][id].merge(:id => id,:parent => self)
+			)
 			block ? block.call(item) : item
 		}
 	end

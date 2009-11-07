@@ -5,6 +5,8 @@ class Sofa
 
 	require 'field'
 
+ROOT_DIR = './t/data' # TODO
+
 	get %r{(/.*/)(.*).(html)} do
 		<<_html	
 <h1>Hello cruel world!</h1>

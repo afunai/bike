@@ -266,14 +266,14 @@ _eos
 	end
 
 	def test_parse_duplicate_tag
-		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo)!')
+		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo) $(foo)!')
 		assert_equal(
 			{'foo' => {:klass => 'boo'}},
 			result[:item],
 			'definition tags are overridden by a preceding definition'
 		)
 		assert_equal(
-			'hello $(foo) world $(foo)!',
+			'hello $(foo) world $(foo) $(foo)!',
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'
 		)
@@ -352,6 +352,43 @@ _tmpl
 		assert_equal(
 			<<'_html',
 hello $(foo) world
+_html
+			result[:tmpl],
+			'Set#parse_html[:tmpl] should be a proper template'
+		)
+	end
+
+	def test_block_tags_with_tbody
+		result = @set.send(:parse_html,<<'_html')
+hello
+	<table class="sofa-blog" id="foo">
+		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
+		<tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+	</table>
+world
+_html
+		assert_equal(
+			{
+				'foo' => {
+					:klass    => 'list',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl',
+<table class="sofa-blog" id="foo">		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
+$()</table>
+_tmpl
+					:set_html => <<'_tmpl',
+		<tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+_tmpl
+				},
+			},
+			result[:item],
+			'Set#parse_html should aware of <tbody>'
+		)
+		assert_equal(
+			<<'_html',
+hello
+	$(foo)
+world
 _html
 			result[:tmpl],
 			'Set#parse_html[:tmpl] should be a proper template'

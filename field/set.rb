@@ -60,22 +60,23 @@ class Sofa::Field::Set < Sofa::Field
 				tag      = s[0]
 				name     = s[1]
 				workflow = s[2]
-				id       = tag.match(/id="(.+?)"/)[1]
+				id       = tag[/id="(.+?)"/,1]
 
 				tmpl << "$(#{id})"
 
 				inner_html = parse_inner_html(s,name)
-				if inner_html.sub(/<tbody.*?<\/tbody>/im,'$()')
+				if inner_html.sub!(/^\s*<tbody.*?<\/tbody>\n?/im,'$()')
+					list_tmpl = "#{tag}#{inner_html}</#{name}>\n"
+					set_html  = $&
 				else
-					html = <<_html
-#{tag}
-</#{tag}>
-_html
+					list_tmpl = "#{tag}$()</#{name}>\n"
+					set_html  = inner_html
 				end
 				item[id] = {
 					:klass    => 'list',
 					:workflow => workflow,
-					:html     => inner_html,
+					:tmpl     => list_tmpl,
+					:set_html => set_html,
 				}
 			else
 				tmpl << s.scan(/.+?(?=\w|<|\z)/m)

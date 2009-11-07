@@ -284,7 +284,16 @@ _eos
 <ul class="sofa-blog" id="foo"><li>hello</li></ul>
 _html
 		assert_equal(
-			{'foo' => {:klass => 'list',:workflow => 'blog',:html => '<li>hello</li>'}},
+			{
+				'foo' => {
+					:klass    => 'list',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl',
+<ul class="sofa-blog" id="foo">$()</ul>
+_tmpl
+					:set_html => '<li>hello</li>',
+				}
+			},
 			result[:item],
 			'Set#parse_html should be able to parse block sofa tags'
 		)
@@ -302,7 +311,16 @@ _html
 </ul>
 _html
 		assert_equal(
-			{'foo' => {:klass => 'list',:workflow => 'blog',:html => "\t<li>hello</li>\n"}},
+			{
+				'foo' => {
+					:klass    => 'list',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl',
+<ul class="sofa-blog" id="foo">$()</ul>
+_tmpl
+					:set_html => "\t<li>hello</li>\n",
+				},
+			},
 			result[:item],
 			'Set#parse_html should be able to parse block sofa tags'
 		)
@@ -318,7 +336,16 @@ _html
 hello <ul class="sofa-blog" id="foo"><li>hello</li></ul> world
 _html
 		assert_equal(
-			{'foo' => {:klass => 'list',:workflow => 'blog',:html => '<li>hello</li>'}},
+			{
+				'foo' => {
+					:klass    => 'list',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl',
+<ul class="sofa-blog" id="foo">$()</ul>
+_tmpl
+					:set_html => '<li>hello</li>',
+				},
+			},
 			result[:item],
 			'Set#parse_html should be able to parse block sofa tags'
 		)
@@ -340,11 +367,20 @@ _html
 </ul>
 _html
 		assert_equal(
-			{'foo' => {:klass => 'list',:workflow => 'blog',:html => <<'_html'}},
+			{
+				'foo' => {
+					:klass    => 'list',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl',
+<ul class="sofa-blog" id="foo">$()</ul>
+_tmpl
+					:set_html => <<'_html',
 	<li>
 		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
 	</li>
 _html
+				},
+			},
 			result[:item],
 			'Set#parse_html should be able to parse nested block sofa tags'
 		)
@@ -373,13 +409,20 @@ _html
 		assert_equal(
 			{
 				'title' => {:klass => 'text',:tokens => ['32']},
-				'foo'   => {:klass => 'list',:workflow => 'blog',:html => <<'_html'},
+				'foo'   => {
+					:klass => 'list',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl',
+<ul id="foo" class="sofa-blog">$()</ul>
+_tmpl
+					:set_html => <<'_html',
 		<li>
 			subject:(text 64)
 			body:(textarea 72*10)
 			<ul><li>qux</li></ul>
 		</li>
 _html
+				},
 			},
 			result[:item],
 			'Set#parse_html should be able to parse combination of mixed sofa tags'

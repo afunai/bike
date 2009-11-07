@@ -30,7 +30,10 @@ _html
 				'foo'   => {
 					:klass    => 'list',
 					:workflow => 'blog',
-					:html     => <<'_html',
+					:tmpl     => <<'_tmpl',
+<ul id="foo" class="sofa-blog">$()</ul>
+_tmpl
+					:set_html => <<'_html',
 		<li>
 			subject:(text 64)
 			body:(textarea 72*10)
@@ -83,7 +86,7 @@ _html
 		)
 		assert_equal(
 			"\t\t<li>hi</li>\n",
-			main[:html],
+			main[:set_html],
 			'Set#item() should load the metas of child items'
 		)
 	end

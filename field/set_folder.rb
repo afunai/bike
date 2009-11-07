@@ -3,12 +3,17 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
+require 'yaml'
+
 class Sofa::Field::Set::Folder < Sofa::Field::Set
 
 	def initialize(meta = {})
-		meta[:html] = load_html meta
+		meta[:dir]  = meta[:parent] ? File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
+		meta[:html] = load_html(meta[:dir],meta[:parent])
 		super
 		my[:item]['label'] = {:klass => 'text'}
+		my[:item]['owner'] = {:klass => 'text'}
+		load load_val(my[:dir],my[:parent])
 	end
 
 	private
@@ -24,14 +29,22 @@ class Sofa::Field::Set::Folder < Sofa::Field::Set
 		super
 	end
 
-	def load_html(meta)
-		meta[:dir] = meta[:parent] ? File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
-		html_file = File.join Sofa::ROOT_DIR,meta[:dir],'_.html'
+	def load_html(dir,parent)
+		html_file = File.join Sofa::ROOT_DIR,dir,'_.html'
 		if File.exists? html_file
 			File.open(html_file) {|f| f.read }
-		elsif meta[:parent]
-			meta[:parent][:html]
+		elsif parent
+			parent[:html]
 		end
+	end
+
+	def load_val(dir,parent)
+		val_file = File.join Sofa::ROOT_DIR,"#{dir}.yaml"
+		v = File.exists?(val_file) ? File.open(val_file) {|f| YAML.load f.read } : {}
+		parent ? {
+			'label' => parent.val('label'),
+			'owner' => parent.val('owner'),
+		}.merge(v) : v
 	end
 
 end

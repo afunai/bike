@@ -11,8 +11,8 @@ class Sofa::Field::Set::Folder < Sofa::Field::Set
 		meta[:dir]  = meta[:parent] ? File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
 		meta[:html] = load_html(meta[:dir],meta[:parent])
 		super
-		my[:item]['label'] = {:klass => 'text'}
-		my[:item]['owner'] = {:klass => 'text'}
+		my[:item]['_label'] = {:klass => 'text'}
+		my[:item]['_owner'] = {:klass => 'text'}
 		load load_val(my[:dir],my[:parent])
 	end
 
@@ -42,8 +42,8 @@ class Sofa::Field::Set::Folder < Sofa::Field::Set
 		val_file = File.join Sofa::ROOT_DIR,"#{dir}.yaml"
 		v = File.exists?(val_file) ? File.open(val_file) {|f| YAML.load f.read } : {}
 		parent ? {
-			'label' => parent.val('label'),
-			'owner' => parent.val('owner'),
+			'_label' => parent.val('_label'),
+			'_owner' => parent.val('_owner'),
 		}.merge(v) : v
 	end
 

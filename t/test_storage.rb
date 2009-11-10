@@ -43,4 +43,14 @@ class TC_Storage < Test::Unit::TestCase
 		)
 	end
 
+	def test_select
+	end
+
 end
+
+
+__END__
+
+List.val == queue
+storage.item should first look in list.val, then the 'real' storage.
+

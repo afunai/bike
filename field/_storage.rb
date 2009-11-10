@@ -22,16 +22,41 @@ class Sofa::Storage
 		@list = list
 	end
 
-def select(conds) #=> ids
+def select(conds = {})
+	base_entries = _select(conds)
+	base_entries = _sort(conds,base_entries)
+	base_entries = _paginate(conds,base_entries)
 end
 
-def load(id)
+def _select(conds)
+	if conds[:id]
+		_select_by_id(conds) | (list.queue.keys & conds[:id])
+	elsif conds[:q]
+		_select_by_q(conds)
+	elsif conds[:d] || conds[:y]
+		_select_by_d(conds)
+	else
+		_select_all(conds) | list.queue.keys
+	end
 end
 
-def save(id,val)
+def load(id) #=> item
 end
 
-def remove(id)
+def save(orig_id,item)
+end
+
+def delete(id)
+end
+
+if nil
+def list.commit(type = :all)
+	if @storage.is_a? Sofa::Storage::Val
+		queue.each {|id,item| item.commit(:val) && @storage.save(id,item) }
+	elsif type == :all
+		queue.each {|id,item| item.commit(:val) && @storage.save(id,item) && item.commit(:all) }
+	end
+end
 end
 
 	private

@@ -27,6 +27,13 @@ def item(*item_steps)
 	end
 end
 
+def queue
+	@item_object.keys.inject({}) {|h,id|
+		h[id] = @item_object[id] if @item_object[id].modified?
+		h
+	}
+end
+
 def errors
 	errors = {}
 	@item_object.each_pair {|id,item|
@@ -66,7 +73,6 @@ __END__
 		}
 		errors unless errors.empty?
 	end
-
 
 	def commit(option = {})
 		return self unless modified?

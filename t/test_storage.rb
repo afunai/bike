@@ -6,27 +6,40 @@
 class TC_Storage < Test::Unit::TestCase
 
 	def setup
-		@list = Sofa::Field::List.new(
-			:id       => 'main',
-			:klass    => 'list',
-			:parent   => Sofa::Field.instance(:id => 'foo',:klass => 'set-folder'),
-			:set_html => <<'_html'
-	<li>
-		name:(text 32)
-		comment:(text 64)
-	</li>
-_html
+		@list = Sofa::Field.instance(
+			:klass  => 'list',
+			:id     => 'main',
+			:parent => Sofa::Field.instance(:id => 'foo',:klass => 'set-folder')
 		)
 	end
 
 	def teardown
 	end
 
-	def test_instance
-		assert_kind_of(
-			Sofa::Storage,
+	def test_file_instance
+		assert_instance_of(
+			Sofa::Storage::File,
 			Sofa::Storage.instance(@list),
-			'Storage.instance should return a storage instance according to the list'
+			'Storage.instance should return a File instance when the list is right under the folder'
+		)
+
+		child_list = Sofa::Field.instance(
+			:klass  => 'list',
+			:parent => @list
+		)
+		assert_instance_of(
+			Sofa::Storage::Val,
+			Sofa::Storage.instance(child_list),
+			'Storage.instance should return a Val instance when the list is apart from the folder'
+		)
+
+		orphan_list = Sofa::Field.instance(
+			:klass  => 'list'
+		)
+		assert_instance_of(
+			Sofa::Storage::Val,
+			Sofa::Storage.instance(orphan_list),
+			'Storage.instance should return a Val instance when the list has no parent folder'
 		)
 	end
 

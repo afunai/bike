@@ -22,6 +22,18 @@ class Sofa::Storage
 		@list = list
 	end
 
+def select(conds) #=> ids
+end
+
+def load(id)
+end
+
+def save(id,val)
+end
+
+def remove(id)
+end
+
 	private
 
 end

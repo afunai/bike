@@ -46,6 +46,12 @@ class Sofa::Field
 		item_steps.empty? ? self : nil # scalar has no item
 	end
 
+	def folder
+		f = self
+		f = f[:parent] until f.nil? || f.is_a?(Sofa::Field::Set::Folder)
+		f
+	end
+
 	def get(arg = {})
 		action = arg[:action]
 		action = 'read' unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)

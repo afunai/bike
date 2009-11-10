@@ -6,6 +6,9 @@ class Sofa
 	require 'field'
 
 ROOT_DIR = './t/data' # TODO
+STORAGE  = {
+	:klass => 'File',
+}
 
 	get %r{(/.*/)(.*).(html)} do
 		<<_html	

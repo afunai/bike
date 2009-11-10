@@ -7,7 +7,9 @@ class TC_List < Test::Unit::TestCase
 
 	def setup
 		@list = Sofa::Field::List.new(
+			:id       => 'main',
 			:klass    => 'list',
+			:parent   => Sofa::Field.instance(:id => 'foo',:klass => 'set-folder'),
 			:workflow => 'blog',
 			:tmpl     => <<'_tmpl',
 <ul id="foo" class="sofa-blog">
@@ -25,11 +27,19 @@ _html
 	def teardown
 	end
 
+def ptest_storage
+	assert_instance_of(
+		Sofa::Storage,
+		@list.instance_variable_get(:@storage),
+		'List#instance should load an apropriate storage for the list'
+	)
+end
+
 def test_item
 	assert_instance_of(
-		Sofa::Field::Text,
-		title,
-		'list#item() should return the child item on the fly'
+		Sofa::Field::Set,
+		@list.item('091107_0001'),
+		'list#item() should return the child set in the storage'
 	) if nil
 end
 

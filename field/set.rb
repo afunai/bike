@@ -36,11 +36,9 @@ class Sofa::Field::Set < Sofa::Field
 		}
 	end
 
-	def collect_item(conditions = :all,&block)
+	def collect_item(conds = {},&block)
 		items = my[:item].keys
-		unless conditions == :all
-			items &= conditions.to_a # select item(s) by id
-		end
+		items &= conds[:id].to_a if conds[:id] # select item(s) by id
 		items.collect {|id|
 			item = @item_object[id] ||= Sofa::Field.instance(
 				my[:item][id].merge(:id => id,:parent => self)

@@ -19,7 +19,7 @@ class TC_Storage < Test::Unit::TestCase
 	def test_file_instance
 		assert_instance_of(
 			Sofa::Storage::File,
-			Sofa::Storage.instance(@list),
+			@list.storage,
 			'Storage.instance should return a File instance when the list is right under the folder'
 		)
 
@@ -29,7 +29,7 @@ class TC_Storage < Test::Unit::TestCase
 		)
 		assert_instance_of(
 			Sofa::Storage::Val,
-			Sofa::Storage.instance(child_list),
+			child_list.storage,
 			'Storage.instance should return a Val instance when the list is apart from the folder'
 		)
 
@@ -38,12 +38,22 @@ class TC_Storage < Test::Unit::TestCase
 		)
 		assert_instance_of(
 			Sofa::Storage::Val,
-			Sofa::Storage.instance(orphan_list),
+			orphan_list.storage,
 			'Storage.instance should return a Val instance when the list has no parent folder'
 		)
 	end
 
 	def test_select
+		list = Sofa::Field.instance :klass => 'list'
+		list.load [
+			{'1234' => {'foo' => 'bar'}},
+			{'1235' => {'foo' => 'baz'}},
+		]
+		assert_equal(
+			['1234'],
+			list.storage.select(:id => '1234'),
+			'Storage#select should return item ids that match given conds'
+		)
 	end
 
 end

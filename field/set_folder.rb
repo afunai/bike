@@ -18,13 +18,13 @@ class Sofa::Field::Set::Folder < Sofa::Field::Set
 
 	private
 
-	def collect_item(conditions = :all,&block)
+	def collect_item(conds = {},&block)
 		if (
-			conditions.is_a?(::String) &&
-			conditions =~ /\A\w+\z/ &&
-			File.directory?(File.join Sofa::ROOT_DIR,my[:dir],conditions)
+			conds[:id].is_a?(::String) &&
+			conds[:id] =~ /\A\w+\z/ &&
+			File.directory?(File.join Sofa::ROOT_DIR,my[:dir],conds[:id])
 		)
-			my[:item][conditions] = {:klass  => 'set-folder'}
+			my[:item][conds[:id]] = {:klass  => 'set-folder'}
 		end
 		super
 	end

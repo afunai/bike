@@ -22,26 +22,11 @@ class Sofa::Storage
 		@list = list
 	end
 
-def select(conds = {})
-	base_entries = _select(conds)
-	base_entries = _sort(conds,base_entries)
-	base_entries = _paginate(conds,base_entries)
-end
-
-def _select(conds)
-	if conds[:id]
-		_select_by_id(conds) | (list.queue.keys & conds[:id])
-	elsif conds[:q]
-		_select_by_q(conds)
-	elsif conds[:d] || conds[:y]
-		_select_by_d(conds)
-	else
-		_select_all(conds) | list.queue.keys
+	def select(conds = {})
+		entries = _select(conds)
+		entries = _sort(conds,entries)
+		entries = _paginate(conds,entries)
 	end
-end
-
-def load(id) #=> item
-end
 
 def save(orig_id,item)
 end
@@ -51,29 +36,47 @@ end
 
 	private
 
+	def _select(conds)
+		if conds[:id]
+			_select_by_id(conds) | (@list.instance_variable_get(:@item_object).keys & conds[:id].to_a)
+		elsif conds[:q]
+			_select_by_q(conds)
+		elsif conds[:d] || conds[:y]
+			_select_by_d(conds)
+		else
+			_select_all(conds) | @list.instance_variable_get(:@item_object).keys
+		end
+	end
+
+	def _sort(conds,entries)
+		entries
+	end
+
+	def _paginate(conds,entries)
+		entries
+	end
+
 end
 
 __END__
 
-def Field.commit(type = nil)
-	if type.nil? && folder
-		folder.commit(:all) # persistent commit
-	else
-		_commit(type)
-	end
+def Field.commit
+	f = self
+	f = f[:parent] until f.nil? || f.persistent?
+	f ? f._commit(:all) : self._commit(:all)
 end
 
 def Field._commit(type)
 	@queue = nil if valid?
 end
 def Set._commit(type)
-	queue.each {|id,item| item.commit(:val) }
+	queue.each {|id,item| item._commit(:val) }
 end
 def List._commit(type)
 	if @storage.is_a? Sofa::Storage::Val
-		queue.each {|id,item| item.commit(:val) && @storage.save(id,item) }
+		queue.each {|id,item| item._commit(:val) && @storage.save(id,item) }
 	elsif type == :all
-		queue.each {|id,item| item.commit(:val) && @storage.save(id,item) && item.commit(:all) }
+		queue.each {|id,item| item._commit(:val) && @storage.save(id,item) && item._commit(:all) }
 	end
 end
 

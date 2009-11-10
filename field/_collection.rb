@@ -21,7 +21,7 @@ def item(*item_steps)
 
 	id,*item_steps = item_steps
 
-	if id.is_a?(::String) && child = collect_item(id).first
+	if id.is_a?(::String) && child = collect_item(:id => id).first
 		item = item_steps.empty? ? child : child.item(*item_steps)
 		block_given? ? yield(item) : item
 	end
@@ -43,11 +43,11 @@ def errors
 end
 
 	def collect(&block)
-		collect_item(:all,&block)
+		collect_item({},&block)
 	end
 
 	def each(&block)
-		collect_item(:all).each &block
+		collect_item.each &block
 	end
 
 end

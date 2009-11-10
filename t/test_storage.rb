@@ -54,6 +54,11 @@ class TC_Storage < Test::Unit::TestCase
 			list.storage.select(:id => '1234'),
 			'Storage#select should return item ids that match given conds'
 		)
+		assert_equal(
+			['1234','1235'],
+			list.storage.select,
+			'Storage#select should return item ids that match given conds'
+		)
 	end
 
 end

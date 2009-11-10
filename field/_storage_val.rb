@@ -7,11 +7,11 @@ class Sofa::Storage::Val < Sofa::Storage
 
 	def initialize(list)
 		super
-		@val = []
+		@val = [] # this is the 'storage'.
 	end
 
 	def val(id = nil)
-		id ? @val.find {|row| row.keys.first == id } : @val
+		id ? @val.find {|row| row.keys.first == id }.values.first : @val
 	end
 
 	def post(action,v)
@@ -34,7 +34,7 @@ class Sofa::Storage::Val < Sofa::Storage
 	end
 
 	def _select_all(conds)
-		val.keys
+		val.collect {|row| row.keys.first }
 	end
 
 end

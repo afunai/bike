@@ -21,14 +21,14 @@ class Sofa::Field::List < Sofa::Field
 		@storage.val
 	end
 
-def _post(action,val = {})
-	if action == 'update'
-		val.each {|id,v|
+def _post(action,v = nil)
+	if action == 'update' && v.is_a?(::Hash)
+		v.each_key {|id|
 			item = item_instance id
 			item.post(action,v[id])
 		}
 	else
-		@storage.post(action,val)
+		@storage.post(action,v)
 	end
 end
 

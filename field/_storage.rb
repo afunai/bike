@@ -49,21 +49,33 @@ end
 def delete(id)
 end
 
-if nil
-def list.commit(type = :all)
+	private
+
+end
+
+__END__
+
+def Field.commit(type = nil)
+	if type.nil? && folder
+		folder.commit(:all) # persistent commit
+	else
+		_commit(type)
+	end
+end
+
+def Field._commit(type)
+	@queue = nil if valid?
+end
+def Set._commit(type)
+	queue.each {|id,item| item.commit(:val) }
+end
+def List._commit(type)
 	if @storage.is_a? Sofa::Storage::Val
 		queue.each {|id,item| item.commit(:val) && @storage.save(id,item) }
 	elsif type == :all
 		queue.each {|id,item| item.commit(:val) && @storage.save(id,item) && item.commit(:all) }
 	end
 end
-end
-
-	private
-
-end
-
-__END__
 
 	def self.instance(list)
 		f = list

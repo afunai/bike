@@ -9,12 +9,12 @@ class Sofa::Storage
 		if folder = list.folder
 			klass = Sofa::STORAGE[:klass].capitalize
 			if klass == 'File' && folder != list[:parent]
-				Val.new list
+				Temp.new list
 			else
 				self.const_get(klass).new list
 			end
 		else
-			Val.new list
+			Temp.new list
 		end
 	end
 
@@ -24,8 +24,8 @@ class Sofa::Storage
 
 	def select(conds = {})
 		entries = _select(conds)
-		entries = _sort(conds,entries)
-		entries = _paginate(conds,entries)
+		entries = _sort(entries,conds)
+		entries = _page(entries,conds)
 	end
 
 def save(orig_id,item)
@@ -48,11 +48,11 @@ end
 		end
 	end
 
-	def _sort(conds,entries)
+	def _sort(entries,conds)
 		entries
 	end
 
-	def _paginate(conds,entries)
+	def _page(entries,conds)
 		entries
 	end
 
@@ -63,20 +63,20 @@ __END__
 def Field.commit
 	f = self
 	f = f[:parent] until f.nil? || f.persistent?
-	f ? f._commit(:all) : self._commit(:all)
+	f ? f._commit(:persistent) : self._commit(:persistent)
 end
 
 def Field._commit(type)
 	@queue = nil if valid?
 end
 def Set._commit(type)
-	queue.each {|id,item| item._commit(:val) }
+	queue.each {|id,item| item._commit(:temp) }
 end
 def List._commit(type)
-	if @storage.is_a? Sofa::Storage::Val
-		queue.each {|id,item| item._commit(:val) && @storage.save(id,item) }
-	elsif type == :all
-		queue.each {|id,item| item._commit(:val) && @storage.save(id,item) && item._commit(:all) }
+	if @storage.is_a? Sofa::Storage::Temp
+		queue.each {|id,item| item._commit(type) }
+	elsif type == :persistent
+		queue.each {|id,item| item._commit(:temp) && @storage.save(id,item) && item._commit(:persistent) }
 	end
 end
 

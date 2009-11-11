@@ -3,11 +3,11 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Storage::Val < Sofa::Storage
+class Sofa::Storage::Temp < Sofa::Storage
 
 	def initialize(list)
 		super
-		@val = [] # this is the 'storage'.
+		@val = [] # the 'storage'.
 	end
 
 	def val(id = nil)

@@ -28,18 +28,18 @@ class TC_Storage < Test::Unit::TestCase
 			:parent => @list
 		)
 		assert_instance_of(
-			Sofa::Storage::Val,
+			Sofa::Storage::Temp,
 			child_list.storage,
-			'Storage.instance should return a Val instance when the list is apart from the folder'
+			'Storage.instance should return a Temp when the list is not a child of the folder'
 		)
 
 		orphan_list = Sofa::Field.instance(
 			:klass  => 'list'
 		)
 		assert_instance_of(
-			Sofa::Storage::Val,
+			Sofa::Storage::Temp,
 			orphan_list.storage,
-			'Storage.instance should return a Val instance when the list has no parent folder'
+			'Storage.instance should return a Temp when the list is a direct child of the folder'
 		)
 	end
 
@@ -62,10 +62,3 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 end
-
-
-__END__
-
-List.val == queue
-storage.item should first look in list.val, then the 'real' storage.
-

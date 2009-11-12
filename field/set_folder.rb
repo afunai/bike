@@ -5,7 +5,7 @@
 
 require 'yaml'
 
-class Sofa::Field::Set::Folder < Sofa::Field::Set
+class Sofa::Field::Set::Folder < Sofa::Field::Set::Static
 
 	def initialize(meta = {})
 		meta[:dir]  = meta[:parent] ? File.join(meta[:parent][:dir],meta[:id]) : meta[:id]

@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Sofa::Field::Collection
+module Sofa::Field::Set
 
 	include Enumerable
 

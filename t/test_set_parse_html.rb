@@ -6,7 +6,7 @@
 class TC_Set_Parse_HTML < Test::Unit::TestCase
 
 	def setup
-		@set = Sofa::Field::Set.new
+		@set = Sofa::Field::Set::Static.new
 	end
 
 	def teardown

@@ -5,7 +5,7 @@
 
 class Sofa::Field::Set::Dynamic < Sofa::Field
 
-	include Sofa::Field::Collection
+	include Sofa::Field::Set
 
 	attr_reader :storage
 

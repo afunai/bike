@@ -3,9 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-require 'yaml'
-
-class Sofa::Field::Set::Folder < Sofa::Field::Set::Static
+class Sofa::Field::Set::Static::Folder < Sofa::Field::Set::Static
 
 	def initialize(meta = {})
 		meta[:dir]  = meta[:parent] ? File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
@@ -24,7 +22,7 @@ class Sofa::Field::Set::Folder < Sofa::Field::Set::Static
 			conds[:id] =~ /\A\w+\z/ &&
 			File.directory?(File.join Sofa::ROOT_DIR,my[:dir],conds[:id])
 		)
-			my[:item][conds[:id]] = {:klass  => 'set-folder'}
+			my[:item][conds[:id]] = {:klass  => 'set-static-folder'}
 		end
 		super
 	end

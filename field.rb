@@ -48,7 +48,7 @@ class Sofa::Field
 
 	def folder
 		f = self
-		f = f[:parent] until f.nil? || f.is_a?(Sofa::Field::Set::Folder)
+		f = f[:parent] until f.nil? || f.is_a?(Sofa::Field::Set::Static::Folder)
 		f
 	end
 

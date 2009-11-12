@@ -9,7 +9,7 @@ class TC_List < Test::Unit::TestCase
 		@list = Sofa::Field::Set::Dynamic.new(
 			:id       => 'main',
 			:klass    => 'set-dynamic',
-			:parent   => Sofa::Field.instance(:id => 'foo',:klass => 'set-folder'),
+			:parent   => Sofa::Field.instance(:id => 'foo',:klass => 'set-static-folder'),
 			:workflow => 'blog',
 			:tmpl     => <<'_tmpl',
 <ul id="foo" class="sofa-blog">

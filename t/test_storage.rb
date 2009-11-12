@@ -9,7 +9,7 @@ class TC_Storage < Test::Unit::TestCase
 		@list = Sofa::Field.instance(
 			:klass  => 'set-dynamic',
 			:id     => 'main',
-			:parent => Sofa::Field.instance(:id => 'foo',:klass => 'set-folder')
+			:parent => Sofa::Field.instance(:id => 'foo',:klass => 'set-static-folder')
 		)
 	end
 

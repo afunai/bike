@@ -45,10 +45,10 @@ class TC_Storage < Test::Unit::TestCase
 
 	def test_select
 		list = Sofa::Field.instance :klass => 'list'
-		list.load [
-			{'1234' => {'foo' => 'bar'}},
-			{'1235' => {'foo' => 'baz'}},
-		]
+		list.load(
+			'1234' => {'foo' => 'bar'},
+			'1235' => {'foo' => 'baz'}
+		)
 		assert_equal(
 			['1234'],
 			list.storage.select(:id => '1234'),

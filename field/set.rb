@@ -73,7 +73,7 @@ class Sofa::Field::Set < Sofa::Field
 					set_html  = inner_html
 				end
 				item[id] = {
-					:klass    => 'list',
+					:klass    => 'set-dynamic',
 					:workflow => workflow,
 					:tmpl     => list_tmpl,
 					:set_html => set_html,

@@ -286,7 +286,7 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'list',
+					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl',
 <ul class="sofa-blog" id="foo">$()</ul>
@@ -313,7 +313,7 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'list',
+					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl',
 <ul class="sofa-blog" id="foo">$()</ul>
@@ -338,7 +338,7 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'list',
+					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl',
 <ul class="sofa-blog" id="foo">$()</ul>
@@ -370,7 +370,7 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'list',
+					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl',
 <table class="sofa-blog" id="foo">		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
@@ -406,7 +406,7 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'list',
+					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl',
 <ul class="sofa-blog" id="foo">$()</ul>
@@ -447,7 +447,7 @@ _html
 			{
 				'title' => {:klass => 'text',:tokens => ['32']},
 				'foo'   => {
-					:klass => 'list',
+					:klass => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl',
 <ul id="foo" class="sofa-blog">$()</ul>

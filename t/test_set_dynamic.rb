@@ -6,9 +6,9 @@
 class TC_List < Test::Unit::TestCase
 
 	def setup
-		@list = Sofa::Field::List.new(
+		@list = Sofa::Field::Set::Dynamic.new(
 			:id       => 'main',
-			:klass    => 'list',
+			:klass    => 'set-dynamic',
 			:parent   => Sofa::Field.instance(:id => 'foo',:klass => 'set-folder'),
 			:workflow => 'blog',
 			:tmpl     => <<'_tmpl',
@@ -71,7 +71,7 @@ _html
 end
 
 def ptest_recursive_tmpl
-	list = Sofa::Field::list.new(:html => <<'_html')
+	list = Sofa::Field::Set::Dynamic.new(:html => <<'_html')
 <li>$()</li>
 _html
 	assert_nothing_raised(
@@ -82,7 +82,7 @@ _html
 end
 
 def ptest_load_default
-	list = Sofa::Field::list.new(:html => <<'_html')
+	list = Sofa::Field::Set::Dynamic.new(:html => <<'_html')
 <li>
 name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
@@ -96,7 +96,7 @@ _html
 end
 
 def ptest_load
-	list = Sofa::Field::list.new(:html => <<'_html')
+	list = Sofa::Field::Set::Dynamic.new(:html => <<'_html')
 <li>
 name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
@@ -110,7 +110,7 @@ _html
 end
 
 def ptest_create
-	list = Sofa::Field::list.new(:html => <<'_html')
+	list = Sofa::Field::Set::Dynamic.new(:html => <<'_html')
 <li>
 name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
@@ -124,7 +124,7 @@ _html
 end
 
 def ptest_update
-	list = Sofa::Field::list.new(:html => <<'_html')
+	list = Sofa::Field::Set::Dynamic.new(:html => <<'_html')
 <li>
 name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
@@ -138,7 +138,7 @@ _html
 end
 
 def ptest_delete
-	list = Sofa::Field::list.new(:html => <<'_html')
+	list = Sofa::Field::Set::Dynamic.new(:html => <<'_html')
 <li>
 name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>

@@ -19,7 +19,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 			'Folder#initialize should load [:html] from [:dir]/_.html'
 		)
 		assert_instance_of(
-			Sofa::Field::List,
+			Sofa::Field::Set::Dynamic,
 			folder.item('main'),
 			'Folder#initialize should load the items according to [:html]'
 		)

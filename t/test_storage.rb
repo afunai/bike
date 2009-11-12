@@ -7,7 +7,7 @@ class TC_Storage < Test::Unit::TestCase
 
 	def setup
 		@list = Sofa::Field.instance(
-			:klass  => 'list',
+			:klass  => 'set-dynamic',
 			:id     => 'main',
 			:parent => Sofa::Field.instance(:id => 'foo',:klass => 'set-folder')
 		)
@@ -24,7 +24,7 @@ class TC_Storage < Test::Unit::TestCase
 		)
 
 		child_list = Sofa::Field.instance(
-			:klass  => 'list',
+			:klass  => 'set-dynamic',
 			:parent => @list
 		)
 		assert_instance_of(
@@ -34,7 +34,7 @@ class TC_Storage < Test::Unit::TestCase
 		)
 
 		orphan_list = Sofa::Field.instance(
-			:klass  => 'list'
+			:klass  => 'set-dynamic'
 		)
 		assert_instance_of(
 			Sofa::Storage::Temp,
@@ -44,7 +44,7 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def test_select
-		list = Sofa::Field.instance :klass => 'list'
+		list = Sofa::Field.instance :klass => 'set-dynamic'
 		list.load(
 			'1234' => {'foo' => 'bar'},
 			'1235' => {'foo' => 'baz'}

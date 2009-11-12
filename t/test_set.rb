@@ -28,7 +28,7 @@ _html
 			{
 				'title' => {:klass => 'text',:tokens => ['32']},
 				'foo'   => {
-					:klass    => 'list',
+					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl',
 <ul id="foo" class="sofa-blog">$()</ul>
@@ -75,7 +75,7 @@ _html
 
 		main = set.item('main')
 		assert_instance_of(
-			Sofa::Field::List,
+			Sofa::Field::Set::Dynamic,
 			main,
 			'Set#item() should return the child item on the fly'
 		)

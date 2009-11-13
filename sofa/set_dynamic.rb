@@ -3,9 +3,9 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Field::Set::Dynamic < Sofa::Field
+class Sofa::Set::Dynamic < Sofa::Field
 
-	include Sofa::Field::Set
+	include Sofa::Set
 
 	attr_reader :storage
 

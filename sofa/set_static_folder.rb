@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Field::Set::Static::Folder < Sofa::Field::Set::Static
+class Sofa::Set::Static::Folder < Sofa::Set::Static
 
 	def initialize(meta = {})
 		meta[:dir]  = meta[:parent] ? File.join(meta[:parent][:dir],meta[:id]) : meta[:id]

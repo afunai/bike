@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Sofa::Field::Set
+module Sofa::Set
 
 	include Enumerable
 
@@ -105,7 +105,7 @@ __END__
 		base = self
 		name = item[:full_name][/^#{base[:full_name]}-(.+)/,1]
 		result = block_given? ? yield(name,item) : item
-		if item.is_a?(Field::Collection) && result != :skip
+		if item.is_a?(Sofa::Set) && result != :skip
 			[
 				result,
 				item.collect {|sub_item| base.traverse(sub_item,&block) }

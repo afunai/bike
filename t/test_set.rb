@@ -12,7 +12,7 @@ class TC_Set < Test::Unit::TestCase
 	end
 
 	def test_initialize
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <html>
 	<h1>title:(text 32)</h1>
 	<ul id="foo" class="sofa-blog">
@@ -48,7 +48,7 @@ _html
 	end
 
 	def test_item
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <html>
 	<h1>title:(text 32)</h1>
 	<ul id="main" class="sofa-blog">
@@ -58,7 +58,7 @@ _html
 _html
 		title = set.item('title')
 		assert_instance_of(
-			Sofa::Field::Text,
+			Sofa::Text,
 			title,
 			'Set#item() should return the child item on the fly'
 		)
@@ -75,7 +75,7 @@ _html
 
 		main = set.item('main')
 		assert_instance_of(
-			Sofa::Field::Set::Static::Dynamic,
+			Sofa::Set::Static::Dynamic,
 			main,
 			'Set#item() should return the child item on the fly'
 		)
@@ -92,7 +92,7 @@ _html
 	end
 
 	def test_val
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text): comment:(text)
 </li>
@@ -112,7 +112,7 @@ _html
 	end
 
 	def test_get
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
@@ -145,7 +145,7 @@ _html
 	end
 
 	def test_recursive_tmpl
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <li>$()</li>
 _html
 		assert_nothing_raised(
@@ -156,7 +156,7 @@ _html
 	end
 
 	def test_load_default
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
@@ -175,7 +175,7 @@ _html
 	end
 
 	def test_load
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
@@ -201,7 +201,7 @@ _html
 	end
 
 	def test_create
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
@@ -215,7 +215,7 @@ _html
 	end
 
 	def test_update
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
@@ -241,7 +241,7 @@ _html
 	end
 
 	def test_delete
-		set = Sofa::Field::Set::Static.new(:html => <<'_html')
+		set = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>

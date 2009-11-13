@@ -5,9 +5,9 @@
 
 require 'strscan'
 
-class Sofa::Field::Set::Static < Sofa::Field
+class Sofa::Set::Static < Sofa::Field
 
-	include Sofa::Field::Set
+	include Sofa::Set
 
 	def initialize(meta = {})
 		@meta = meta.merge parse_html(meta[:html].to_s)

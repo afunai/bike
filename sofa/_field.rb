@@ -11,10 +11,11 @@ $KCODE = 'UTF8'
 class Sofa::Field
 
 	def self.instance(meta = {})
-		meta[:klass].to_s.split(/-/).inject(self) {|c,name|
+		k = meta[:klass].to_s.split(/-/).inject(Sofa) {|c,name|
 			name = name.capitalize
 			c.const_get(name)
-		}.new meta
+		}
+		k < self ? k.new(meta) : nil
 	end
 
 	attr_reader :queue
@@ -46,7 +47,7 @@ class Sofa::Field
 
 	def folder
 		f = self
-		f = f[:parent] until f.nil? || f.is_a?(Sofa::Field::Set::Static::Folder)
+		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Static::Folder)
 		f
 	end
 

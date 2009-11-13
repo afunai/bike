@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Field::Foo < Sofa::Field
+class Sofa::Foo < Sofa::Field
 	class Bar < Sofa::Field
 		def _get_test(arg)
 			'just a test.'
@@ -26,9 +26,16 @@ class TC_Field < Test::Unit::TestCase
 
 	def test_instance
 		assert_instance_of(
-			Sofa::Field::Foo::Bar,
+			Sofa::Foo::Bar,
 			@f,
 			'Field#instance should return an instance of the class specified by :klass'
+		)
+	end
+
+	def test_wrong_instance
+		assert_nil(
+			Sofa::Field.instance(:klass => 'storage'),
+			'Field#instance should not return an instance of other than Field'
 		)
 	end
 

@@ -12,23 +12,23 @@ class TC_Set_Folder < Test::Unit::TestCase
 	end
 
 	def test_initialize
-		folder = Sofa::Field::Set::Static::Folder.new(:id => 'foo',:parent => nil)
+		folder = Sofa::Set::Static::Folder.new(:id => 'foo',:parent => nil)
 		assert_match(
 			/^<html>/,
 			folder[:html],
 			'Folder#initialize should load [:html] from [:dir]/_.html'
 		)
 		assert_instance_of(
-			Sofa::Field::Set::Dynamic,
+			Sofa::Set::Dynamic,
 			folder.item('main'),
 			'Folder#initialize should load the items according to [:html]'
 		)
 	end
 
 	def test_default_items
-		folder = Sofa::Field::Set::Static::Folder.new(:id => 'foo',:parent => nil)
+		folder = Sofa::Set::Static::Folder.new(:id => 'foo',:parent => nil)
 		assert_instance_of(
-			Sofa::Field::Text,
+			Sofa::Text,
 			folder.item('_label'),
 			'Folder#initialize should always load the default items'
 		)
@@ -45,10 +45,10 @@ class TC_Set_Folder < Test::Unit::TestCase
 	end
 
 	def test_child_folder
-		folder = Sofa::Field::Set::Static::Folder.new(:id => 'foo',:parent => nil)
+		folder = Sofa::Set::Static::Folder.new(:id => 'foo',:parent => nil)
 		child  = folder.item('bar')
 		assert_instance_of(
-			Sofa::Field::Set::Static::Folder,
+			Sofa::Set::Static::Folder,
 			child,
 			'Folder#item should look the real directory for the child item'
 		)

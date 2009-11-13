@@ -34,6 +34,10 @@ class TC_Field < Test::Unit::TestCase
 
 	def test_wrong_instance
 		assert_nil(
+			Sofa::Field.instance(:klass => 'set'),
+			'Field#instance should not return an instance of other than Field'
+		)
+		assert_nil(
 			Sofa::Field.instance(:klass => 'storage'),
 			'Field#instance should not return an instance of other than Field'
 		)

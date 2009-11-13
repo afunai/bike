@@ -15,7 +15,7 @@ class Sofa::Field
 			name = name.capitalize
 			c.const_get(name)
 		}
-		k < self ? k.new(meta) : nil
+		k.new(meta) if k < self
 	end
 
 	attr_reader :queue

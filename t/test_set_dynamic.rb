@@ -5,6 +5,12 @@
 
 class TC_Set_Dynamic < Test::Unit::TestCase
 
+	class Sofa::Text
+		def _get_test_sd(arg)
+			'moo!'
+		end
+	end
+
 	def setup
 		@sd = Sofa::Set::Dynamic.new(
 			:id       => 'main',
@@ -88,18 +94,25 @@ _html
 			@sd.get,
 			'Set::Dynamic#get should return the html by [:tmpl]'
 		)
-	end
-
-def ptest_recursive_tmpl
-	list = Sofa::Set::Dynamic.new(:html => <<'_html')
-<li>$()</li>
+		assert_equal(
+			<<'_html',
+<ul id="foo" class="sofa-blog">
+	<li>carl: baz</li>
+</ul>
 _html
-	assert_nothing_raised(
-		'list#get should avoid recursive reference to [:tmpl]'
-	) {
-		list.get
-	}
-end
+			@sd.get(:conds => {:id => '1235'}),
+			'Set::Dynamic#get should return the html by [:tmpl]'
+		)
+		assert_equal(
+			<<'_html',
+<ul id="foo" class="sofa-blog">
+	<li>moo!: moo!</li>
+</ul>
+_html
+			@sd.get(:conds => {:id => '1235'},:action => 'test_sd'),
+			'Set::Dynamic#get should return the html by [:tmpl]'
+		)
+	end
 
 def ptest_load_default
 	list = Sofa::Set::Dynamic.new(:html => <<'_html')

@@ -29,17 +29,17 @@ class Sofa::Set::Dynamic < Sofa::Field
 		}
 	end
 
-def _post(action,v = nil)
-	if action == :update && v.is_a?(::Hash)
-		v.each_key {|id|
-			item = item_instance id
-			item_action = id[REX_NEW_ID] ? :create : (v[id][:delete] ? :delete : :update)
-			item.post(item_action,v[id])
-		}
-	else
-		@storage.post(action,v) # create / delete
+	def _post(action,v = nil)
+		if action == :update && v.is_a?(::Hash)
+			v.each_key {|id|
+				item = item_instance id
+				item_action = id[REX_NEW_ID] ? :create : (v[id][:delete] ? :delete : :update)
+				item.post(item_action,v[id])
+			}
+		else
+			@storage.post(action,v) # create / delete
+		end
 	end
-end
 
 	def collect_item(conds = {},&block)
 		@storage.select(conds).collect {|id|

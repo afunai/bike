@@ -75,4 +75,29 @@ class TC_Storage < Test::Unit::TestCase
 		)
 	end
 
+	def test_page
+		list = Sofa::Field.instance :klass => 'set-dynamic'
+		list.load(
+			'1234' => {'foo' => 'bar'},
+			'1236' => {'foo' => 'qux'},
+			'1235' => {'foo' => 'baz'}
+		)
+		list[:p_size] = 2
+		assert_equal(
+			['1234','1235'],
+			list.storage.select(:p => 1),
+			'Storage#_page should paginate the item ids returned by _select()'
+		)
+		assert_equal(
+			['1236'],
+			list.storage.select(:p => 2),
+			'Storage#_page should paginate the item ids returned by _select()'
+		)
+		assert_equal(
+			[],
+			list.storage.select(:p => 3),
+			'Storage#_page should return an empty list if the page does not exist'
+		)
+	end
+
 end

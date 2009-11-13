@@ -57,7 +57,11 @@ end
 	end
 
 	def _page(item_ids,conds)
-		item_ids
+		page = conds[:p].to_i
+		page = 1 if page < 1
+		size = @list[:p_size].to_i
+		size = 10 if size < 1
+		item_ids[(page - 1) * size,size].to_a
 	end
 
 end

@@ -10,8 +10,6 @@ $KCODE = 'UTF8'
 
 class Sofa::Field
 
-	Dir['./field/*.rb'].sort.each {|file| require file }
-
 	def self.instance(meta = {})
 		meta[:klass].to_s.split(/-/).inject(self) {|c,name|
 			name = name.capitalize

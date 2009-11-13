@@ -3,7 +3,8 @@ require 'sinatra'
 
 class Sofa
 
-	require 'field'
+	require 'sofa/_field'
+	Dir['./sofa/*.rb'].sort.each {|file| require file }
 
 ROOT_DIR = './t/data' # TODO
 STORAGE  = {

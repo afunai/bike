@@ -61,4 +61,18 @@ class TC_Storage < Test::Unit::TestCase
 		)
 	end
 
+	def test_sort
+		list = Sofa::Field.instance :klass => 'set-dynamic'
+		list.load(
+			'1234' => {'foo' => 'bar'},
+			'1236' => {'foo' => 'qux'},
+			'1235' => {'foo' => 'baz'}
+		)
+		assert_equal(
+			['1236','1235','1234'],
+			list.storage.select(:order => '-d'),
+			'Storage#_sort should sort the item ids returned by _select()'
+		)
+	end
+
 end

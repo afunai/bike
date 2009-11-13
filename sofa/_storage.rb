@@ -23,9 +23,9 @@ class Sofa::Storage
 	end
 
 	def select(conds = {})
-		entries = _select(conds)
-		entries = _sort(entries,conds)
-		entries = _page(entries,conds)
+		item_ids = _select(conds)
+		item_ids = _sort(item_ids,conds)
+		item_ids = _page(item_ids,conds)
 	end
 
 def save(id,v) # do not include move action.
@@ -39,7 +39,7 @@ end
 	def _select(conds)
 		if conds[:id]
 			_select_by_id(conds) | (@list.instance_variable_get(:@item_object).keys & conds[:id].to_a)
-		elsif cid = (conds.keys - ['order','p']).first
+		elsif cid = (conds.keys - [:order,:p]).first
 			m = "_select_by_#{cid}"
 			respond_to?(m,true) ? __send__(m,conds) : []
 		else
@@ -47,12 +47,17 @@ end
 		end
 	end
 
-	def _sort(entries,conds)
-		entries
+	def _sort(item_ids,conds)
+		case conds[:order]
+			when '-d','-id'
+				item_ids.sort.reverse
+			else
+				item_ids.sort
+		end
 	end
 
-	def _page(entries,conds)
-		entries
+	def _page(item_ids,conds)
+		item_ids
 	end
 
 end

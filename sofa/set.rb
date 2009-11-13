@@ -27,7 +27,7 @@ def item(*item_steps)
 	end
 end
 
-def p_queue # queue #=> :create / :update etc. just like scalars.
+def p_action # action #=> :create / :update etc. just like scalars.
 	@item_object.keys.inject({}) {|h,id|
 		h[id] = @item_object[id] if @item_object[id].modified?
 		h
@@ -60,10 +60,10 @@ end
 __END__
 
 	def modified?
-		(!queue.empty? || @queue) ? true : false
+		(!action.empty? || @action) ? true : false
 	end
 
-	def queue
+	def action
 		@item_object.keys.inject({}) {|h,id|
 			h[id] = @item_object[id] if @item_object[id].modified?
 			h
@@ -85,9 +85,9 @@ __END__
 			if persistent? || option[:item_steps] || !my[:parent]
 				option[:item_steps] ||= []
 				item = item(option[:item_steps].shift) if option[:item_steps].first
-				q    = item ? {item[:id] => item} : queue()
+				q    = item ? {item[:id] => item} : action()
 				@result = _commit(q,option)
-				@queue  = nil # for create/delete
+				@action  = nil # for create/delete
 			else
 				persistent_commit
 			end

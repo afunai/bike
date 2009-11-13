@@ -18,7 +18,7 @@ class Sofa::Field
 		k.new(meta) if k < self
 	end
 
-	attr_reader :queue
+	attr_reader :action
 
 	def initialize(meta = {})
 		@meta = meta
@@ -83,16 +83,16 @@ class Sofa::Field
 
 	def post(action,v = nil)
 		_post action,val_cast(v)
-		@queue = action unless action == :load || action == :load_default
+		@action = action unless action == :load || action == :load_default
 		self
 	end
 
 	def modified?
-		@queue ? true : false
+		@action ? true : false
 	end
 
 	def deleted?
-		@queue == :delete
+		@action == :delete
 	end
 
 	def valid?
@@ -180,39 +180,6 @@ end
 
 
 
-def load_default
-	post('load_default')
-end
-
-def load(v = nil)
-	post('load',v)
-end
-
-def create(v = nil)
-	post('create',v)
-end
-
-def update(v = nil)
-	post('update',v)
-end
-
-def delete
-	post('delete')
-end
-
-def post(action,v = nil)
-	_post(action,val_cast(v))
-	@queue = action unless action == 'load' || action == 'load_default'
-	self
-end
-
-def modified?
-	queue ? true : false
-end
-
-def deleted?
-	@queue == 'delete'
-end
 
 def valid?
 	errors().to_a.empty?
@@ -224,7 +191,7 @@ end
 def commit(option = {})
 	if modified? && valid?
 		if persistent? || option[:item_steps]
-			@queue = nil
+			@action = nil
 		else
 			persistent_commit
 		end

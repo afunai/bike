@@ -75,16 +75,16 @@ def Field.commit
 end
 
 def Field._commit(type)
-	@queue = nil if valid?
+	@action = nil if valid?
 end
 def Set._commit(type)
-	queue.each {|id,item| item._commit(:temp) }
+	action.each {|id,item| item._commit(:temp) }
 end
 def List._commit(type)
 	if @storage.is_a? Sofa::Storage::Temp
-		queue.each {|id,item| item._commit(type) }
+		action.each {|id,item| item._commit(type) }
 	elsif type == :persistent
-		queue.each {|id,item| item._commit(:temp) && @storage.save(id,item) && item._commit(:persistent) }
+		action.each {|id,item| item._commit(:temp) && @storage.save(id,item) && item._commit(:persistent) }
 	end
 end
 

@@ -162,18 +162,18 @@ _html
 		)
 		assert_equal(
 			:update,
-			@sd.item('1234').queue,
-			'Set::Dynamic#update should set a proper queue on the item'
+			@sd.item('1234').action,
+			'Set::Dynamic#update should set a proper action on the item'
 		)
 		assert_equal(
 			nil,
-			@sd.item('1234','name').queue,
-			'Set::Dynamic#update should set a proper queue on the item'
+			@sd.item('1234','name').action,
+			'Set::Dynamic#update should set a proper action on the item'
 		)
 		assert_equal(
 			:update,
-			@sd.item('1234','comment').queue,
-			'Set::Dynamic#update should set a proper queue on the item'
+			@sd.item('1234','comment').action,
+			'Set::Dynamic#update should set a proper action on the item'
 		)
 
 		# create an item
@@ -185,18 +185,18 @@ _html
 		)
 		assert_equal(
 			:create,
-			@sd.item('_1236').queue,
-			'Set::Dynamic#update should set a proper queue on the item'
+			@sd.item('_1236').action,
+			'Set::Dynamic#update should set a proper action on the item'
 		)
 		assert_equal(
 			:create,
-			@sd.item('_1236','name').queue,
-			'Set::Dynamic#update should set a proper queue on the item'
+			@sd.item('_1236','name').action,
+			'Set::Dynamic#update should set a proper action on the item'
 		)
 		assert_equal(
 			nil,
-			@sd.item('_1236','comment').queue,
-			'Set::Dynamic#update should set a proper queue on the item'
+			@sd.item('_1236','comment').action,
+			'Set::Dynamic#update should set a proper action on the item'
 		)
 
 		# delete an item
@@ -208,8 +208,8 @@ _html
 		)
 		assert_equal(
 			:delete,
-			@sd.item('1235').queue,
-			'Set::Dynamic#update should set a proper queue on the item'
+			@sd.item('1235').action,
+			'Set::Dynamic#update should set a proper action on the item'
 		)
 
 		assert_equal(

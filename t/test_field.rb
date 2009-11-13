@@ -68,8 +68,8 @@ class TC_Field < Test::Unit::TestCase
 		)
 		assert_equal(
 			:create,
-			@f.queue,
-			'Field#post should set @queue'
+			@f.action,
+			'Field#post should set @action'
 		)
 
 		@f.post(:update,111)
@@ -80,8 +80,8 @@ class TC_Field < Test::Unit::TestCase
 		)
 		assert_equal(
 			:update,
-			@f.queue,
-			'Field#post should set @queue'
+			@f.action,
+			'Field#post should set @action'
 		)
 	end
 
@@ -93,8 +93,8 @@ class TC_Field < Test::Unit::TestCase
 			'Field#load_default should set @val to [:default]'
 		)
 		assert_nil(
-			@f.queue,
-			'Field#load_default should not set @queue'
+			@f.action,
+			'Field#load_default should not set @action'
 		)
 	end
 
@@ -106,8 +106,8 @@ class TC_Field < Test::Unit::TestCase
 			'Field#load should set @val'
 		)
 		assert_nil(
-			@f.queue,
-			'Field#load should not set @queue'
+			@f.action,
+			'Field#load should not set @action'
 		)
 	end
 
@@ -120,8 +120,8 @@ class TC_Field < Test::Unit::TestCase
 		)
 		assert_equal(
 			:create,
-			@f.queue,
-			'Field#create should set @queue'
+			@f.action,
+			'Field#create should set @action'
 		)
 	end
 
@@ -134,8 +134,8 @@ class TC_Field < Test::Unit::TestCase
 		)
 		assert_equal(
 			:update,
-			@f.queue,
-			'Field#update should set @queue'
+			@f.action,
+			'Field#update should set @action'
 		)
 	end
 
@@ -148,8 +148,8 @@ class TC_Field < Test::Unit::TestCase
 		)
 		assert_equal(
 			:delete,
-			@f.queue,
-			'Field#delete should set @queue'
+			@f.action,
+			'Field#delete should set @action'
 		)
 		assert(
 			@f.deleted?,

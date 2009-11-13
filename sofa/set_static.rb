@@ -14,10 +14,6 @@ class Sofa::Set::Static < Sofa::Field
 		@item_object = {}
 	end
 
-	def get(arg = {})
-		_get_by_tmpl(arg,my[:tmpl])
-	end
-
 	private
 
 	def _val

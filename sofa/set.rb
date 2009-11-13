@@ -50,6 +50,10 @@ end
 		collect_item.each &block
 	end
 
+	def get(arg = {})
+		_get_by_tmpl(arg,my[:tmpl])
+	end
+
 end
 
 

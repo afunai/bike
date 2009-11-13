@@ -21,6 +21,12 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@storage.val
 	end
 
+	def _get(arg)
+		collect_item(arg[:conds] || {}) {|item|
+			item.get arg
+		}
+	end
+
 def _post(action,v = nil)
 	if action == 'update' && v.is_a?(::Hash)
 		v.each_key {|id|

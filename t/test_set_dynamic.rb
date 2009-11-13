@@ -15,10 +15,7 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 $()</ul>
 _tmpl
 			:set_html => <<'_html'
-	<li>
-		name:(text 32)
-		comment:(text 64)
-	</li>
+	<li>name:(text 32): comment:(text 64)</li>
 _html
 		)
 	end
@@ -30,12 +27,12 @@ _html
 		assert_kind_of(
 			Sofa::Storage,
 			@sd.storage,
-			'List#instance should load an apropriate storage for the list'
+			'Set::Dynamic#instance should load an apropriate storage for the list'
 		)
 		assert_instance_of(
 			Sofa::Storage::Temp,
 			@sd.storage,
-			'List#instance should load an apropriate storage for the list'
+			'Set::Dynamic#instance should load an apropriate storage for the list'
 		)
 	end
 
@@ -44,11 +41,11 @@ _html
 		assert_instance_of(
 			Sofa::Set::Static,
 			@sd.item('1234'),
-			'list#item() should return the child set in the storage'
+			'Set::Dynamic#item should return the child set in the storage'
 		)
 		assert_nil(
 			@sd.item('non-existent'),
-			'list#item() should return nil when the item is not in the storage'
+			'Set::Dynamic#item should return nil when the item is not in the storage'
 		)
 	end
 
@@ -63,30 +60,35 @@ _html
 				'1235' => {'name' => 'carl'},
 			},
 			@sd.val,
-			'list#val without arg should return values of all items in the storage'
+			'Set::Dynamic#val without arg should return values of all items in the storage'
 		)
 		assert_equal(
 			{'name' => 'frank'},
 			@sd.val('1234'),
-			'list#val with an item id should return the value of the item in the storage'
+			'Set::Dynamic#val with an item id should return the value of the item in the storage'
 		)
 		assert_nil(
 			@sd.val('non-existent'),
-			'list#val with an item id should return nil when the item is not in the storage'
+			'Set::Dynamic#val with an item id should return nil when the item is not in the storage'
 		)
 	end
 
-def ptest_get
-	assert_equal(
-		<<'_html',
-<li>
-nobody: peek a boo
-</li>
+	def test_get
+		@sd.load(
+			'1234' => {'name' => 'frank','comment' => 'bar'},
+			'1235' => {'name' => 'carl', 'comment' => 'baz'}
+		)
+		assert_equal(
+			<<'_html',
+<ul id="foo" class="sofa-blog">
+	<li>frank: bar</li>
+	<li>carl: baz</li>
+</ul>
 _html
-		list.get,
-		'list#get should return the html by [:tmpl]'
-	)
-end
+			@sd.get,
+			'Set::Dynamic#get should return the html by [:tmpl]'
+		)
+	end
 
 def ptest_recursive_tmpl
 	list = Sofa::Set::Dynamic.new(:html => <<'_html')

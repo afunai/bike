@@ -212,6 +212,12 @@ _html
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 
+		# before commit
+		assert_equal(
+			:update,
+			@sd.action,
+			'Set::Dynamic#update should set a proper action'
+		)
 		assert_equal(
 			{
 				'1234' => {'name' => 'frank','comment' => 'bar'},

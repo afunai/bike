@@ -87,7 +87,7 @@ class Sofa::Field
 		self
 	end
 
-	def modified?
+	def pending?
 		@action ? true : false
 	end
 
@@ -189,7 +189,7 @@ def errors
 end
 
 def commit(option = {})
-	if modified? && valid?
+	if pending? && valid?
 		if persistent? || option[:item_steps]
 			@action = nil
 		else

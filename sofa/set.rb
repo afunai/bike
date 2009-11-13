@@ -7,32 +7,29 @@ module Sofa::Set
 
 	include Enumerable
 
-def val(*steps)
-	if steps.empty?
-		_val
-	elsif i = item(steps)
-		i.val
+	def val(*steps)
+		if steps.empty?
+			_val
+		elsif i = item(steps)
+			i.val
+		end
 	end
-end
 
-def item(*item_steps)
-	item_steps = item_steps.first if item_steps.first.is_a? ::Array
-	return self if item_steps.empty?
+	def item(*item_steps)
+		item_steps = item_steps.first if item_steps.first.is_a? ::Array
+		return self if item_steps.empty?
 
-	id,*item_steps = item_steps
+		id,*item_steps = item_steps
 
-	if id.is_a?(::String) && child = collect_item(:id => id).first
-		item = item_steps.empty? ? child : child.item(*item_steps)
-		block_given? ? yield(item) : item
+		if id.is_a?(::String) && child = collect_item(:id => id).first
+			item = item_steps.empty? ? child : child.item(*item_steps)
+			block_given? ? yield(item) : item
+		end
 	end
-end
 
-def p_action # action #=> :create / :update etc. just like scalars.
-	@item_object.keys.inject({}) {|h,id|
-		h[id] = @item_object[id] if @item_object[id].modified?
-		h
-	}
-end
+	def pending?
+		!action_items.empty? || action
+	end
 
 def errors
 	errors = {}
@@ -54,13 +51,22 @@ end
 		_get_by_tmpl(arg,my[:tmpl])
 	end
 
+	private
+
+def action_items
+	@item_object.keys.inject({}) {|h,id|
+		h[id] = @item_object[id] if @item_object[id].pending?
+		h
+	}
+end
+
 end
 
 
 __END__
 
 	def modified?
-		(!action.empty? || @action) ? true : false
+		(!action_items.empty? || @action) ? true : false
 	end
 
 	def action

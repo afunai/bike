@@ -43,7 +43,7 @@ _html
 				},
 			},
 			set[:item],
-			'Set#initialize should load @meta'
+			'Set::Static#initialize should load @meta'
 		)
 	end
 
@@ -60,34 +60,34 @@ _html
 		assert_instance_of(
 			Sofa::Text,
 			title,
-			'Set#item() should return the child item on the fly'
+			'Set::Static#item() should return the child item on the fly'
 		)
 		assert_equal(
 			title.object_id,
 			set.item('title').object_id,
-			'Set#item() should cache the loaded items'
+			'Set::Static#item() should cache the loaded items'
 		)
 		assert_equal(
 			32,
 			title[:size],
-			'Set#item() should load the metas of child items'
+			'Set::Static#item() should load the metas of child items'
 		)
 
 		main = set.item('main')
 		assert_instance_of(
 			Sofa::Set::Static::Dynamic,
 			main,
-			'Set#item() should return the child item on the fly'
+			'Set::Static#item() should return the child item on the fly'
 		)
 		assert_equal(
 			main.object_id,
 			set.item('main').object_id,
-			'Set#item() should cache the loaded items'
+			'Set::Static#item() should cache the loaded items'
 		)
 		assert_equal(
 			"\t\t<li>hi</li>\n",
 			main[:set_html],
-			'Set#item() should load the metas of child items'
+			'Set::Static#item() should load the metas of child items'
 		)
 	end
 
@@ -101,13 +101,13 @@ _html
 		assert_equal(
 			{'name' => 'foo'},
 			set.val,
-			'Set#val should not include the value of the empty item'
+			'Set::Static#val should not include the value of the empty item'
 		)
 		set.item('comment').load 'bar'
 		assert_equal(
 			{'name' => 'foo','comment' => 'bar'},
 			set.val,
-			'Set#val should not include the value of the empty item'
+			'Set::Static#val should not include the value of the empty item'
 		)
 	end
 
@@ -125,7 +125,7 @@ _html
 </li>
 _html
 			set.get,
-			'Set#get should return the html by [:tmpl]'
+			'Set::Static#get should return the html by [:tmpl]'
 		)
 
 		comment = set.item('comment')
@@ -140,7 +140,7 @@ _html
 </li>
 _html
 			set.get(:action => 'foo'),
-			'Set#get should pass :action to the child items'
+			'Set::Static#get should pass :action to the child items'
 		)
 	end
 
@@ -149,7 +149,7 @@ _html
 <li>$()</li>
 _html
 		assert_nothing_raised(
-			'Set#get should avoid recursive reference to [:tmpl]'
+			'Set::Static#get should avoid recursive reference to [:tmpl]'
 		) {
 			set.get
 		}
@@ -165,12 +165,12 @@ _html
 		assert_equal(
 			'nobody',
 			set.item('name').val,
-			'Set#load_default should load all the child items with their [:default]'
+			'Set::Static#load_default should load all the child items with their [:default]'
 		)
 		assert_equal(
 			'peek a boo',
 			set.item('comment').val,
-			'Set#load_default should load all the child items with their [:default]'
+			'Set::Static#load_default should load all the child items with their [:default]'
 		)
 	end
 
@@ -184,19 +184,19 @@ _html
 		assert_equal(
 			{'name' => 'carl'},
 			set.val,
-			'Set#load should not touch the item for which value is not given'
+			'Set::Static#load should not touch the item for which value is not given'
 		)
 		set.load('name' => 'frank','comment' => 'cut the schmuck some slack.')
 		assert_equal(
 			{'name' => 'frank','comment' => 'cut the schmuck some slack.'},
 			set.val,
-			'Set#load should load the items at once'
+			'Set::Static#load should load the items at once'
 		)
 		set.load('name' => 'carl')
 		assert_equal(
 			{'name' => 'carl','comment' => 'cut the schmuck some slack.'},
 			set.val,
-			'Set#load should not touch the item for which value is not given'
+			'Set::Static#load should not touch the item for which value is not given'
 		)
 	end
 
@@ -210,7 +210,7 @@ _html
 		assert_equal(
 			{'name' => 'carl'},
 			set.val,
-			'Set#create should not touch the item for which value is not given'
+			'Set::Static#create should not touch the item for which value is not given'
 		)
 	end
 
@@ -224,19 +224,19 @@ _html
 		assert_equal(
 			{'name' => 'carl'},
 			set.val,
-			'Set#update should not touch the item for which value is not given'
+			'Set::Static#update should not touch the item for which value is not given'
 		)
 		set.update('name' => 'frank','comment' => 'cut the schmuck some slack.')
 		assert_equal(
 			{'name' => 'frank','comment' => 'cut the schmuck some slack.'},
 			set.val,
-			'Set#udpate should load the items at once'
+			'Set::Static#udpate should load the items at once'
 		)
 		set.update('name' => 'carl')
 		assert_equal(
 			{'name' => 'carl','comment' => 'cut the schmuck some slack.'},
 			set.val,
-			'Set#update should not touch the item for which value is not given'
+			'Set::Static#update should not touch the item for which value is not given'
 		)
 	end
 
@@ -251,12 +251,12 @@ _html
 		set.delete
 		assert(
 			set.deleted?,
-			'Set#delete should set deleted?() to true'
+			'Set::Static#delete should set deleted?() to true'
 		)
 		assert_equal(
 			{'name' => 'foo'},
 			set.val,
-			'Set#delete should not touch any item'
+			'Set::Static#delete should not touch any item'
 		)
 	end
 

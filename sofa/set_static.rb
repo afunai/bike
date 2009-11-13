@@ -26,9 +26,7 @@ class Sofa::Set::Static < Sofa::Field
 	def _post(action,v = {})
 		each {|item|
 			id = item[:id]
-			item.post(action,v[id]) if (
-				action == :load_default || action == :create || v.has_key?(id)
-			)
+			item.post(action,v[id]) if action == :load_default || v.has_key?(id)
 		}
 	end
 

@@ -7,6 +7,8 @@ class Sofa::Set::Dynamic < Sofa::Field
 
 	include Sofa::Set
 
+	REX_NEW_ID = /^_\d/
+
 	attr_reader :storage
 
 	def initialize(meta = {})
@@ -28,22 +30,23 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 def _post(action,v = nil)
-	if action == 'update' && v.is_a?(::Hash)
+	if action == :update && v.is_a?(::Hash)
 		v.each_key {|id|
 			item = item_instance id
-			item.post(action,v[id])
+			item_action = id[REX_NEW_ID] ? :create : (v[id][:delete] ? :delete : :update)
+			item.post(item_action,v[id])
 		}
 	else
 		@storage.post(action,v) # create / delete
 	end
 end
 
-def collect_item(conds = {},&block)
-	@storage.select(conds).collect {|id|
-		item = item_instance id
-		block ? block.call(item) : item
-	}
-end
+	def collect_item(conds = {},&block)
+		@storage.select(conds).collect {|id|
+			item = item_instance id
+			block ? block.call(item) : item
+		}
+	end
 
 def item_instance(id)
 	unless @item_object[id]
@@ -53,7 +56,7 @@ def item_instance(id)
 			:klass  => 'set-static',
 			:html   => my[:set_html]
 		)
-		id[/^_\d/] ? @item_object[id].load_default : @item_object[id].load(@storage.val id)
+		id[REX_NEW_ID] ? @item_object[id].load_default : @item_object[id].load(@storage.val id)
 	end
 	@item_object[id]
 end

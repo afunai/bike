@@ -27,7 +27,7 @@ def item(*item_steps)
 	end
 end
 
-def queue
+def p_queue # queue #=> :create / :update etc. just like scalars.
 	@item_object.keys.inject({}) {|h,id|
 		h[id] = @item_object[id] if @item_object[id].modified?
 		h

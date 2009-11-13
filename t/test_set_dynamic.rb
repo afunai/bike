@@ -21,7 +21,7 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 $()</ul>
 _tmpl
 			:set_html => <<'_html'
-	<li>name:(text 32): comment:(text 64)</li>
+	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
 _html
 		)
 	end
@@ -114,75 +114,120 @@ _html
 		)
 	end
 
-def ptest_load_default
-	list = Sofa::Set::Dynamic.new(:html => <<'_html')
-<li>
-name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
-</li>
-_html
-	list.load_default
-	assert_equal(
-		'nobody',
-		list.item('name').val,
-		'list#load_default should load all the child items with their [:default]'
-	)
-end
+	def test_load_default
+	end
 
-def ptest_load
-	list = Sofa::Set::Dynamic.new(:html => <<'_html')
-<li>
-name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
-</li>
-_html
-	list.load('name' => 'carl')
-	assert_equal(
-		{'name' => 'carl'},
-		list.val,
-		'list#load should not touch the item for which value is not given'
-	)
-end
+	def test_load
+		@sd.load('1235' => {'name' => 'carl'})
+		assert_equal(
+			{'1235' => {'name' => 'carl'}},
+			@sd.val,
+			'Set::Dynamic#load should load the storage with the given values'
+		)
+		@sd.load('1234' => {'name' => 'frank'})
+		assert_equal(
+			{'1234' => {'name' => 'frank'}},
+			@sd.val,
+			'Set::Dynamic#load should overwrite all values in the storage'
+		)
+	end
 
-def ptest_create
-	list = Sofa::Set::Dynamic.new(:html => <<'_html')
-<li>
-name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
-</li>
-_html
-	list.create('name' => 'carl')
-	assert_equal(
-		{'name' => 'carl'},
-		list.val,
-		'list#create should not touch the item for which value is not given'
-	)
-end
+	def test_create
+		@sd.create('1235' => {'name' => 'carl'})
+		assert_equal(
+			{'1235' => {'name' => 'carl'}},
+			@sd.val,
+			'Set::Dynamic#create should create the storage with the given values'
+		)
+		@sd.create('1234' => {'name' => 'frank'})
+		assert_equal(
+			{'1234' => {'name' => 'frank'}},
+			@sd.val,
+			'Set::Dynamic#create should overwrite all values in the storage'
+		)
+	end
 
-def ptest_update
-	list = Sofa::Set::Dynamic.new(:html => <<'_html')
-<li>
-name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
-</li>
-_html
-	list.update('name' => 'carl')
-	assert_equal(
-		{'name' => 'carl'},
-		list.val,
-		'list#update should not touch the item for which value is not given'
-	)
-end
+	def test_update
+		@sd.load(
+			'1234' => {'name' => 'frank','comment' => 'bar'},
+			'1235' => {'name' => 'carl', 'comment' => 'baz'}
+		)
 
-def ptest_delete
-	list = Sofa::Set::Dynamic.new(:html => <<'_html')
-<li>
-name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
-</li>
-_html
-	list.item('name').load 'foo'
+		# update an item
+		@sd.update('1234' => {'comment' => 'qux'})
+		assert_equal(
+			{'name' => 'frank','comment' => 'qux'},
+			@sd.item('1234').val,
+			'Set::Dynamic#update should update the values of the item instance'
+		)
+		assert_equal(
+			:update,
+			@sd.item('1234').queue,
+			'Set::Dynamic#update should set a proper queue on the item'
+		)
+		assert_equal(
+			nil,
+			@sd.item('1234','name').queue,
+			'Set::Dynamic#update should set a proper queue on the item'
+		)
+		assert_equal(
+			:update,
+			@sd.item('1234','comment').queue,
+			'Set::Dynamic#update should set a proper queue on the item'
+		)
 
-	list.delete
-	assert(
-		list.deleted?,
-		'list#delete should list deleted?() to true'
-	)
-end
+		# create an item
+		@sd.update('_1236' => {'name' => 'roy'})
+		assert_equal(
+			{'name' => 'roy','comment' => 'hi.'},
+			@sd.item('_1236').val,
+			'Set::Dynamic#update should update the values of the item instance'
+		)
+		assert_equal(
+			:create,
+			@sd.item('_1236').queue,
+			'Set::Dynamic#update should set a proper queue on the item'
+		)
+		assert_equal(
+			:create,
+			@sd.item('_1236','name').queue,
+			'Set::Dynamic#update should set a proper queue on the item'
+		)
+		assert_equal(
+			nil,
+			@sd.item('_1236','comment').queue,
+			'Set::Dynamic#update should set a proper queue on the item'
+		)
+
+		# delete an item
+		@sd.update('1235' => {:delete => true})
+		assert_equal(
+			{'name' => 'carl','comment' => 'baz'},
+			@sd.item('1235').val,
+			'Set::Dynamic#update should not update the values of the item when deleting'
+		)
+		assert_equal(
+			:delete,
+			@sd.item('1235').queue,
+			'Set::Dynamic#update should set a proper queue on the item'
+		)
+
+		assert_equal(
+			{
+				'1234' => {'name' => 'frank','comment' => 'bar'},
+				'1235' => {'name' => 'carl', 'comment' => 'baz'},
+			},
+			@sd.val,
+			'Set::Dynamic#update should not touch the original values in the storage'
+		)
+	end
+
+	def test_delete
+		@sd.delete
+		assert(
+			@sd.deleted?,
+			'Set::Dynamic#delete should set deleted?() to true'
+		)
+	end
 
 end

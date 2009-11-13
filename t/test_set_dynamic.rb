@@ -39,33 +39,42 @@ _html
 		)
 	end
 
-def test_item
-	@sd.load('1234' => {'foo' => 'bar'})
-	assert_instance_of(
-		Sofa::Set::Static,
-		@sd.item('1234'),
-		'list#item() should return the child set in the storage'
-	)
-	assert_nil(
-		@sd.item('non-existent'),
-		'list#item() should return nil when the item is not in the storage'
-	)
-end
+	def test_item
+		@sd.load('1234' => {'name' => 'frank'})
+		assert_instance_of(
+			Sofa::Set::Static,
+			@sd.item('1234'),
+			'list#item() should return the child set in the storage'
+		)
+		assert_nil(
+			@sd.item('non-existent'),
+			'list#item() should return nil when the item is not in the storage'
+		)
+	end
 
-def ptest_val
-	list.item('name').load 'foo'
-	assert_equal(
-		{'name' => 'foo'},
-		list.val,
-		'list#val should not include the value of the empty item'
-	)
-	list.item('comment').load 'bar'
-	assert_equal(
-		{'name' => 'foo','comment' => 'bar'},
-		list.val,
-		'list#val should not include the value of the empty item'
-	)
-end
+	def test_val
+		@sd.load(
+			'1234' => {'name' => 'frank'},
+			'1235' => {'name' => 'carl'}
+		)
+		assert_equal(
+			{
+				'1234' => {'name' => 'frank'},
+				'1235' => {'name' => 'carl'},
+			},
+			@sd.val,
+			'list#val without arg should return values of all items in the storage'
+		)
+		assert_equal(
+			{'name' => 'frank'},
+			@sd.val('1234'),
+			'list#val with an item id should return the value of the item in the storage'
+		)
+		assert_nil(
+			@sd.val('non-existent'),
+			'list#val with an item id should return nil when the item is not in the storage'
+		)
+	end
 
 def ptest_get
 	assert_equal(

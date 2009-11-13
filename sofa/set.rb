@@ -11,7 +11,7 @@ def val(*steps)
 	if steps.empty?
 		_val
 	elsif i = item(steps)
-		i.val 
+		i.val
 	end
 end
 

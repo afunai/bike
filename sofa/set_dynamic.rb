@@ -28,11 +28,11 @@ def _post(action,v = nil)
 			item.post(action,v[id])
 		}
 	else
-		@storage.post(action,v)
+		@storage.post(action,v) # create / delete
 	end
 end
 
-def pcollect_item(conds = {},&block)
+def collect_item(conds = {},&block)
 	@storage.select(conds).collect {|id|
 		item = item_instance id
 		block ? block.call(item) : item
@@ -44,7 +44,7 @@ def item_instance(id)
 		@item_object[id] = Sofa::Field.instance(
 			:id     => id,
 			:parent => self,
-			:klass  => 'set',
+			:klass  => 'set-static',
 			:html   => my[:set_html]
 		)
 		id[/^_\d/] ? @item_object[id].load_default : @item_object[id].load(@storage.val id)

@@ -3,13 +3,12 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class TC_List < Test::Unit::TestCase
+class TC_Set_Dynamic < Test::Unit::TestCase
 
 	def setup
-		@list = Sofa::Set::Dynamic.new(
+		@sd = Sofa::Set::Dynamic.new(
 			:id       => 'main',
 			:klass    => 'set-dynamic',
-			:parent   => Sofa::Field.instance(:id => 'foo',:klass => 'set-static-folder'),
 			:workflow => 'blog',
 			:tmpl     => <<'_tmpl',
 <ul id="foo" class="sofa-blog">
@@ -27,20 +26,30 @@ _html
 	def teardown
 	end
 
-def ptest_storage
-	assert_instance_of(
-		Sofa::Storage,
-		@list.instance_variable_get(:@storage),
-		'List#instance should load an apropriate storage for the list'
-	)
-end
+	def test_storage
+		assert_kind_of(
+			Sofa::Storage,
+			@sd.storage,
+			'List#instance should load an apropriate storage for the list'
+		)
+		assert_instance_of(
+			Sofa::Storage::Temp,
+			@sd.storage,
+			'List#instance should load an apropriate storage for the list'
+		)
+	end
 
 def test_item
+	@sd.load('1234' => {'foo' => 'bar'})
 	assert_instance_of(
-		Sofa::Set,
-		@list.item('091107_0001'),
+		Sofa::Set::Static,
+		@sd.item('1234'),
 		'list#item() should return the child set in the storage'
-	) if nil
+	)
+	assert_nil(
+		@sd.item('non-existent'),
+		'list#item() should return nil when the item is not in the storage'
+	)
 end
 
 def ptest_val

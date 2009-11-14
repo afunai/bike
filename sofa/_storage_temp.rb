@@ -5,6 +5,10 @@
 
 class Sofa::Storage::Temp < Sofa::Storage
 
+	def self.available?
+		true
+	end
+
 	def initialize(list)
 		super
 		@val = {} # the 'storage'.

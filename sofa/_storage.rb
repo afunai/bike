@@ -5,21 +5,27 @@
 
 class Sofa::Storage
 
-	def self.instance(list)
-		if folder = list.folder
+	def self.instance(sd)
+		if folder = sd.folder
 			klass = Sofa::STORAGE[:klass].capitalize
-			if klass == 'File' && folder != list[:parent]
-				Temp.new list
+			if klass == 'File' && folder != sd[:parent]
+				Temp.new sd
 			else
-				self.const_get(klass).new list
+				self.const_get(klass).new sd
 			end
 		else
-			Temp.new list
+			Temp.new sd
 		end
 	end
 
-	def initialize(list)
-		@list = list
+	def self.available?
+		false
+	end
+
+	attr_reader :sd
+
+	def initialize(sd)
+		@sd = sd
 	end
 
 	def select(conds = {})
@@ -44,12 +50,12 @@ class Sofa::Storage
 
 	def _select(conds)
 		if conds[:id]
-			_select_by_id(conds) | (@list.instance_variable_get(:@item_object).keys & conds[:id].to_a)
+			_select_by_id(conds) | (@sd.instance_variable_get(:@item_object).keys & conds[:id].to_a)
 		elsif cid = (conds.keys - [:order,:p]).first
 			m = "_select_by_#{cid}"
 			respond_to?(m,true) ? __send__(m,conds) : []
 		else
-			_select_all(conds) | @list.instance_variable_get(:@item_object).keys
+			_select_all(conds) | @sd.instance_variable_get(:@item_object).keys
 		end
 	end
 
@@ -65,15 +71,15 @@ class Sofa::Storage
 	def _page(item_ids,conds)
 		page = conds[:p].to_i
 		page = 1 if page < 1
-		size = @list[:p_size].to_i
+		size = @sd[:p_size].to_i
 		size = 10 if size < 1
 		item_ids[(page - 1) * size,size].to_a
 	end
 
-def store(id,v)
-end
+	def store(id,v)
+	end
 
-def delete(id)
-end
+	def delete(id)
+	end
 
 end

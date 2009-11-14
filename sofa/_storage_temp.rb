@@ -14,11 +14,8 @@ class Sofa::Storage::Temp < Sofa::Storage
 		id ? @val[id] : @val
 	end
 
-	def post(action,v)
-		case action
-			when :load,:create
-				@val = v
-		end
+	def load(v)
+		@val = v
 	end
 
 	private

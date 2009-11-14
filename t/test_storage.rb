@@ -49,7 +49,7 @@ class TC_Storage < Test::Unit::TestCase
 			'1234' => {'foo' => 'bar'},
 			'1236' => {'foo' => 'qux'},
 			'1235' => {'foo' => 'baz'}
-		)
+		) if sd.storage.respond_to? :load
 		_test_select(sd)
 		_test_sort(sd)
 		_test_page(sd)

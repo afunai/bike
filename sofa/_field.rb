@@ -105,10 +105,6 @@ class Sofa::Field
 		@action ? true : false
 	end
 
-	def deleted?
-		@action == :delete
-	end
-
 	def valid?
 		errors.empty?
 	end

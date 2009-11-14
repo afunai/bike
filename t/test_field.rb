@@ -151,10 +151,6 @@ class TC_Field < Test::Unit::TestCase
 			@f.action,
 			'Field#delete should set @action'
 		)
-		assert(
-			@f.deleted?,
-			'Field#delete should set the result of deleted?() to true'
-		)
 	end
 
 	def test_get

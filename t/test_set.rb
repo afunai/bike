@@ -249,9 +249,10 @@ _html
 		set.item('name').load 'foo'
 
 		set.delete
-		assert(
-			set.deleted?,
-			'Set::Static#delete should set deleted?() to true'
+		assert_equal(
+			:delete,
+			set.action,
+			'Set::Static#delete should set @action'
 		)
 		assert_equal(
 			{'name' => 'foo'},

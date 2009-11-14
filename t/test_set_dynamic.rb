@@ -270,9 +270,10 @@ _html
 
 	def test_delete
 		@sd.delete
-		assert(
-			@sd.deleted?,
-			'Set::Dynamic#delete should set deleted?() to true'
+		assert_equal(
+			:delete,
+			@sd.action,
+			'Set::Dynamic#delete should set @action'
 		)
 	end
 

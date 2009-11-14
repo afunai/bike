@@ -18,7 +18,7 @@ class Sofa::Field
 		k.new(meta) if k < self
 	end
 
-	attr_reader :action
+	attr_reader :action,:result
 
 	def initialize(meta = {})
 		@meta = meta
@@ -95,6 +95,7 @@ class Sofa::Field
 
 	def commit(type = :temp)
 		if valid?
+			@result = @action
 			@action = nil
 			self
 		end

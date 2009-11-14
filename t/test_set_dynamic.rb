@@ -216,7 +216,7 @@ _html
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 
-		# before commit
+		# before the commit
 		assert_equal(
 			:update,
 			@sd.action,
@@ -233,6 +233,7 @@ _html
 
 		@sd.commit
 
+		# after the commit
 		assert(
 			!@sd.pending?,
 			'Set::Dynamic#commit should clear the pending status of the items'
@@ -244,6 +245,26 @@ _html
 			},
 			@sd.val,
 			'Set::Dynamic#commit should update the original values in the storage'
+		)
+		assert_equal(
+			:update,
+			@sd.result,
+			'Set::Dynamic#commit should set own @result'
+		)
+		assert_equal(
+			:update,
+			@sd.item('1234').result,
+			'Set::Dynamic#commit should set @result for the items'
+		)
+		assert_equal(
+			:delete,
+			@sd.item('1235').result,
+			'Set::Dynamic#commit should set @result for the items'
+		)
+		assert_equal(
+			:create,
+			@sd.item('_1236').result,
+			'Set::Dynamic#commit should set @result for the items'
 		)
 	end
 

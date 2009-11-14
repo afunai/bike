@@ -30,6 +30,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 			}
 		end
 		if pending_items.empty?
+			@result = @action
 			@action = nil
 			self
 		end

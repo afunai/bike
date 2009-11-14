@@ -28,11 +28,17 @@ class Sofa::Storage
 		item_ids = _page(item_ids,conds)
 	end
 
-def save(id,v) # do not include move action.
-end
-
-def delete(id)
-end
+	def save(action,id,item)
+		case action
+			when :create
+				store(:new_id,item.val)
+			when :update
+				store(item[:id],item.val)
+				delete(id) if item[:id] != id
+			when :delete
+				delete(id)
+		end
+	end
 
 	private
 
@@ -64,34 +70,10 @@ end
 		item_ids[(page - 1) * size,size].to_a
 	end
 
+def store(id,v)
 end
 
-__END__
-
-def Field.commit
-	f = self
-	f = f[:parent] until f.nil? || f.persistent?
-	f ? f._commit(:persistent) : self._commit(:persistent)
+def delete(id)
 end
 
-def Field._commit(type)
-	@action = nil if valid?
 end
-def Set._commit(type)
-	action.each {|id,item| item._commit(:temp) }
-end
-def List._commit(type)
-	if @storage.is_a? Sofa::Storage::Temp
-		action.each {|id,item| item._commit(type) }
-	elsif type == :persistent
-		action.each {|id,item| item._commit(:temp) && @storage.save(id,item) && item._commit(:persistent) }
-	end
-end
-
-	def self.instance(list)
-		f = list
-		until f.nil? || f.is_a? Sofa::Set::Folder
-			f = f[:parent]
-		end
-	end
-

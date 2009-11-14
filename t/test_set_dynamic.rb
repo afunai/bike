@@ -152,6 +152,10 @@ _html
 			'1234' => {'name' => 'frank','comment' => 'bar'},
 			'1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
+		s = @sd.storage
+		def s.new_id
+			'new!'
+		end
 
 		# update an item
 		@sd.update('1234' => {'comment' => 'qux'})
@@ -225,6 +229,21 @@ _html
 			},
 			@sd.val,
 			'Set::Dynamic#update should not touch the original values in the storage'
+		)
+
+		@sd.commit
+
+		assert(
+			!@sd.pending?,
+			'Set::Dynamic#commit should clear the pending status of the items'
+		)
+		assert_equal(
+			{
+				'1234' => {'name' => 'frank','comment' => 'qux'},
+				'new!' => {'name' => 'roy',  'comment' => 'hi.'},
+			},
+			@sd.val,
+			'Set::Dynamic#commit should update the original values in the storage'
 		)
 	end
 

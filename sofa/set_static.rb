@@ -14,6 +14,14 @@ class Sofa::Set::Static < Sofa::Field
 		@item_object = {}
 	end
 
+	def commit(type = :temp)
+		pending_items.each {|id,item| item.commit type }
+		if pending_items.empty?
+			@action = nil
+			self
+		end
+	end
+
 	private
 
 	def _val

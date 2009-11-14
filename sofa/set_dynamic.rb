@@ -17,6 +17,24 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@item_object = {}
 	end
 
+	def commit(type = :temp)
+		if @storage.is_a? Sofa::Storage::Temp
+			pending_items.each {|id,item|
+				action = item.action
+				item.commit(type) && @storage.save(action,id,item)
+			}
+		elsif type == :persistent
+			pending_items.each {|id,item|
+				action = item.action
+				item.commit(:temp) && @storage.save(action,id,item) && item.commit(:persistent)
+			}
+		end
+		if pending_items.empty?
+			@action = nil
+			self
+		end
+	end
+
 	private
 
 	def _val

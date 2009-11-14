@@ -28,7 +28,7 @@ module Sofa::Set
 	end
 
 	def pending?
-		!action_items.empty? || action
+		!pending_items.empty? || action
 	end
 
 def errors
@@ -53,28 +53,18 @@ end
 
 	private
 
-def action_items
-	@item_object.keys.inject({}) {|h,id|
-		h[id] = @item_object[id] if @item_object[id].pending?
-		h
-	}
-end
+	def pending_items
+		@item_object.keys.sort.inject({}) {|h,id|
+			h[id] = @item_object[id] if @item_object[id].pending?
+			h
+		}
+	end
 
 end
 
 
 __END__
 
-	def modified?
-		(!action_items.empty? || @action) ? true : false
-	end
-
-	def action
-		@item_object.keys.inject({}) {|h,id|
-			h[id] = @item_object[id] if @item_object[id].modified?
-			h
-		}
-	end
 
 	def errors
 		errors = {}
@@ -101,14 +91,6 @@ __END__
 			@result = {}
 		end
 		self
-	end
-
-	def collect(&block)
-		collect_item(:all,&block)
-	end
-
-	def each(&block)
-		collect_item(:all).each &block
 	end
 
 	def traverse(item = self,&block)

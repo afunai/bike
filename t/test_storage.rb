@@ -6,11 +6,7 @@
 class TC_Storage < Test::Unit::TestCase
 
 	def setup
-		@sd = Sofa::Field.instance(
-			:klass  => 'set-dynamic',
-			:id     => 'main',
-			:parent => Sofa::Field.instance(:id => 't_select',:klass => 'set-static-folder')
-		)
+		@sd = Sofa::Set::Static::Folder.root.item('t_select','main')
 	end
 
 	def teardown
@@ -103,6 +99,7 @@ class TC_Storage < Test::Unit::TestCase
 			storage.select(:p => 3),
 			"#{storage.class}#_page should return an empty list if the page does not exist"
 		)
+		storage.sd[:p_size] = 10
 	end
 
 end

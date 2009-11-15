@@ -10,7 +10,7 @@ ROOT_DIR = './t/data' # TODO
 STORAGE  = {
 	'default' => 'File',
 	'File'    => {
-		'data_dir' => './t/data/t_select',
+		'data_dir' => './t/data',
 	},
 	'Mysql'   => {
 		'dbname' => 'sofa',

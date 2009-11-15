@@ -142,7 +142,7 @@ class Sofa::Field
 			if $1 == '@'
 				my[$2.intern]
 			elsif item = item($2)
-				item.get(:action => arg[:action])
+				item.get(arg) # TODO: distribute proper sub-arg for the item
 			else
 				_get(arg)
 			end

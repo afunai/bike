@@ -48,9 +48,9 @@ class TC_Storage < Test::Unit::TestCase
 
 			storage = klass.new sd
 			storage.load(
-				'20091114_0001' => {'name' => 'bar'},
-				'20091114_0003' => {'name' => 'qux'},
-				'20091114_0002' => {'name' => 'baz'}
+				'20091114_0001' => {'name' => 'bar','comment' => 'I am BAR!'},
+				'20091114_0003' => {'name' => 'qux','comment' => 'Qux! Qux!'},
+				'20091114_0002' => {'name' => 'baz','comment' => 'BAZ BAZ...'}
 			) if storage.respond_to? :load
 
 			_test_select(storage)
@@ -109,7 +109,7 @@ class TC_Storage < Test::Unit::TestCase
 
 	def _test_val(storage)
 		assert_equal(
-			{'name' => 'baz'},
+			{'name' => 'baz','comment' => 'BAZ BAZ...'},
 			storage.val('20091114_0002'),
 			"#{storage.class}#val should return the item value"
 		)
@@ -136,7 +136,7 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 def ptest_p
-	puts Sofa::Set::Static::Folder.root.item('t_select').get :foo => 123
+	puts Sofa::Set::Static::Folder.root.item('t_select').get :conds => {}
 end
 
 end

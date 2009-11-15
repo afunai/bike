@@ -10,7 +10,7 @@ def self.root
 end
 
 	def initialize(meta = {})
-		meta[:dir]  = meta[:parent] ? File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
+		meta[:dir]  = meta[:parent] ? ::File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
 		meta[:html] = load_html(meta[:dir],meta[:parent])
 		super
 		my[:item]['_label'] = {:klass => 'text'}
@@ -24,7 +24,7 @@ end
 		if (
 			conds[:id].is_a?(::String) &&
 			conds[:id] =~ /\A\w+\z/ &&
-			File.directory?(File.join Sofa::ROOT_DIR,my[:dir],conds[:id])
+			::File.directory?(::File.join Sofa::ROOT_DIR,my[:dir],conds[:id])
 		)
 			my[:item][conds[:id]] = {:klass  => 'set-static-folder'}
 		end
@@ -32,17 +32,17 @@ end
 	end
 
 	def load_html(dir,parent)
-		html_file = File.join Sofa::ROOT_DIR,dir,'_.html'
-		if File.exists? html_file
-			File.open(html_file) {|f| f.read }
+		html_file = ::File.join Sofa::ROOT_DIR,dir,'_.html'
+		if ::File.exists? html_file
+			::File.open(html_file) {|f| f.read }
 		elsif parent
 			parent[:html]
 		end
 	end
 
 	def load_val(dir,parent)
-		val_file = File.join Sofa::ROOT_DIR,"#{dir}.yaml"
-		v = File.exists?(val_file) ? File.open(val_file) {|f| YAML.load f.read } : {}
+		val_file = ::File.join Sofa::ROOT_DIR,"#{dir}.yaml"
+		v = ::File.exists?(val_file) ? ::File.open(val_file) {|f| YAML.load f.read } : {}
 		parent ? {
 			'_label' => parent.val('_label'),
 			'_owner' => parent.val('_owner'),

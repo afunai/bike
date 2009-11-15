@@ -53,6 +53,7 @@ class TC_Storage < Test::Unit::TestCase
 			_test_select(storage)
 			_test_sort(storage)
 			_test_page(storage)
+			_test_val(storage)
 		}
 	end
 
@@ -100,6 +101,14 @@ class TC_Storage < Test::Unit::TestCase
 			"#{storage.class}#_page should return an empty list if the page does not exist"
 		)
 		storage.sd[:p_size] = 10
+	end
+
+	def _test_val(storage)
+		assert_equal(
+			{'name' => 'baz'},
+			storage.val('20091114_0002'),
+			"#{storage.class}#val should return the item value"
+		)
 	end
 
 end

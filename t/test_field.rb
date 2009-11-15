@@ -59,6 +59,36 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
+	def test_name
+		item = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		assert_equal(
+			'main',
+			item[:name],
+			'Field#[:name] should return the path name from the nearest folder'
+		)
+		item = Sofa::Set::Static::Folder.root.item('foo','bar')
+		assert_equal(
+			'bar',
+			item[:name],
+			'Field#[:name] should return the path name from the nearest folder'
+		)
+	end
+
+	def test_full_name
+		item = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		assert_equal(
+			'-foo-bar-main',
+			item[:full_name],
+			'Field#[:full_name] should return the path name from the root folder'
+		)
+		item = Sofa::Set::Static::Folder.root.item('foo','bar')
+		assert_equal(
+			'-foo-bar',
+			item[:full_name],
+			'Field#[:full_name] should return the path name from the root folder'
+		)
+	end
+
 	def test_post
 		@f.post(:create,999)
 		assert_equal(

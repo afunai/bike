@@ -5,6 +5,10 @@
 
 class Sofa::Set::Static::Folder < Sofa::Set::Static
 
+def self.root
+	self.new(:id => '')
+end
+
 	def initialize(meta = {})
 		meta[:dir]  = meta[:parent] ? File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
 		meta[:html] = load_html(meta[:dir],meta[:parent])

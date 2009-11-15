@@ -45,10 +45,18 @@ class Sofa::Field
 		item_steps.empty? ? self : nil # scalar has no item
 	end
 
-	def folder
+	def meta_folder
 		f = self
 		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Static::Folder)
 		f
+	end
+
+	def meta_name
+		my[:parent] && (my[:parent] != my[:folder]) ? "#{my[:parent][:name]}-#{my[:id]}" : my[:id]
+	end
+
+	def meta_full_name
+		my[:parent] ? "#{my[:parent][:full_name]}-#{my[:id]}" : my[:id]
 	end
 
 	def get(arg = {})

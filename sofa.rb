@@ -8,7 +8,15 @@ class Sofa
 
 ROOT_DIR = './t/data' # TODO
 STORAGE  = {
-	:klass => 'File',
+	'default' => 'File',
+	'File'    => {
+		'data_dir' => './t/data/t_select',
+	},
+	'Mysql'   => {
+		'dbname' => 'sofa',
+		'user'   => 'foo',
+		'pw'     => 'bar',
+	}
 }
 
 	get %r{(/.*/)(.*).(html)} do

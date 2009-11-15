@@ -28,9 +28,6 @@ class Sofa::Storage::Temp < Sofa::Storage
 		val.keys & conds[:id].to_a
 	end
 
-	def _select_by_q(conds)
-	end
-
 	def _select_by_d(conds)
 	end
 

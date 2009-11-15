@@ -9,7 +9,7 @@ class TC_Storage < Test::Unit::TestCase
 		@sd = Sofa::Field.instance(
 			:klass  => 'set-dynamic',
 			:id     => 'main',
-			:parent => Sofa::Field.instance(:id => 'foo',:klass => 'set-static-folder')
+			:parent => Sofa::Field.instance(:id => 't_select',:klass => 'set-static-folder')
 		)
 	end
 
@@ -18,7 +18,7 @@ class TC_Storage < Test::Unit::TestCase
 
 	def test_instance
 		assert_instance_of(
-			Sofa::Storage.const_get(Sofa::STORAGE[:klass]),
+			Sofa::Storage.const_get(Sofa::STORAGE['default']),
 			@sd.storage,
 			'Storage.instance should return a File instance when the set is right under the folder'
 		)
@@ -47,8 +47,7 @@ class TC_Storage < Test::Unit::TestCase
 		Sofa::Storage.constants.collect {|c| Sofa::Storage.const_get c }.each {|klass|
 			next unless klass.available?
 
-			sd = Sofa::Field.instance(:klass  => 'set-dynamic',:id => 'foo')
-			storage = klass.new sd
+			storage = klass.new @sd
 			storage.load(
 				'20091114_0001' => {'name' => 'bar'},
 				'20091114_0003' => {'name' => 'qux'},

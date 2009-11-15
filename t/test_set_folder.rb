@@ -11,6 +11,15 @@ class TC_Set_Folder < Test::Unit::TestCase
 	def teardown
 	end
 
+	def test_root
+		root = Sofa::Set::Static::Folder.root
+		assert_instance_of(
+			Sofa::Set::Static::Folder,
+			root,
+			'Folder.root should return the root folder instance'
+		)
+	end
+
 	def test_initialize
 		folder = Sofa::Set::Static::Folder.new(:id => 'foo',:parent => nil)
 		assert_match(

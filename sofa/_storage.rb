@@ -6,8 +6,8 @@
 class Sofa::Storage
 
 	def self.instance(sd)
-		if folder = sd.folder
-			klass = Sofa::STORAGE[:klass].capitalize
+		if folder = sd[:folder]
+			klass = Sofa::STORAGE['default'].capitalize
 			if klass == 'File' && folder != sd[:parent]
 				Temp.new sd
 			else

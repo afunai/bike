@@ -109,6 +109,10 @@ class TC_Storage < Test::Unit::TestCase
 			storage.val('20091114_0002'),
 			"#{storage.class}#val should return the item value"
 		)
+		assert_nil(
+			storage.val('non-existent'),
+			"#{storage.class}#val should return {} when there is no item"
+		)
 	end
 
 end

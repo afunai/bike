@@ -23,7 +23,8 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def val(id = nil)
 		if id
-			YAML.load(raw_load id)
+			v = raw_load id
+			YAML.load(v) if v
 		else
 			{} # too many to return
 		end
@@ -65,24 +66,24 @@ class Sofa::Storage::File < Sofa::Storage
 		v = nil
 		file = glob(id.to_a).first
 		::File.open(::File.join(@dir,file),'r') {|f|
-			f.flock(::File::LOCK_SH)
+			f.flock ::File::LOCK_SH
 			v = f.read
-			f.flock(::File::LOCK_UN)
+			f.flock ::File::LOCK_UN
 		} if file
 		v
 	end
 
-	def raw_save(path,v)
-		dig_dir(path)
-		file = file_from_path(path)
+def raw_save(path,v)
+	dig_dir(path)
+	file = file_from_path(path)
 
-		::File.open(file,'w') {|f|
-			f.flock(::File::LOCK_EX)
-			f.truncate(0)
-			f << v
-			f.flock(::File::LOCK_UN)
-			f.chmod(0664) rescue nil
-		}
-	end
+	::File.open(file,'w') {|f|
+		f.flock(::File::LOCK_EX)
+		f.truncate(0)
+		f << v
+		f.flock(::File::LOCK_UN)
+		f.chmod(0664) rescue nil
+	}
+end
 
 end

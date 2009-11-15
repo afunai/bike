@@ -54,11 +54,12 @@ class Sofa::Storage::File < Sofa::Storage
 	def delete(id)
 	end
 
-	def glob(id = [])
-		prefix       = (@sd[:name] == 'main') ? '' : @sd[:name].sub(/^main-/,'') + '_'
-		id_pattern   = id.empty? ? '[0-9]*_[0-9]*' : "{#{id.join ','}}"
-		glob_pattern = "#{prefix}#{id_pattern}.yaml"
+	def glob(id = :all)
+		return [] if id == []
 
+		prefix       = (@sd[:name] == 'main') ? '' : @sd[:name].sub(/^main-/,'') + '_'
+		id_pattern   = (id == :all) ? '[0-9]*_[0-9]*' : "{#{id.join ','}}"
+		glob_pattern = "#{prefix}#{id_pattern}.yaml"
 		::Dir.chdir(@dir) { ::Dir.glob glob_pattern }
 	end
 

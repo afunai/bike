@@ -6,22 +6,23 @@
 class TC_Storage < Test::Unit::TestCase
 
 	def setup
-		@sd = Sofa::Set::Static::Folder.root.item('t_select','main')
 	end
 
 	def teardown
 	end
 
 	def test_instance
+		sd = Sofa::Set::Static::Folder.root.item('t_select','main')
+
 		assert_instance_of(
 			Sofa::Storage.const_get(Sofa::STORAGE['default']),
-			@sd.storage,
+			sd.storage,
 			'Storage.instance should return a File instance when the set is right under the folder'
 		)
 
 		child_set = Sofa::Field.instance(
 			:klass  => 'set-dynamic',
-			:parent => @sd
+			:parent => sd
 		)
 		assert_instance_of(
 			Sofa::Storage::Temp,
@@ -39,11 +40,13 @@ class TC_Storage < Test::Unit::TestCase
 		)
 	end
 
-	def test_select
+	def test_fetch
+		sd = Sofa::Set::Static::Folder.root.item('t_select','main')
+
 		Sofa::Storage.constants.collect {|c| Sofa::Storage.const_get c }.each {|klass|
 			next unless klass.available?
 
-			storage = klass.new @sd
+			storage = klass.new sd
 			storage.load(
 				'20091114_0001' => {'name' => 'bar'},
 				'20091114_0003' => {'name' => 'qux'},
@@ -53,6 +56,7 @@ class TC_Storage < Test::Unit::TestCase
 			_test_select(storage)
 			_test_sort(storage)
 			_test_page(storage)
+
 			_test_val(storage)
 		}
 	end
@@ -111,8 +115,28 @@ class TC_Storage < Test::Unit::TestCase
 		)
 		assert_nil(
 			storage.val('non-existent'),
-			"#{storage.class}#val should return {} when there is no item"
+			"#{storage.class}#val should return nil when there is no item"
+		)
+		assert_nil(
+			storage.val(''),
+			"#{storage.class}#val should return nil when there is no item"
 		)
 	end
+
+	def test_store
+		sd = Sofa::Set::Static::Folder.root.item('t_store','main')
+
+		Sofa::Storage.constants.collect {|c| Sofa::Storage.const_get c }.each {|klass|
+			next unless klass.available?
+
+			storage = klass.new sd
+			storage.clear if storage.respond_to? :clear
+			
+		}
+	end
+
+def ptest_p
+	puts Sofa::Set::Static::Folder.root.item('t_select').get :foo => 123
+end
 
 end

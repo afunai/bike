@@ -49,8 +49,13 @@ _html
 			@sd.item('1234'),
 			'Set::Dynamic#item should return the child set in the storage'
 		)
+
 		assert_nil(
 			@sd.item('non-existent'),
+			'Set::Dynamic#item should return nil when the item is not in the storage'
+		)
+		assert_nil(
+			@sd.item(''),
 			'Set::Dynamic#item should return nil when the item is not in the storage'
 		)
 	end

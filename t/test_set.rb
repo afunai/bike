@@ -89,6 +89,15 @@ _html
 			main[:set_html],
 			'Set::Static#item() should load the metas of child items'
 		)
+
+		assert_nil(
+			set.item('non-existent'),
+			'Set::Static#item should return nil when the item is not in the storage'
+		)
+		assert_nil(
+			set.item(''),
+			'Set::Static#item should return nil when the item is not in the storage'
+		)
 	end
 
 	def test_val

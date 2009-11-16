@@ -21,12 +21,12 @@ class Sofa::Set::Dynamic < Sofa::Field
 		if @storage.is_a? Sofa::Storage::Temp
 			pending_items.each {|id,item|
 				action = item.action
-				item.commit(type) && @storage.save(action,id,item)
+				item.commit(type) && _commit(action,id,item)
 			}
 		elsif type == :persistent
 			pending_items.each {|id,item|
 				action = item.action
-				item.commit(:temp) && @storage.save(action,id,item) && item.commit(:persistent)
+				item.commit(:temp) && _commit(action,id,item) && item.commit(:persistent)
 			}
 		end
 		if pending_items.empty?
@@ -58,6 +58,18 @@ class Sofa::Set::Dynamic < Sofa::Field
 				}
 			when :load,:load_default,:create
 				@storage.load(v) if @storage.respond_to?(:load,true)
+		end
+	end
+
+	def _commit(action,id,item)
+		case action
+			when :create
+				@storage.store(:new_id,item.val)
+			when :update
+				@storage.store(item[:id],item.val)
+				@storage.delete(id) if item[:id] != id
+			when :delete
+				@storage.delete(id)
 		end
 	end
 

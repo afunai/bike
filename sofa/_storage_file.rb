@@ -30,6 +30,10 @@ class Sofa::Storage::File < Sofa::Storage
 		end
 	end
 
+	def store(id,v)
+		id = new_id if id == :new_id
+	end
+
 	private
 
 	def _select_by_id(conds)
@@ -41,10 +45,6 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def _select_all(conds)
 		glob.collect {|f| f[REX_ID] }
-	end
-
-	def store(id,v)
-		id = new_id if id == :new_id
 	end
 
 	def new_id

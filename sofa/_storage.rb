@@ -34,16 +34,10 @@ class Sofa::Storage
 		item_ids = _page(item_ids,conds)
 	end
 
-	def save(action,id,item)
-		case action
-			when :create
-				store(:new_id,item.val)
-			when :update
-				store(item[:id],item.val)
-				delete(id) if item[:id] != id
-			when :delete
-				delete(id)
-		end
+	def store(id,v)
+	end
+
+	def delete(id)
 	end
 
 	private
@@ -74,12 +68,6 @@ class Sofa::Storage
 		size = @sd[:p_size].to_i
 		size = 10 if size < 1
 		item_ids[(page - 1) * size,size].to_a
-	end
-
-	def store(id,v)
-	end
-
-	def delete(id)
 	end
 
 end

@@ -27,6 +27,11 @@ class Sofa::Storage::File < Sofa::Storage
 		end
 	end
 
+	def clear
+		glob.each {|file| ::File.unlink ::File.join(@dir,file) }
+		self
+	end
+
 	def store(id,v)
 		id = new_id if id == :new_id
 		save_file(id,v.ya2yaml(:syck_compatible => true)) && id
@@ -51,8 +56,6 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def glob(id = :all)
-#		return [] if id == []
-
 		glob_pattern = "#{file_prefix}#{pattern_for id}.yaml"
 		::Dir.chdir(@dir) { ::Dir.glob glob_pattern }
 	end

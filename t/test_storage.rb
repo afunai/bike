@@ -140,6 +140,9 @@ class TC_Storage < Test::Unit::TestCase
 			id = _test_add(storage)
 			_test_update(storage,id)
 			_test_delete(storage,id)
+
+			_test_new_id(storage)
+			_test_clear(storage)
 		}
 	end
 
@@ -186,6 +189,42 @@ class TC_Storage < Test::Unit::TestCase
 		assert_nil(
 			storage.val(id),
 			"#{storage.class}#delete should delete the element with the given id"
+		)
+	end
+
+	def _test_new_id(storage)
+		id1 = storage.store(:new_id,{'foo' => 'bar'})
+		assert_match(
+			Sofa::Storage::REX_ID,
+			id1,
+			"#{storage.class}#new_id should return a unique id for the element"
+		)
+		id2 = storage.store(:new_id,{'foo' => 'bar'})
+		assert_match(
+			Sofa::Storage::REX_ID,
+			id2,
+			"#{storage.class}#new_id should return a unique id for the element"
+		)
+		assert_not_equal(
+			id1,
+			id2,
+			"#{storage.class}#new_id should return a unique id for the element"
+		)
+	end
+
+	def _test_clear(storage)
+		id1 = storage.store(:new_id,{'foo' => 'bar'})
+		id2 = storage.store(:new_id,{'foo' => 'bar'})
+
+		storage.clear
+
+		assert_nil(
+			storage.val(id1),
+			"#{storage.class}#clear should delete all elements"
+		)
+		assert_nil(
+			storage.val(id2),
+			"#{storage.class}#clear should delete all elements"
 		)
 	end
 

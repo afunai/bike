@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'sinatra'
+require 'sinatra/base'
 
-class Sofa
+class Sofa < Sinatra::Base
 
 	require 'sofa/_field'
 	Dir['./sofa/*.rb'].sort.each {|file| require file }
@@ -19,11 +19,10 @@ STORAGE  = {
 	}
 }
 
-	get %r{(/.*/)(.*).(html)} do
-		<<_html	
-<h1>Hello cruel world!</h1>
-#{params[:captures].join ','}
-_html
+	get %r{/(.*/)(.*).(html)} do
+		path,action,ext = *params[:captures]
+		folder = Sofa::Set::Static::Folder.root.item path.split('/')
+		folder.get
 	end
 
 end

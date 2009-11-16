@@ -15,19 +15,23 @@ class Sofa::Storage::Temp < Sofa::Storage
 
 	def build(v)
 		@val = v
+		self
 	end
 
 	def clear
 		@val = {}
+		self
 	end
 
 	def store(id,v)
 		id = new_id if id == :new_id
 		@val[id] = v
+		id
 	end
 
 	def delete(id)
 		@val.delete id
+		id
 	end
 
 	private
@@ -37,14 +41,12 @@ class Sofa::Storage::Temp < Sofa::Storage
 	end
 
 	def _select_by_d(conds)
+		rex_d = /^#{conds[:d]}/
+		val.keys.select {|id| id[rex_d] }
 	end
 
 	def _select_all(conds)
 		val.keys
-	end
-
-	def new_id
-		'%.4d' % (@val.keys.max.to_i + 1)
 	end
 
 end

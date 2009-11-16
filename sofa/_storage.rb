@@ -5,6 +5,8 @@
 
 class Sofa::Storage
 
+	REX_ID = /\d{8}_\d{4,}/
+
 	def self.instance(sd)
 		if folder = sd[:folder]
 			klass = Sofa::STORAGE['default'].capitalize
@@ -35,20 +37,25 @@ class Sofa::Storage
 	end
 
 	def build(v)
+		self
 	end
 
 	def clear
+		self
 	end
 
 	def store(id,v)
+		id
 	end
 
 	def delete(id)
+		id
 	end
 
 	private
 
 	def _select(conds)
+# TODO: cast / sanitize
 		if conds[:id]
 			_select_by_id(conds) | (@sd.instance_variable_get(:@item_object).keys & conds[:id].to_a)
 		elsif cid = (conds.keys - [:order,:p]).first
@@ -74,6 +81,15 @@ class Sofa::Storage
 		size = @sd[:p_size].to_i
 		size = 10 if size < 1
 		item_ids[(page - 1) * size,size].to_a
+	end
+
+	def new_id
+		d = Time.now.strftime '%Y%m%d'
+		if max_in_d = select(:d => d,:order => 'id').last
+			d + '_%.4d' % (max_in_d[/\d{4}$/].to_i + 1)
+		else
+			d + '_0001'
+		end
 	end
 
 end

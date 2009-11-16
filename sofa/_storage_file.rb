@@ -5,12 +5,9 @@
 
 require 'rubygems'
 require 'yaml'
-
 require 'ya2yaml'
 
 class Sofa::Storage::File < Sofa::Storage
-
-	REX_ID = /\d{8}_\d{4,}/
 
 	def self.available?
 		Sofa::STORAGE['File'] && Sofa::STORAGE['File']['data_dir']
@@ -23,7 +20,7 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def val(id = nil)
 		if id
-			v = raw_load id
+			v = load_file id
 			YAML.load(v) if v
 		else
 			{} # too many to return
@@ -32,9 +29,11 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def store(id,v)
 		id = new_id if id == :new_id
+		save_file(id,v.ya2yaml(:syck_compatible => true)) && id
 	end
 
 	def delete(id)
+		remove_file(id) && id
 	end
 
 	private
@@ -44,26 +43,35 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def _select_by_d(conds)
+		glob(conds[:d].to_s).collect {|f| f[REX_ID] }
 	end
 
 	def _select_all(conds)
 		glob.collect {|f| f[REX_ID] }
 	end
 
-	def new_id
-		'%.4d' % (@val.keys.max.to_i + 1)
-	end
-
 	def glob(id = :all)
-		return [] if id == []
+#		return [] if id == []
 
-		prefix       = (@sd[:name] == 'main') ? '' : @sd[:name].sub(/^main-/,'') + '_'
-		id_pattern   = (id == :all) ? '[0-9]*_[0-9]*' : "{#{id.join ','}}"
-		glob_pattern = "#{prefix}#{id_pattern}.yaml"
+		glob_pattern = "#{file_prefix}#{pattern_for id}.yaml"
 		::Dir.chdir(@dir) { ::Dir.glob glob_pattern }
 	end
 
-	def raw_load(id)
+	def file_prefix
+		(@sd[:name] == 'main') ? '' : @sd[:name].sub(/^main-/,'') + '_'
+	end
+
+	def pattern_for(id)
+		if id.is_a? Array
+			"{#{id.join ','}}"
+		elsif id == :all
+			'[0-9]*_[0-9]*'
+		elsif id =~ /\A\d{4,8}\z/
+			"#{id}*"
+		end
+	end
+
+	def load_file(id)
 		v = nil
 		file = glob(id.to_a).first
 		::File.open(::File.join(@dir,file),'r') {|f|
@@ -74,17 +82,21 @@ class Sofa::Storage::File < Sofa::Storage
 		v
 	end
 
-def raw_save(path,v)
-	dig_dir(path)
-	file = file_from_path(path)
+	def save_file(id,v)
+		file = "#{file_prefix}#{id}.yaml"
+		::File.open(::File.join(@dir,file),'w') {|f|
+			f.flock ::File::LOCK_EX
+			f.truncate 0
+			f << v
+			f.flock ::File::LOCK_UN
+			f.chmod 0664
+		}
+	end
 
-	::File.open(file,'w') {|f|
-		f.flock(::File::LOCK_EX)
-		f.truncate(0)
-		f << v
-		f.flock(::File::LOCK_UN)
-		f.chmod(0664) rescue nil
-	}
-end
+	def remove_file(id)
+		glob(id.to_a) .each {|file|
+			::File.unlink ::File.join(@dir,file) # may include child files
+		}
+	end
 
 end

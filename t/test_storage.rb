@@ -58,6 +58,8 @@ class TC_Storage < Test::Unit::TestCase
 			_test_page(storage)
 
 			_test_val(storage)
+
+			storage.clear
 		}
 	end
 

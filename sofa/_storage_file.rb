@@ -27,6 +27,12 @@ class Sofa::Storage::File < Sofa::Storage
 		end
 	end
 
+	def build(v)
+		clear
+		v.each {|id,v| store(id,v) }
+		self
+	end
+
 	def clear
 		glob.each {|file| ::File.unlink ::File.join(@dir,file) }
 		self

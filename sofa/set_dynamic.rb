@@ -57,7 +57,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 					item.post(item_action,v[id])
 				}
 			when :load,:load_default,:create
-				@storage.load(v) if @storage.respond_to?(:load,true)
+				@storage.build v
 		end
 	end
 

@@ -34,6 +34,12 @@ class Sofa::Storage
 		item_ids = _page(item_ids,conds)
 	end
 
+	def build(v)
+	end
+
+	def clear
+	end
+
 	def store(id,v)
 	end
 

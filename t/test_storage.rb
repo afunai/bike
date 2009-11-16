@@ -47,11 +47,11 @@ class TC_Storage < Test::Unit::TestCase
 			next unless klass.available?
 
 			storage = klass.new sd
-			storage.load(
+			storage.build(
 				'20091114_0001' => {'name' => 'bar','comment' => 'I am BAR!'},
 				'20091114_0003' => {'name' => 'qux','comment' => 'Qux! Qux!'},
 				'20091114_0002' => {'name' => 'baz','comment' => 'BAZ BAZ...'}
-			) if storage.respond_to? :load
+			)
 
 			_test_select(storage)
 			_test_sort(storage)
@@ -130,8 +130,7 @@ class TC_Storage < Test::Unit::TestCase
 			next unless klass.available?
 
 			storage = klass.new sd
-			storage.clear if storage.respond_to? :clear
-			
+			storage.clear
 		}
 	end
 

@@ -9,17 +9,16 @@ class Sofa::Storage::Temp < Sofa::Storage
 		true
 	end
 
-	def initialize(list)
-		super
-		@val = {} # the 'storage'.
-	end
-
 	def val(id = nil)
 		id ? @val[id] : @val
 	end
 
-	def load(v)
+	def build(v)
 		@val = v
+	end
+
+	def clear
+		@val = {}
 	end
 
 	def store(id,v)

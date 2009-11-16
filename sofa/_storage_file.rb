@@ -34,6 +34,9 @@ class Sofa::Storage::File < Sofa::Storage
 		id = new_id if id == :new_id
 	end
 
+	def delete(id)
+	end
+
 	private
 
 	def _select_by_id(conds)
@@ -49,9 +52,6 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def new_id
 		'%.4d' % (@val.keys.max.to_i + 1)
-	end
-
-	def delete(id)
 	end
 
 	def glob(id = :all)

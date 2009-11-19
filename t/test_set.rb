@@ -41,7 +41,7 @@ _tmpl
 		</li>
 _html
 				},
-			},
+			}.merge(Sofa::Set::Static::DEFAULT_ITEMS),
 			set[:item],
 			'Set::Static#initialize should load @meta'
 		)

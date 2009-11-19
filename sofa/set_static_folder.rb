@@ -5,6 +5,12 @@
 
 class Sofa::Set::Static::Folder < Sofa::Set::Static
 
+	DEFAULT_ITEMS = {
+		'_owner' => {:klass => 'text'},
+		'_group' => {:klass => 'text'},
+		'_label' => {:klass => 'text'},
+	}
+
 def self.root
 	self.new(:id => '')
 end
@@ -13,8 +19,6 @@ end
 		meta[:dir]  = meta[:parent] ? ::File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
 		meta[:html] = load_html(meta[:dir],meta[:parent])
 		super
-		my[:item]['_label'] = {:klass => 'text'}
-		my[:item]['_owner'] = {:klass => 'text'}
 		load load_val(my[:dir],my[:parent])
 	end
 

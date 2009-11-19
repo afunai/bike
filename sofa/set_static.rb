@@ -89,6 +89,10 @@ class Sofa::Set::Static < Sofa::Field
 					:tmpl      => self_tmpl,
 					:item_html => item_html,
 				}
+				if inner_html =~ /\A\s*<!--(.+?)-->/m
+					s2 = StringScanner.new $1
+					parse_tokens(s2,item[id])
+				end
 			else
 				tmpl << s.scan(/.+?(?=\w|<|\z)/m)
 			end
@@ -99,8 +103,7 @@ class Sofa::Set::Static < Sofa::Field
 		}
 	end
 
-	def parse_tokens(s)
-		meta = {}
+	def parse_tokens(s,meta = {})
 		until s.eos? || s.scan(/\)/)
 			prefix = s[1] if s.scan /([:;,])?\s*/
 			if s.scan /(["'])(.*?)(\1|$)/
@@ -163,30 +166,3 @@ class Sofa::Set::Static < Sofa::Field
 	end
 
 end
-
-
-__END__
-
-
-
-	def _post(action,v = {})
-		each {|item|
-			id = item[:id]
-			item.post(action,v[id]) if (
-				action == 'load_default' || action == 'create' || v.has_key?(id)
-			)
-		}
-	end
-
-	def _commit(q,option)
-		q.keys.sort.each {|id|
-			item = q[id]
-			item.commit(option)
-		}
-		q
-	end
-
-	def val_cast(v)
-		v.is_a?(::Hash) ? v : {:self => v}
-	end
-

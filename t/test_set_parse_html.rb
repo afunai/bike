@@ -358,6 +358,37 @@ _html
 		)
 	end
 
+	def test_block_tags_with_options
+		result = @set.send(:parse_html,<<'_html')
+hello
+	<table class="sofa-blog" id="foo">
+		<!-- 1..20 barbaz -->
+		<tbody><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+	</table>
+world
+_html
+		assert_equal(
+			{
+				'foo' => {
+					:min       => 1,
+					:max       => 20,
+					:tokens    => ['barbaz'],
+					:klass     => 'set-dynamic',
+					:workflow  => 'blog',
+					:tmpl      => <<'_tmpl',
+<table class="sofa-blog" id="foo">		<!-- 1..20 barbaz -->
+$()</table>
+_tmpl
+					:item_html => <<'_tmpl',
+		<tbody><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+_tmpl
+				},
+			},
+			result[:item],
+			'Set::Static#parse_html should aware of <tbody>'
+		)
+	end
+
 	def test_block_tags_with_tbody
 		result = @set.send(:parse_html,<<'_html')
 hello

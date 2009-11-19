@@ -77,17 +77,17 @@ class Sofa::Set::Static < Sofa::Field
 
 				inner_html = parse_inner_html(s,name)
 				if inner_html.sub!(/^\s*<tbody.*?<\/tbody>\n?/im,'$()')
-					list_tmpl = "#{tag}#{inner_html}</#{name}>\n"
-					set_html  = $&
+					self_tmpl = "#{tag}#{inner_html}</#{name}>\n"
+					item_html = $&
 				else
-					list_tmpl = "#{tag}$()</#{name}>\n"
-					set_html  = inner_html
+					self_tmpl = "#{tag}$()</#{name}>\n"
+					item_html = inner_html
 				end
 				item[id] = {
-					:klass    => 'set-dynamic',
-					:workflow => workflow,
-					:tmpl     => list_tmpl,
-					:set_html => set_html,
+					:klass     => 'set-dynamic',
+					:workflow  => workflow,
+					:tmpl      => self_tmpl,
+					:item_html => item_html,
 				}
 			else
 				tmpl << s.scan(/.+?(?=\w|<|\z)/m)

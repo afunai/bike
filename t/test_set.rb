@@ -28,12 +28,12 @@ _html
 			{
 				'title' => {:klass => 'text',:tokens => ['32']},
 				'foo'   => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl',
+					:klass     => 'set-dynamic',
+					:workflow  => 'blog',
+					:tmpl      => <<'_tmpl',
 <ul id="foo" class="sofa-blog">$()</ul>
 _tmpl
-					:set_html => <<'_html',
+					:item_html => <<'_html',
 		<li>
 			subject:(text 64)
 			body:(textarea 72*10)
@@ -86,7 +86,7 @@ _html
 		)
 		assert_equal(
 			"\t\t<li>hi</li>\n",
-			main[:set_html],
+			main[:item_html],
 			'Set::Static#item() should load the metas of child items'
 		)
 

@@ -286,12 +286,12 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl',
+					:klass     => 'set-dynamic',
+					:workflow  => 'blog',
+					:tmpl      => <<'_tmpl',
 <ul class="sofa-blog" id="foo">$()</ul>
 _tmpl
-					:set_html => '<li>hello</li>',
+					:item_html => '<li>hello</li>',
 				}
 			},
 			result[:item],
@@ -313,12 +313,12 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl',
+					:klass     => 'set-dynamic',
+					:workflow  => 'blog',
+					:tmpl      => <<'_tmpl',
 <ul class="sofa-blog" id="foo">$()</ul>
 _tmpl
-					:set_html => "\t<li>hello</li>\n",
+					:item_html => "\t<li>hello</li>\n",
 				},
 			},
 			result[:item],
@@ -338,12 +338,12 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl',
+					:klass     => 'set-dynamic',
+					:workflow  => 'blog',
+					:tmpl      => <<'_tmpl',
 <ul class="sofa-blog" id="foo">$()</ul>
 _tmpl
-					:set_html => '<li>hello</li>',
+					:item_html => '<li>hello</li>',
 				},
 			},
 			result[:item],
@@ -370,13 +370,13 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl',
+					:klass     => 'set-dynamic',
+					:workflow  => 'blog',
+					:tmpl      => <<'_tmpl',
 <table class="sofa-blog" id="foo">		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()</table>
 _tmpl
-					:set_html => <<'_tmpl',
+					:item_html => <<'_tmpl',
 		<tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
 _tmpl
 				},
@@ -406,12 +406,12 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl',
+					:klass     => 'set-dynamic',
+					:workflow  => 'blog',
+					:tmpl      => <<'_tmpl',
 <ul class="sofa-blog" id="foo">$()</ul>
 _tmpl
-					:set_html => <<'_html',
+					:item_html => <<'_html',
 	<li>
 		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
 	</li>
@@ -447,12 +447,12 @@ _html
 			{
 				'title' => {:klass => 'text',:tokens => ['32']},
 				'foo'   => {
-					:klass => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl',
+					:klass     => 'set-dynamic',
+					:workflow  => 'blog',
+					:tmpl      => <<'_tmpl',
 <ul id="foo" class="sofa-blog">$()</ul>
 _tmpl
-					:set_html => <<'_html',
+					:item_html => <<'_html',
 		<li>
 			subject:(text 64)
 			body:(textarea 72*10)

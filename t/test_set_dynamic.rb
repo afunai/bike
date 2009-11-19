@@ -13,14 +13,14 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 
 	def setup
 		@sd = Sofa::Set::Dynamic.new(
-			:id       => 'main',
-			:klass    => 'set-dynamic',
-			:workflow => 'blog',
-			:tmpl     => <<'_tmpl',
+			:id        => 'main',
+			:klass     => 'set-dynamic',
+			:workflow  => 'blog',
+			:tmpl      => <<'_tmpl',
 <ul id="foo" class="sofa-blog">
 $()</ul>
 _tmpl
-			:set_html => <<'_html'
+			:item_html => <<'_html'
 	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
 _html
 		)

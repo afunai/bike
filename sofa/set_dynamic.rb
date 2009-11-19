@@ -86,7 +86,7 @@ def item_instance(id)
 			:id     => id,
 			:parent => self,
 			:klass  => 'set-static',
-			:html   => my[:set_html]
+			:html   => my[:item_html]
 		)
 		id[REX_NEW_ID] ? @item_object[id].load_default : @item_object[id].load(@storage.val id)
 	end

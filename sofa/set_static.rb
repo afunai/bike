@@ -11,7 +11,7 @@ class Sofa::Set::Static < Sofa::Field
 
 	DEFAULT_ITEMS = {
 		'_owner'   => {:klass => 'meta-owner'},
-		'_group'   => {:klass => 'text'},
+		'_group'   => {:klass => 'meta-group'},
 		'_status'  => {:klass => 'text'},
 		'_updated' => {:klass => 'text'},
 	}

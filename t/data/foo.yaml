@@ -1,3 +1,7 @@
 ---
 _label: 'Foo Folder'
 _owner: frank
+_group:
+  - roy
+  - jim
+

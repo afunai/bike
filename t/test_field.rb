@@ -333,4 +333,38 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
+	def test_group
+		assert_equal(
+			[],
+			Sofa::Set::Static::Folder.root[:group],
+			"Field#[:group] should return [] for the root folder"
+		)
+		assert_equal(
+			['roy','jim'],
+			Sofa::Set::Static::Folder.root.item('foo')[:group],
+			'Field#[:group] should return @meta[:group] if available'
+		)
+		assert_equal(
+			['roy','jim'],
+			Sofa::Set::Static::Folder.root.item('foo','main')[:group],
+			'Field#[:group] should return @meta[:group] of the nearest folder'
+		)
+		assert_equal(
+			['roy','jim'],
+			Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')[:group],
+			'Field#[:group] should return @meta[:group] of the nearest folder'
+		)
+
+		assert_equal(
+			['don'],
+			Sofa::Set::Static::Folder.root.item('foo','bar')[:group],
+			'Field#[:group] should return @meta[:group] if available'
+		)
+		assert_equal(
+			['don'],
+			Sofa::Set::Static::Folder.root.item('foo','bar','main')[:group],
+			'Field#[:group] should return @meta[:group] of the nearest folder'
+		)
+	end
+
 end

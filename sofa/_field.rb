@@ -72,6 +72,10 @@ class Sofa::Field
 		(my[:parent] && my[:parent][:folder]) ? my[:parent][:folder][:owners] : []
 	end
 
+	def meta_group
+		@meta[:group] || (my[:parent] ? my[:parent][:group] : [])
+	end
+
 	def get(arg = {})
 		action = arg[:action]
 		action = 'read' unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)

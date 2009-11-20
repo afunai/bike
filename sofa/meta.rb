@@ -28,3 +28,14 @@ class Sofa::Meta::Owner < Sofa::Field
 	end
 
 end
+
+
+class Sofa::Meta::Group < Sofa::Field
+
+	include Sofa::Meta
+
+	def post(action,v)
+		super if action == :load || action == :create
+	end
+
+end

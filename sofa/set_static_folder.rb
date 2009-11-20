@@ -6,7 +6,7 @@
 class Sofa::Set::Static::Folder < Sofa::Set::Static
 
 	DEFAULT_ITEMS = {
-		'_owner' => {:klass => 'text'},
+		'_owner' => {:klass => 'meta-owner'},
 		'_group' => {:klass => 'text'},
 		'_label' => {:klass => 'text'},
 	}

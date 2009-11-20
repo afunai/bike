@@ -60,8 +60,16 @@ class Sofa::Field
 		f
 	end
 
+	def meta_owner
+		@meta[:owner] || (my[:parent] ? my[:parent][:owner] : 'root')
+	end
+
 	def meta_owners
-		my[:parent] ? (my[:parent][:owners] | my[:owner].to_a) : my[:owner].to_a
+		my[:parent] ? (my[:parent][:owners] | @meta[:owner].to_a) : @meta[:owner].to_a
+	end
+
+	def meta_admins
+		(my[:parent] && my[:parent][:folder]) ? my[:parent][:folder][:owners] : []
 	end
 
 	def get(arg = {})

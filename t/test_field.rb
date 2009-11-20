@@ -222,26 +222,114 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
+	def test_owner
+		assert_equal(
+			'root',
+			Sofa::Set::Static::Folder.root[:owner],
+			"Field#[:owner] should return 'root' for the root folder"
+		)
+		assert_equal(
+			'frank',
+			Sofa::Set::Static::Folder.root.item('foo')[:owner],
+			'Field#[:owner] should return @meta[:owner] if available'
+		)
+		assert_equal(
+			'frank',
+			Sofa::Set::Static::Folder.root.item('foo','main')[:owner],
+			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
+		)
+		assert_equal(
+			'frank',
+			Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')[:owner],
+			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
+		)
+
+		assert_equal(
+			'frank',
+			Sofa::Set::Static::Folder.root.item('foo','bar')[:owner],
+			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
+		)
+		assert_equal(
+			'frank',
+			Sofa::Set::Static::Folder.root.item('foo','bar','main')[:owner],
+			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
+		)
+		assert_equal(
+			'carl',
+			Sofa::Set::Static::Folder.root.item('foo','bar','main','20091120_0001')[:owner],
+			'Field#[:owner] should return @meta[:owner] if available'
+		)
+		assert_equal(
+			'carl',
+			Sofa::Set::Static::Folder.root.item('foo','bar','main','20091120_0001','name')[:owner],
+			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
+		)
+	end
+
 	def test_owners
-		item = Sofa::Set::Static::Folder.root
 		assert_equal(
 			['root'],
-			item[:owners],
+			Sofa::Set::Static::Folder.root[:owners],
 			"Field#[:owners] should return ['root'] for the root folder"
 		)
-
-		item = Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')
 		assert_equal(
 			['root','frank'],
-			item[:owners],
-			'Field#[:owners] should return all users in the ancestor tree'
+			Sofa::Set::Static::Folder.root.item('foo')[:owners],
+			'Field#[:owners] should return all the owners of the ancestor fields'
 		)
-
-		item = Sofa::Set::Static::Folder.root.item('foo','bar','main','20091120_0001')
+		assert_equal(
+			['root','frank'],
+			Sofa::Set::Static::Folder.root.item('foo','main')[:owners],
+			'Field#[:owners] should return all the owners of the ancestor fields'
+		)
 		assert_equal(
 			['root','frank','carl'],
-			item[:owners],
-			'Field#[:owners] should return all users in the ancestor tree'
+			Sofa::Set::Static::Folder.root.item('foo','bar','main','20091120_0001')[:owners],
+			'Field#[:owners] should return all the owners of the ancestor fields'
+		)
+	end
+
+	def test_admins
+		assert_equal(
+			[],
+			Sofa::Set::Static::Folder.root[:admins],
+			"Field#[:admins] should return [] for the root folder"
+		)
+		assert_equal(
+			['root'],
+			Sofa::Set::Static::Folder.root.item('foo')[:admins],
+			'Field#[:admins] should return @meta[:admins] if available'
+		)
+		assert_equal(
+			['root','frank'],
+			Sofa::Set::Static::Folder.root.item('foo','main')[:admins],
+			'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
+		)
+		assert_equal(
+			['root','frank'],
+			Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')[:admins],
+			'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
+		)
+
+		assert_equal(
+			['root','frank'],
+			Sofa::Set::Static::Folder.root.item('foo','bar')[:admins],
+			'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
+		)
+		assert_equal(
+			['root','frank'],
+			Sofa::Set::Static::Folder.root.item('foo','bar','main')[:admins],
+			'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
+		)
+		assert_equal(
+			['root','frank'],
+			Sofa::Set::Static::Folder.root.item('foo','bar','main','20091120_0001')[:admins],
+			'Field#[:admins] should return @meta[:admins] if available'
+		)
+		assert_equal(
+			['root','frank'],
+			Sofa::Set::Static::Folder.root.item('foo','bar','main','20091120_0001','name')[:admins],
+			'Field#[:admins] should return @meta[:admins] if available'
 		)
 	end
 

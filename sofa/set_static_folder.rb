@@ -12,8 +12,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	}
 
 	def self.root
-		root = self.new(:id => '')
-		root.empty? ? root.load('_owner' => 'root') : root
+		self.new(:id => '')
 	end
 
 	def initialize(meta = {})

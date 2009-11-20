@@ -11,9 +11,10 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		'_label' => {:klass => 'text'},
 	}
 
-def self.root
-	self.new(:id => '')
-end
+	def self.root
+		root = self.new(:id => '')
+		root.empty? ? root.load('_owner' => 'root') : root
+	end
 
 	def initialize(meta = {})
 		meta[:dir]  = meta[:parent] ? ::File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
@@ -46,6 +47,7 @@ end
 
 	def load_val(dir,parent)
 		val_file = ::File.join Sofa::ROOT_DIR,"#{dir}.yaml"
+		val_file = Sofa::ROOT_DIR.sub(/\/?$/,'.yaml') if dir == ''
 		v = ::File.exists?(val_file) ? ::File.open(val_file) {|f| YAML.load f.read } : {}
 		parent ? {
 			'_label' => parent.val('_label'),

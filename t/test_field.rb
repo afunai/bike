@@ -222,19 +222,27 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
-def ptest_owners
-	item = Sofa::Set::Static::Folder.root
-	assert_equal(
-		['root'],
-		item[:owners],
-		"Field#[:owners] should return ['root'] for the root folder"
-	)
-	item = Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')
-	assert_equal(
-		['root','frank'],
-		item[:owners],
-		'Field#[:owners] should return all users in the ancestor tree'
-	)
-end
+	def test_owners
+		item = Sofa::Set::Static::Folder.root
+		assert_equal(
+			['root'],
+			item[:owners],
+			"Field#[:owners] should return ['root'] for the root folder"
+		)
+
+		item = Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')
+		assert_equal(
+			['root','frank'],
+			item[:owners],
+			'Field#[:owners] should return all users in the ancestor tree'
+		)
+
+		item = Sofa::Set::Static::Folder.root.item('foo','bar','main','20091120_0001')
+		assert_equal(
+			['root','frank','carl'],
+			item[:owners],
+			'Field#[:owners] should return all users in the ancestor tree'
+		)
+	end
 
 end

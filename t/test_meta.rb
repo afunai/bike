@@ -25,6 +25,27 @@ class TC_Meta < Test::Unit::TestCase
 			ss.val('_owner'),
 			'Meta::Owner#load should work like normal fields'
 		)
+		assert_equal(
+			'frank',
+			ss[:owner],
+			'Meta::Owner#load should update the [:owner] of the parent set'
+		)
+
+		ss.item('_owner').update 'carl'
+		assert_equal(
+			'frank',
+			ss.val('_owner'),
+			'Meta::Owne should not be updated'
+		)
+		assert(
+			!ss.item('_owner').pending?,
+			'Meta::Owne should not be updated'
+		)
+		assert_equal(
+			'frank',
+			ss[:owner],
+			'Meta::Owne should not be updated'
+		)
 	end
 
 end

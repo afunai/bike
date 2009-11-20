@@ -13,7 +13,7 @@ module Sofa::Meta
 	end
 
 	def klass_id
-		self.class.to_s[/\w+$/].downcase
+		self.class.to_s[/\w+$/].downcase.intern
 	end
 
 end

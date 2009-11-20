@@ -60,6 +60,10 @@ class Sofa::Field
 		f
 	end
 
+	def meta_owners
+		my[:parent] ? (my[:parent][:owners] | my[:owner].to_a) : my[:owner].to_a
+	end
+
 	def get(arg = {})
 		action = arg[:action]
 		action = 'read' unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)

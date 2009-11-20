@@ -12,8 +12,9 @@ class Sofa::Set::Dynamic < Sofa::Field
 	attr_reader :storage
 
 	def initialize(meta = {})
-		@meta = meta
-		@storage = Sofa::Storage.instance self
+		@meta        = meta
+		@storage     = Sofa::Storage.instance self
+		@workflow    = Sofa::Workflow.instance self
 		@item_object = {}
 	end
 

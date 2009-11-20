@@ -76,6 +76,18 @@ class Sofa::Field
 		@meta[:group] || (my[:parent] ? my[:parent][:group] : [])
 	end
 
+	def meta_role
+		if my[:admins].include? Sofa.client
+			:admin
+		elsif my[:group].include? Sofa.client
+			:group
+		elsif my[:owner] == Sofa.client
+			:owner
+		else
+			:guest
+		end
+	end
+
 	def get(arg = {})
 		action = arg[:action]
 		action = 'read' unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)

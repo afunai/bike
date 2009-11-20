@@ -19,6 +19,18 @@ STORAGE  = {
 	}
 }
 
+	def self.current
+		Thread.current
+	end
+
+	def self.session
+		self.current[:session] || (@@fake_session ||= {})
+	end
+
+	def self.client
+		self.session[:client] ||= 'nobody'
+	end
+
 	get %r{/(.*/)(.*).(html)} do
 		path,action,ext = *params[:captures]
 		folder = Sofa::Set::Static::Folder.root.item path.split('/')

@@ -29,8 +29,8 @@ class Sofa::Field
 		caller.grep(/`inspect'/).empty? ? super : "<#{self.class} name=\"#{my[:name]}\">"
 	end
 
-	def [](id)
-		respond_to?("meta_#{id}") ? __send__("meta_#{id}") : @meta[id]
+	def [](id,*arg)
+		respond_to?("meta_#{id}") ? __send__("meta_#{id}",*arg) : @meta[id]
 	end
 
 	def []=(id,v)

@@ -5,6 +5,13 @@
 
 class Sofa::Workflow
 
+	PERM = {
+		:create => 'oooo',
+		:read   => 'oooo',
+		:update => 'oooo',
+		:delete => 'oooo',
+	}
+
 	def self.instance(sd)
 		klass = sd[:workflow].to_s.capitalize
 		if klass != ''
@@ -24,4 +31,12 @@ end
 
 
 class Sofa::Workflow::Blog < Sofa::Workflow
+
+	PERM = {
+		:create => 'oo--',
+		:read   => 'oooo',
+		:update => 'ooo-',
+		:delete => 'o-o-',
+	}
+
 end

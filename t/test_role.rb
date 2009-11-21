@@ -145,19 +145,19 @@ class TC_Perm < Test::Unit::TestCase
 		)
 
 		assert_equal(
-			['don'],
+			['carl','don'],
 			Sofa::Set::Static::Folder.root.item('foo','bar')[:group],
 			'Field#[:group] should return @meta[:group] if available'
 		)
 		assert_equal(
-			['don'],
+			['carl','don'],
 			Sofa::Set::Static::Folder.root.item('foo','bar','main')[:group],
 			'Field#[:group] should return @meta[:group] of the nearest folder'
 		)
 	end
 
 	def test_role_of_nobody
-		Sofa.session[:client] = nil
+		Sofa.client = nil
 		assert_equal(
 			:guest,
 			Sofa::Set::Static::Folder.root[:role],
@@ -186,7 +186,7 @@ class TC_Perm < Test::Unit::TestCase
 	end
 
 	def test_role_of_frank
-		Sofa.session[:client] = 'frank'
+		Sofa.client = 'frank'
 		assert_equal(
 			:guest,
 			Sofa::Set::Static::Folder.root[:role],
@@ -215,7 +215,7 @@ class TC_Perm < Test::Unit::TestCase
 	end
 
 	def test_role_of_roy
-		Sofa.session[:client] = 'roy'
+		Sofa.client = 'roy'
 		assert_equal(
 			:guest,
 			Sofa::Set::Static::Folder.root[:role],

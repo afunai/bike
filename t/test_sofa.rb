@@ -19,21 +19,21 @@ class TC_Sofa < Test::Unit::TestCase
 	end
 
 	def test_client
-		Sofa.session[:client] = nil
+		Sofa.client = nil
 		assert_equal(
 			'nobody',
 			Sofa.client,
 			'Sofa.client should return nobody before login'
 		)
 
-		Sofa.session[:client] = 'frank'
+		Sofa.client = 'frank'
 		assert_equal(
 			'frank',
 			Sofa.client,
 			'Sofa.client should return the user who logged in'
 		)
 
-		Sofa.session[:client] = nil
+		Sofa.client = nil
 		assert_equal(
 			'nobody',
 			Sofa.client,

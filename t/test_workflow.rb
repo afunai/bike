@@ -32,4 +32,8 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
+def ptest_permit?
+	sd = Sofa::Set::Static::Folder.root.item('foo','main')
+end
+
 end

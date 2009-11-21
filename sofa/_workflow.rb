@@ -27,6 +27,29 @@ class Sofa::Workflow
 		@sd = sd
 	end
 
+	def permit_get?(params)
+		return true if permit?(@sd[:role],params[:action])
+		params[:action] != :create && permit?(@sd.role_on_items(params[:conds]),params[:action])
+	end
+
+	private
+
+	def permit?(role,action)
+		perm = self.class.const_get(:PERM)[action]
+		perm && perm =~ case role
+			when :admin
+				/^o.../
+			when :group
+				/^.o../
+			when :owner
+				/^..o./
+			when :guest
+				/^...o/
+			else
+				/.\A/ # never matches
+		end ? true : false
+	end
+
 end
 
 

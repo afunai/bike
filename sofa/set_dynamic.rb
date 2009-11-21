@@ -9,7 +9,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 
 	REX_NEW_ID = /^_\d/
 
-	attr_reader :storage
+	attr_reader :storage,:workflow
 
 	def initialize(meta = {})
 		@meta        = meta

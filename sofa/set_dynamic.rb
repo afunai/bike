@@ -18,6 +18,12 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@item_object = {}
 	end
 
+	def role_on_items(conds = {})
+		@storage.select(conds).all? {|id|
+			item_instance(id)[:owner] == Sofa.client
+		} ? :owner : :guest
+	end
+
 	def commit(type = :temp)
 		if @storage.is_a? Sofa::Storage::Temp
 			pending_items.each {|id,item|

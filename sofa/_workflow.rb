@@ -29,7 +29,11 @@ class Sofa::Workflow
 
 	def permit?(params,method = :get)
 		return true if _permit?(@sd[:role],params[:action])
-		conds = (method == :get) ? params[:conds] : params.keys.collect {|k| k[Sofa::Storage::REX_ID] }
+		if method == :get
+			conds = params[:conds]
+		else
+			conds = {:id => params.keys.select {|k| k =~ Sofa::Storage::REX_ID }}
+		end
 		params[:action] != :create && _permit?(@sd.role_on_items(conds),params[:action])
 	end
 

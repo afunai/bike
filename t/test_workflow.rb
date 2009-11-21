@@ -147,11 +147,77 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 		assert(
 			!sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
-			"'nobody' should not be able to get.update the item"
+			"'nobody' should not be able to get.update carl's item"
 		)
 		assert(
 			!sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
-			"'nobody' should not be able to get.delete the item"
+			"'nobody' should not be able to get.delete carl's item"
+		)
+	end
+
+	def test_permit_don_get?
+		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+
+		Sofa.client = 'don' # don belongs to the group of foo/bar/
+		assert(
+			sd.workflow.permit_get?(:action => :create),
+			'don should be able to get.create'
+		)
+		assert(
+			sd.workflow.permit_get?(:action => :read,:conds => {:id => '20091120_0001'}),
+			'don should be able to get.read the item'
+		)
+		assert(
+			sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
+			"don should be able to get.update carl's item"
+		)
+		assert(
+			!sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
+			"don should not be able to get.delete carl's item"
+		)
+	end
+
+	def test_permit_carl_get?
+		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+
+		Sofa.client = 'carl' # carl belongs to the group of foo/bar/, and the owner of the item #0001
+		assert(
+			sd.workflow.permit_get?(:action => :create),
+			'carl should be able to get.create'
+		)
+		assert(
+			sd.workflow.permit_get?(:action => :read,:conds => {:id => '20091120_0001'}),
+			'carl should be able to get.read the item'
+		)
+		assert(
+			sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
+			"carl should be able to get.update his own item"
+		)
+		assert(
+			sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
+			"carl should be able to get.delete his own item"
+		)
+	end
+
+	def test_permit_frank_get?
+		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+
+		Sofa.client = 'frank' # frank is an admin of foo/bar/
+		assert(
+			sd.workflow.permit_get?(:action => :create),
+			'frank should be able to get.create'
+		)
+		assert(
+			sd.workflow.permit_get?(:action => :read,:conds => {:id => '20091120_0001'}),
+			'frank should be able to get.read the item'
+		)
+		assert(
+			sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
+			"frank should be able to get.update his own item"
+		)
+		assert(
+			sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
+			"frank should be able to get.delete his own item"
 		)
 	end
 

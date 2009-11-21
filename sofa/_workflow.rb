@@ -27,14 +27,15 @@ class Sofa::Workflow
 		@sd = sd
 	end
 
-	def permit_get?(params)
-		return true if permit?(@sd[:role],params[:action])
-		params[:action] != :create && permit?(@sd.role_on_items(params[:conds]),params[:action])
+	def permit?(params,method = :get)
+		return true if _permit?(@sd[:role],params[:action])
+		conds = (method == :get) ? params[:conds] : params.keys.collect {|k| k[Sofa::Storage::REX_ID] }
+		params[:action] != :create && _permit?(@sd.role_on_items(conds),params[:action])
 	end
 
 	private
 
-	def permit?(role,action)
+	def _permit?(role,action)
 		perm = self.class.const_get(:PERM)[action]
 		perm && perm =~ case role
 			when :admin
@@ -58,8 +59,8 @@ class Sofa::Workflow::Blog < Sofa::Workflow
 	PERM = {
 		:create => 'oo--',
 		:read   => 'oooo',
-		:update => 'ooo-',
-		:delete => 'o-o-',
+		:update => 'o-o-',
+		:delete => 'oo--',
 	}
 
 end

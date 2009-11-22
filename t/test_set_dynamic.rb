@@ -10,6 +10,7 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 			:id        => 'main',
 			:klass     => 'set-dynamic',
 			:workflow  => 'blog',
+			:group     => ['roy','don'],
 			:tmpl      => <<'_tmpl',
 <ul id="foo" class="sofa-blog">
 $()</ul>
@@ -337,6 +338,151 @@ _html
 			@sd.action,
 			'Set::Dynamic#delete should set @action'
 		)
+	end
+
+	def test_post_by_nobody
+		@sd.load(
+			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
+		)
+		Sofa.client = nil
+
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"'nobody' should not create a new item"
+		) {
+			@sd.update('_0001' => {'comment' => 'qux'})
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"'nobody' should not update frank's item"
+		) {
+			@sd.update('20091122_0001' => {'comment' => 'qux'})
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"'nobody' should not delete frank's item"
+		) {
+			@sd.update('20091122_0001' => {'_action' => 'delete'})
+		}
+	end
+
+	def test_post_by_nobody
+		@sd.load(
+			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
+		)
+		Sofa.client = nil
+
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"'nobody' should not create a new item"
+		) {
+			@sd.update('_0001' => {'comment' => 'qux'})
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"'nobody' should not update frank's item"
+		) {
+			@sd.update('20091122_0001' => {'comment' => 'qux'})
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"'nobody' should not delete frank's item"
+		) {
+			@sd.update('20091122_0001' => {'_action' => 'delete'})
+		}
+	end
+
+	def test_post_by_roy
+		@sd.load(
+			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
+		)
+		Sofa.client = 'roy' # roy belongs to the group
+
+		assert_nothing_raised(
+			'roy should be able to create a new item'
+		) {
+			@sd.update('_0001' => {'comment' => 'qux'})
+		}
+		assert_nothing_raised(
+			"roy should be able to update frank's item"
+		) {
+			@sd.update('20091122_0001' => {'comment' => 'qux'})
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"roy should not delete frank's item"
+		) {
+			@sd.update('20091122_0001' => {'_action' => 'delete'})
+		}
+	end
+
+	def test_post_by_carl
+		@sd.load(
+			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
+		)
+		Sofa.client = 'carl' # carl is not the member of the group
+
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'carl should not create a new item'
+		) {
+			@sd.update('_0001' => {'comment' => 'qux'})
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"carl should not update frank's item"
+		) {
+			@sd.update('20091122_0001' => {'comment' => 'qux'})
+		}
+		assert_nothing_raised(
+			'carl should be able to update his own item'
+		) {
+			@sd.update('20091122_0002' => {'comment' => 'qux'})
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"carl should not delete frank's item"
+		) {
+			@sd.update('20091122_0001' => {'_action' => 'delete'})
+		}
+	end
+
+	def test_post_by_frank
+		@sd.load(
+			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
+		)
+		Sofa.client = 'frank' # frank is the admin
+
+		assert_nothing_raised(
+			'frank should be able to create a new item'
+		) {
+			@sd.update('_0001' => {'comment' => 'qux'})
+		}
+		assert_nothing_raised(
+			'frank should be able to update his own item'
+		) {
+			@sd.update('20091122_0001' => {'comment' => 'qux'})
+		}
+		assert_nothing_raised(
+			"frank should be able to update carl's item"
+		) {
+			@sd.update('20091122_0002' => {'comment' => 'qux'})
+		}
+		assert_nothing_raised(
+			'frank should be able to delete his own item'
+		) {
+			@sd.update('20091122_0001' => {'_action' => 'delete'})
+		}
+		assert_nothing_raised(
+			"frank should be able to delete carl's item"
+		) {
+			@sd.update('20091122_0002' => {'_action' => 'delete'})
+		}
 	end
 
 end

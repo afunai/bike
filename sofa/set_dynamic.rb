@@ -36,7 +36,7 @@ def get(arg = {})
 end
 
 def post(action,v = nil)
-	return super unless action == :update
+	return super unless action == :update # the 'root' SD can only :update
 
 	if @workflow.permit_post? v
 		@workflow.before_post(action,v)
@@ -111,17 +111,24 @@ end
 		}
 	end
 
-def item_instance(id)
-	unless @item_object[id]
-		@item_object[id] = Sofa::Field.instance(
-			:id     => id,
-			:parent => self,
-			:klass  => 'set-static',
-			:html   => my[:item_html]
-		)
-		id[REX_NEW_ID] ? @item_object[id].load_default : @item_object[id].load(@storage.val id)
+	def item_instance(id)
+		unless @item_object[id]
+# TODO: cache the parsed item_html
+			@item_object[id] = Sofa::Field.instance(
+				:id     => id,
+				:parent => self,
+				:klass  => 'set-static',
+				:html   => my[:item_html]
+			)
+			id[REX_NEW_ID] ? @item_object[id].load_default : @item_object[id].load(@storage.val id)
+		end
+		@item_object[id]
 	end
-	@item_object[id]
+
+def default_action
+	['read','create','update'].find {|action|
+		@workflow._permit?(my[:role],action)
+	} || 'read'
 end
 
 end

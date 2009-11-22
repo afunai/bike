@@ -86,6 +86,11 @@ _html
 			@sd.role_on_items(:d => '200911'),
 			'Set::Dynamic#role_on_items should return :guest if any item is owned by somebody else'
 		)
+		assert_equal(
+			:guest,
+			@sd.role_on_items(:id => 'non-existent'),
+			'Set::Dynamic#role_on_items should return :guest if the item is non-existent'
+		)
 
 		Sofa.client = 'frank'
 		assert_equal(

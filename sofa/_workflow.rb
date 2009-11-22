@@ -34,12 +34,13 @@ class Sofa::Workflow
 
 	def permit_post?(val)
 		val.all? {|id,v|
-			if id =~ Sofa::Set::Dynamic::REX_NEW_ID
-				action = :create
-			elsif id =~ Sofa::Storage::REX_ID
-				action = v['_action'] ? v['_action'].intern : :update
-			else
-				next true # not a item value
+			case id
+				when Sofa::Set::Dynamic::REX_NEW_ID
+					action = :create
+				when Sofa::Storage::REX_ID
+					action = v['_action'] ? v['_action'].intern : :update
+				when /^_submit/
+					next true # not a item value
 			end
 			_permit?(@sd[:role],action) ||
 			(action != :create && _permit?(@sd.role_on_items(:id => id),action))

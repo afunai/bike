@@ -41,7 +41,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test__permit_guest?
+	def test_permit_guest?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
 			!wf.instance_eval { _permit?(:guest,:create) },
@@ -61,7 +61,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test__permit_owner?
+	def test_permit_owner?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
 			!wf.instance_eval { _permit?(:owner,:create) },
@@ -81,7 +81,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test__permit_group?
+	def test_permit_group?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
 			wf.instance_eval { _permit?(:group,:create) },
@@ -101,7 +101,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test__permit_admin?
+	def test_permit_admin?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
 			wf.instance_eval { _permit?(:admin,:create) },
@@ -121,7 +121,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test__permit_abnormal_role?
+	def test_permit_abnormal_role?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
 			!wf.instance_eval { _permit?(:'non-exist',:read) },
@@ -152,6 +152,11 @@ class TC_Workflow < Test::Unit::TestCase
 			!sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
 			"'nobody' should not get.delete carl's item"
 		)
+
+		assert(
+			!sd.workflow.permit_get?(:action => :update,:conds => {:id => 'non-existent'}),
+			"'nobody' should not get.update a non-existent item"
+		)
 	end
 
 	def test_permit_nobody_post?
@@ -168,6 +173,11 @@ class TC_Workflow < Test::Unit::TestCase
 		assert(
 			!sd.workflow.permit_post?('20091120_0001' => {'_action' => 'delete'}),
 			"'nobody' should not post.delete carl's item"
+		)
+
+		assert(
+			!sd.workflow.permit_post?('non-existent' => {'name' => 'foo'}),
+			"'nobody' should not post.update a non-existent item"
 		)
 	end
 

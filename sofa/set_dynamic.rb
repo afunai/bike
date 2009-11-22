@@ -19,7 +19,8 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 	def role_on_items(conds = {})
-		@storage.select(conds || {}).all? {|id|
+		item_ids = @storage.select(conds || {})
+		!item_ids.empty? && item_ids.all? {|id|
 			item_instance(id)[:owner] == Sofa.client
 		} ? :owner : :guest
 	end

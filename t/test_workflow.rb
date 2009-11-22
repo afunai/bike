@@ -193,12 +193,12 @@ class TC_Workflow < Test::Unit::TestCase
 			'don should be able to get.read the item'
 		)
 		assert(
-			!sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
-			"don should not get.update carl's item"
+			sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
+			"don should be able to get.update carl's item"
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
-			"don should be able to get.delete carl's item"
+			!sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
+			"don should not get.delete carl's item"
 		)
 	end
 
@@ -210,12 +210,12 @@ class TC_Workflow < Test::Unit::TestCase
 			'don should be able to post.create'
 		)
 		assert(
-			!sd.workflow.permit_post?('20091120_0001' => {'name' => 'foo'}),
-			"don should not post.update carl's item"
+			sd.workflow.permit_post?('20091120_0001' => {'name' => 'foo'}),
+			"don should be able to post.update carl's item"
 		)
 		assert(
-			sd.workflow.permit_post?('20091120_0001' => {'_action' => 'delete'}),
-			"don should be able to post.delete carl's item"
+			!sd.workflow.permit_post?('20091120_0001' => {'_action' => 'delete'}),
+			"don should not post.delete carl's item"
 		)
 	end
 

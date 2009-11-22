@@ -84,8 +84,8 @@ class Sofa::Workflow::Blog < Sofa::Workflow
 	PERM = {
 		:create => 'oo--',
 		:read   => 'oooo',
-		:update => 'o-o-',
-		:delete => 'oo--',
+		:update => 'oo--',
+		:delete => 'o-o-',
 	}
 
 end

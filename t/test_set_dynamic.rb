@@ -10,7 +10,6 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 			:id        => 'main',
 			:klass     => 'set-dynamic',
 			:workflow  => 'blog',
-			:owner     => 'frank',
 			:tmpl      => <<'_tmpl',
 <ul id="foo" class="sofa-blog">
 $()</ul>
@@ -19,9 +18,14 @@ _tmpl
 	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
 _html
 		)
+		def @sd.meta_admins
+			['frank']
+		end
+		Sofa.client = 'frank'
 	end
 
 	def teardown
+		Sofa.client = nil
 	end
 
 	def test_storage
@@ -154,7 +158,6 @@ _html
 			'Set::Dynamic#get should return the html by [:tmpl]'
 		)
 
-		Sofa.client = 'frank'
 		@sd.each {|ss|
 			ss.each {|item|
 				def item._get_update(arg)
@@ -208,8 +211,8 @@ _html
 
 	def test_update
 		@sd.load(
-			'1234' => {'name' => 'frank','comment' => 'bar'},
-			'1235' => {'name' => 'carl', 'comment' => 'baz'}
+			'20091122_1234' => {'name' => 'frank','comment' => 'bar'},
+			'20091122_1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
 		s = @sd.storage
 		def s.new_id
@@ -217,25 +220,25 @@ _html
 		end
 
 		# update an item
-		@sd.update('1234' => {'comment' => 'qux'})
+		@sd.update('20091122_1234' => {'comment' => 'qux'})
 		assert_equal(
 			{'name' => 'frank','comment' => 'qux'},
-			@sd.item('1234').val,
+			@sd.item('20091122_1234').val,
 			'Set::Dynamic#update should update the values of the item instance'
 		)
 		assert_equal(
 			:update,
-			@sd.item('1234').action,
+			@sd.item('20091122_1234').action,
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 		assert_equal(
 			nil,
-			@sd.item('1234','name').action,
+			@sd.item('20091122_1234','name').action,
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 		assert_equal(
 			:update,
-			@sd.item('1234','comment').action,
+			@sd.item('20091122_1234','comment').action,
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 
@@ -263,15 +266,15 @@ _html
 		)
 
 		# delete an item
-		@sd.update('1235' => {:delete => true})
+		@sd.update('20091122_1235' => {:delete => true})
 		assert_equal(
 			{'name' => 'carl','comment' => 'baz'},
-			@sd.item('1235').val,
+			@sd.item('20091122_1235').val,
 			'Set::Dynamic#update should not update the values of the item when deleting'
 		)
 		assert_equal(
 			:delete,
-			@sd.item('1235').action,
+			@sd.item('20091122_1235').action,
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 
@@ -283,8 +286,8 @@ _html
 		)
 		assert_equal(
 			{
-				'1234' => {'name' => 'frank','comment' => 'bar'},
-				'1235' => {'name' => 'carl', 'comment' => 'baz'},
+				'20091122_1234' => {'name' => 'frank','comment' => 'bar'},
+				'20091122_1235' => {'name' => 'carl', 'comment' => 'baz'},
 			},
 			@sd.val,
 			'Set::Dynamic#update should not touch the original values in the storage'
@@ -299,8 +302,8 @@ _html
 		)
 		assert_equal(
 			{
-				'1234' => {'name' => 'frank','comment' => 'qux'},
-				'new!' => {'name' => 'roy',  'comment' => 'hi.'},
+				'20091122_1234' => {'name' => 'frank','comment' => 'qux'},
+				'new!'          => {'name' => 'roy',  'comment' => 'hi.'},
 			},
 			@sd.val,
 			'Set::Dynamic#commit should update the original values in the storage'
@@ -312,12 +315,12 @@ _html
 		)
 		assert_equal(
 			:update,
-			@sd.item('1234').result,
+			@sd.item('20091122_1234').result,
 			'Set::Dynamic#commit should set @result for the items'
 		)
 		assert_equal(
 			:delete,
-			@sd.item('1235').result,
+			@sd.item('20091122_1235').result,
 			'Set::Dynamic#commit should set @result for the items'
 		)
 		assert_equal(

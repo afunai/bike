@@ -31,18 +31,20 @@ def get(arg = {})
 		@workflow.before_get arg
 		@workflow.filter super
 	else
-		Sofa::Error::Forbidden.new
+		raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
 	end
 end
 
-def ppost(action,v = nil)
-	if @workflow.permit?(v,:post)
+def post(action,v = nil)
+	return super unless action == :update
+
+	if @workflow.permit_post? v
 		@workflow.before_post(action,v)
 		super
 		@workflow.after_post
 		self
 	else
-		Sofa::Error::Forbidden.new
+		raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
 	end
 end
 

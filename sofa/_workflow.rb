@@ -47,21 +47,6 @@ class Sofa::Workflow
 		}
 	end
 
-	def before_get(arg)
-	end
-
-	def filter(html)
-		html
-	end
-
-	def before_post(action,v)
-	end
-
-	def after_post
-	end
-
-	private
-
 	def _permit?(role,action)
 		perm = self.class.const_get(:PERM)[action]
 		perm && perm =~ case role
@@ -76,6 +61,19 @@ class Sofa::Workflow
 			else
 				/.\A/ # never matches
 		end ? true : false
+	end
+
+	def before_get(arg)
+	end
+
+	def filter(html)
+		html
+	end
+
+	def before_post(action,v)
+	end
+
+	def after_post
 	end
 
 end

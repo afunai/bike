@@ -32,15 +32,18 @@ class Sofa::Workflow
 		(arg[:action] != :create && _permit?(@sd.role_on_items(arg[:conds]),arg[:action]))
 	end
 
-	def permit_post?(params,method = :get)
-		return true if params[:action] == :load || params[:action] == :load_default
-		return true if _permit?(@sd[:role],params[:action])
-		return false if params[:action] == :create
-
-		conds = (method == :get) ?
-			params[:conds] :
-			{:id => params.keys.select {|k| k =~ Sofa::Storage::REX_ID }}
-		_permit?(@sd.role_on_items(conds),params[:action])
+	def permit_post?(val)
+		val.all? {|id,v|
+			if id =~ Sofa::Set::Dynamic::REX_NEW_ID
+				action = :create
+			elsif id =~ Sofa::Storage::REX_ID
+				action = v['_action'] ? v['_action'].intern : :update
+			else
+				next true # not a item value
+			end
+			_permit?(@sd[:role],action) ||
+			(action != :create && _permit?(@sd.role_on_items(:id => id),action))
+		}
 	end
 
 	def before_get(arg)

@@ -308,4 +308,57 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
+	class Sofa::Workflow::Test_Default_Action < Sofa::Workflow
+		PERM = {
+			:create => 'oo--',
+			:read   => 'o---',
+			:update => 'ooo-',
+			:foo    => 'oooo',
+		}
+	end
+	def test_default_action
+		sd = Sofa::Set::Dynamic.new(:group => ['roy'])
+		sd.instance_eval { @workflow = Sofa::Workflow::Test_Default_Action.new sd }
+		def sd.meta_admins
+			['frank']
+		end
+		sd.load(
+			'20091122_0001' => {'_owner' => 'carl'},
+			'20091122_0002' => {'_owner' => 'frank'}
+		)
+
+		Sofa.client = nil
+		assert_equal(
+			:foo,
+			sd.workflow.default_action,
+			'Workflow#default_action should return a permitted action for the client'
+		)
+
+		Sofa.client = 'carl' # carl is not the member of the group
+		assert_equal(
+			:foo,
+			sd.workflow.default_action,
+			'Workflow#default_action should return a permitted action for the client'
+		)
+		assert_equal(
+			:update,
+			sd.workflow.default_action(:conds => {:id => '20091122_0001'}),
+			'Workflow#default_action should see the given conds'
+		)
+
+		Sofa.client = 'roy' # roy belongs to the group
+		assert_equal(
+			:create,
+			sd.workflow.default_action,
+			'Workflow#default_action should return a permitted action for the client'
+		)
+
+		Sofa.client = 'frank' # frank is the admin
+		assert_equal(
+			:read,
+			sd.workflow.default_action,
+			'Workflow#default_action should return a permitted action for the client'
+		)
+	end
+
 end

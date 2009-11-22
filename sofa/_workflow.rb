@@ -32,6 +32,13 @@ class Sofa::Workflow
 		(arg[:action] != :create && _permit?(@sd.role_on_items(arg[:conds]),arg[:action]))
 	end
 
+	def default_action(arg = {})
+		actions = self.class.const_get(:PERM).keys - [:read,:create,:update]
+		([:read,:create,:update] + actions).find {|action|
+			permit_get?(arg.merge :action => action)
+		} || :read
+	end
+
 	def permit_post?(val)
 		val.all? {|id,v|
 			case id

@@ -37,6 +37,13 @@ class Sofa::Workflow
 		params[:action] != :create && _permit?(@sd.role_on_items(conds),params[:action])
 	end
 
+	def before_get(arg)
+	end
+
+	def filter(html)
+		html
+	end
+
 	private
 
 	def _permit?(role,action)

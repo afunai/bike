@@ -5,17 +5,12 @@
 
 class TC_Set_Dynamic < Test::Unit::TestCase
 
-	class Sofa::Text
-		def _get_test_sd(arg)
-			'moo!'
-		end
-	end
-
 	def setup
 		@sd = Sofa::Set::Dynamic.new(
 			:id        => 'main',
 			:klass     => 'set-dynamic',
 			:workflow  => 'blog',
+			:owner     => 'frank',
 			:tmpl      => <<'_tmpl',
 <ul id="foo" class="sofa-blog">
 $()</ul>
@@ -153,13 +148,22 @@ _html
 			@sd.get(:conds => {:id => '1235'}),
 			'Set::Dynamic#get should return the html by [:tmpl]'
 		)
+
+		Sofa.client = 'frank'
+		@sd.each {|ss|
+			ss.each {|item|
+				def item._get_update(arg)
+					'moo!'
+				end
+			}
+		}
 		assert_equal(
 			<<'_html',
 <ul id="foo" class="sofa-blog">
 	<li>moo!: moo!</li>
 </ul>
 _html
-			@sd.get(:conds => {:id => '1235'},:action => 'test_sd'),
+			@sd.get(:conds => {:id => '1235'},:action => :update),
 			'Set::Dynamic#get should return the html by [:tmpl]'
 		)
 	end

@@ -24,6 +24,20 @@ class Sofa::Set::Dynamic < Sofa::Field
 		} ? :owner : :guest
 	end
 
+def get(arg = {})
+	arg[:action] ||= :read
+	if @workflow.permit?(arg,:get)
+		@workflow.before_get arg
+		@workflow.filter super
+	else
+		Sofa::Error::Forbidden.new
+	end
+end
+
+def post(action,v = nil)
+	super
+end
+
 	def commit(type = :temp)
 		if @storage.is_a? Sofa::Storage::Temp
 			pending_items.each {|id,item|

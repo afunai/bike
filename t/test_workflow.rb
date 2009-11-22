@@ -302,6 +302,10 @@ class TC_Workflow < Test::Unit::TestCase
 			!sd.workflow.permit_get?(:action => :'***'),
 			'frank should not get.*** on the stage'
 		)
+		assert(
+			!sd.workflow.permit_post?('20091120_0001' => {'_action' => '***'}),
+			'frank should not post.*** on the stage'
+		)
 	end
 
 end

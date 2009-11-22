@@ -27,14 +27,20 @@ class Sofa::Workflow
 		@sd = sd
 	end
 
-	def permit?(params,method = :get)
+	def permit_get?(arg)
+		_permit?(@sd[:role],arg[:action]) ||
+		(arg[:action] != :create && _permit?(@sd.role_on_items(arg[:conds]),arg[:action]))
+	end
+
+	def permit_post?(params,method = :get)
+		return true if params[:action] == :load || params[:action] == :load_default
 		return true if _permit?(@sd[:role],params[:action])
-		if method == :get
-			conds = params[:conds]
-		else
-			conds = {:id => params.keys.select {|k| k =~ Sofa::Storage::REX_ID }}
-		end
-		params[:action] != :create && _permit?(@sd.role_on_items(conds),params[:action])
+		return false if params[:action] == :create
+
+		conds = (method == :get) ?
+			params[:conds] :
+			{:id => params.keys.select {|k| k =~ Sofa::Storage::REX_ID }}
+		_permit?(@sd.role_on_items(conds),params[:action])
 	end
 
 	def before_get(arg)
@@ -42,6 +48,12 @@ class Sofa::Workflow
 
 	def filter(html)
 		html
+	end
+
+	def before_post(action,v)
+	end
+
+	def after_post
 	end
 
 	private

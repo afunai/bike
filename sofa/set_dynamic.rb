@@ -25,8 +25,8 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 def get(arg = {})
-	arg[:action] ||= :read
-	if @workflow.permit?(arg,:get)
+	arg[:action] ||= :read # TODO: look for a possible action by the client
+	if @workflow.permit_get? arg
 		@workflow.before_get arg
 		@workflow.filter super
 	else
@@ -34,8 +34,15 @@ def get(arg = {})
 	end
 end
 
-def post(action,v = nil)
-	super
+def ppost(action,v = nil)
+	if @workflow.permit?(v,:post)
+		@workflow.before_post(action,v)
+		super
+		@workflow.after_post
+		self
+	else
+		Sofa::Error::Forbidden.new
+	end
 end
 
 	def commit(type = :temp)

@@ -340,31 +340,20 @@ _html
 		)
 	end
 
-	def test_post_by_nobody
+	def test_get_by_nobody
 		@sd.load(
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
 		Sofa.client = nil
 
-		assert_raise(
-			Sofa::Error::Forbidden,
-			"'nobody' should not create a new item"
-		) {
-			@sd.update('_0001' => {'comment' => 'qux'})
-		}
-		assert_raise(
-			Sofa::Error::Forbidden,
-			"'nobody' should not update frank's item"
-		) {
-			@sd.update('20091122_0001' => {'comment' => 'qux'})
-		}
-		assert_raise(
-			Sofa::Error::Forbidden,
-			"'nobody' should not delete frank's item"
-		) {
-			@sd.update('20091122_0001' => {'_action' => 'delete'})
-		}
+		arg = {:action => :update}
+		@sd.get arg
+		assert_equal(
+			:read,
+			arg[:action],
+			'Set::Dynamic#get should retreat from the forbidden action'
+		)
 	end
 
 	def test_post_by_nobody
@@ -394,29 +383,34 @@ _html
 		}
 	end
 
-	def test_post_by_roy
+	def test_get_by_carl
 		@sd.load(
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = 'roy' # roy belongs to the group
+		Sofa.client = 'carl' # carl is not the member of the group
 
-		assert_nothing_raised(
-			'roy should be able to create a new item'
-		) {
-			@sd.update('_0001' => {'comment' => 'qux'})
-		}
-		assert_nothing_raised(
-			"roy should be able to update frank's item"
-		) {
-			@sd.update('20091122_0001' => {'comment' => 'qux'})
-		}
-		assert_raise(
-			Sofa::Error::Forbidden,
-			"roy should not delete frank's item"
-		) {
-			@sd.update('20091122_0001' => {'_action' => 'delete'})
-		}
+		arg = {:action => :create}
+		@sd.get arg
+		assert_equal(
+			:read,
+			arg[:action],
+			'Set::Dynamic#get should retreat from the forbidden action'
+		)
+		arg = {:action => :update}
+		@sd.get arg
+		assert_equal(
+			:read,
+			arg[:action],
+			'Set::Dynamic#get should retreat from the forbidden action'
+		)
+		arg = {:action => :update,:conds => {:id => '20091122_0002'}}
+		@sd.get arg
+		assert_equal(
+			:update,
+			arg[:action],
+			'Set::Dynamic#get should keep the permitted action'
+		)
 	end
 
 	def test_post_by_carl
@@ -449,6 +443,77 @@ _html
 		) {
 			@sd.update('20091122_0001' => {'_action' => 'delete'})
 		}
+	end
+
+	def test_get_by_roy
+		@sd.load(
+			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
+		)
+		Sofa.client = 'roy' # roy belongs to the group
+
+		arg = {:action => :create}
+		@sd.get arg
+		assert_equal(
+			:create,
+			arg[:action],
+			'Set::Dynamic#get should keep the permitted action'
+		)
+		arg = {:action => :delete}
+		@sd.get arg
+		assert_equal(
+			:read,
+			arg[:action],
+			'Set::Dynamic#get should retreat from the forbidden action'
+		)
+	end
+
+	def test_post_by_roy
+		@sd.load(
+			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
+		)
+		Sofa.client = 'roy' # roy belongs to the group
+
+		assert_nothing_raised(
+			'roy should be able to create a new item'
+		) {
+			@sd.update('_0001' => {'comment' => 'qux'})
+		}
+		assert_nothing_raised(
+			"roy should be able to update frank's item"
+		) {
+			@sd.update('20091122_0001' => {'comment' => 'qux'})
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"roy should not delete frank's item"
+		) {
+			@sd.update('20091122_0001' => {'_action' => 'delete'})
+		}
+	end
+
+	def test_get_by_frank
+		@sd.load(
+			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
+		)
+		Sofa.client = 'frank' # frank is the admin
+
+		arg = {:action => :create}
+		@sd.get arg
+		assert_equal(
+			:create,
+			arg[:action],
+			'Set::Dynamic#get should keep the permitted action'
+		)
+		arg = {:action => :delete}
+		@sd.get arg
+		assert_equal(
+			:delete,
+			arg[:action],
+			'Set::Dynamic#get should keep the permitted action'
+		)
 	end
 
 	def test_post_by_frank

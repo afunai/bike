@@ -25,28 +25,28 @@ class Sofa::Set::Dynamic < Sofa::Field
 		} ? :owner : :guest
 	end
 
-def get(arg = {})
-	arg[:action] ||= :read # TODO: look for a possible action by the client
-	if @workflow.permit_get? arg
-		@workflow.before_get arg
-		@workflow.filter super
-	else
-		raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
+	def get(arg = {})
+		arg[:action] = @workflow.default_action(arg) unless @workflow.permit_get? arg
+		if @workflow.permit_get? arg
+			@workflow.before_get arg
+			@workflow.filter super
+		else
+			raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
+		end
 	end
-end
 
-def post(action,v = nil)
-	return super unless action == :update # the 'root' SD can only :update
+	def post(action,v = nil)
+		return super unless action == :update # the 'root' set can only be updated
 
-	if @workflow.permit_post? v
-		@workflow.before_post(action,v)
-		super
-		@workflow.after_post
-		self
-	else
-		raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
+		if @workflow.permit_post? v
+			@workflow.before_post(action,v)
+			super
+			@workflow.after_post
+			self
+		else
+			raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
+		end
 	end
-end
 
 	def commit(type = :temp)
 		if @storage.is_a? Sofa::Storage::Temp
@@ -124,11 +124,5 @@ end
 		end
 		@item_object[id]
 	end
-
-def default_action
-	['read','create','update'].find {|action|
-		@workflow._permit?(my[:role],action)
-	} || 'read'
-end
 
 end

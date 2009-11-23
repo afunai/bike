@@ -288,8 +288,8 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
-<ul class="sofa-blog" id="foo">$()</ul>
+					:tmpl      => <<'_tmpl'.chomp,
+<ul class="sofa-blog" id="@(name)">$()</ul>
 _tmpl
 					:item_html => '<li>hello</li>',
 				}
@@ -315,8 +315,9 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
-<ul class="sofa-blog" id="foo">$()</ul>
+					:tmpl      => <<'_tmpl'.chomp,
+<ul class="sofa-blog" id="@(name)">
+$()</ul>
 _tmpl
 					:item_html => "\t<li>hello</li>\n",
 				},
@@ -340,8 +341,8 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
-<ul class="sofa-blog" id="foo">$()</ul>
+					:tmpl      => <<'_tmpl'.chomp,
+<ul class="sofa-blog" id="@(name)">$()</ul>
 _tmpl
 					:item_html => '<li>hello</li>',
 				},
@@ -375,13 +376,14 @@ _html
 					:tokens    => ['barbaz'],
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
-<table class="sofa-blog" id="foo">		<!-- 1..20 barbaz -->
-$()</table>
+					:tmpl      => <<'_tmpl'.chomp,
+<table class="sofa-blog" id="@(name)">
+		<!-- 1..20 barbaz -->
+$()	</table>
 _tmpl
-					:item_html => <<'_tmpl',
+					:item_html => <<'_html',
 		<tbody><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
-_tmpl
+_html
 				},
 			},
 			result[:item],
@@ -403,13 +405,14 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
-<table class="sofa-blog" id="foo">		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-$()</table>
+					:tmpl      => <<'_tmpl'.chomp,
+<table class="sofa-blog" id="@(name)">
+		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
+$()	</table>
 _tmpl
-					:item_html => <<'_tmpl',
+					:item_html => <<'_html',
 		<tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
-_tmpl
+_html
 				},
 			},
 			result[:item],
@@ -439,8 +442,9 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
-<ul class="sofa-blog" id="foo">$()</ul>
+					:tmpl      => <<'_tmpl'.chomp,
+<ul class="sofa-blog" id="@(name)">
+$()</ul>
 _tmpl
 					:item_html => <<'_html',
 	<li>
@@ -480,8 +484,9 @@ _html
 				'foo'   => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
-<ul id="foo" class="sofa-blog">$()</ul>
+					:tmpl      => <<'_tmpl'.chomp,
+<ul id="@(name)" class="sofa-blog">
+$()	</ul>
 _tmpl
 					:item_html => <<'_html',
 		<li>

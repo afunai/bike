@@ -48,7 +48,8 @@ end
 	end
 
 	def get(arg = {})
-		_get_by_tmpl(arg,my[:tmpl])
+		m = "_get_#{arg[:action]}"
+		(m != '_get_read') && respond_to?(m,true) ? __send__(m,arg) : _get_by_tmpl(arg,my[:tmpl])
 	end
 
 	private

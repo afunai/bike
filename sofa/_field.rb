@@ -166,15 +166,18 @@ class Sofa::Field
 	end
 
 	def _get_by_tmpl(arg,tmpl = '')
-		tmpl.gsub(/(@|\$)\((.*?)\)/) {
-			if $1 == '@'
-				my[$2.intern]
-			elsif $2 != ''
-				steps = $2.split '-'
-				item = item steps
-				item.get arg # TODO: distribute proper sub-arg for the item
-			else
+		tmpl.gsub(/(@|\$)\((.*?)(?:\.(.+?))?\)/) {
+			type,name,action = $1,$2,$3
+			if type == '@'
+				my[name.intern]
+			elsif name == ''
 				_get arg
+			else
+				steps = name.split '-'
+				item = item steps
+				item_arg = arg.dup # TODO: distribute proper sub-arg for the item
+				item_arg[:action] = action.intern if action
+				item ? item.get(item_arg) : '???'
 			end
 		}
 	end

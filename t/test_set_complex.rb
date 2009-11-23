@@ -5,12 +5,19 @@
 
 class TC_Set_Complex < Test::Unit::TestCase
 
+	class ::Sofa::Set::Dynamic
+		def _get_vegetable(arg)
+			"'potato'"
+		end
+	end
+
 	class ::Sofa::Workflow::Pipco < ::Sofa::Workflow
 		PERM = {
-			:create => 'oo--',
-			:read   => 'oooo',
-			:update => 'ooo-',
-			:delete => 'o-o-',
+			:create    => 'oo--',
+			:read      => 'oooo',
+			:update    => 'ooo-',
+			:delete    => 'o-o-',
+			:vegetable => 'oooo',
 		}
 	end
 
@@ -28,16 +35,16 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:workflow  => 'pipco',
 			:group     => ['roy','don'],
 			:tmpl      => <<'_tmpl',
-<ul id="foo" class="sofa-pipco">
+<ul id="@(name)" class="sofa-pipco">
 $()</ul>
 _tmpl
 			:item_html => <<'_html'
-	<li>
+	<li id="@(name)">
 		name:(tomago 32 :'nobody'): comment:(tomago 64 :'hi.')
 		<ul id="files" class="sofa-pipco">
-<li>file:(tomago :'foo.jpg')</li>
+			<li id="@(name)">file:(tomago :'foo.jpg')</li>
 		</ul>
-		%(bar-navi)
+		$(files.vegetable)
 	</li>
 _html
 		)
@@ -70,6 +77,8 @@ _html
 	end
 
 	def test_get_default
+puts			@sd.get
+return
 		assert_equal(
 			<<'_html',
 <ul id="foo" class="sofa-pipco">

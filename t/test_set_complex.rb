@@ -6,6 +6,9 @@
 class TC_Set_Complex < Test::Unit::TestCase
 
 	class ::Sofa::Set::Dynamic
+		def _get_modify(arg)
+			_get_by_tmpl({:action => :modify},my[:tmpl]) + '[modify]'
+		end
 		def _get_vegetable(arg)
 			"'potato'"
 		end
@@ -17,6 +20,7 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:read      => 'oooo',
 			:update    => 'ooo-',
 			:delete    => 'o-o-',
+			:modify    => 'ooo-',
 			:vegetable => 'oooo',
 		}
 	end
@@ -48,9 +52,6 @@ _tmpl
 	</li>
 _html
 		)
-		def @sd.meta_admins
-			['frank']
-		end
 		@sd.load(
 			'20091123_0001' => {
 				'_owner'  => 'carl',
@@ -98,6 +99,18 @@ _html
 </ul>
 _html
 			@sd.get,
+			'Set#get should work recursively as a part of the complex'
+		)
+	end
+
+	def test_get_with_arg
+		Sofa.client = 'root'
+puts			@sd.get(:action => :modify)
+return
+		assert_equal(
+			<<'_html',
+_html
+			@sd.get(:action => :update),
 			'Set#get should work recursively as a part of the complex'
 		)
 	end

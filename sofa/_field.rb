@@ -69,7 +69,7 @@ class Sofa::Field
 	end
 
 	def meta_admins
-		(my[:parent] && my[:parent][:folder]) ? my[:parent][:folder][:owners] : []
+		(my[:parent] && my[:parent][:folder]) ? my[:parent][:folder][:owners] : ['root']
 	end
 
 	def meta_group

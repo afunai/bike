@@ -90,7 +90,7 @@ class Sofa::Field
 
 	def get(arg = {})
 		action = arg[:action]
-		action = 'read' unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)
+		action = :default unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)
 		if tmpl = my[:"tmpl_#{action}"]
 			_get_by_tmpl(arg,tmpl)
 		else
@@ -162,7 +162,7 @@ class Sofa::Field
 
 	def _get(arg)
 		m = "_get_#{arg[:action]}"
-		respond_to?(m,true) ? __send__(m,arg) : _get_read(arg)
+		respond_to?(m,true) ? __send__(m,arg) : _get_default(arg)
 	end
 
 	def _get_by_tmpl(arg,tmpl = '')
@@ -182,7 +182,7 @@ class Sofa::Field
 		}
 	end
 
-	def _get_read(arg)
+	def _get_default(arg)
 		Rack::Utils.escape_html val.to_s
 	end
 

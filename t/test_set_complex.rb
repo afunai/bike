@@ -77,25 +77,23 @@ _html
 	end
 
 	def test_get_default
-puts			@sd.get
-return
 		assert_equal(
 			<<'_html',
-<ul id="foo" class="sofa-pipco">
-	<li>
+<ul id="main" class="sofa-pipco">
+	<li id="main-20091123_0001">
 		'CZ'(action,read): 'oops'(action,read)
-		<ul id="files" class="sofa-pipco"><li>'carl1.jpg'(action,read)</li>
-<li>'carl2.jpg'(action,read)</li>
-</ul>
-
-		%(bar-navi)
+		<ul id="main-20091123_0001-files" class="sofa-pipco">
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action,read)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action,read)</li>
+		</ul>
+		'potato'
 	</li>
-	<li>
+	<li id="main-20091123_0002">
 		'RE'(action,read): 'wee'(action,read)
-		<ul id="files" class="sofa-pipco"><li>'roy.png'(action,read)</li>
-</ul>
-
-		%(bar-navi)
+		<ul id="main-20091123_0002-files" class="sofa-pipco">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,read)</li>
+		</ul>
+		'potato'
 	</li>
 </ul>
 _html

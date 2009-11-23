@@ -25,15 +25,15 @@ class Sofa::Set::Dynamic < Sofa::Field
 		} ? :owner : :guest
 	end
 
-def get(arg = {})
-	arg[:action] = @workflow.default_action(arg) unless @workflow.permit_get? arg
-	if @workflow.permit_get? arg
-		@workflow.before_get arg
-		@workflow.filter super
-	else
-		raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
+	def get(arg = {})
+		arg[:action] = @workflow.default_action(arg) unless @workflow.permit_get? arg
+		if @workflow.permit_get? arg
+			@workflow.before_get arg
+			@workflow.filter_get super
+		else
+			raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
+		end
 	end
-end
 
 	def post(action,v = nil)
 		return super unless action == :update # the 'root' set can only be updated

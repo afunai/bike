@@ -67,20 +67,21 @@ class Sofa::Set::Static < Sofa::Field
 			if s.scan /(\w+):\(/m
 				tmpl << "$(#{s[1]})"
 				item[s[1]] = parse_tokens(s)
-			elsif s.scan /<(\w+).+?class="[^"]*?sofa-(\w+).+?>/
+			elsif s.scan /<(\w+).+?class="[^"]*?sofa-(\w+).+?>\n?/i
 				tag      = s[0]
+				id       = tag.sub!(/id="(.+?)"/i,'id="@(name)"') ? $1 : 'main'
 				name     = s[1]
 				workflow = s[2]
-				id       = tag[/id="(.+?)"/,1]
+				indent   = tmpl[/^\s*\z/]
 
 				tmpl << "$(#{id})"
 
 				inner_html = parse_inner_html(s,name)
 				if inner_html.sub!(/^\s*<tbody.*?<\/tbody>\n?/im,'$()')
-					self_tmpl = "#{tag}#{inner_html}</#{name}>\n"
+					self_tmpl = "#{tag}#{inner_html}#{indent}</#{name}>"
 					item_html = $&
 				else
-					self_tmpl = "#{tag}$()</#{name}>\n"
+					self_tmpl = "#{tag}$()#{indent}</#{name}>"
 					item_html = inner_html
 				end
 				item[id] = {

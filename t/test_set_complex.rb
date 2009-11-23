@@ -16,11 +16,12 @@ class TC_Set_Complex < Test::Unit::TestCase
 
 	class ::Sofa::Tomago < ::Sofa::Field
 		def get(arg)
-			"#{val}:#{arg.sort.join ','}"
+			"'#{val}'(#{arg.sort.join ','})"
 		end
 	end
 
 	def setup
+		# Set::Dynamic of Set::Static of (Scalar and (Set::Dynamic of Set::Static of Scalar))
 		@sd = Sofa::Set::Dynamic.new(
 			:id        => 'main',
 			:klass     => 'set-dynamic',
@@ -34,7 +35,7 @@ _tmpl
 	<li>
 		name:(tomago 32 :'nobody'): comment:(tomago 64 :'hi.')
 		<ul id="files" class="sofa-pipco">
-			<li>file:(tomago :'foo.jpg')</li>
+<li>file:(tomago :'foo.jpg')</li>
 		</ul>
 		%(bar-navi)
 	</li>
@@ -68,7 +69,30 @@ _html
 		Sofa.client = nil
 	end
 
-	def test_storage
+	def test_get_default
+		assert_equal(
+			<<'_html',
+<ul id="foo" class="sofa-pipco">
+	<li>
+		'CZ'(action,read): 'oops'(action,read)
+		<ul id="files" class="sofa-pipco"><li>'carl1.jpg'(action,read)</li>
+<li>'carl2.jpg'(action,read)</li>
+</ul>
+
+		%(bar-navi)
+	</li>
+	<li>
+		'RE'(action,read): 'wee'(action,read)
+		<ul id="files" class="sofa-pipco"><li>'roy.png'(action,read)</li>
+</ul>
+
+		%(bar-navi)
+	</li>
+</ul>
+_html
+			@sd.get,
+			'Set#get should work recursively as a part of the complex'
+		)
 	end
 
 end

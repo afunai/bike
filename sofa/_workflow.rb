@@ -73,8 +73,8 @@ class Sofa::Workflow
 	def before_get(arg)
 	end
 
-	def filter(html)
-		html
+	def filter_get(out)
+		out
 	end
 
 	def before_post(action,v)

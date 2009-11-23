@@ -29,7 +29,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 		arg[:action] = @workflow.default_action(arg) unless @workflow.permit_get? arg
 		if @workflow.permit_get? arg
 			@workflow.before_get arg
-			@workflow.filter super
+			@workflow.filter_get super
 		else
 			raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
 		end

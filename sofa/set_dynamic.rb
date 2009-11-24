@@ -18,27 +18,40 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@item_object = {}
 	end
 
-	def role_on_items(conds = {})
-		item_ids = @storage.select(conds || {})
-		!item_ids.empty? && item_ids.all? {|id|
-			item_instance(id)[:owner] == Sofa.client
-		} ? :owner : :guest
-	end
+def permit_get?(arg)
+	permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
+		item.permit? arg[:action]
+	}
+end
+
+def permit_post?(val)
+	val.all? {|id,v|
+		case id
+			when Sofa::Set::Dynamic::REX_NEW_ID
+				action = :create
+			when Sofa::Storage::REX_ID
+				action = v['_action'] ? v['_action'].intern : :update
+			when /^_submit/
+				next true # not a item value
+		end
+		permit?(action) || (action != :create && item(id) && item(id).permit?(action))
+	}
+end
 
 	def get(arg = {})
-		arg[:action] = @workflow.default_action(arg) unless @workflow.permit_get? arg
-		if @workflow.permit_get? arg
+		arg[:action] = default_action unless permit_get? arg
+		if arg[:action]
 			@workflow.before_get arg
 			@workflow.filter_get super
 		else
-			raise Sofa::Error::Forbidden.new "forbidden: #{action} '#{my[:full_name]}'"
+			"forbidden: #{my[:name]}"
 		end
 	end
 
 	def post(action,v = nil)
 		return super unless action == :update # the 'root' set can only be updated
 
-		if @workflow.permit_post? v
+		if permit_post? v
 			@workflow.before_post(action,v)
 			super
 			@workflow.after_post

@@ -5,11 +5,16 @@
 
 class Sofa::Workflow
 
+	ROLE_ADMIN = 0b1000
+	ROLE_GROUP = 0b0100
+	ROLE_OWNER = 0b0010
+	ROLE_GUEST = 0b0001
+
 	PERM = {
-		:create => 'oooo',
-		:read   => 'oooo',
-		:update => 'oooo',
-		:delete => 'oooo',
+		:create => 0b1111,
+		:read   => 0b1111,
+		:update => 0b1111,
+		:delete => 0b1111,
 	}
 
 	def self.instance(sd)
@@ -27,47 +32,8 @@ class Sofa::Workflow
 		@sd = sd
 	end
 
-	def permit_get?(arg)
-		permit?(@sd[:role],arg[:action]) ||
-		(arg[:action] != :create && permit?(@sd.role_on_items(arg[:conds]),arg[:action]))
-	end
-
-	def default_action(arg = {})
-		actions = self.class.const_get(:PERM).keys - [:read,:create,:update]
-		([:read,:create,:update] + actions).find {|action|
-			permit_get?(arg.merge :action => action)
-		} || :read
-	end
-
-	def permit_post?(val)
-		val.all? {|id,v|
-			case id
-				when Sofa::Set::Dynamic::REX_NEW_ID
-					action = :create
-				when Sofa::Storage::REX_ID
-					action = v['_action'] ? v['_action'].intern : :update
-				when /^_submit/
-					next true # not a item value
-			end
-			permit?(@sd[:role],action) ||
-			(action != :create && permit?(@sd.role_on_items(:id => id),action))
-		}
-	end
-
-	def permit?(role,action)
-		perm = self.class.const_get(:PERM)[action]
-		perm && perm =~ case role
-			when :admin
-				/^o.../
-			when :group
-				/^.o../
-			when :owner
-				/^..o./
-			when :guest
-				/^...o/
-			else
-				/.\A/ # never matches
-		end ? true : false
+	def permit?(roles,action)
+		(roles & self.class.const_get(:PERM)[action].to_i) > 0
 	end
 
 	def before_get(arg)
@@ -89,10 +55,10 @@ end
 class Sofa::Workflow::Blog < Sofa::Workflow
 
 	PERM = {
-		:create => 'oo--',
-		:read   => 'oooo',
-		:update => 'ooo-',
-		:delete => 'o-o-',
+		:create => 0b1100,
+		:read   => 0b1111,
+		:update => 0b1110,
+		:delete => 0b1010,
 	}
 
 end

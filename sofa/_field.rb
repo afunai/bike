@@ -83,16 +83,22 @@ class Sofa::Field
 	end
 
 	def meta_roles
-		roles  = 0b0001 # guest
-		roles |= 0b1000 if my[:admins].include? Sofa.client
-		roles |= 0b0100 if my[:group].include? Sofa.client
-		roles |= 0b0010 if my[:owner] == Sofa.client
+		roles  = Sofa::Workflow::ROLE_GUEST
+		roles |= Sofa::Workflow::ROLE_ADMIN if my[:admins].include? Sofa.client
+		roles |= Sofa::Workflow::ROLE_GROUP if my[:group].include? Sofa.client
+		roles |= Sofa::Workflow::ROLE_OWNER if my[:owner] == Sofa.client
 		roles
 	end
 
 	def permit?(action)
-		my[:sd] ? my[:sd].workflow.permit?(my[:sd][:role],action) : true
+		my[:sd] ? my[:sd].workflow.permit?(my[:roles],action) : true
 	end
+
+def default_action
+	return :read unless my[:sd]
+	actions = my[:sd].workflow.class.const_get(:PERM).keys - [:read,:create,:update]
+	([:read,:create,:update] + actions).find {|action| permit? action } || :read
+end
 
 	def get(arg = {})
 		action = arg[:action]

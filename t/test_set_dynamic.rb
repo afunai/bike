@@ -19,10 +19,7 @@ _tmpl
 	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
 _html
 		)
-		def @sd.meta_admins
-			['frank']
-		end
-		Sofa.client = 'frank'
+		Sofa.client = 'root'
 	end
 
 	def teardown
@@ -347,6 +344,7 @@ _html
 			arg[:action],
 			'Set::Dynamic#get should retreat from the forbidden action'
 		)
+
 		arg = {:action => :update}
 		@sd.get arg
 		assert_equal(
@@ -354,6 +352,7 @@ _html
 			arg[:action],
 			'Set::Dynamic#get should keep the partially-permitted action'
 		)
+
 		arg = {:action => :update,:conds => {:id => '20091122_0002'}}
 		@sd.get arg
 		assert_equal(
@@ -409,6 +408,7 @@ _html
 			arg[:action],
 			'Set::Dynamic#get should keep the permitted action'
 		)
+
 		arg = {:action => :delete}
 		@sd.get arg
 		assert_equal(
@@ -443,20 +443,21 @@ _html
 		}
 	end
 
-	def test_get_by_frank
+	def test_get_by_root
 		@sd.load(
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = 'frank' # frank is the admin
+		Sofa.client = 'root' # root is the admin
 
-		arg = {:action => :create}
+		arg = {:action => :create,:db => 1}
 		@sd.get arg
 		assert_equal(
 			:create,
 			arg[:action],
 			'Set::Dynamic#get should keep the permitted action'
 		)
+
 		arg = {:action => :delete}
 		@sd.get arg
 		assert_equal(
@@ -466,12 +467,12 @@ _html
 		)
 	end
 
-	def test_post_by_frank
+	def test_post_by_root
 		@sd.load(
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = 'frank' # frank is the admin
+		Sofa.client = 'root' # root is the admin
 
 		assert_nothing_raised(
 			'frank should be able to create a new item'

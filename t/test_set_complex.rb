@@ -132,7 +132,7 @@ _html
 			'Set#get should distribute the action to its items'
 		)
 return
-		Sofa.client = 'roy'
+		Sofa.client = 'carl'
 puts			@sd.get(:action => :modify)
 return
 		assert_equal(

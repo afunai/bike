@@ -101,13 +101,7 @@ class Sofa::Field
 	end
 
 	def get(arg = {})
-		action = arg[:action]
-		action = :default unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)
-		if tmpl = my[:"tmpl_#{action}"]
-			_get_by_tmpl(arg,tmpl)
-		else
-			_get(arg)
-		end
+		permit_get?(arg) ? _get(arg) : 'xxx'
 	end
 
 	def load_default
@@ -131,6 +125,8 @@ class Sofa::Field
 	end
 
 	def post(action,v = nil)
+		raise Sofa::Error::Forbidden unless permit_post?(action,v)
+
 		_post action,val_cast(v)
 		@action = action unless action == :load || action == :load_default
 		self
@@ -173,6 +169,16 @@ class Sofa::Field
 	end
 
 	def _get(arg)
+		action = arg[:action]
+		action = :default unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)
+		if tmpl = my[:"tmpl_#{action}"]
+			_get_by_tmpl(arg,tmpl)
+		else
+			_get_by_method(arg)
+		end
+	end
+
+	def _get_by_method(arg)
 		m = "_get_#{arg[:action]}"
 		respond_to?(m,true) ? __send__(m,arg) : _get_default(arg)
 	end
@@ -183,12 +189,12 @@ class Sofa::Field
 			if type == '@'
 				my[name.intern]
 			elsif name == ''
-				_get arg
+				_get_by_method arg
 			else
 				steps = name.split '-'
+				item_arg = steps.inject(arg) {|a,s| a[s] || {} }
+				item_arg[:action] = action ? action.intern : arg[:action]
 				item = item steps
-				item_arg = arg.dup # TODO: distribute proper sub-arg for the item
-				item_arg[:action] = action.intern if action
 				item ? item.get(item_arg) : '???'
 			end
 		}
@@ -205,6 +211,14 @@ class Sofa::Field
 			when :load,:create,:update
 				@val = v
 		end
+	end
+
+	def permit_get?(arg)
+		permit? arg[:action]
+	end
+
+	def permit_post?(action,v)
+		action == :load || action == :load_default || permit?(action)
 	end
 
 	def val_cast(v)

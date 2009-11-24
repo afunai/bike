@@ -48,14 +48,45 @@ end
 	end
 
 	def get(arg = {})
-		if (arg[:action] != :default) && respond_to?("_get_#{arg[:action]}",true)
+		arg[:action] = default_action unless permit_get? arg
+		super
+	end
+
+	private
+
+	def _get(arg)
+		if respond_to?("_get_#{arg[:action]}",true)
 			__send__("_get_#{arg[:action]}",arg)
 		else
 			_get_by_tmpl(arg,my[:tmpl])
 		end
 	end
 
-	private
+	def _get_by_method(arg)
+		collect_item(arg[:conds] || {}) {|item|
+			item.get arg.dup
+		}
+	end
+
+	def permit_get?(arg)
+		permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
+			item.permit? arg[:action]
+		}
+	end
+
+	def permit_post?(action,val)
+		(action != :update) || val.all? {|id,v|
+			case id
+				when Sofa::Set::Dynamic::REX_NEW_ID
+					action = :create
+				when Sofa::Storage::REX_ID
+					action = v['_action'] ? v['_action'].intern : :update
+				when /^_submit/
+					next true # not a item value
+			end
+			permit?(action) || (action != :create && item(id) && item(id).permit?(action))
+		}
+	end
 
 	def pending_items
 		@item_object.keys.sort.inject({}) {|h,id|

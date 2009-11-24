@@ -41,99 +41,99 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test_permit_guest?
+	def testpermit_guest?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			!wf.instance_eval { _permit?(:guest,:create) },
+			!wf.instance_eval { permit?(:guest,:create) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { _permit?(:guest,:read) },
+			wf.instance_eval { permit?(:guest,:read) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { _permit?(:guest,:update) },
+			!wf.instance_eval { permit?(:guest,:update) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { _permit?(:guest,:delete) },
+			!wf.instance_eval { permit?(:guest,:delete) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
-	def test_permit_owner?
+	def testpermit_owner?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			!wf.instance_eval { _permit?(:owner,:create) },
+			!wf.instance_eval { permit?(:owner,:create) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { _permit?(:owner,:read) },
+			wf.instance_eval { permit?(:owner,:read) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { _permit?(:owner,:update) },
+			wf.instance_eval { permit?(:owner,:update) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { _permit?(:owner,:delete) },
+			!wf.instance_eval { permit?(:owner,:delete) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
-	def test_permit_group?
+	def testpermit_group?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			wf.instance_eval { _permit?(:group,:create) },
+			wf.instance_eval { permit?(:group,:create) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { _permit?(:group,:read) },
+			wf.instance_eval { permit?(:group,:read) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { _permit?(:group,:update) },
+			!wf.instance_eval { permit?(:group,:update) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { _permit?(:group,:delete) },
+			wf.instance_eval { permit?(:group,:delete) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
-	def test_permit_admin?
+	def testpermit_admin?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			wf.instance_eval { _permit?(:admin,:create) },
+			wf.instance_eval { permit?(:admin,:create) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { _permit?(:admin,:read) },
+			wf.instance_eval { permit?(:admin,:read) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { _permit?(:admin,:update) },
+			wf.instance_eval { permit?(:admin,:update) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { _permit?(:admin,:delete) },
+			wf.instance_eval { permit?(:admin,:delete) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
-	def test_permit_abnormal_role?
+	def testpermit_abnormal_role?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			!wf.instance_eval { _permit?(:'non-exist',:read) },
+			!wf.instance_eval { permit?(:'non-exist',:read) },
 			'Set::Workflow#permit? should always return false for non-exist roles'
 		)
 		assert(
-			!wf.instance_eval { _permit?(:admin,:'non-exist') },
+			!wf.instance_eval { permit?(:admin,:'non-exist') },
 			'Set::Workflow#permit? should always return false for non-exist actions'
 		)
 	end
 
-	def test_permit_nobody_get?
+	def testpermit_nobody_get?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = nil
 		assert(
@@ -159,7 +159,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test_permit_nobody_post?
+	def testpermit_nobody_post?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = nil
 		assert(
@@ -181,7 +181,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test_permit_don_get?
+	def testpermit_don_get?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'don' # don belongs to the group of foo/bar/
 		assert(
@@ -202,7 +202,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test_permit_don_post?
+	def testpermit_don_post?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'don' # don belongs to the group of foo/bar/
 		assert(
@@ -219,7 +219,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test_permit_carl_get?
+	def testpermit_carl_get?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'carl' # carl belongs to the group of foo/bar/, and the owner of the item #0001
 		assert(
@@ -240,7 +240,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test_permit_carl_post?
+	def testpermit_carl_post?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'carl' # carl belongs to the group of foo/bar/, and the owner of the item #0001
 		assert(
@@ -257,7 +257,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test_permit_frank_get?
+	def testpermit_frank_get?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'frank' # frank is an admin of foo/bar/
 		assert(
@@ -278,7 +278,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test_permit_frank_post?
+	def testpermit_frank_post?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'frank' # frank is an admin of foo/bar/
 		assert(
@@ -295,7 +295,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def test_permit_abnormal_action?
+	def testpermit_abnormal_action?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'frank'
 		assert(

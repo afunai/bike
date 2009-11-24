@@ -48,8 +48,11 @@ end
 	end
 
 	def get(arg = {})
-		m = "_get_#{arg[:action]}"
-		(m != '_get_read') && respond_to?(m,true) ? __send__(m,arg) : _get_by_tmpl(arg,my[:tmpl])
+		if (arg[:action] != :default) && respond_to?("_get_#{arg[:action]}",true)
+			__send__("_get_#{arg[:action]}",arg)
+		else
+			_get_by_tmpl(arg,my[:tmpl])
+		end
 	end
 
 	private
@@ -62,49 +65,3 @@ end
 	end
 
 end
-
-
-__END__
-
-
-	def errors
-		errors = {}
-		@item_object.each_pair {|id,item|
-			errors[id] = item.errors if item.errors
-		}
-		errors unless errors.empty?
-	end
-
-	def commit(option = {})
-		return self unless modified?
-
-		if valid?
-			if persistent? || option[:item_steps] || !my[:parent]
-				option[:item_steps] ||= []
-				item = item(option[:item_steps].shift) if option[:item_steps].first
-				q    = item ? {item[:id] => item} : action()
-				@result = _commit(q,option)
-				@action  = nil # for create/delete
-			else
-				persistent_commit
-			end
-		else
-			@result = {}
-		end
-		self
-	end
-
-	def traverse(item = self,&block)
-		base = self
-		name = item[:full_name][/^#{base[:full_name]}-(.+)/,1]
-		result = block_given? ? yield(name,item) : item
-		if item.is_a?(Sofa::Set) && result != :skip
-			[
-				result,
-				item.collect {|sub_item| base.traverse(sub_item,&block) }
-			]
-		else
-			result
-		end
-	end
-

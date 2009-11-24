@@ -80,9 +80,9 @@ class TC_Perm < Test::Unit::TestCase
 
 	def test_admins
 		assert_equal(
-			[],
+			['root'],
 			Sofa::Set::Static::Folder.root[:admins],
-			"Field#[:admins] should return [] for the root folder"
+			"Field#[:admins] should return ['root'] for the root folder"
 		)
 		assert_equal(
 			['root'],

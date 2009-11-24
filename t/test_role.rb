@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class TC_Perm < Test::Unit::TestCase
+class TC_Role < Test::Unit::TestCase
 
 	def setup
 	end
@@ -156,90 +156,90 @@ class TC_Perm < Test::Unit::TestCase
 		)
 	end
 
-	def test_role_of_nobody
+	def test_roles_of_nobody
 		Sofa.client = nil
 		assert_equal(
-			:guest,
-			Sofa::Set::Static::Folder.root[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0001,
+			Sofa::Set::Static::Folder.root[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:guest,
-			Sofa::Set::Static::Folder.root.item('foo')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0001,
+			Sofa::Set::Static::Folder.root.item('foo')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:guest,
-			Sofa::Set::Static::Folder.root.item('foo','main')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0001,
+			Sofa::Set::Static::Folder.root.item('foo','main')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:guest,
-			Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0001,
+			Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:guest,
-			Sofa::Set::Static::Folder.root.item('foo','bar')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0001,
+			Sofa::Set::Static::Folder.root.item('foo','bar')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 	end
 
-	def test_role_of_frank
+	def test_roles_of_frank
 		Sofa.client = 'frank'
 		assert_equal(
-			:guest,
-			Sofa::Set::Static::Folder.root[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0001,
+			Sofa::Set::Static::Folder.root[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:owner,
-			Sofa::Set::Static::Folder.root.item('foo')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0011,
+			Sofa::Set::Static::Folder.root.item('foo')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:admin,
-			Sofa::Set::Static::Folder.root.item('foo','main')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b1011,
+			Sofa::Set::Static::Folder.root.item('foo','main')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:admin,
-			Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b1011,
+			Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:admin,
-			Sofa::Set::Static::Folder.root.item('foo','bar')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b1011,
+			Sofa::Set::Static::Folder.root.item('foo','bar')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 	end
 
-	def test_role_of_roy
+	def test_roles_of_roy
 		Sofa.client = 'roy'
 		assert_equal(
-			:guest,
-			Sofa::Set::Static::Folder.root[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0001,
+			Sofa::Set::Static::Folder.root[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:group,
-			Sofa::Set::Static::Folder.root.item('foo')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0101,
+			Sofa::Set::Static::Folder.root.item('foo')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:group,
-			Sofa::Set::Static::Folder.root.item('foo','main')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0101,
+			Sofa::Set::Static::Folder.root.item('foo','main')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:group,
-			Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0101,
+			Sofa::Set::Static::Folder.root.item('foo','main','20091120_0001')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
-			:guest,
-			Sofa::Set::Static::Folder.root.item('foo','bar')[:role],
-			'Field#[:role] should return the role of the client on the field'
+			0b0001,
+			Sofa::Set::Static::Folder.root.item('foo','bar')[:roles],
+			'Field#[:roles] should return the roles of the client on the field'
 		)
 	end
 

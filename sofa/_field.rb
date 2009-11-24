@@ -82,16 +82,16 @@ class Sofa::Field
 		@meta[:group] || (my[:parent] ? my[:parent][:group] : [])
 	end
 
-	def meta_role
-		if my[:admins].include? Sofa.client
-			:admin
-		elsif my[:group].include? Sofa.client
-			:group
-		elsif my[:owner] == Sofa.client
-			:owner
-		else
-			:guest
-		end
+	def meta_roles
+		roles  = 0b0001 # guest
+		roles |= 0b1000 if my[:admins].include? Sofa.client
+		roles |= 0b0100 if my[:group].include? Sofa.client
+		roles |= 0b0010 if my[:owner] == Sofa.client
+		roles
+	end
+
+	def permit?(action)
+		my[:sd] ? my[:sd].workflow.permit?(my[:sd][:role],action) : true
 	end
 
 	def get(arg = {})

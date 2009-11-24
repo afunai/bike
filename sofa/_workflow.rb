@@ -28,8 +28,8 @@ class Sofa::Workflow
 	end
 
 	def permit_get?(arg)
-		_permit?(@sd[:role],arg[:action]) ||
-		(arg[:action] != :create && _permit?(@sd.role_on_items(arg[:conds]),arg[:action]))
+		permit?(@sd[:role],arg[:action]) ||
+		(arg[:action] != :create && permit?(@sd.role_on_items(arg[:conds]),arg[:action]))
 	end
 
 	def default_action(arg = {})
@@ -49,12 +49,12 @@ class Sofa::Workflow
 				when /^_submit/
 					next true # not a item value
 			end
-			_permit?(@sd[:role],action) ||
-			(action != :create && _permit?(@sd.role_on_items(:id => id),action))
+			permit?(@sd[:role],action) ||
+			(action != :create && permit?(@sd.role_on_items(:id => id),action))
 		}
 	end
 
-	def _permit?(role,action)
+	def permit?(role,action)
 		perm = self.class.const_get(:PERM)[action]
 		perm && perm =~ case role
 			when :admin

@@ -28,7 +28,7 @@ class TC_Set_Complex < Test::Unit::TestCase
 	end
 
 	class ::Sofa::Tomago < ::Sofa::Field
-		def get(arg)
+		def _get(arg)
 			"'#{val}'(#{arg.sort.join ','})"
 		end
 	end
@@ -105,7 +105,7 @@ _html
 		)
 	end
 
-	def test_get_with_arg
+	def test_get_with_global_action
 		Sofa.client = 'root'
 		assert_equal(
 			<<'_html'.chomp,
@@ -131,10 +131,10 @@ _html
 			@sd.get(:action => :modify),
 			'Set#get should distribute the action to its items'
 		)
-return
-		Sofa.client = 'carl'
-puts			@sd.get(:action => :modify)
-return
+	end
+
+	def test_get_with_partial_permission
+		Sofa.client = 'carl' # can edit only his own item
 		assert_equal(
 			<<'_html'.chomp,
 <ul id="main" class="sofa-pipco">
@@ -147,17 +147,43 @@ return
 		'potato'
 	</li>
 	<li id="main-20091123_0002">
-		'RE'(action,modify): 'wee'(action,modify)
+		'RE'(action,read): 'wee'(action,read)
 		<ul id="main-20091123_0002-files" class="sofa-pipco">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,modify)</li>
-		</ul>[modify]
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,read)</li>
+		</ul>
 		'potato'
 	</li>
 </ul>
 [modify]
 _html
 			@sd.get(:action => :modify),
-			'Set#get should distribute the action to its items'
+			'Field#get should fall back to a possible action if the given action is not permitted'
+		) if nil
+
+		@sd.item('20091123_0002','comment')[:owner] = 'carl' # enclave in roy's item
+		assert_equal(
+			<<'_html'.chomp,
+<ul id="main" class="sofa-pipco">
+	<li id="main-20091123_0001">
+		'CZ'(action,modify): 'oops'(action,modify)
+		<ul id="main-20091123_0001-files" class="sofa-pipco">
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action,modify)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action,modify)</li>
+		</ul>[modify]
+		'potato'
+	</li>
+	<li id="main-20091123_0002">
+		'RE'(action,read): 'wee'(action,modify)
+		<ul id="main-20091123_0002-files" class="sofa-pipco">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,read)</li>
+		</ul>
+		'potato'
+	</li>
+</ul>
+[modify]
+_html
+			@sd.get(:action => :modify),
+			'Field#get should preserve the given action wherever possible'
 		)
 	end
 

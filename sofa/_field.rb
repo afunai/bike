@@ -101,7 +101,11 @@ class Sofa::Field
 	end
 
 	def get(arg = {})
-		permit_get?(arg) ? _get(arg) : 'xxx'
+		if permit_get? arg
+			_get(arg)
+		else
+			(arg[:action] = default_action) ? _get(arg) : 'xxx'
+		end
 	end
 
 	def load_default

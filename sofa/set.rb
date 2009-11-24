@@ -47,11 +47,6 @@ end
 		collect_item.each &block
 	end
 
-	def get(arg = {})
-		arg[:action] = default_action unless permit_get? arg
-		super
-	end
-
 	private
 
 	def _get(arg)
@@ -64,7 +59,9 @@ end
 
 	def _get_by_method(arg)
 		collect_item(arg[:conds] || {}) {|item|
-			item.get arg.dup
+			item_arg = arg[item[:id]] || {}
+			item_arg[:action] ||= arg[:action]
+			item.get item_arg
 		}
 	end
 

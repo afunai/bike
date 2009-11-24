@@ -60,56 +60,6 @@ _html
 		)
 	end
 
-	def test_role_on_items
-		@sd.load(
-			'20091121_0001' => {'_owner' => 'frank'},
-			'20091122_0001' => {'_owner' => 'carl'},
-			'20091122_0002' => {'_owner' => 'carl'}
-		)
-		@sd[:owner] = 'frank'
-
-		Sofa.client = 'carl'
-		assert_equal(:guest,@sd[:role])
-
-		assert_equal(
-			:owner,
-			@sd.role_on_items(:id => '20091122_0001'),
-			'Set::Dynamic#role_on_items should return the role on all the selected items'
-		)
-		assert_equal(
-			:guest,
-			@sd.role_on_items(:id => ['20091122_0001','20091121_0001']),
-			'Set::Dynamic#role_on_items should return :guest if any item is owned by somebody else'
-		)
-		assert_equal(
-			:owner,
-			@sd.role_on_items(:d => '20091122'),
-			'Set::Dynamic#role_on_items should return the role on all the selected items'
-		)
-		assert_equal(
-			:guest,
-			@sd.role_on_items(:d => '200911'),
-			'Set::Dynamic#role_on_items should return :guest if any item is owned by somebody else'
-		)
-		assert_equal(
-			:guest,
-			@sd.role_on_items(:id => 'non-existent'),
-			'Set::Dynamic#role_on_items should return :guest if the item is non-existent'
-		)
-
-		Sofa.client = 'frank'
-		assert_equal(
-			:owner,
-			@sd.role_on_items(:d => '20091121'),
-			'Set::Dynamic#role_on_items should return the role on all the selected items'
-		)
-		assert_equal(
-			:guest,
-			@sd.role_on_items(:d => '200911'),
-			'Set::Dynamic#role_on_items should not count if the client is the owner of the upper tier'
-		)
-	end
-
 	def test_val
 		@sd.load(
 			'1234' => {'name' => 'frank'},
@@ -400,9 +350,9 @@ _html
 		arg = {:action => :update}
 		@sd.get arg
 		assert_equal(
-			:read,
+			:update,
 			arg[:action],
-			'Set::Dynamic#get should retreat from the forbidden action'
+			'Set::Dynamic#get should keep the partially-permitted action'
 		)
 		arg = {:action => :update,:conds => {:id => '20091122_0002'}}
 		@sd.get arg

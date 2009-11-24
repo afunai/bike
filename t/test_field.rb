@@ -89,6 +89,68 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
+	def test_sd
+		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		assert_equal(
+			sd,
+			sd[:sd],
+			'Field#[:workflow] should return the nearest set_dynamic'
+		)
+		assert_equal(
+			sd,
+			sd.item('20091120_0001')[:sd],
+			'Field#[:workflow] should return the nearest set_dynamic'
+		)
+		assert_equal(
+			sd,
+			sd.item('20091120_0001','name')[:sd],
+			'Field#[:workflow] should return the nearest set_dynamic'
+		)
+		assert_nil(
+			Sofa::Set::Static::Folder.root[:sd],
+			'Field#[:workflow] should return nil if there is no set_dynamic in the ancestors'
+		)
+	end
+
+	def test_get
+		@f.instance_variable_set(:@val,'hello')
+		assert_equal(
+			'hello',
+			@f.get,
+			'Field#get should return @val by default'
+		)
+
+		assert_equal(
+			'just a test.',
+			@f.get(:action => :test),
+			'Field#get should relay the result of _get_*()'
+		)
+
+		@f[:tmpl_foo] = 'foo foo'
+		assert_equal(
+			'foo foo',
+			@f.get(:action => :foo),
+			'Field#get should look for [:tmpl_*]'
+		)
+	end
+
+	def test_get_by_tmpl
+		@f.instance_variable_set(:@val,'hello')
+		@f[:tmpl_foo] = 'foo $() foo'
+		assert_equal(
+			'foo hello foo',
+			@f.get(:action => :foo),
+			'Field#_get_by_tmpl should replace %() with @val'
+		)
+
+		@f[:tmpl_foo] = 'foo @(baz) foo'
+		assert_equal(
+			'foo 1234 foo',
+			@f.get(:action => :foo),
+			'Field#_get_by_tmpl should replace @(...) with @meta[...]'
+		)
+	end
+
 	def test_post
 		@f.post(:create,999)
 		assert_equal(
@@ -180,45 +242,6 @@ class TC_Field < Test::Unit::TestCase
 			:delete,
 			@f.action,
 			'Field#delete should set @action'
-		)
-	end
-
-	def test_get
-		@f.instance_variable_set(:@val,'hello')
-		assert_equal(
-			'hello',
-			@f.get,
-			'Field#get should return @val by default'
-		)
-
-		assert_equal(
-			'just a test.',
-			@f.get(:action => :test),
-			'Field#get should relay the result of _get_*()'
-		)
-
-		@f[:tmpl_foo] = 'foo foo'
-		assert_equal(
-			'foo foo',
-			@f.get(:action => :foo),
-			'Field#get should look for [:tmpl_*]'
-		)
-	end
-
-	def test_get_by_tmpl
-		@f.instance_variable_set(:@val,'hello')
-		@f[:tmpl_foo] = 'foo $() foo'
-		assert_equal(
-			'foo hello foo',
-			@f.get(:action => :foo),
-			'Field#_get_by_tmpl should replace %() with @val'
-		)
-
-		@f[:tmpl_foo] = 'foo @(baz) foo'
-		assert_equal(
-			'foo 1234 foo',
-			@f.get(:action => :foo),
-			'Field#_get_by_tmpl should replace @(...) with @meta[...]'
 		)
 	end
 

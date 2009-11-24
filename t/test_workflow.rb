@@ -7,10 +7,10 @@ class TC_Workflow < Test::Unit::TestCase
 
 	class Sofa::Workflow::Foo < Sofa::Workflow
 		PERM = {
-			:create => 'oo--',
-			:read   => 'oooo',
-			:update => 'o-o-',
-			:delete => 'oo--',
+			:create => 0b1100,
+			:read   => 0b1111,
+			:update => 0b1010,
+			:delete => 0b1100,
 		}
 	end
 
@@ -41,279 +41,193 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	def testpermit_guest?
+	def test_wf_permit_guest?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			!wf.instance_eval { permit?(:guest,:create) },
+			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_GUEST,:create) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(:guest,:read) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_GUEST,:read) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { permit?(:guest,:update) },
+			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_GUEST,:update) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { permit?(:guest,:delete) },
+			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_GUEST,:delete) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
-	def testpermit_owner?
+	def test_wf_permit_owner?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			!wf.instance_eval { permit?(:owner,:create) },
+			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_OWNER,:create) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(:owner,:read) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_OWNER,:read) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(:owner,:update) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_OWNER,:update) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { permit?(:owner,:delete) },
+			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_OWNER,:delete) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
-	def testpermit_group?
+	def test_wf_permit_group?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			wf.instance_eval { permit?(:group,:create) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_GROUP,:create) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(:group,:read) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_GROUP,:read) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { permit?(:group,:update) },
+			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_GROUP,:update) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(:group,:delete) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_GROUP,:delete) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
-	def testpermit_admin?
+	def test_wf_permit_admin?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			wf.instance_eval { permit?(:admin,:create) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:create) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(:admin,:read) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:read) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(:admin,:update) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:update) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(:admin,:delete) },
+			wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:delete) },
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
-	def testpermit_abnormal_role?
+	def test_wf_permit_abnormal_action?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			!wf.instance_eval { permit?(:'non-exist',:read) },
-			'Set::Workflow#permit? should always return false for non-exist roles'
-		)
-		assert(
-			!wf.instance_eval { permit?(:admin,:'non-exist') },
+			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:'non-exist') },
 			'Set::Workflow#permit? should always return false for non-exist actions'
 		)
 	end
 
-	def testpermit_nobody_get?
+	def test_permit_nobody?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = nil
 		assert(
-			!sd.workflow.permit_get?(:action => :create),
-			"'nobody' should not get.create"
+			!sd.permit?(:create),
+			"'nobody' should not create"
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :read,:conds => {:id => '20091120_0001'}),
-			"'nobody' should be able to get.read the item"
+			sd.item('20091120_0001').permit?(:read),
+			"'nobody' should be able to read the item"
 		)
 		assert(
-			!sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
-			"'nobody' should not get.update carl's item"
+			!sd.item('20091120_0001').permit?(:update),
+			"'nobody' should not update carl's item"
 		)
 		assert(
-			!sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
-			"'nobody' should not get.delete carl's item"
-		)
-
-		assert(
-			!sd.workflow.permit_get?(:action => :update,:conds => {:id => 'non-existent'}),
-			"'nobody' should not get.update a non-existent item"
+			!sd.item('20091120_0001').permit?(:delete),
+			"'nobody' should not delete carl's item"
 		)
 	end
 
-	def testpermit_nobody_post?
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		Sofa.client = nil
-		assert(
-			!sd.workflow.permit_post?('_1234' => {'name' => 'foo'}),
-			"'nobody' should not post.create"
-		)
-		assert(
-			!sd.workflow.permit_post?('20091120_0001' => {'name' => 'foo'}),
-			"'nobody' should not post.update carl's item"
-		)
-		assert(
-			!sd.workflow.permit_post?('20091120_0001' => {'_action' => 'delete'}),
-			"'nobody' should not post.delete carl's item"
-		)
-
-		assert(
-			!sd.workflow.permit_post?('non-existent' => {'name' => 'foo'}),
-			"'nobody' should not post.update a non-existent item"
-		)
-	end
-
-	def testpermit_don_get?
+	def test_permit_don?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'don' # don belongs to the group of foo/bar/
 		assert(
-			sd.workflow.permit_get?(:action => :create),
-			'don should be able to get.create'
+			sd.permit?(:create),
+			'don should be able to create'
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :read,:conds => {:id => '20091120_0001'}),
-			'don should be able to get.read the item'
+			sd.item('20091120_0001').permit?(:read),
+			'don should be able to read the item'
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
-			"don should be able to get.update carl's item"
+			sd.item('20091120_0001').permit?(:update),
+			"don should be able to update carl's item"
 		)
 		assert(
-			!sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
-			"don should not get.delete carl's item"
+			!sd.item('20091120_0001').permit?(:delete),
+			"don should not delete carl's item"
 		)
 	end
 
-	def testpermit_don_post?
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		Sofa.client = 'don' # don belongs to the group of foo/bar/
-		assert(
-			sd.workflow.permit_post?('_1234' => {'name' => 'foo'}),
-			'don should be able to post.create'
-		)
-		assert(
-			sd.workflow.permit_post?('20091120_0001' => {'name' => 'foo'}),
-			"don should be able to post.update carl's item"
-		)
-		assert(
-			!sd.workflow.permit_post?('20091120_0001' => {'_action' => 'delete'}),
-			"don should not post.delete carl's item"
-		)
-	end
-
-	def testpermit_carl_get?
+	def test_permit_carl?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'carl' # carl belongs to the group of foo/bar/, and the owner of the item #0001
 		assert(
-			sd.workflow.permit_get?(:action => :create),
-			'carl should be able to get.create'
+			sd.permit?(:create),
+			'carl should be able to create'
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :read,:conds => {:id => '20091120_0001'}),
-			'carl should be able to get.read the item'
+			sd.item('20091120_0001').permit?(:read),
+			'carl should be able to read the item'
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
-			"carl should be able to get.update his own item"
+			sd.item('20091120_0001').permit?(:update),
+			"carl should be able to update his own item"
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
-			"carl should be able to get.delete his own item"
+			sd.item('20091120_0001').permit?(:delete),
+			"carl should be able to delete his own item"
 		)
 	end
 
-	def testpermit_carl_post?
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		Sofa.client = 'carl' # carl belongs to the group of foo/bar/, and the owner of the item #0001
-		assert(
-			sd.workflow.permit_post?('_1234' => {'name' => 'foo'}),
-			'carl should be able to post.create'
-		)
-		assert(
-			sd.workflow.permit_post?('20091120_0001' => {'name' => 'foo'}),
-			"carl should be able to post.update his own item"
-		)
-		assert(
-			sd.workflow.permit_post?('20091120_0001' => {'_action' => 'delete'}),
-			"carl should be able to post.delete his own item"
-		)
-	end
-
-	def testpermit_frank_get?
+	def test_permit_frank?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'frank' # frank is an admin of foo/bar/
 		assert(
-			sd.workflow.permit_get?(:action => :create),
-			'frank should be able to get.create'
+			sd.permit?(:create),
+			'frank should be able to create'
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :read,:conds => {:id => '20091120_0001'}),
-			'frank should be able to get.read the item'
+			sd.item('20091120_0001').permit?(:read),
+			'frank should be able to read the item'
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :update,:conds => {:id => '20091120_0001'}),
-			"frank should be able to get.update his own item"
+			sd.item('20091120_0001').permit?(:update),
+			"frank should be able to update his own item"
 		)
 		assert(
-			sd.workflow.permit_get?(:action => :delete,:conds => {:id => '20091120_0001'}),
-			"frank should be able to get.delete his own item"
+			sd.item('20091120_0001').permit?(:delete),
+			"frank should be able to delete his own item"
 		)
 	end
 
-	def testpermit_frank_post?
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		Sofa.client = 'frank' # frank is an admin of foo/bar/
-		assert(
-			sd.workflow.permit_post?('_1234' => {'name' => 'foo'}),
-			'frank should be able to post.create'
-		)
-		assert(
-			sd.workflow.permit_post?('20091120_0001' => {'name' => 'foo'}),
-			"frank should be able to post.update carl's item"
-		)
-		assert(
-			sd.workflow.permit_post?('20091120_0001' => {'_action' => 'delete'}),
-			"frank should be able to post.delete carl's item"
-		)
-	end
-
-	def testpermit_abnormal_action?
+	def test_permit_abnormal_action?
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		Sofa.client = 'frank'
 		assert(
-			!sd.workflow.permit_get?(:action => :'***'),
-			'frank should not get.*** on the stage'
-		)
-		assert(
-			!sd.workflow.permit_post?('20091120_0001' => {'_action' => '***'}),
-			'frank should not post.*** on the stage'
+			!sd.permit?(:'****'),
+			'frank should not **** on the stage'
 		)
 	end
 
 	class Sofa::Workflow::Test_Default_Action < Sofa::Workflow
 		PERM = {
-			:create => 'oo--',
-			:read   => 'o---',
-			:update => 'ooo-',
-			:foo    => 'oooo',
+			:create => 0b1100,
+			:read   => 0b1000,
+			:update => 0b1110,
+			:foo    => 0b1111,
 		}
 	end
 	def test_default_action
@@ -330,33 +244,33 @@ class TC_Workflow < Test::Unit::TestCase
 		Sofa.client = nil
 		assert_equal(
 			:foo,
-			sd.workflow.default_action,
+			sd.default_action,
 			'Workflow#default_action should return a permitted action for the client'
 		)
 
 		Sofa.client = 'carl' # carl is not the member of the group
 		assert_equal(
 			:foo,
-			sd.workflow.default_action,
+			sd.default_action,
 			'Workflow#default_action should return a permitted action for the client'
 		)
 		assert_equal(
 			:update,
-			sd.workflow.default_action(:conds => {:id => '20091122_0001'}),
+			sd.item('20091122_0001').default_action,
 			'Workflow#default_action should see the given conds'
 		)
 
 		Sofa.client = 'roy' # roy belongs to the group
 		assert_equal(
 			:create,
-			sd.workflow.default_action,
+			sd.default_action,
 			'Workflow#default_action should return a permitted action for the client'
 		)
 
 		Sofa.client = 'frank' # frank is the admin
 		assert_equal(
 			:read,
-			sd.workflow.default_action,
+			sd.default_action,
 			'Workflow#default_action should return a permitted action for the client'
 		)
 	end

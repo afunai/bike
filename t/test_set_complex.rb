@@ -16,13 +16,15 @@ class TC_Set_Complex < Test::Unit::TestCase
 
 	class ::Sofa::Workflow::Pipco < ::Sofa::Workflow
 		PERM = {
-			:create    => 'oo--',
-			:read      => 'oooo',
-			:update    => 'ooo-',
-			:delete    => 'o-o-',
-			:modify    => 'ooo-',
-			:vegetable => 'oooo',
+			:create    => 0b1100,
+			:read      => 0b1111,
+			:update    => 0b1110,
+			:delete    => 0b1010,
+			:modify    => 0b1110,
+			:vegetable => 0b1111,
 		}
+		def before_get(arg)
+		end
 	end
 
 	class ::Sofa::Tomago < ::Sofa::Field
@@ -105,13 +107,57 @@ _html
 
 	def test_get_with_arg
 		Sofa.client = 'root'
+		assert_equal(
+			<<'_html'.chomp,
+<ul id="main" class="sofa-pipco">
+	<li id="main-20091123_0001">
+		'CZ'(action,modify): 'oops'(action,modify)
+		<ul id="main-20091123_0001-files" class="sofa-pipco">
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action,modify)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action,modify)</li>
+		</ul>[modify]
+		'potato'
+	</li>
+	<li id="main-20091123_0002">
+		'RE'(action,modify): 'wee'(action,modify)
+		<ul id="main-20091123_0002-files" class="sofa-pipco">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,modify)</li>
+		</ul>[modify]
+		'potato'
+	</li>
+</ul>
+[modify]
+_html
+			@sd.get(:action => :modify),
+			'Set#get should distribute the action to its items'
+		)
+return
+		Sofa.client = 'roy'
 puts			@sd.get(:action => :modify)
 return
 		assert_equal(
-			<<'_html',
+			<<'_html'.chomp,
+<ul id="main" class="sofa-pipco">
+	<li id="main-20091123_0001">
+		'CZ'(action,modify): 'oops'(action,modify)
+		<ul id="main-20091123_0001-files" class="sofa-pipco">
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action,modify)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action,modify)</li>
+		</ul>[modify]
+		'potato'
+	</li>
+	<li id="main-20091123_0002">
+		'RE'(action,modify): 'wee'(action,modify)
+		<ul id="main-20091123_0002-files" class="sofa-pipco">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,modify)</li>
+		</ul>[modify]
+		'potato'
+	</li>
+</ul>
+[modify]
 _html
-			@sd.get(:action => :update),
-			'Set#get should work recursively as a part of the complex'
+			@sd.get(:action => :modify),
+			'Set#get should distribute the action to its items'
 		)
 	end
 

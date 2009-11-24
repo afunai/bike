@@ -60,6 +60,12 @@ class Sofa::Field
 		f
 	end
 
+	def meta_sd
+		f = self
+		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Dynamic)
+		f
+	end
+
 	def meta_owner
 		@meta[:owner] || (my[:parent] ? my[:parent][:owner] : 'root')
 	end
@@ -76,16 +82,22 @@ class Sofa::Field
 		@meta[:group] || (my[:parent] ? my[:parent][:group] : [])
 	end
 
-	def meta_role
-		if my[:admins].include? Sofa.client
-			:admin
-		elsif my[:group].include? Sofa.client
-			:group
-		elsif my[:owner] == Sofa.client
-			:owner
-		else
-			:guest
-		end
+	def meta_roles
+		roles  = Sofa::Workflow::ROLE_GUEST
+		roles |= Sofa::Workflow::ROLE_ADMIN if my[:admins].include? Sofa.client
+		roles |= Sofa::Workflow::ROLE_GROUP if my[:group].include? Sofa.client
+		roles |= Sofa::Workflow::ROLE_OWNER if my[:owner] == Sofa.client
+		roles
+	end
+
+	def permit?(action)
+		my[:sd] ? my[:sd].workflow.permit?(my[:roles],action) : true
+	end
+
+	def default_action
+		return :read unless my[:sd]
+		actions = my[:sd].workflow.class.const_get(:PERM).keys - [:read,:create,:update]
+		([:read,:create,:update] + actions).find {|action| permit? action }
 	end
 
 	def get(arg = {})

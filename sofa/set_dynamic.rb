@@ -18,26 +18,6 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@item_object = {}
 	end
 
-def permit_get?(arg)
-	permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
-		item.permit? arg[:action]
-	}
-end
-
-def permit_post?(val)
-	val.all? {|id,v|
-		case id
-			when Sofa::Set::Dynamic::REX_NEW_ID
-				action = :create
-			when Sofa::Storage::REX_ID
-				action = v['_action'] ? v['_action'].intern : :update
-			when /^_submit/
-				next true # not a item value
-		end
-		permit?(action) || (action != :create && item(id) && item(id).permit?(action))
-	}
-end
-
 	def get(arg = {})
 		arg[:action] = default_action unless permit_get? arg
 		if arg[:action]
@@ -115,6 +95,26 @@ end
 			when :delete
 				@storage.delete(id)
 		end
+	end
+
+	def permit_get?(arg)
+		permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
+			item.permit? arg[:action]
+		}
+	end
+
+	def permit_post?(val)
+		val.all? {|id,v|
+			case id
+				when Sofa::Set::Dynamic::REX_NEW_ID
+					action = :create
+				when Sofa::Storage::REX_ID
+					action = v['_action'] ? v['_action'].intern : :update
+				when /^_submit/
+					next true # not a item value
+			end
+			permit?(action) || (action != :create && item(id) && item(id).permit?(action))
+		}
 	end
 
 	def collect_item(conds = {},&block)

@@ -16,12 +16,12 @@ class TC_Set_Complex < Test::Unit::TestCase
 
 	class ::Sofa::Workflow::Pipco < ::Sofa::Workflow
 		PERM = {
-			:create    => 'oo--',
-			:read      => 'oooo',
-			:update    => 'ooo-',
-			:delete    => 'o-o-',
-			:modify    => 'ooo-',
-			:vegetable => 'oooo',
+			:create    => 0b1100,
+			:read      => 0b1111,
+			:update    => 0b1110,
+			:delete    => 0b1010,
+			:modify    => 0b1110,
+			:vegetable => 0b1111,
 		}
 		def before_get(arg)
 		end

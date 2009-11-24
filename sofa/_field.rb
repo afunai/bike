@@ -94,11 +94,11 @@ class Sofa::Field
 		my[:sd] ? my[:sd].workflow.permit?(my[:roles],action) : true
 	end
 
-def default_action
-	return :read unless my[:sd]
-	actions = my[:sd].workflow.class.const_get(:PERM).keys - [:read,:create,:update]
-	([:read,:create,:update] + actions).find {|action| permit? action } || :read
-end
+	def default_action
+		return :read unless my[:sd]
+		actions = my[:sd].workflow.class.const_get(:PERM).keys - [:read,:create,:update]
+		([:read,:create,:update] + actions).find {|action| permit? action }
+	end
 
 	def get(arg = {})
 		action = arg[:action]

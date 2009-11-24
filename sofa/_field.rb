@@ -60,6 +60,12 @@ class Sofa::Field
 		f
 	end
 
+	def meta_sd
+		f = self
+		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Dynamic)
+		f
+	end
+
 	def meta_owner
 		@meta[:owner] || (my[:parent] ? my[:parent][:owner] : 'root')
 	end

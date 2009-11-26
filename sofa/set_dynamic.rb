@@ -44,6 +44,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 	def _get(arg)
+		return '' if arg[:p_action] == :update && !@workflow.is_a?(Sofa::Workflow::Attachment)
 		@workflow.before_get arg
 		@workflow.filter_get super
 	end

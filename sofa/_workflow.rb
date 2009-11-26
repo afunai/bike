@@ -62,3 +62,15 @@ class Sofa::Workflow::Blog < Sofa::Workflow
 	}
 
 end
+
+
+class Sofa::Workflow::Attachment < Sofa::Workflow
+
+	PERM = {
+		:create => 0b1010,
+		:read   => 0b1111,
+		:update => 0b1010,
+		:delete => 0b1010,
+	}
+
+end

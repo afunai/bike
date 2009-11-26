@@ -196,8 +196,10 @@ class Sofa::Field
 				_get_by_method arg
 			else
 				steps = name.split '-'
-				item_arg = steps.inject(arg) {|a,s| a[s] || {} }
-				item_arg[:action] = action ? action.intern : arg[:action]
+				item_arg = steps.inject(arg) {|a,s|
+					a[s] || {:p_action => a[:action],:action => a[:action]}
+				}
+				item_arg[:action] = action.intern if action
 				item = item steps
 				item ? item.get(item_arg) : '???'
 			end

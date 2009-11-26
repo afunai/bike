@@ -6,9 +6,6 @@
 class TC_Set_Complex < Test::Unit::TestCase
 
 	class ::Sofa::Set::Dynamic
-		def _get_modify(arg)
-			_get_by_tmpl({:action => :modify},my[:tmpl]) + '[modify]'
-		end
 		def _get_vegetable(arg)
 			"'potato'"
 		end
@@ -20,7 +17,6 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:read      => 0b1111,
 			:update    => 0b1110,
 			:delete    => 0b1010,
-			:modify    => 0b1110,
 			:vegetable => 0b1111,
 		}
 		def before_get(arg)
@@ -29,7 +25,8 @@ class TC_Set_Complex < Test::Unit::TestCase
 
 	class ::Sofa::Tomago < ::Sofa::Field
 		def _get(arg)
-			"'#{val}'(#{arg.sort.join ','})"
+			args = arg.keys.collect {|k| "#{k}=#{arg[k]}" }.sort
+			"'#{val}'(#{args.join ','})"
 		end
 	end
 
@@ -46,11 +43,14 @@ $()</ul>
 _tmpl
 			:item_html => <<'_html'
 	<li id="@(name)">
-		name:(tomago 32 :'nobody'): comment:(tomago 64 :'hi.')
-		<ul id="files" class="sofa-pipco">
+		name:(tomago 32 :'nobody'): comment:(tomago 64 :'hello.')
+		<ul id="files" class="sofa-attachment">
 			<li id="@(name)">file:(tomago :'foo.jpg')</li>
 		</ul>
-		$(files.vegetable)
+		<ul id="replies" class="sofa-pipco">
+			<li id="@(name)">reply:(tomago :'hi.')</li>
+		</ul>
+		$(replies.vegetable)
 	</li>
 _html
 		)
@@ -63,6 +63,9 @@ _html
 					'20091123_0001' => {'file' => 'carl1.jpg'},
 					'20091123_0002' => {'file' => 'carl2.jpg'},
 				},
+				'replies'   => {
+					'20091125_0001' => {'_owner' => 'bobby','reply' => 'howdy.'},
+				},
 			},
 			'20091123_0002' => {
 				'_owner'  => 'roy',
@@ -70,6 +73,10 @@ _html
 				'comment' => 'wee',
 				'files'   => {
 					'20091123_0001' => {'file' => 'roy.png'},
+				},
+				'replies'   => {
+					'20091125_0001' => {'_owner' => 'don','reply' => 'ho ho.'},
+					'20091125_0002' => {'_owner' => 'roy','reply' => 'oops.'},
 				},
 			}
 		)
@@ -80,21 +87,29 @@ _html
 	end
 
 	def test_get_default
+		Sofa.client = nil
 		assert_equal(
 			<<'_html',
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
-		'CZ'(action,read): 'oops'(action,read)
-		<ul id="main-20091123_0001-files" class="sofa-pipco">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action,read)</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action,read)</li>
+		'CZ'(action=read,p_action=read): 'oops'(action=read,p_action=read)
+		<ul id="main-20091123_0001-files" class="sofa-attachment">
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=read,p_action=read)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read,p_action=read)</li>
+		</ul>
+		<ul id="main-20091123_0001-replies" class="sofa-pipco">
+			<li id="main-20091123_0001-replies-20091125_0001">'howdy.'(action=read,p_action=read)</li>
 		</ul>
 		'potato'
 	</li>
 	<li id="main-20091123_0002">
-		'RE'(action,read): 'wee'(action,read)
-		<ul id="main-20091123_0002-files" class="sofa-pipco">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,read)</li>
+		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
+		<ul id="main-20091123_0002-files" class="sofa-attachment">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
+		</ul>
+		<ul id="main-20091123_0002-replies" class="sofa-pipco">
+			<li id="main-20091123_0002-replies-20091125_0001">'ho ho.'(action=read,p_action=read)</li>
+			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=read,p_action=read)</li>
 		</ul>
 		'potato'
 	</li>
@@ -105,30 +120,43 @@ _html
 		)
 	end
 
-	def test_get_with_global_action
+	def test_get_with_parent_action
 		Sofa.client = 'root'
+		result = @sd.get(:action => :update)
+
+		assert_match(
+			/id="main-20091123_0001-files"/,
+			result,
+			'Set::Dynamic#get(:action => :update) should include child attachments'
+		)
+		assert_no_match(
+			/id="main-20091123_0001-replies"/,
+			result,
+			'Set::Dynamic#get(:action => :update) should not include child apps'
+		)
 		assert_equal(
-			<<'_html'.chomp,
+			<<'_html',
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
-		'CZ'(action,modify): 'oops'(action,modify)
-		<ul id="main-20091123_0001-files" class="sofa-pipco">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action,modify)</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action,modify)</li>
-		</ul>[modify]
-		'potato'
+		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
+		<ul id="main-20091123_0001-files" class="sofa-attachment">
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
+		</ul>
+		
+		
 	</li>
 	<li id="main-20091123_0002">
-		'RE'(action,modify): 'wee'(action,modify)
-		<ul id="main-20091123_0002-files" class="sofa-pipco">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,modify)</li>
-		</ul>[modify]
-		'potato'
+		'RE'(action=update,p_action=update): 'wee'(action=update,p_action=update)
+		<ul id="main-20091123_0002-files" class="sofa-attachment">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=update,p_action=update)</li>
+		</ul>
+		
+		
 	</li>
 </ul>
-[modify]
 _html
-			@sd.get(:action => :modify),
+			result,
 			'Set#get should distribute the action to its items'
 		)
 	end
@@ -136,53 +164,58 @@ _html
 	def test_get_with_partial_permission
 		Sofa.client = 'carl' # can edit only his own item
 		assert_equal(
-			<<'_html'.chomp,
+			<<'_html',
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
-		'CZ'(action,modify): 'oops'(action,modify)
-		<ul id="main-20091123_0001-files" class="sofa-pipco">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action,modify)</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action,modify)</li>
-		</ul>[modify]
-		'potato'
+		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
+		<ul id="main-20091123_0001-files" class="sofa-attachment">
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
+		</ul>
+		
+		
 	</li>
 	<li id="main-20091123_0002">
-		'RE'(action,read): 'wee'(action,read)
-		<ul id="main-20091123_0002-files" class="sofa-pipco">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,read)</li>
+		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
+		<ul id="main-20091123_0002-files" class="sofa-attachment">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
+		</ul>
+		<ul id="main-20091123_0002-replies" class="sofa-pipco">
+			<li id="main-20091123_0002-replies-20091125_0001">'ho ho.'(action=read,p_action=read)</li>
+			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=read,p_action=read)</li>
 		</ul>
 		'potato'
 	</li>
 </ul>
-[modify]
 _html
-			@sd.get(:action => :modify),
+			@sd.get(:action => :update),
 			'Field#get should fall back to a possible action if the given action is not permitted'
-		) if nil
+		)
 
 		@sd.item('20091123_0002','comment')[:owner] = 'carl' # enclave in roy's item
 		assert_equal(
-			<<'_html'.chomp,
+			<<'_html',
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
-		'CZ'(action,modify): 'oops'(action,modify)
-		<ul id="main-20091123_0001-files" class="sofa-pipco">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action,modify)</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action,modify)</li>
-		</ul>[modify]
-		'potato'
+		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
+		<ul id="main-20091123_0001-files" class="sofa-attachment">
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
+		</ul>
+		
+		
 	</li>
 	<li id="main-20091123_0002">
-		'RE'(action,read): 'wee'(action,modify)
-		<ul id="main-20091123_0002-files" class="sofa-pipco">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action,read)</li>
+		'RE'(action=read,p_action=update): 'wee'(action=update,p_action=update)
+		<ul id="main-20091123_0002-files" class="sofa-attachment">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
-		'potato'
+		
+		
 	</li>
 </ul>
-[modify]
 _html
-			@sd.get(:action => :modify),
+			@sd.get(:action => :update),
 			'Field#get should preserve the given action wherever possible'
 		)
 	end

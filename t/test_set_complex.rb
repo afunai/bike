@@ -9,6 +9,9 @@ class TC_Set_Complex < Test::Unit::TestCase
 		def _get_vegetable(arg)
 			"'potato'"
 		end
+		def _get_enormous(arg)
+			"'mouth'"
+		end
 	end
 
 	class ::Sofa::Workflow::Pipco < ::Sofa::Workflow
@@ -17,15 +20,20 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:read      => 0b1111,
 			:update    => 0b1110,
 			:delete    => 0b1010,
+			:enormous  => 0b1111,
 			:vegetable => 0b1111,
 		}
 		def filter_get(arg,out)
+# TODO: should be moved up to SD#get?
 			(arg[:action] == :update && arg[:p_action] != :update) ? <<_html : out
 <form id="#{@sd[:full_name]}" method="post" action="#{@sd[:full_name]}">
 #{out}</form>
 _html
 		end
 	end
+
+	::Sofa::Workflow::Attachment::PERM[:enormous]  = 0b1111
+	::Sofa::Workflow::Attachment::PERM[:vegetable] = 0b1111
 
 	class ::Sofa::Tomago < ::Sofa::Field
 		def _get(arg)
@@ -51,9 +59,11 @@ _tmpl
 		<ul id="files" class="sofa-attachment">
 			<li id="@(name)">file:(tomago :'foo.jpg')</li>
 		</ul>
+		$(files.update-enormous)
 		<ul id="replies" class="sofa-pipco">
 			<li id="@(name)">reply:(tomago :'hi.')</li>
 		</ul>
+		$(replies.update-enormous)
 		$(replies.vegetable)
 	</li>
 _html
@@ -91,7 +101,19 @@ _html
 	end
 
 	def test_get_default
-		Sofa.client = nil
+		Sofa.client = 'root' #nil
+		result = @sd.get
+
+		assert_match(
+			/'potato'/,
+			result,
+			'Set#get should include $(foo.baz) whenever the action :baz is permitted'
+		)
+		assert_no_match(
+			/'mouth'/,
+			result,
+			'Set#get should not include $(foo.bar-baz) when the parent action is not :bar'
+		)
 		assert_equal(
 			<<'_html',
 <ul id="main" class="sofa-pipco">
@@ -119,7 +141,7 @@ _html
 	</li>
 </ul>
 _html
-			@sd.get,
+			result,
 			'Set#get should work recursively as a part of the complex'
 		)
 	end
@@ -139,6 +161,16 @@ _html
 			'Set::Dynamic#get(:action => :update) should not include child apps'
 		)
 		assert_no_match(
+			/'potato'/,
+			result,
+			'Set::Dynamic#get(:action => :update) should not include any value of child apps'
+		)
+		assert_match(
+			/'mouth'/,
+			result,
+			'Set#get should include $(foo.bar-baz) when the parent action is :bar'
+		)
+		assert_no_match(
 			/<form.+<form/m,
 			result,
 			'Set::Dynamic#get(:action => :update) should not return nested forms'
@@ -153,16 +185,14 @@ _html
 			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
 		</ul>
-		
-		
+		'mouth'
 	</li>
 	<li id="main-20091123_0002">
 		'RE'(action=update,p_action=update): 'wee'(action=update,p_action=update)
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=update,p_action=update)</li>
 		</ul>
-		
-		
+		'mouth'
 	</li>
 </ul>
 </form>
@@ -174,6 +204,7 @@ _html
 
 	def test_get_with_partial_permission
 		Sofa.client = 'carl' # can edit only his own item
+
 		assert_equal(
 			<<'_html',
 <form id="main" method="post" action="main">
@@ -184,8 +215,7 @@ _html
 			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
 		</ul>
-		
-		
+		'mouth'
 	</li>
 	<li id="main-20091123_0002">
 		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
@@ -216,16 +246,14 @@ _html
 			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
 		</ul>
-		
-		
+		'mouth'
 	</li>
 	<li id="main-20091123_0002">
 		'RE'(action=read,p_action=update): 'wee'(action=update,p_action=update)
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
-		
-		
+		'mouth'
 	</li>
 </ul>
 </form>

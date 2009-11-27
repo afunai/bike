@@ -42,6 +42,7 @@ class Sofa::Field
 	end
 
 	def item(*item_steps)
+		item_steps = item_steps.first if item_steps.first.is_a? ::Array
 		item_steps.empty? ? self : nil # scalar has no item
 	end
 
@@ -188,10 +189,16 @@ class Sofa::Field
 	end
 
 	def _get_by_tmpl(arg,tmpl = '')
-		tmpl.gsub(/(@|\$)\((.*?)(?:\.(\w+?))?\)/) {
-			type,name,action = $1,$2,$3
-			if type == '@'
-				my[name.intern]
+		tmpl.gsub(/@\((.+?)\)/) {
+			steps = $1.split '-'
+			id    = steps.pop
+			item  = item steps
+			item ? item[id.intern] : '???'
+		}.gsub(/\$\((.*?)(?:\.([\w\-]+))?\)/) {
+			name,action = $1,$2
+			p_action,action = action.split('-',2) if action =~ /-/
+			if p_action && p_action.intern != arg[:action]
+				''
 			elsif name == ''
 				_get_by_method arg
 			else
@@ -203,7 +210,7 @@ class Sofa::Field
 				item = item steps
 				item ? item.get(item_arg) : '???'
 			end
-		}
+		}.gsub(/^\s+\n/,'')
 	end
 
 	def _get_default(arg)

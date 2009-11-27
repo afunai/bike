@@ -188,7 +188,7 @@ class Sofa::Field
 	end
 
 	def _get_by_tmpl(arg,tmpl = '')
-		tmpl.gsub(/(@|\$)\((.*?)(?:\.(.+?))?\)/) {
+		tmpl.gsub(/(@|\$)\((.*?)(?:\.(\w+?))?\)/) {
 			type,name,action = $1,$2,$3
 			if type == '@'
 				my[name.intern]

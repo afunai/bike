@@ -263,4 +263,76 @@ _html
 		)
 	end
 
+	def test_get_with_partial_action
+		Sofa.client = 'root'
+
+		result = @sd.get(
+			'20091123_0002' => {
+				'replies' => {
+					:action => :update,
+					:conds  => {:id => '20091125_0002'},
+				},
+			}
+		)
+		assert_equal(
+			<<'_html',
+<ul id="main" class="sofa-pipco">
+	<li id="main-20091123_0001">
+		'CZ'(action=read,p_action=read): 'oops'(action=read,p_action=read)
+		<ul id="main-20091123_0001-files" class="sofa-attachment">
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=read,p_action=read)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read,p_action=read)</li>
+		</ul>
+		<ul id="main-20091123_0001-replies" class="sofa-pipco">
+			<li id="main-20091123_0001-replies-20091125_0001">'howdy.'(action=read,p_action=read)</li>
+		</ul>
+		'potato'
+	</li>
+	<li id="main-20091123_0002">
+		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
+		<ul id="main-20091123_0002-files" class="sofa-attachment">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
+		</ul>
+		<form id="main-20091123_0002-replies" method="post" action="main-20091123_0002-replies">
+<ul id="main-20091123_0002-replies" class="sofa-pipco">
+			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
+		</ul></form>
+		'potato'
+	</li>
+</ul>
+_html
+			result,
+			'Field#get should be able to handle a partial action'
+		)
+
+		result = @sd.get(
+			:conds => {:id => '20091123_0002'},
+			'20091123_0002' => {
+				'replies' => {
+					:action => :update,
+					:conds  => {:id => '20091125_0002'},
+				},
+			}
+		)
+		assert_equal(
+			<<'_html',
+<ul id="main" class="sofa-pipco">
+	<li id="main-20091123_0002">
+		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
+		<ul id="main-20091123_0002-files" class="sofa-attachment">
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
+		</ul>
+		<form id="main-20091123_0002-replies" method="post" action="main-20091123_0002-replies">
+<ul id="main-20091123_0002-replies" class="sofa-pipco">
+			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
+		</ul></form>
+		'potato'
+	</li>
+</ul>
+_html
+			result,
+			'Field#get should be able to handle a partial action'
+		)
+	end
+
 end

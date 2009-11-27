@@ -39,7 +39,7 @@ class Sofa::Workflow
 	def before_get(arg)
 	end
 
-	def filter_get(out)
+	def filter_get(arg,out)
 		out
 	end
 

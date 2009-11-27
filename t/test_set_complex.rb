@@ -19,7 +19,11 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:delete    => 0b1010,
 			:vegetable => 0b1111,
 		}
-		def before_get(arg)
+		def filter_get(arg,out)
+			(arg[:action] == :update && arg[:p_action] != :update) ? <<_html : out
+<form id="#{@sd[:full_name]}" method="post" action="#{@sd[:full_name]}">
+#{out}</form>
+_html
 		end
 	end
 
@@ -134,8 +138,14 @@ _html
 			result,
 			'Set::Dynamic#get(:action => :update) should not include child apps'
 		)
+		assert_no_match(
+			/<form.+<form/m,
+			result,
+			'Set::Dynamic#get(:action => :update) should not return nested forms'
+		)
 		assert_equal(
 			<<'_html',
+<form id="main" method="post" action="main">
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
@@ -155,6 +165,7 @@ _html
 		
 	</li>
 </ul>
+</form>
 _html
 			result,
 			'Set#get should distribute the action to its items'
@@ -165,6 +176,7 @@ _html
 		Sofa.client = 'carl' # can edit only his own item
 		assert_equal(
 			<<'_html',
+<form id="main" method="post" action="main">
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
@@ -187,6 +199,7 @@ _html
 		'potato'
 	</li>
 </ul>
+</form>
 _html
 			@sd.get(:action => :update),
 			'Field#get should fall back to a possible action if the given action is not permitted'
@@ -195,6 +208,7 @@ _html
 		@sd.item('20091123_0002','comment')[:owner] = 'carl' # enclave in roy's item
 		assert_equal(
 			<<'_html',
+<form id="main" method="post" action="main">
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
@@ -214,6 +228,7 @@ _html
 		
 	</li>
 </ul>
+</form>
 _html
 			@sd.get(:action => :update),
 			'Field#get should preserve the given action wherever possible'

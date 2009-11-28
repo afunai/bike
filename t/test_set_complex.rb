@@ -24,7 +24,7 @@ class TC_Set_Complex < Test::Unit::TestCase
 		def filter_get(arg,out)
 # TODO: should be moved up to SD#get?
 			(arg[:action] == :update && arg[:p_action] != :update) ? <<_html : out
-<form id="#{@sd[:full_name]}" method="post" action="#{@sd[:full_name]}">
+<form id="#{@sd[:full_name]}" method="post" action="#{@sd[:folder] ? @sd[:folder][:full_name] : ''}">
 #{out}</form>
 _html
 		end
@@ -172,7 +172,7 @@ _html
 		)
 		assert_equal(
 			<<'_html',
-<form id="main" method="post" action="main">
+<form id="main" method="post" action="">
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
@@ -202,7 +202,7 @@ _html
 
 		assert_equal(
 			<<'_html',
-<form id="main" method="post" action="main">
+<form id="main" method="post" action="">
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
@@ -233,7 +233,7 @@ _html
 		@sd.item('20091123_0002','comment')[:owner] = 'carl' # enclave in roy's item
 		assert_equal(
 			<<'_html',
-<form id="main" method="post" action="main">
+<form id="main" method="post" action="">
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
@@ -287,7 +287,7 @@ _html
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
-		<form id="main-20091123_0002-replies" method="post" action="main-20091123_0002-replies">
+		<form id="main-20091123_0002-replies" method="post" action="">
 <ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
 		</ul></form>
@@ -316,7 +316,7 @@ _html
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
-		<form id="main-20091123_0002-replies" method="post" action="main-20091123_0002-replies">
+		<form id="main-20091123_0002-replies" method="post" action="">
 <ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
 		</ul></form>

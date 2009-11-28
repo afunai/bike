@@ -335,4 +335,30 @@ _html
 		)
 	end
 
+	def test_post_partial
+		Sofa.client = 'don'
+		original_val = YAML.load @sd.val.to_yaml
+		@sd.update(
+			'20091123_0002' => {
+				'replies' => {
+					'_0001' => {
+						'_owner' => 'don',
+						'reply'  => 'yum.',
+					},
+				},
+			}
+		)
+		assert_equal(
+			original_val,
+			@sd.val,
+			'Field#val should not change before the commit'
+		)
+		@sd.commit
+		assert_not_equal(
+			original_val,
+			@sd.val,
+			'Field#val should change after the commit'
+		)
+	end
+
 end

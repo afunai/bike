@@ -253,7 +253,6 @@ _html
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
-		'mouth'
 	</li>
 </ul>
 </form>

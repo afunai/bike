@@ -197,7 +197,7 @@ class Sofa::Field
 		}.gsub(/\$\((.*?)(?:\.([\w\-]+))?\)/) {
 			name,action = $1,$2
 			p_action,action = action.split('-',2) if action =~ /-/
-			if p_action && p_action.intern != arg[:action]
+			if p_action && (p_action.intern != arg[:action] || !item.permit?(arg[:action]))
 				''
 			elsif name == ''
 				_get_by_method arg

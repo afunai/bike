@@ -207,6 +207,7 @@ class Sofa::Field
 					a[s] || {:p_action => a[:action],:action => a[:action]}
 				}
 				item_arg[:action] = action.intern if action
+				item_arg[:permitted] = true if action # skip authorization
 				item = item steps
 				item ? item.get(item_arg) : '???'
 			end

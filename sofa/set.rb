@@ -66,7 +66,7 @@ end
 	end
 
 	def permit_get?(arg)
-		permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
+		arg[:permitted] || permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
 			item.permit? arg[:action]
 		}
 	end

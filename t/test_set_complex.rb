@@ -20,8 +20,6 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:read      => 0b1111,
 			:update    => 0b1110,
 			:delete    => 0b1010,
-			:enormous  => 0b1111,
-			:vegetable => 0b1111,
 		}
 		def filter_get(arg,out)
 # TODO: should be moved up to SD#get?
@@ -31,9 +29,6 @@ class TC_Set_Complex < Test::Unit::TestCase
 _html
 		end
 	end
-
-	::Sofa::Workflow::Attachment::PERM[:enormous]  = 0b1111
-	::Sofa::Workflow::Attachment::PERM[:vegetable] = 0b1111
 
 	class ::Sofa::Tomago < ::Sofa::Field
 		def _get(arg)

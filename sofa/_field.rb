@@ -206,10 +206,15 @@ class Sofa::Field
 				item_arg = steps.inject(arg) {|a,s|
 					a[s] || {:p_action => a[:action],:action => a[:action]}
 				}
-				item_arg[:action] = action.intern if action
-				item_arg[:permitted] = true if action # skip authorization
 				item = item steps
-				item ? item.get(item_arg) : '???'
+				if item.nil?
+					'???'
+				elsif action
+					item_arg[:action] = action.intern
+					item.instance_eval { _get(item_arg) } # skip the authorization
+				else
+					item.get(item_arg)
+				end
 			end
 		}.gsub(/^\s+\n/,'')
 	end

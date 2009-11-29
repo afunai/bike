@@ -57,32 +57,6 @@ def params_from_request(req)
 	params
 end
 
-	def steps_from_path(path)
-		path.split('/').select {|step_or_cond|
-			step_or_cond != '' && step_or_cond !~ REX_COND && step_or_cond !~ REX_COND_D
-		}
-	end
-
-	def conds_from_path(path)
-		path.split('/').inject({}) {|conds,step_or_cond|
-			if step_or_cond =~ REX_COND
-				conds[$1.intern] = $2
-			elsif step_or_cond =~ REX_COND_D
-				conds[:d] = $&
-			end
-			conds
-		}
-	end
-
-	def action_from_path(path)
-		basename = path[%r{[^/]+$}] # nil for /foo/bar/
-		basename && basename !~ /^index/ ? basename.split('.').first.intern : nil
-	end
-
-def path_from_steps(steps)
-	steps.join('/') + (steps.empty? ? '' : '/')
-end
-
 	def rebuild_params(src)
 		src.each_key.sort.reverse.inject({}) {|params,key|
 			name,special = key.split('.',2)
@@ -111,5 +85,43 @@ end
 			params
 		}
 	end
+
+def base_sd_of(path)
+	base = Sofa::Set::Static::Folder.root.item(steps_from_path path)
+end
+
+	def steps_from_path(path)
+		_dirname(path).split('/').select {|step_or_cond|
+			step_or_cond != '' && step_or_cond !~ REX_COND && step_or_cond !~ REX_COND_D
+		}
+	end
+
+	def conds_from_path(path)
+		_dirname(path).split('/').inject({}) {|conds,step_or_cond|
+			if step_or_cond =~ REX_COND
+				conds[$1.intern] = $2
+			elsif step_or_cond =~ REX_COND_D
+				conds[:d] = $&
+			end
+			conds
+		}
+	end
+
+	def action_from_path(path)
+		basename = _basename path
+		basename && basename !~ /^index/ ? basename.split('.').first.intern : nil
+	end
+
+	def _dirname(path) # returns '/foo/bar/' for '/foo/bar/'
+		path[%r{^.*/}] || ''
+	end
+
+	def _basename(path) # returns nil for '/foo/bar/'
+		path[%r{[^/]+$}]
+	end
+
+def path_from_steps(steps)
+	steps.join('/') + (steps.empty? ? '' : '/')
+end
 
 end

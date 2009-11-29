@@ -151,14 +151,21 @@ class TC_Sofa < Test::Unit::TestCase
 		assert_equal(
 			['foo','bar'],
 			sofa.instance_eval {
+				steps_from_path '/foo/bar/create.html'
+			},
+			'Sofa#steps_from_path should ignore the pseudo-filename'
+		)
+		assert_equal(
+			['foo'],
+			sofa.instance_eval {
 				steps_from_path '/foo/bar'
 			},
-			'Sofa#steps_from_path should be able to extract item steps from path_info'
+			'Sofa#steps_from_path should ignore the last step without a following slash'
 		)
 		assert_equal(
 			['foo','bar'],
 			sofa.instance_eval {
-				steps_from_path '/foo//bar/buz=123/'
+				steps_from_path '/foo//bar/baz=123/'
 			},
 			'Sofa#steps_from_path should distinguish item steps from conds'
 		)
@@ -178,6 +185,13 @@ class TC_Sofa < Test::Unit::TestCase
 			[],
 			sofa.instance_eval {
 				steps_from_path '/'
+			},
+			'Sofa#steps_from_path should return empty array when there is no item steps'
+		)
+		assert_equal(
+			[],
+			sofa.instance_eval {
+				steps_from_path '/index.html'
 			},
 			'Sofa#steps_from_path should return empty array when there is no item steps'
 		)
@@ -205,7 +219,7 @@ class TC_Sofa < Test::Unit::TestCase
 			sofa.instance_eval {
 				steps_from_path '/foo/bar/3001/'
 			},
-			'Sofa#steps_from_path should be patched in the next millenium :-)'
+			'Sofa#steps_from_path should be patched in the next millennium :-)'
 		)
 	end
 
@@ -221,23 +235,32 @@ class TC_Sofa < Test::Unit::TestCase
 		)
 		assert_equal(
 			{
-				:buz => '123',
+				:baz => '123',
 				:qux => '456',
 			},
 			sofa.instance_eval {
-				conds_from_path '/foo/bar/buz=123/qux=456/'
+				conds_from_path '/foo/bar/baz=123/qux=456/'
 			},
 			'Sofa#conds_from_path should be able to extract conds from path_info'
 		)
 		assert_equal(
 			{
-				:buz => '1234',
-				:qux => '4567',
+				:baz => '123',
+				:qux => '456',
 			},
 			sofa.instance_eval {
-				conds_from_path '/foo/bar//buz=1234//qux=4567'
+				conds_from_path '/foo/bar/baz=123/qux=456/create.html'
 			},
-			'Sofa#conds_from_path should be able to extract conds from path_info'
+			'Sofa#conds_from_path should ignore the pseudo-filename'
+		)
+		assert_equal(
+			{
+				:baz => '1234',
+			},
+			sofa.instance_eval {
+				conds_from_path '/foo/bar//baz=1234//qux=4567'
+			},
+			'Sofa#conds_from_path should ignore the item steps and the last step without a slash'
 		)
 	end
 
@@ -258,6 +281,13 @@ class TC_Sofa < Test::Unit::TestCase
 			},
 			'Sofa#conds_from_path should return empty hash when there is no conds'
 		)
+		assert_equal(
+			{},
+			sofa.instance_eval {
+				conds_from_path '/index.html'
+			},
+			'Sofa#conds_from_path should return empty hash when there is no conds'
+		)
 	end
 
 	def test_conds_from_path_with_cond_d
@@ -266,11 +296,11 @@ class TC_Sofa < Test::Unit::TestCase
 		assert_equal(
 			{
 				:d   => '200911',
-				:buz => '1234',
+				:baz => '1234',
 				:qux => '4567',
 			},
 			sofa.instance_eval {
-				conds_from_path '/foo/bar/200911/buz=1234/qux=4567'
+				conds_from_path '/foo/bar/200911/baz=1234/qux=4567/'
 			},
 			'Sofa#conds_from_path should be able to distinguish ambiguous cond[:d]'
 		)
@@ -286,6 +316,7 @@ class TC_Sofa < Test::Unit::TestCase
 			},
 			'Sofa#action_from_path should extract the action from path_info'
 		)
+
 		assert_nil(
 			sofa.instance_eval {
 				action_from_path '/foo/bar/index.html'
@@ -299,5 +330,81 @@ class TC_Sofa < Test::Unit::TestCase
 			'Sofa#action_from_path should return nil if no pseudo-filename is given'
 		)
 	end
+
+	def test_base_sd_of
+		sofa = Sofa.new
+
+		assert_instance_of(
+			Sofa::Set::Dynamic,
+			sofa.instance_eval {
+				base_sd_of '/foo/bar/main/index.html'
+			},
+			'Sofa#workflow_root should return a set_dynamic'
+		)
+	end
+
+def ptest_params_from_request
+	sofa = Sofa.new
+
+	env = Rack::MockRequest.env_for(
+		'http://example.com/foo/bar/main/qux=456/?acorn=round',
+		{
+			:script_name => '',
+			:input       => 'coax=true&some-doors=open',
+		}
+	)
+	req = Rack::Request.new env
+	params = sofa.instance_eval {
+		params_from_request req
+	}
+	assert_equal(
+		[{'baz' => '123'},{'qux' => '456'}],
+		params[:conditions],
+		'sofa#params_from_request should get conditions from req.path_info'
+	)
+	assert_equal(
+		{
+			:conditions => [{'baz' => '123'},{'qux' => '456'}],
+			'muha'      => 'muhamuha',
+			'hoge'      => 'hogehoge',
+			'fuga'      => {'fuga' => 'fugafuga'},
+		},
+		params,
+		'sofa#params_from_request should get params from req.path_info and req.params'
+	)
+return
+	env = Rack::MockRequest.env_for(
+		'http://example.com/foo/bar/baz=123/qux=456/?.where-q=ttt',
+		{
+			:script_name => '',
+		}
+	)
+	req = Rack::Request.new(env)
+	params = sofa.instance_eval {
+		params_from_request(req)
+	}
+	assert_equal(
+		[{'baz' => '123'},{'qux' => '456'},{'q' => 'ttt'}],
+		params[:conditions],
+		'sofa#params_from_request should get conditions from both req.path_info and req.params'
+	)
+
+	env = Rack::MockRequest.env_for(
+		'http://example.com/foo/bar/baz=123/qux=456/update.html',
+		{
+			:script_name => '',
+		}
+	)
+	req = Rack::Request.new(env)
+	params = sofa.instance_eval {
+		params_from_request(req)
+	}
+	assert_equal(
+		'update',
+		params[:action],
+		'sofa#params_from_request should get action from req.path_info'
+	)
+end
+
 
 end

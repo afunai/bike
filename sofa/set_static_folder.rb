@@ -25,8 +25,9 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	private
 
 	def collect_item(conds = {},&block)
-		if (
-			conds[:id].is_a?(::String) &&
+		if conds[:id] =~ Sofa::Storage::REX_ID && sd = item('main')
+			return sd.instance_eval { collect_item(conds,&block) }
+		elsif (
 			conds[:id] =~ /\A\w+\z/ &&
 			::File.directory?(::File.join Sofa::ROOT_DIR,my[:dir],conds[:id])
 		)

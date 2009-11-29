@@ -73,4 +73,18 @@ class TC_Set_Folder < Test::Unit::TestCase
 		)
 	end
 
+	def test_item
+		folder = Sofa::Set::Static::Folder.root.item('foo')
+		assert_instance_of(
+			Sofa::Set::Static,
+			folder.item('main','20091120_0001'),
+			'Folder#item should work just like any other sets'
+		)
+		assert_instance_of(
+			Sofa::Set::Static,
+			folder.item('20091120_0001'),
+			"Folder#item should delegate to item('main') if full-formatted :id is given"
+		)
+	end
+
 end

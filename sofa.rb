@@ -19,6 +19,9 @@ STORAGE  = {
 	}
 }
 
+	REX_COND   = /^(.+?)=(.+)$/
+	REX_COND_D = /^(19\d\d|2\d\d\d)/
+
 	def self.current
 		Thread.current
 	end
@@ -42,6 +45,43 @@ get %r{/(.*/)(.*).(html)} do
 end
 
 	private
+
+def params_from_request(req)
+	params = rebuild_params(req.params)
+
+	params[:conditions] = conditions_from_path(req.path_info) + params[:conditions].to_a
+	params.delete(:conditions) if params[:conditions].empty?
+
+	action = action_from_path(req.path_info)
+	params[:action],params[:sub_action] = action.split('.',2) if action
+	params
+end
+
+	def steps_from_path(path)
+		path.split('/').select {|step_or_cond|
+			step_or_cond != '' && step_or_cond !~ REX_COND && step_or_cond !~ REX_COND_D
+		}
+	end
+
+def conds_from_path(path)
+	path.split('/').inject({}) {|conds,step_or_cond|
+		if step_or_cond =~ REX_COND
+			conds[$1.intern] = $2
+		elsif step_or_cond =~ REX_COND_D
+			conds[:d] = $1
+		end
+		conds
+	}
+end
+
+def action_from_path(path)
+	filename = path.split('/',-1).last[/([^\.]+)\./,1]
+	filename.gsub('_','.') if filename && filename != 'index'
+end
+
+def path_from_steps(steps)
+	steps.join('/') + (steps.empty? ? '' : '/')
+end
 
 	def rebuild_params(src)
 		src.each_key.sort.reverse.inject({}) {|params,key|

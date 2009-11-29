@@ -20,7 +20,7 @@ STORAGE  = {
 }
 
 	REX_COND   = /^(.+?)=(.+)$/
-	REX_COND_D = /^(19\d\d|2\d\d\d)/
+	REX_COND_D = /^(19\d\d|2\d\d\d)\d{0,4}$/
 
 	def self.current
 		Thread.current
@@ -63,21 +63,21 @@ end
 		}
 	end
 
-def conds_from_path(path)
-	path.split('/').inject({}) {|conds,step_or_cond|
-		if step_or_cond =~ REX_COND
-			conds[$1.intern] = $2
-		elsif step_or_cond =~ REX_COND_D
-			conds[:d] = $1
-		end
-		conds
-	}
-end
+	def conds_from_path(path)
+		path.split('/').inject({}) {|conds,step_or_cond|
+			if step_or_cond =~ REX_COND
+				conds[$1.intern] = $2
+			elsif step_or_cond =~ REX_COND_D
+				conds[:d] = $&
+			end
+			conds
+		}
+	end
 
-def action_from_path(path)
-	filename = path.split('/',-1).last[/([^\.]+)\./,1]
-	filename.gsub('_','.') if filename && filename != 'index'
-end
+	def action_from_path(path)
+		basename = path[%r{[^/]+$}] # nil for /foo/bar/
+		basename && basename !~ /^index/ ? basename.split('.').first.intern : nil
+	end
 
 def path_from_steps(steps)
 	steps.join('/') + (steps.empty? ? '' : '/')

@@ -142,18 +142,6 @@ class TC_Sofa < Test::Unit::TestCase
 		sofa = Sofa.new
 
 		env = Rack::MockRequest.env_for(
-			'http://example.com/'
-		)
-		req = Rack::Request.new env
-		assert_equal(
-			[],
-			sofa.instance_eval {
-				steps_from_path req.path_info
-			},
-			'Sofa#steps_from_path should return empty array when there is no item steps'
-		)
-
-		env = Rack::MockRequest.env_for(
 			'http://example.com/foo/bar/'
 		)
 		req = Rack::Request.new env
@@ -191,6 +179,22 @@ class TC_Sofa < Test::Unit::TestCase
 				steps_from_path req.path_info
 			},
 			'Sofa#steps_from_path should distinguish item steps from conds'
+		)
+	end
+
+	def test_steps_from_path_with_empty_steps
+		sofa = Sofa.new
+
+		env = Rack::MockRequest.env_for(
+			'http://example.com/'
+		)
+		req = Rack::Request.new env
+		assert_equal(
+			[],
+			sofa.instance_eval {
+				steps_from_path req.path_info
+			},
+			'Sofa#steps_from_path should return empty array when there is no item steps'
 		)
 	end
 
@@ -238,18 +242,6 @@ class TC_Sofa < Test::Unit::TestCase
 		sofa = Sofa.new
 
 		env = Rack::MockRequest.env_for(
-			'http://example.com/'
-		)
-		req = Rack::Request.new env
-		assert_equal(
-			{},
-			sofa.instance_eval {
-				conds_from_path req.path_info
-			},
-			'Sofa#conds_from_path should return empty hash when there is no conds'
-		)
-
-		env = Rack::MockRequest.env_for(
 			'http://example.com/foo/bar/'
 		)
 		req = Rack::Request.new env
@@ -289,6 +281,80 @@ class TC_Sofa < Test::Unit::TestCase
 				conds_from_path req.path_info
 			},
 			'Sofa#conds_from_path should be able to extract conds from path_info'
+		)
+	end
+
+	def test_conds_from_path_with_empty_conds
+		sofa = Sofa.new
+
+		env = Rack::MockRequest.env_for(
+			'http://example.com/'
+		)
+		req = Rack::Request.new env
+		assert_equal(
+			{},
+			sofa.instance_eval {
+				conds_from_path req.path_info
+			},
+			'Sofa#conds_from_path should return empty hash when there is no conds'
+		)
+	end
+
+	def test_conds_from_path_with_cond_d
+		sofa = Sofa.new
+
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/200911/buz=1234/qux=4567'
+		)
+		req = Rack::Request.new env
+		assert_equal(
+			{
+				:d   => '200911',
+				:buz => '1234',
+				:qux => '4567',
+			},
+			sofa.instance_eval {
+				conds_from_path req.path_info
+			},
+			'Sofa#conds_from_path should be able to distinguish ambiguous cond[:d]'
+		)
+	end
+
+	def test_action_from_path
+		sofa = Sofa.new
+
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/create.html'
+		)
+		req = Rack::Request.new env
+		assert_equal(
+			:create,
+			sofa.instance_eval {
+				action_from_path req.path_info
+			},
+			'Sofa#action_from_path should extract the action from path_info'
+		)
+
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/index.html'
+		)
+		req = Rack::Request.new env
+		assert_nil(
+			sofa.instance_eval {
+				action_from_path req.path_info
+			},
+			'Sofa#action_from_path should return nil if the pseudo-filename is index.*'
+		)
+
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/'
+		)
+		req = Rack::Request.new env
+		assert_nil(
+			sofa.instance_eval {
+				action_from_path req.path_info
+			},
+			'Sofa#action_from_path should return nil if no pseudo-filename is given'
 		)
 	end
 

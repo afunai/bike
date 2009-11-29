@@ -86,9 +86,14 @@ end
 		}
 	end
 
-def base_sd_of(path)
-	base = Sofa::Set::Static::Folder.root.item(steps_from_path path)
-end
+	def base_sd_of(path)
+		base = Sofa::Set::Static::Folder.root.item(steps_from_path path)
+		if base.is_a? Sofa::Set::Dynamic
+			base
+		elsif base.is_a? Sofa::Set::Static::Folder
+			base.item 'main'
+		end
+	end
 
 	def steps_from_path(path)
 		_dirname(path).split('/').select {|step_or_cond|

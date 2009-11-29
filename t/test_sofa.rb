@@ -304,6 +304,16 @@ class TC_Sofa < Test::Unit::TestCase
 			},
 			'Sofa#conds_from_path should be able to distinguish ambiguous cond[:d]'
 		)
+		assert_equal(
+			{
+				:baz => '1234',
+				:qux => '4567',
+			},
+			sofa.instance_eval {
+				conds_from_path '/foo/bar/20091129_0001/baz=1234/qux=4567/'
+			},
+			'Sofa#conds_from_path should ignore the full-formatted id'
+		)
 	end
 
 	def test_action_from_path
@@ -334,12 +344,54 @@ class TC_Sofa < Test::Unit::TestCase
 	def test_base_sd_of
 		sofa = Sofa.new
 
+		sd = sofa.instance_eval {
+			base_sd_of '/foo/bar/main/index.html'
+		}
 		assert_instance_of(
 			Sofa::Set::Dynamic,
-			sofa.instance_eval {
-				base_sd_of '/foo/bar/main/index.html'
-			},
-			'Sofa#workflow_root should return a set_dynamic'
+			sd,
+			'Sofa#base_sd_of should return a set_dynamic'
+		)
+		assert_equal(
+			'-foo-bar-main',
+			sd[:full_name],
+			'Sofa#base_sd_of should return a set_dynamic at the bottom of the given steps'
+		)
+
+		sd = sofa.instance_eval {
+			base_sd_of '/foo/bar/index.html'
+		}
+		assert_instance_of(
+			Sofa::Set::Dynamic,
+			sd,
+			'Sofa#base_sd_of should return a set_dynamic'
+		)
+		assert_equal(
+			'-foo-bar-main',
+			sd[:full_name],
+			"Sofa#base_sd_of should return the item('main') if the given steps point at a folder"
+		)
+
+		sd = sofa.instance_eval {
+			base_sd_of '/foo/bar/20091120_0001/files/index.html'
+		}
+		assert_instance_of(
+			Sofa::Set::Dynamic,
+			sd,
+			'Sofa#base_sd_of should return a set_dynamic'
+		)
+		assert_equal(
+			'-foo-bar-main-20091120_0001-files',
+			sd[:full_name],
+			"Sofa#base_sd_of should be able to dive into any depth from the folder"
+		)
+
+		sd = sofa.instance_eval {
+			base_sd_of '/foo/bar/20091120_0002/files/index.html'
+		}
+		assert_nil(
+			sd,
+			'Sofa#base_sd_of should return nil if there is no set_dynamic at the steps'
 		)
 	end
 

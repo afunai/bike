@@ -5,8 +5,6 @@
 
 class Sofa::Storage
 
-	REX_ID = /\d{8}_\d{4,}/
-
 	def self.instance(sd)
 		if folder = sd[:folder]
 			klass = Sofa::STORAGE['default'].capitalize

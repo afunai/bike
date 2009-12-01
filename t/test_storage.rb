@@ -156,7 +156,7 @@ class TC_Storage < Test::Unit::TestCase
 			id = storage.store(:new_id,{'foo' => 'bar'})
 		}
 		assert_match(
-			Sofa::Storage::REX_ID,
+			Sofa::REX::ID,
 			id,
 			"#{storage.class}#store should return the id of the created item"
 		)
@@ -184,7 +184,7 @@ class TC_Storage < Test::Unit::TestCase
 			id = storage.delete(id)
 		}
 		assert_match(
-			Sofa::Storage::REX_ID,
+			Sofa::REX::ID,
 			id,
 			"#{storage.class}#delete should return the id of the deleted item"
 		)
@@ -197,13 +197,13 @@ class TC_Storage < Test::Unit::TestCase
 	def _test_new_id(storage)
 		id1 = storage.store(:new_id,{'foo' => 'bar'})
 		assert_match(
-			Sofa::Storage::REX_ID,
+			Sofa::REX::ID,
 			id1,
 			"#{storage.class}#new_id should return a unique id for the element"
 		)
 		id2 = storage.store(:new_id,{'foo' => 'bar'})
 		assert_match(
-			Sofa::Storage::REX_ID,
+			Sofa::REX::ID,
 			id2,
 			"#{storage.class}#new_id should return a unique id for the element"
 		)

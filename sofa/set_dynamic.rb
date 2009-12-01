@@ -7,8 +7,6 @@ class Sofa::Set::Dynamic < Sofa::Field
 
 	include Sofa::Set
 
-	REX_NEW_ID = /^_\d/
-
 	attr_reader :storage,:workflow
 
 	def initialize(meta = {})
@@ -55,7 +53,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 			when :update
 				v.each_key {|id|
 					item = item_instance id
-					item_action = id[REX_NEW_ID] ? :create : (v[id][:delete] ? :delete : :update)
+					item_action = id[Sofa::REX::ID_NEW] ? :create : (v[id][:delete] ? :delete : :update)
 					item.post(item_action,v[id])
 				}
 			when :load,:load_default,:create
@@ -92,7 +90,11 @@ class Sofa::Set::Dynamic < Sofa::Field
 				:klass  => 'set-static',
 				:html   => my[:item_html]
 			)
-			id[REX_NEW_ID] ? @item_object[id].load_default : @item_object[id].load(@storage.val id)
+			if id[Sofa::REX::ID_NEW]
+				@item_object[id].load_default
+			else
+				@item_object[id].load(@storage.val id)
+			end
 		end
 		@item_object[id]
 	end

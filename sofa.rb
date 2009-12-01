@@ -6,6 +6,13 @@ class Sofa < Sinatra::Base
 	require 'sofa/_field'
 	Dir['./sofa/*.rb'].sort.each {|file| require file }
 
+	module REX
+		ID     = /^\d{8}_\d{4,}/
+		ID_NEW = /^_\d/
+		COND   = /^(.+?)=(.+)$/
+		COND_D = /^(19\d\d|2\d\d\d)\d{0,4}$/
+	end
+
 ROOT_DIR = './t/data' # TODO
 STORAGE  = {
 	'default' => 'File',
@@ -18,9 +25,6 @@ STORAGE  = {
 		'pw'     => 'bar',
 	}
 }
-
-	REX_COND   = /^(.+?)=(.+)$/
-	REX_COND_D = /^(19\d\d|2\d\d\d)\d{0,4}$/
 
 	def self.current
 		Thread.current
@@ -97,15 +101,15 @@ end
 
 	def steps_from_path(path)
 		_dirname(path).split('/').select {|step_or_cond|
-			step_or_cond != '' && step_or_cond !~ REX_COND && step_or_cond !~ REX_COND_D
+			step_or_cond != '' && step_or_cond !~ REX::COND && step_or_cond !~ REX::COND_D
 		}
 	end
 
 	def conds_from_path(path)
 		_dirname(path).split('/').inject({}) {|conds,step_or_cond|
-			if step_or_cond =~ REX_COND
+			if step_or_cond =~ REX::COND
 				conds[$1.intern] = $2
-			elsif step_or_cond =~ REX_COND_D
+			elsif step_or_cond =~ REX::COND_D
 				conds[:d] = $&
 			end
 			conds

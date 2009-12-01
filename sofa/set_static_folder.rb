@@ -25,7 +25,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	private
 
 	def collect_item(conds = {},&block)
-		if conds[:id] =~ Sofa::Storage::REX_ID && sd = item('main')
+		if conds[:id] =~ Sofa::REX::ID && sd = item('main')
 			return sd.instance_eval { collect_item(conds,&block) }
 		elsif (
 			conds[:id] =~ /\A\w+\z/ &&

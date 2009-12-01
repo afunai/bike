@@ -74,9 +74,9 @@ end
 	def permit_post?(action,val)
 		(action != :update) || val.all? {|id,v|
 			case id
-				when Sofa::Set::Dynamic::REX_NEW_ID
+				when Sofa::REX::ID_NEW
 					action = :create
-				when Sofa::Storage::REX_ID
+				when Sofa::REX::ID
 					action = v['_action'] ? v['_action'].intern : :update
 				when /^_submit/
 					next true # not a item value

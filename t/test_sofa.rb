@@ -502,4 +502,30 @@ class TC_Sofa < Test::Unit::TestCase
 		)
 	end
 
+	def test_current
+		Sofa.current[:foo] = 'main foo' 
+		main_current = Sofa.current
+
+		t = Thread.new {
+			assert_not_equal(
+				main_current,
+				Sofa.current,
+				'Sofa.current should be unique per a thread'
+			)
+			assert_not_equal(
+				'main foo',
+				Sofa.current[:foo],
+				'Sofa.current should be unique per a thread'
+			)
+			Sofa.current[:foo] = 'child foo' 
+		}
+		t.join
+
+		assert_equal(
+			'main foo',
+			Sofa.current[:foo],
+			'Sofa.current should be unique per a thread'
+		)
+	end
+
 end

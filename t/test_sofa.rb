@@ -395,68 +395,111 @@ class TC_Sofa < Test::Unit::TestCase
 		)
 	end
 
-def ptest_params_from_request
-	sofa = Sofa.new
+	def test_params_from_request
+		sofa = Sofa.new
 
-	env = Rack::MockRequest.env_for(
-		'http://example.com/foo/bar/main/qux=456/?acorn=round',
-		{
-			:script_name => '',
-			:input       => 'coax=true&some-doors=open',
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/main/qux=456/wink.html?acorn=round',
+			{
+				:script_name => '',
+				:input       => 'coax=true&some-doors=open',
+			}
+		)
+		req = Rack::Request.new env
+		params = sofa.instance_eval {
+			params_from_request req
 		}
-	)
-	req = Rack::Request.new env
-	params = sofa.instance_eval {
-		params_from_request req
-	}
-	assert_equal(
-		[{'baz' => '123'},{'qux' => '456'}],
-		params[:conditions],
-		'sofa#params_from_request should get conditions from req.path_info'
-	)
-	assert_equal(
-		{
-			:conditions => [{'baz' => '123'},{'qux' => '456'}],
-			'muha'      => 'muhamuha',
-			'hoge'      => 'hogehoge',
-			'fuga'      => {'fuga' => 'fugafuga'},
-		},
-		params,
-		'sofa#params_from_request should get params from req.path_info and req.params'
-	)
-return
-	env = Rack::MockRequest.env_for(
-		'http://example.com/foo/bar/baz=123/qux=456/?.where-q=ttt',
-		{
-			:script_name => '',
-		}
-	)
-	req = Rack::Request.new(env)
-	params = sofa.instance_eval {
-		params_from_request(req)
-	}
-	assert_equal(
-		[{'baz' => '123'},{'qux' => '456'},{'q' => 'ttt'}],
-		params[:conditions],
-		'sofa#params_from_request should get conditions from both req.path_info and req.params'
-	)
+		assert_equal(
+			{
+				'main'  => {
+					:conds  => {:qux => '456'},
+					:action => :wink,
+				},
+				'acorn' => 'round',
+				'coax'  => 'true',
+				'some'  => {'doors' => 'open'},
+			},
+			params,
+			'Sofa#params_from_request should build params from req.path_info and req.params'
+		)
 
-	env = Rack::MockRequest.env_for(
-		'http://example.com/foo/bar/baz=123/qux=456/update.html',
-		{
-			:script_name => '',
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/qux=456/index.html?acorn=round',
+			{
+				:script_name => '',
+				:input       => 'coax=true&some-doors=open',
+			}
+		)
+		req = Rack::Request.new env
+		params = sofa.instance_eval {
+			params_from_request req
 		}
-	)
-	req = Rack::Request.new(env)
-	params = sofa.instance_eval {
-		params_from_request(req)
-	}
-	assert_equal(
-		'update',
-		params[:action],
-		'sofa#params_from_request should get action from req.path_info'
-	)
-end
+		assert_equal(
+			{
+				'main'  => {
+					:conds  => {:qux => '456'},
+					:action => nil,
+				},
+				'acorn' => 'round',
+				'coax'  => 'true',
+				'some'  => {'doors' => 'open'},
+			},
+			params,
+			'Sofa#params_from_request should build params from req.path_info and req.params'
+		)
 
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/20091120_0001/files/qux=456/index.html?acorn=round',
+			{
+				:script_name => '',
+				:input       => 'coax=true&some-doors=open',
+			}
+		)
+		req = Rack::Request.new env
+		params = sofa.instance_eval {
+			params_from_request req
+		}
+		assert_equal(
+			{
+				'main'  => {
+					'20091120_0001' => {
+						'files' => {
+							:conds  => {:qux => '456'}, 
+							:action => nil,
+						},
+					},
+				},
+				'acorn' => 'round',
+				'coax'  => 'true',
+				'some'  => {'doors' => 'open'},
+			},
+			params,
+			'Sofa#params_from_request should attach the params from path_info to the base SD'
+		)
+
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/qux=456/index.html?acorn=round',
+			{
+				:script_name => '',
+				:input       => 'some-doors=open&some.action-open=submit',
+			}
+		)
+		req = Rack::Request.new env
+		params = sofa.instance_eval {
+			params_from_request req
+		}
+		assert_equal(
+			{
+				'main'  => {
+					:conds  => {:qux => '456'},
+					:action => nil,
+				},
+				'acorn' => 'round',
+				'some'  => {'doors' => 'open',:action => :open},
+			},
+			params,
+			'Sofa#params_from_request should build params from req.path_info and req.params'
+		)
+	end
 
 end

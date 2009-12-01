@@ -50,16 +50,17 @@ end
 
 	private
 
-def params_from_request(req)
-	params = rebuild_params(req.params)
+	def params_from_request(req)
+		params = rebuild_params req.params
 
-	params[:conditions] = conditions_from_path(req.path_info) + params[:conditions].to_a
-	params.delete(:conditions) if params[:conditions].empty?
+		base = base_sd_of req.path_info
+		params_of_base = base[:name].split('-').inject(params) {|p,s| p[s] ||= {} }
+		params_of_base[:conds] ||= {}
+		params_of_base[:conds].merge!(conds_from_path req.path_info)
+		params_of_base[:action] = action_from_path req.path_info
 
-	action = action_from_path(req.path_info)
-	params[:action],params[:sub_action] = action.split('.',2) if action
-	params
-end
+		params
+	end
 
 	def rebuild_params(src)
 		src.each_key.sort.reverse.inject({}) {|params,key|

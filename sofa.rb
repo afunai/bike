@@ -54,16 +54,17 @@ STORAGE  = {
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req
 		Sofa.current[:session] = env['rack.session']
+#Sofa.client = 'root'
 
 		if method == 'get'
 			base = base[:folder] if base.is_a? Sofa::Set::Dynamic
-			response_ok(:body => base.get(params))
+			response_ok :body => base.get(params)
 		else
 			base.update params
 			if base.is_a? Sofa::Set::Dynamic
 				if base.valid?
 					base.commit
-					base.workflow.next(action)
+					response_see_other :location => base.workflow.next(action)
 				else
 				end
 			else

@@ -53,11 +53,11 @@ end
 	def params_from_request(req)
 		params = rebuild_params req.params
 
-		base = base_sd_of req.path_info
+		base = base_of req.path_info
 		params_of_base = base[:name].split('-').inject(params) {|p,s| p[s] ||= {} }
 		params_of_base[:conds] ||= {}
-		params_of_base[:conds].merge!(conds_from_path req.path_info)
-		params_of_base[:action] = action_from_path req.path_info
+		params_of_base[:conds].merge!(conds_of req.path_info)
+		params_of_base[:action] = action_of req.path_info
 
 		params
 	end
@@ -91,8 +91,14 @@ end
 		}
 	end
 
-	def base_sd_of(path)
-		base = Sofa::Set::Static::Folder.root.item(steps_from_path path)
+	def steps_of(path)
+		_dirname(path).split('/').select {|step_or_cond|
+			step_or_cond != '' && step_or_cond !~ REX::COND && step_or_cond !~ REX::COND_D
+		}
+	end
+
+	def base_of(path)
+		base = Sofa::Set::Static::Folder.root.item(steps_of path)
 		if base.is_a? Sofa::Set::Dynamic
 			base
 		elsif base.is_a? Sofa::Set::Static::Folder
@@ -100,13 +106,7 @@ end
 		end
 	end
 
-	def steps_from_path(path)
-		_dirname(path).split('/').select {|step_or_cond|
-			step_or_cond != '' && step_or_cond !~ REX::COND && step_or_cond !~ REX::COND_D
-		}
-	end
-
-	def conds_from_path(path)
+	def conds_of(path)
 		_dirname(path).split('/').inject({}) {|conds,step_or_cond|
 			if step_or_cond =~ REX::COND
 				conds[$1.intern] = $2
@@ -117,7 +117,7 @@ end
 		}
 	end
 
-	def action_from_path(path)
+	def action_of(path)
 		basename = _basename path
 		basename && basename !~ /^index/ ? basename.split('.').first.intern : nil
 	end

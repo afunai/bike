@@ -1,7 +1,6 @@
 require 'rubygems'
-require 'sinatra/base'
 
-class Sofa < Sinatra::Base
+class Sofa
 
 	require 'sofa/_field'
 	Dir['./sofa/*.rb'].sort.each {|file| require file }
@@ -42,11 +41,35 @@ STORAGE  = {
 		self.session[:client] = id
 	end
 
-get %r{/(.*/)(.*).(html)} do
-	path,action,ext = *params[:captures]
-	folder = Sofa::Set::Static::Folder.root.item path.split('/')
-	folder.get
-end
+	def call(env)
+		req    = Rack::Request.new env
+		method = req.request_method.downcase
+		path   = req.path_info
+		params = params_from_request req
+		action = action_of path
+		base   = base_of path
+
+		return [404,{},'Not Found'] unless base
+
+		Sofa.current[:env]     = env
+		Sofa.current[:req]     = req
+		Sofa.current[:session] = env['rack.session']
+
+		if method == 'get'
+			base = base[:folder] if base.is_a? Sofa::Set::Dynamic
+			response_ok(:body => base.get(params))
+		else
+			base.update params
+			if base.is_a? Sofa::Set::Dynamic
+				if base.valid?
+					base.commit
+					base.workflow.next(action)
+				else
+				end
+			else
+			end
+		end
+	end
 
 	private
 
@@ -99,10 +122,10 @@ end
 
 	def base_of(path)
 		base = Sofa::Set::Static::Folder.root.item(steps_of path)
-		if base.is_a? Sofa::Set::Dynamic
-			base
-		elsif base.is_a? Sofa::Set::Static::Folder
+		if base.is_a? Sofa::Set::Static::Folder
 			base.item 'main'
+		else
+			base
 		end
 	end
 
@@ -130,8 +153,58 @@ end
 		path[%r{[^/]+$}]
 	end
 
-def path_from_steps(steps)
-	steps.join('/') + (steps.empty? ? '' : '/')
-end
+	def response_ok(result = {})
+		[
+			200,
+			(
+				result[:headers] ||
+				{
+					'Content-Type'   => 'text/html',
+					'Content-Length' => result[:body].size.to_s,
+				}
+			),
+			result[:body],
+		]
+	end
+
+	def response_no_content(result = {})
+		[
+			204,
+			(result[:headers] || {}),
+			[]
+		]
+	end
+
+	def response_see_other(result = {})
+location = 'http://localhost:9292' + result[:location]
+		body = <<_html
+<a href="#{location}">updated</a>
+_html
+		[
+			303,
+			{
+				'Content-Type'   => 'text/html',
+				'content-Length' => body.size.to_s,
+				'Location'       => location,
+			},
+			body
+		]
+	end
+
+	def response_forbidden(result = {})
+		[
+			403,
+			{},
+			'Forbidden'
+		]
+	end
+
+	def response_not_found(result = {})
+		[
+			404,
+			{},
+			'Not Found'
+		]
+	end
 
 end

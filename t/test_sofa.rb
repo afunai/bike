@@ -373,6 +373,15 @@ class TC_Sofa < Test::Unit::TestCase
 		)
 
 		sd = sofa.instance_eval {
+			base_of '/foo/bar/20091120_0001/comment/index.html'
+		}
+		assert_instance_of(
+			Sofa::Text,
+			sd,
+			'Sofa#base_of should return a text if designated'
+		)
+
+		sd = sofa.instance_eval {
 			base_of '/foo/bar/20091120_0001/files/index.html'
 		}
 		assert_instance_of(

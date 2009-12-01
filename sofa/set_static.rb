@@ -72,7 +72,7 @@ class Sofa::Set::Static < Sofa::Field
 				id       = tag.sub!(/id="(.+?)"/i,'id="@(name)"') ? $1 : 'main'
 				name     = s[1]
 				workflow = s[2]
-				indent   = tmpl[/^\s*\z/]
+				indent   = tmpl[/^\s*\z/] if tag =~ /\n/
 
 				tmpl << "$(#{id})"
 

@@ -280,6 +280,25 @@ _html
 		)
 	end
 
+	def test_update_with_eclectic_val
+		@sd.load(
+			'20091122_1234' => {'name' => 'frank','comment' => 'bar'},
+			'20091122_1235' => {'name' => 'carl', 'comment' => 'baz'}
+		)
+		s = @sd.storage
+
+		assert_nothing_raised(
+			'Set::Dynamic#update should work with values other than sub-items'
+		) {
+			@sd.update('20091122_1234' => {'comment' => 'qux'},:conds => {},:action => nil)
+		}
+		assert_equal(
+			{'name' => 'frank','comment' => 'qux'},
+			@sd.item('20091122_1234').val,
+			'Set::Dynamic#update should update the values of the item instance'
+		)
+	end
+
 	def test_delete
 		@sd.delete
 		assert_equal(

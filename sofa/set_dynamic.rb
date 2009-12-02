@@ -52,6 +52,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 		case action
 			when :update
 				v.each_key {|id|
+					next unless id.is_a? ::String
 					item = item_instance id
 					item_action = id[Sofa::REX::ID_NEW] ? :create : (v[id][:delete] ? :delete : :update)
 					item.post(item_action,v[id])

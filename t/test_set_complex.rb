@@ -21,13 +21,6 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:update    => 0b1110,
 			:delete    => 0b1010,
 		}
-		def filter_get(arg,out)
-# TODO: should be moved up to SD#get?
-			(arg[:action] == :update && arg[:p_action] != :update) ? <<_html : out
-<form id="#{@sd[:full_name]}" method="post" action="#{@sd[:folder] ? @sd[:folder][:full_name] : ''}">
-#{out}</form>
-_html
-		end
 	end
 
 	class ::Sofa::Tomago < ::Sofa::Field

@@ -115,9 +115,11 @@ _html
 		}
 		assert_equal(
 			<<'_html',
+<form id="main" method="post" action="">
 <ul id="foo" class="sofa-blog">
 	<li>moo!: moo!</li>
 </ul>
+</form>
 _html
 			@sd.get(:conds => {:id => '1235'},:action => :update),
 			'Set::Dynamic#get should return the html by [:tmpl]'

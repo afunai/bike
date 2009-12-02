@@ -15,7 +15,7 @@ class TC_Storage < Test::Unit::TestCase
 		sd = Sofa::Set::Static::Folder.root.item('t_select','main')
 
 		assert_instance_of(
-			Sofa::Storage.const_get(Sofa::STORAGE['default']),
+			Sofa::Storage.const_get(Sofa['STORAGE']['default']),
 			sd.storage,
 			'Storage.instance should return a File instance when the set is right under the folder'
 		)

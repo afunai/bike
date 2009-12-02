@@ -10,4 +10,6 @@ require 'mocha'
 
 require 'sofa'
 
+Sofa.instance_eval { @config = YAML.load_file './t.yaml' }
+
 result = Test::Unit::AutoRunner.run(true,'t/')

@@ -10,12 +10,12 @@ require 'ya2yaml'
 class Sofa::Storage::File < Sofa::Storage
 
 	def self.available?
-		Sofa::STORAGE['File'] && Sofa::STORAGE['File']['data_dir']
+		Sofa['STORAGE']['File'] && Sofa['STORAGE']['File']['data_dir']
 	end
 
 	def initialize(sd)
 		super
-		@dir = Sofa::STORAGE['File']['data_dir'] + @sd[:folder][:dir]
+		@dir = Sofa['STORAGE']['File']['data_dir'] + @sd[:folder][:dir]
 	end
 
 	def val(id = nil)

@@ -12,18 +12,10 @@ class Sofa
 		COND_D = /^(19\d\d|2\d\d\d)\d{0,4}$/
 	end
 
-ROOT_DIR = './t/data' # TODO
-STORAGE  = {
-	'default' => 'File',
-	'File'    => {
-		'data_dir' => './t/data',
-	},
-	'Mysql'   => {
-		'dbname' => 'sofa',
-		'user'   => 'foo',
-		'pw'     => 'bar',
-	}
-}
+	def self.[](name)
+		@config ||= YAML.load_file './sofa.yaml'
+		@config[name]
+	end
 
 	def self.current
 		Thread.current

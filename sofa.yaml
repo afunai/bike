@@ -1,0 +1,10 @@
+---
+ROOT_DIR: './data'
+STORAGE:
+  default: File
+  File:
+    data_dir: './data'
+  Mysql:
+    dbname: sofa
+    user: foo
+    pw: bar

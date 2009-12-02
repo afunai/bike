@@ -46,13 +46,15 @@ class Sofa
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req
 		Sofa.current[:session] = env['rack.session']
-#Sofa.client = 'root'
+Sofa.client = 'root'
 
 		if method == 'get'
 			base = base[:folder] if base.is_a? Sofa::Set::Dynamic
 			response_ok :body => base.get(params)
 		else
-			base.update params
+			base[:folder].update params
+base.commit :persistent
+return response_see_other :location => '/acorn/200912/'
 			if base.is_a? Sofa::Set::Dynamic
 				if base.valid?
 					base.commit

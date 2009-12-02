@@ -41,10 +41,15 @@ class Sofa::Workflow
 
 	def filter_get(arg,out)
 		# TODO: should be moved up to SD#get?
-		(arg[:action] == :update && arg[:p_action] != :update) ? <<_html : out
-<form id="#{@sd[:full_name]}" method="post" action="#{@sd[:folder] ? @sd[:folder][:full_name] : ''}">
+		if arg[:action] == :update && arg[:p_action] != :update
+			action = @sd[:folder] ? @sd[:folder][:full_name].gsub('-','/') + '/'  : ''
+			<<_html
+<form id="#{@sd[:full_name]}" method="post" action="#{action}">
 #{out}</form>
 _html
+		else
+			out
+		end
 	end
 
 	def before_post(action,v)

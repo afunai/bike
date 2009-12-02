@@ -14,7 +14,7 @@ class Sofa::Text < Sofa::Field
 
 	def _get_update(arg)
 		<<_html.chomp
-<input type="text" id="#{my[:name]}" value="#{val}" />
+<input type="text" name="#{my[:name]}" value="#{val}" />
 _html
 	end
 

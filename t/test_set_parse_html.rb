@@ -359,6 +359,19 @@ _html
 		)
 	end
 
+	def test_look_a_like_block_tag
+		result = @set.send(:parse_html,<<'_html')
+hello <ul class="not-sofa-blog" id="foo"><li>hello</li></ul> world
+_html
+		assert_equal(
+			<<'_html',
+hello <ul class="not-sofa-blog" id="foo"><li>hello</li></ul> world
+_html
+			result[:tmpl],
+			"Set::Static#parse_html[:tmpl] should skip a class which does not start with 'sofa'"
+		)
+	end
+
 	def test_block_tags_with_options
 		result = @set.send(:parse_html,<<'_html')
 hello
@@ -426,6 +439,35 @@ world
 _html
 			result[:tmpl],
 			'Set::Static#parse_html[:tmpl] should be a proper template'
+		)
+	end
+
+	def test_block_tags_with_nested_tbody
+		result = @set.send(:parse_html,<<'_html')
+hello
+	<table class="sofa-blog" id="foo">
+		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
+		<tbody><tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody></tbody>
+	</table>
+world
+_html
+		assert_equal(
+			{
+				'foo' => {
+					:klass     => 'set-dynamic',
+					:workflow  => 'blog',
+					:tmpl      => <<'_tmpl'.chomp,
+<table class="sofa-blog" id="@(name)">
+		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
+$()	</table>
+_tmpl
+					:item_html => <<'_html',
+		<tbody><tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody></tbody>
+_html
+				},
+			},
+			result[:item],
+			'Set::Static#parse_html should aware of nested <tbody>'
 		)
 	end
 

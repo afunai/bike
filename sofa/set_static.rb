@@ -68,7 +68,7 @@ class Sofa::Set::Static < Sofa::Field
 				id = s[1]
 				tmpl << "$(#{id})"
 				item[id] = parse_tokens(s)
-			elsif s.scan /<(\w+).+?class="[^"]*?sofa-(\w+).+?>\n?/i
+			elsif s.scan /<(\w+).+?class=(?:"|"[^"]*?\s)sofa-(\w+).+?>\n?/i
 				id = s[0][/id="(.+?)"/i,1] || 'main'
 				tmpl << "$(#{id})"
 				item[id] = parse_block(s)
@@ -134,14 +134,24 @@ class Sofa::Set::Static < Sofa::Field
 		tag      = s[0].sub(/id=".*?"/i,'id="@(name)"')
 		name     = s[1]
 		workflow = s[2]
-		indent   = s.pre_match[/^\s*\z/] if tag =~ /\n/
 
-		inner_html = parse_inner_html(s,name)
-		if inner_html.sub!(/^\s*<tbody.*?<\/tbody>\n?/im,'$()')
-			self_tmpl = "#{tag}#{inner_html}#{indent}</#{name}>"
-			item_html = $&
+		inner_html,closing_tag = parse_inner_html(s,name)
+
+		if inner_html =~ /<tbody/i
+			self_tmpl = tag
+			s2 = StringScanner.new inner_html
+			until s2.eos?
+				if s2.scan /\s*<tbody.*?>\n?/i
+					item_html = s2[0] + parse_inner_html(s2,'tbody').join
+					item_html << "\n" if s2.scan /\n/
+					self_tmpl << '$()'
+				else
+					self_tmpl << s2.scan(/.+?(?=\t| |<|\z)/m)
+				end
+			end
+			self_tmpl << closing_tag
 		else
-			self_tmpl = "#{tag}$()#{indent}</#{name}>"
+			self_tmpl = "#{tag}$()#{closing_tag}"
 			item_html = inner_html
 		end
 
@@ -166,7 +176,9 @@ class Sofa::Set::Static < Sofa::Field
 			gen += 1 if s[2] == "<#{name}"
 			gen -= 1 if s[2] == "</#{name}>"
 		end
-		contents.gsub(/(\A\n+|[\t ]*<\/#{name}>\z)/,'')
+		contents.gsub!(/\A\n+/,'')
+		contents.gsub!(/[\t ]*<\/#{name}>\z/,'')
+		[contents,$&]
 	end
 
 	def val_cast(v)

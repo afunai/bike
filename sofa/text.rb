@@ -17,5 +17,6 @@ class Sofa::Text < Sofa::Field
 <input type="text" name="#{my[:name]}" value="#{val}" />
 _html
 	end
+	alias :_get_create :_get_update
 
 end

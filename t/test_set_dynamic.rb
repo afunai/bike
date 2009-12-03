@@ -122,7 +122,25 @@ _html
 </form>
 _html
 			@sd.get(:conds => {:id => '1235'},:action => :update),
-			'Set::Dynamic#get should return the html by [:tmpl]'
+			'Set::Dynamic#get should pass the given action to lower items'
+		)
+	end
+
+	def test_get_create
+		@sd.load(
+			'1234' => {'name' => 'frank','comment' => 'bar'},
+			'1235' => {'name' => 'carl', 'comment' => 'baz'}
+		)
+		result = @sd.get(:action => :create)
+		assert_match(
+			/<input/,
+			result,
+			'Set::Dynamic#_get_create should return the _get_create() of a newly created item'
+		)
+		assert_no_match(
+			/bar/,
+			result,
+			'Set::Dynamic#_get_create should not include the _get_create() of existing items'
 		)
 	end
 

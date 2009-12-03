@@ -165,7 +165,6 @@ _html
 		)
 		assert_equal(
 			<<'_html',
-<form id="main" method="post" action="">
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
@@ -183,7 +182,6 @@ _html
 		'mouth'
 	</li>
 </ul>
-</form>
 _html
 			result,
 			'Set#get should distribute the action to its items'
@@ -195,7 +193,6 @@ _html
 
 		assert_equal(
 			<<'_html',
-<form id="main" method="post" action="">
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
@@ -217,7 +214,6 @@ _html
 		'potato'
 	</li>
 </ul>
-</form>
 _html
 			@sd.get(:action => :update),
 			'Field#get should fall back to a possible action if the given action is not permitted'
@@ -226,7 +222,6 @@ _html
 		@sd.item('20091123_0002','comment')[:owner] = 'carl' # enclave in roy's item
 		assert_equal(
 			<<'_html',
-<form id="main" method="post" action="">
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
@@ -243,7 +238,6 @@ _html
 		</ul>
 	</li>
 </ul>
-</form>
 _html
 			@sd.get(:action => :update),
 			'Field#get should preserve the given action wherever possible'
@@ -280,10 +274,9 @@ _html
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
-		<form id="main-20091123_0002-replies" method="post" action="">
-<ul id="main-20091123_0002-replies" class="sofa-pipco">
+		<ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
-		</ul></form>
+		</ul>
 		'potato'
 	</li>
 </ul>
@@ -309,10 +302,9 @@ _html
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
-		<form id="main-20091123_0002-replies" method="post" action="">
-<ul id="main-20091123_0002-replies" class="sofa-pipco">
+		<ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
-		</ul></form>
+		</ul>
 		'potato'
 	</li>
 </ul>

@@ -43,6 +43,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 
 	def _get(arg)
 		@workflow.before_get arg
+
 		if arg[:p_action] == :update && !@workflow.is_a?(Sofa::Workflow::Attachment)
 			out = ''
 		elsif arg[:action] == :create
@@ -51,6 +52,14 @@ class Sofa::Set::Dynamic < Sofa::Field
 		else
 			out = super
 		end
+		if my[:parent] && (my[:parent] == my[:folder])
+			action = my[:folder][:full_name].gsub('-','/') + '/'
+			out = <<_html
+<form id="#{my[:full_name]}" method="post" action="#{action}">
+#{out}</form>
+_html
+		end
+
 		@workflow.filter_get arg,out
 	end
 

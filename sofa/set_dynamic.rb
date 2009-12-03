@@ -42,9 +42,15 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 	def _get(arg)
-		return '' if arg[:p_action] == :update && !@workflow.is_a?(Sofa::Workflow::Attachment)
 		@workflow.before_get arg
-		@workflow.filter_get arg,super
+		if arg[:p_action] == :update && !@workflow.is_a?(Sofa::Workflow::Attachment)
+			out = ''
+		elsif arg[:action] == :create
+			out = _get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])
+		else
+			out = super
+		end
+		@workflow.filter_get arg,out
 	end
 
 	def _post(action,v = nil)

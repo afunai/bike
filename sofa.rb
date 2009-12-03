@@ -71,7 +71,10 @@ return response_see_other :location => '/acorn/200912/'
 	def params_from_request(req)
 		params = rebuild_params req.params
 
+# TODO: base should be set only once in call()
 		base = base_of req.path_info
+		return {} unless base
+
 		params_of_base = base[:name].split('-').inject(params) {|p,s| p[s] ||= {} }
 		params_of_base[:conds] ||= {}
 		params_of_base[:conds].merge!(conds_of req.path_info)

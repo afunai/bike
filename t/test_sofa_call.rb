@@ -26,6 +26,17 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_get_non_exist
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/non/exist/'
+		)
+		assert_equal(
+			404,
+			res.status,
+			'Sofa#call() should return 404 if the given path is non-existent'
+		)
+	end
+
 	def test_get_partial
 		res = Rack::MockRequest.new(@sofa).get(
 			'http://example.com/foo/20091120_0001/name/'

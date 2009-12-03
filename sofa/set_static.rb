@@ -65,35 +65,14 @@ class Sofa::Set::Static < Sofa::Field
 		s = StringScanner.new html
 		until s.eos?
 			if s.scan /(\w+):\(/m
-				tmpl << "$(#{s[1]})"
-				item[s[1]] = parse_tokens(s)
-			elsif s.scan /<(\w+).+?class="[^"]*?sofa-(\w+).+?>\n?/i
-				tag      = s[0]
-				id       = tag.sub!(/id="(.+?)"/i,'id="@(name)"') ? $1 : 'main'
-				name     = s[1]
-				workflow = s[2]
-				indent   = tmpl[/^\s*\z/] if tag =~ /\n/
-
+				id = s[1]
 				tmpl << "$(#{id})"
-
-				inner_html = parse_inner_html(s,name)
-				if inner_html.sub!(/^\s*<tbody.*?<\/tbody>\n?/im,'$()')
-					self_tmpl = "#{tag}#{inner_html}#{indent}</#{name}>"
-					item_html = $&
-				else
-					self_tmpl = "#{tag}$()#{indent}</#{name}>"
-					item_html = inner_html
-				end
-				item[id] = {
-					:klass     => 'set-dynamic',
-					:workflow  => workflow,
-					:tmpl      => self_tmpl,
-					:item_html => item_html,
-				}
-				if inner_html =~ /\A\s*<!--(.+?)-->/m
-					s2 = StringScanner.new $1
-					parse_tokens(s2,item[id])
-				end
+				item[id] = parse_tokens(s)
+			elsif s.scan /<(\w+).+?class="[^"]*?sofa-(\w+).+?>\n?/i
+				id = s[0][/id="(.+?)"/i,1] || 'main'
+				tmpl << "$(#{id})"
+				item[id] = parse_block(s)
+# TODO: parse_action_tmpl eg. <div id="main-submit">...</div> -> item['main']['tmpl_submit']
 			else
 				tmpl << s.scan(/.+?(?=\w|<|\z)/m)
 			end
@@ -149,6 +128,34 @@ class Sofa::Set::Static < Sofa::Field
 				end
 		end
 		meta
+	end
+
+	def parse_block(s)
+		tag      = s[0].sub(/id=".*?"/i,'id="@(name)"')
+		name     = s[1]
+		workflow = s[2]
+		indent   = s.pre_match[/^\s*\z/] if tag =~ /\n/
+
+		inner_html = parse_inner_html(s,name)
+		if inner_html.sub!(/^\s*<tbody.*?<\/tbody>\n?/im,'$()')
+			self_tmpl = "#{tag}#{inner_html}#{indent}</#{name}>"
+			item_html = $&
+		else
+			self_tmpl = "#{tag}$()#{indent}</#{name}>"
+			item_html = inner_html
+		end
+
+		sd = {
+			:klass     => 'set-dynamic',
+			:workflow  => workflow,
+			:tmpl      => self_tmpl,
+			:item_html => item_html,
+		}
+		if inner_html =~ /\A\s*<!--(.+?)-->/m
+			s2 = StringScanner.new $1
+			parse_tokens(s2,sd)
+		end
+		sd
 	end
 
 	def parse_inner_html(s,name)

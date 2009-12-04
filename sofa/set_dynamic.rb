@@ -50,9 +50,23 @@ class Sofa::Set::Dynamic < Sofa::Field
 
 		if arg[:p_action] == :update && !@workflow.is_a?(Sofa::Workflow::Attachment)
 			out = ''
+
+
+
 # TODO: this could only be done in _get_by_method as _get_submit() is called from tmpl :-(
+
+#id="@name-submit" な要素を、後処理で消し込む？
+#	単純は単純だけど、毎回 parse_inner_html を回さないといかん。
+#でなければ、同 field 内での tmpl 複数使用を認めるしかない。
+#	action_tmpl 内で $(.submit) 以外の変数を禁止すれば何とかならんか？
+#	ないし、再帰させずに_get_by_tmpl 内で置換かけてしまうとか。
+
+
 elsif arg[:action] == :submit && arg[:orig_action] == :read
 	out = ''
+
+
+
 		elsif arg[:action] == :create
 			item_instance('_1')
 			out = _get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])

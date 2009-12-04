@@ -68,7 +68,7 @@ class Sofa::Set::Static < Sofa::Field
 				id = s[1]
 				tmpl << "$(#{id})"
 				item[id] = parse_tokens(s)
-			elsif s.scan /<(\w+).+?class=(?:"|"[^"]*?\s)sofa-(\w+).+?>\n?/i
+			elsif s.scan /<(\w+).+?class=(?:"|"[^"]*?\s)sofa-(\w+).*?>\n?/i
 				id = s[0][/id="(.+?)"/i,1] || 'main'
 				tmpl << "$(#{id})"
 				item[id] = parse_block(s)
@@ -82,6 +82,26 @@ class Sofa::Set::Static < Sofa::Field
 			:tmpl => tmpl,
 		}
 	end
+
+def gsub_block(html,name,replace,&block)
+	rex_open_tag = /\s*<(\w+).+?class=(?:"|"[^"]*?\s)#{name}(?:"|\s).*?>\n?/i 
+	out = ''
+	s = StringScanner.new html
+	until s.eos?
+		if s.scan rex_open_tag
+			open_tag = s[0]
+			inner_html,close_tag = parse_inner_html(s,s[1])
+			inner_html << "\n" if s.scan /\n/
+			out << block.call(open_tag,inner_html,close_tag)
+		else
+			out << s.scan /.+?(?=\t| |<|\z)/m
+		end
+	end
+	out
+end
+
+
+
 
 	def parse_tokens(s,meta = {})
 		until s.eos? || s.scan(/\)/)
@@ -138,27 +158,27 @@ class Sofa::Set::Static < Sofa::Field
 		inner_html,close_tag = parse_inner_html(s,name)
 
 		if inner_html =~ /<(\w+).+?class=(?:"|"[^"]*?\s)body(?:"|\s)/i
-			self_tmpl = ''
+			sd_tmpl = ''
 			s2 = StringScanner.new inner_html
 			until s2.eos?
 				if s2.scan /\s*<(\w+).+?class=(?:"|"[^"]*?\s)body(?:"|\s).*?>\n?/i
 					item_html = s2[0] + parse_inner_html(s2,s2[1]).join
 					item_html << "\n" if s2.scan /\n/
-					self_tmpl << '$()'
+					sd_tmpl << '$()'
 				else
-					self_tmpl << s2.scan(/.+?(?=\t| |<|\z)/m)
+					sd_tmpl << s2.scan(/.+?(?=\t| |<|\z)/m)
 				end
 			end
-			self_tmpl = "#{open_tag}#{self_tmpl}#{close_tag}"
+			sd_tmpl = "#{open_tag}#{sd_tmpl}#{close_tag}"
 		else
 			item_html = inner_html
-			self_tmpl = "#{open_tag}$()#{close_tag}"
+			sd_tmpl = "#{open_tag}$()#{close_tag}"
 		end
 
 		sd = {
 			:klass     => 'set-dynamic',
 			:workflow  => workflow,
-			:tmpl      => self_tmpl,
+			:tmpl      => sd_tmpl,
 			:item_html => item_html,
 		}
 		parse_tokens(StringScanner.new($1),sd) if inner_html =~ /\A\s*<!--(.+?)-->/m

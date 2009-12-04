@@ -12,32 +12,32 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 	def teardown
 	end
 
-	def test_parse_tokens
+	def test_scan_tokens
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
-			@set.send(:parse_tokens,StringScanner.new('foo bar baz')),
-			'Set::Static#parse_tokens should be able to parse unquoted tokens into array'
+			@set.send(:scan_tokens,StringScanner.new('foo bar baz')),
+			'Set::Static#scan_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar','baz baz']},
-			@set.send(:parse_tokens,StringScanner.new('foo "bar" "baz baz"')),
-			'Set::Static#parse_tokens should be able to parse quoted tokens'
+			@set.send(:scan_tokens,StringScanner.new('foo "bar" "baz baz"')),
+			'Set::Static#scan_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
-			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz")),
-			'Set::Static#parse_tokens should be able to parse quoted tokens'
+			@set.send(:scan_tokens,StringScanner.new("foo 'bar' baz")),
+			'Set::Static#scan_tokens should be able to parse quoted tokens'
 		)
 
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
-			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz) qux")),
-			'Set::Static#parse_tokens should stop scanning at an ending bracket'
+			@set.send(:scan_tokens,StringScanner.new("foo 'bar' baz) qux")),
+			'Set::Static#scan_tokens should stop scanning at an ending bracket'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar (bar?)','baz']},
-			@set.send(:parse_tokens,StringScanner.new("foo 'bar (bar?)' baz) qux")),
-			'Set::Static#parse_tokens should ignore brackets inside quoted tokens'
+			@set.send(:scan_tokens,StringScanner.new("foo 'bar (bar?)' baz) qux")),
+			'Set::Static#scan_tokens should ignore brackets inside quoted tokens'
 		)
 	end
 
@@ -268,34 +268,34 @@ _eos
 		)
 	end
 
-	def test_parse_inner_html
+	def test_scan_inner_html
 		s = StringScanner.new 'bar</foo>bar'
-		inner_html,close_tag = @set.send(:parse_inner_html,s,'foo')
+		inner_html,close_tag = @set.send(:scan_inner_html,s,'foo')
 		assert_equal(
 			'bar',
 			inner_html,
-			'Set::Static#parse_inner_html should extract the inner html from the scanner'
+			'Set::Static#scan_inner_html should extract the inner html from the scanner'
 		)
 		assert_equal(
 			'</foo>',
 			close_tag,
-			'Set::Static#parse_inner_html should extract the inner html from the scanner'
+			'Set::Static#scan_inner_html should extract the inner html from the scanner'
 		)
 
 		s = StringScanner.new '<foo>bar</foo></foo>'
-		inner_html,close_tag = @set.send(:parse_inner_html,s,'foo')
+		inner_html,close_tag = @set.send(:scan_inner_html,s,'foo')
 		assert_equal(
 			'<foo>bar</foo>',
 			inner_html,
-			'Set::Static#parse_inner_html should be aware of nested tags'
+			'Set::Static#scan_inner_html should be aware of nested tags'
 		)
 
 		s = StringScanner.new "baz\n\t<foo>bar</foo>\n</foo>"
-		inner_html,close_tag = @set.send(:parse_inner_html,s,'foo')
+		inner_html,close_tag = @set.send(:scan_inner_html,s,'foo')
 		assert_equal(
 			"baz\n\t<foo>bar</foo>\n",
 			inner_html,
-			'Set::Static#parse_inner_html should be aware of nested tags'
+			'Set::Static#scan_inner_html should be aware of nested tags'
 		)
 	end
 

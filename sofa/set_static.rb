@@ -83,7 +83,7 @@ class Sofa::Set::Static < Sofa::Field
 		until s.eos?
 			if s.scan rex_open_tag
 				open_tag = s[0]
-				inner_html,close_tag = parse_inner_html(s,s[1])
+				inner_html,close_tag = scan_inner_html(s,s[1])
 				close_tag << "\n" if s.scan /\n/
 				out << block.call(open_tag,inner_html,close_tag)
 			else
@@ -98,7 +98,7 @@ class Sofa::Set::Static < Sofa::Field
 		s = StringScanner.new html
 		until s.eos?
 			if s.scan /(\w+):\(([\w\-]+)\s*/m
-				out << block.call(s[1],{:klass => s[2]}.merge(parse_tokens s))
+				out << block.call(s[1],{:klass => s[2]}.merge(scan_tokens s))
 			else
 				out << s.scan(/.+?(?=\w|<|\z)/m)
 			end
@@ -127,38 +127,7 @@ class Sofa::Set::Static < Sofa::Field
 			:tmpl      => "#{open_tag}#{sd_tmpl}#{close_tag}",
 			:item_html => item_html,
 		}
-		(inner_html =~ /\A\s*<!--(.+?)-->/m) ? sd.merge(parse_tokens StringScanner.new($1)) : sd
-	end
-
-	def parse_inner_html(s,name)
-		contents = ''
-		gen = 1
-		until s.eos? || (gen < 1)
-			contents << s.scan(/(.*?)(<#{name}|<\/#{name}>|\z)/m)
-			gen += 1 if s[2] == "<#{name}"
-			gen -= 1 if s[2] == "</#{name}>"
-		end
-		contents.gsub!(/\A\n+/,'')
-		contents.gsub!(/[\t ]*<\/#{name}>\z/,'')
-		[contents,$&]
-	end
-
-	def parse_tokens(s)
-		meta = {}
-		until s.eos? || s.scan(/\)/)
-			prefix = s[1] if s.scan /([:;,])?\s*/
-			if s.scan /(["'])(.*?)(\1|$)/
-				token = s[2]
-			elsif s.scan /[^\s\):;,]+/
-				token = s[0]
-			end
-			prefix ||= ',' if s.scan /(?=,)/ # 1st element of options
-			prefix ||= ';' if s.scan /(?=;)/ # 1st element of defaults
-
-			parse_token(prefix,token,meta)
-			s.scan /\s+/
-		end
-		meta
+		(inner_html =~ /\A\s*<!--(.+?)-->/m) ? sd.merge(scan_tokens StringScanner.new($1)) : sd
 	end
 
 	def parse_token(prefix,token,meta = {})
@@ -183,6 +152,37 @@ class Sofa::Set::Static < Sofa::Field
 						meta[:tokens] ||= []
 						meta[:tokens] << token
 				end
+		end
+		meta
+	end
+
+	def scan_inner_html(s,name)
+		contents = ''
+		gen = 1
+		until s.eos? || (gen < 1)
+			contents << s.scan(/(.*?)(<#{name}|<\/#{name}>|\z)/m)
+			gen += 1 if s[2] == "<#{name}"
+			gen -= 1 if s[2] == "</#{name}>"
+		end
+		contents.gsub!(/\A\n+/,'')
+		contents.gsub!(/[\t ]*<\/#{name}>\z/,'')
+		[contents,$&]
+	end
+
+	def scan_tokens(s)
+		meta = {}
+		until s.eos? || s.scan(/\)/)
+			prefix = s[1] if s.scan /([:;,])?\s*/
+			if s.scan /(["'])(.*?)(\1|$)/
+				token = s[2]
+			elsif s.scan /[^\s\):;,]+/
+				token = s[0]
+			end
+			prefix ||= ',' if s.scan /(?=,)/ # 1st element of options
+			prefix ||= ';' if s.scan /(?=;)/ # 1st element of defaults
+
+			parse_token(prefix,token,meta)
+			s.scan /\s+/
 		end
 		meta
 	end

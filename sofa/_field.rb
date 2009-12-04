@@ -196,8 +196,8 @@ class Sofa::Field
 			item ? item[id.intern] : '???'
 		}.gsub(/\$\((.*?)(?:\.([\w\-]+))?\)/) {
 			name,action = $1,$2
-			p_action,action = action.split('-',2) if action =~ /-/
-			if p_action && (p_action.intern != arg[:action] || !item.permit?(arg[:action]))
+			cond_action,action = action.split('-',2) if action =~ /-/
+			if cond_action && (cond_action.intern != arg[:action] || !item.permit?(arg[:action]))
 				''
 			elsif name == ''
 				arg = arg.merge(:orig_action => arg[:action],:action => action.intern) if action

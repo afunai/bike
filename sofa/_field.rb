@@ -200,6 +200,7 @@ class Sofa::Field
 			if p_action && (p_action.intern != arg[:action] || !item.permit?(arg[:action]))
 				''
 			elsif name == ''
+				arg = arg.merge(:orig_action => arg[:action],:action => action.intern) if action
 				_get_by_method arg
 			else
 				steps = name.split '-'
@@ -210,6 +211,8 @@ class Sofa::Field
 				if item.nil?
 					'???'
 				elsif action
+					item_arg = item_arg.dup
+					item_arg[:orig_action] = item_arg[:action]
 					item_arg[:action] = action.intern
 					item.instance_eval { _get(item_arg) } # skip the authorization
 				else

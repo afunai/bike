@@ -57,7 +57,7 @@ end
 		end
 	end
 
-	def _get_by_method(arg)
+	def _get_default(arg)
 		collect_item(arg[:conds] || {}) {|item|
 			item_arg = arg[item[:id]] || {}
 			item_arg[:action] ||= arg[:action]

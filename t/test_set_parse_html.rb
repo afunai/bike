@@ -279,6 +279,37 @@ _eos
 		)
 	end
 
+	def test_parse_inner_html
+		s = StringScanner.new 'bar</foo>bar'
+		inner_html,close_tag = @set.send(:parse_inner_html,s,'foo')
+		assert_equal(
+			'bar',
+			inner_html,
+			'Set::Static#parse_inner_html should extract the inner html from the scanner'
+		)
+		assert_equal(
+			'</foo>',
+			close_tag,
+			'Set::Static#parse_inner_html should extract the inner html from the scanner'
+		)
+
+		s = StringScanner.new '<foo>bar</foo></foo>'
+		inner_html,close_tag = @set.send(:parse_inner_html,s,'foo')
+		assert_equal(
+			'<foo>bar</foo>',
+			inner_html,
+			'Set::Static#parse_inner_html should be aware of nested tags'
+		)
+
+		s = StringScanner.new "baz\n\t<foo>bar</foo>\n</foo>"
+		inner_html,close_tag = @set.send(:parse_inner_html,s,'foo')
+		assert_equal(
+			"baz\n\t<foo>bar</foo>\n",
+			inner_html,
+			'Set::Static#parse_inner_html should be aware of nested tags'
+		)
+	end
+
 	def test_parse_block_tag
 		result = @set.send(:parse_html,<<'_html')
 <ul class="sofa-blog" id="foo"><li>hello</li></ul>
@@ -377,7 +408,7 @@ _html
 hello
 	<table class="sofa-blog" id="foo">
 		<!-- 1..20 barbaz -->
-		<tbody><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+		<tbody class="body"><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
 	</table>
 world
 _html
@@ -395,12 +426,12 @@ _html
 $()	</table>
 _tmpl
 					:item_html => <<'_html',
-		<tbody><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+		<tbody class="body"><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
 _html
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should aware of <tbody>'
+			'Set::Static#parse_html should aware of <tbody class="body">'
 		)
 	end
 
@@ -409,7 +440,7 @@ _html
 hello
 	<table class="sofa-blog" id="foo">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-		<tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+		<tbody class="body"><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
 	</table>
 world
 _html
@@ -424,12 +455,12 @@ _html
 $()	</table>
 _tmpl
 					:item_html => <<'_html',
-		<tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+		<tbody class="body"><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
 _html
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should aware of <tbody>'
+			'Set::Static#parse_html should aware of <tbody class="body">'
 		)
 		assert_equal(
 			<<'_html',
@@ -447,7 +478,7 @@ _html
 hello
 	<table class="sofa-blog" id="foo">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-		<tbody><tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody></tbody>
+		<tbody class="body"><tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody></tbody>
 	</table>
 world
 _html
@@ -462,12 +493,12 @@ _html
 $()	</table>
 _tmpl
 					:item_html => <<'_html',
-		<tbody><tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody></tbody>
+		<tbody class="body"><tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody></tbody>
 _html
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should aware of nested <tbody>'
+			'Set::Static#parse_html should aware of nested <tbody class="body">'
 		)
 	end
 

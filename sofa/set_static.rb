@@ -137,12 +137,12 @@ class Sofa::Set::Static < Sofa::Field
 
 		inner_html,close_tag = parse_inner_html(s,name)
 
-		if inner_html =~ /<tbody/i
+		if inner_html =~ /<(\w+).+?class=(?:"|"[^"]*?\s)body(?:"|\s)/i
 			self_tmpl = ''
 			s2 = StringScanner.new inner_html
 			until s2.eos?
-				if s2.scan /\s*<tbody.*?>\n?/i
-					item_html = s2[0] + parse_inner_html(s2,'tbody').join
+				if s2.scan /\s*<(\w+).+?class=(?:"|"[^"]*?\s)body(?:"|\s).*?>\n?/i
+					item_html = s2[0] + parse_inner_html(s2,s2[1]).join
 					item_html << "\n" if s2.scan /\n/
 					self_tmpl << '$()'
 				else

@@ -131,14 +131,14 @@ class Sofa::Set::Static < Sofa::Field
 	end
 
 	def parse_block(s)
-		tag      = s[0].sub(/id=".*?"/i,'id="@(name)"')
+		open_tag = s[0].sub(/id=".*?"/i,'id="@(name)"')
 		name     = s[1]
 		workflow = s[2]
 
-		inner_html,closing_tag = parse_inner_html(s,name)
+		inner_html,close_tag = parse_inner_html(s,name)
 
 		if inner_html =~ /<tbody/i
-			self_tmpl = tag
+			self_tmpl = ''
 			s2 = StringScanner.new inner_html
 			until s2.eos?
 				if s2.scan /\s*<tbody.*?>\n?/i
@@ -149,10 +149,10 @@ class Sofa::Set::Static < Sofa::Field
 					self_tmpl << s2.scan(/.+?(?=\t| |<|\z)/m)
 				end
 			end
-			self_tmpl << closing_tag
+			self_tmpl = "#{open_tag}#{self_tmpl}#{close_tag}"
 		else
-			self_tmpl = "#{tag}$()#{closing_tag}"
 			item_html = inner_html
+			self_tmpl = "#{open_tag}$()#{close_tag}"
 		end
 
 		sd = {

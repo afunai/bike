@@ -97,8 +97,8 @@ class Sofa::Set::Static < Sofa::Field
 		out = ''
 		s = StringScanner.new html
 		until s.eos?
-			if s.scan /(\w+):\(/m
-				out << block.call(s[1],parse_tokens(s))
+			if s.scan /(\w+):\(([\w\-]+)\s*/m
+				out << block.call(s[1],{:klass => s[2]}.merge(parse_tokens s))
 			else
 				out << s.scan(/.+?(?=\w|<|\z)/m)
 			end
@@ -127,7 +127,7 @@ class Sofa::Set::Static < Sofa::Field
 			:tmpl      => "#{open_tag}#{sd_tmpl}#{close_tag}",
 			:item_html => item_html,
 		}
-		(inner_html =~ /\A\s*<!--(.+?)-->/m) ? parse_tokens(StringScanner.new($1),sd) : sd
+		(inner_html =~ /\A\s*<!--(.+?)-->/m) ? sd.merge(parse_tokens StringScanner.new($1)) : sd
 	end
 
 	def parse_inner_html(s,name)
@@ -143,7 +143,8 @@ class Sofa::Set::Static < Sofa::Field
 		[contents,$&]
 	end
 
-	def parse_tokens(s,meta = {})
+	def parse_tokens(s)
+		meta = {}
 		until s.eos? || s.scan(/\)/)
 			prefix = s[1] if s.scan /([:;,])?\s*/
 			if s.scan /(["'])(.*?)(\1|$)/
@@ -161,10 +162,6 @@ class Sofa::Set::Static < Sofa::Field
 	end
 
 	def parse_token(prefix,token,meta = {})
-		unless meta[:klass]
-			meta[:klass] = token
-			return meta
-		end
 		case prefix
 			when ':'
 				meta[:default] = token

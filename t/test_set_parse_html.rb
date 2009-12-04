@@ -14,28 +14,28 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 
 	def test_parse_tokens
 		assert_equal(
-			{:klass => 'foo',:tokens => ['bar','baz']},
+			{:tokens => ['foo','bar','baz']},
 			@set.send(:parse_tokens,StringScanner.new('foo bar baz')),
 			'Set::Static#parse_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
-			{:klass => 'foo',:tokens => ['bar','baz baz']},
+			{:tokens => ['foo','bar','baz baz']},
 			@set.send(:parse_tokens,StringScanner.new('foo "bar" "baz baz"')),
 			'Set::Static#parse_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
-			{:klass => 'foo',:tokens => ['bar','baz']},
+			{:tokens => ['foo','bar','baz']},
 			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz")),
 			'Set::Static#parse_tokens should be able to parse quoted tokens'
 		)
 
 		assert_equal(
-			{:klass => 'foo',:tokens => ['bar','baz']},
+			{:tokens => ['foo','bar','baz']},
 			@set.send(:parse_tokens,StringScanner.new("foo 'bar' baz) qux")),
 			'Set::Static#parse_tokens should stop scanning at an ending bracket'
 		)
 		assert_equal(
-			{:klass => 'foo',:tokens => ['bar (bar?)','baz']},
+			{:tokens => ['foo','bar (bar?)','baz']},
 			@set.send(:parse_tokens,StringScanner.new("foo 'bar (bar?)' baz) qux")),
 			'Set::Static#parse_tokens should ignore brackets inside quoted tokens'
 		)
@@ -123,46 +123,35 @@ _html
 
 	def test_parse_token
 		assert_equal(
-			{:klass => 'foo'},
-			@set.send(:parse_token,nil,'foo',{}),
-			'The first token should be regarded as [:klass]'
-		)
-		assert_equal(
-			{:klass => 'foo'},
-			@set.send(:parse_token,nil,'foo',{}),
-			'The first token should be regarded as [:klass]'
-		)
-
-		assert_equal(
-			{:klass => 'foo',:width => 160,:height => 120},
-			@set.send(:parse_token,nil,'160*120',{:klass => 'foo'}),
+			{:width => 160,:height => 120},
+			@set.send(:parse_token,nil,'160*120',{}),
 			'Set::Static#parse_token should be able to parse dimension tokens'
 		)
 		assert_equal(
-			{:klass => 'foo',:min => 1,:max => 32},
-			@set.send(:parse_token,nil,'1..32',{:klass => 'foo'}),
+			{:min => 1,:max => 32},
+			@set.send(:parse_token,nil,'1..32',{}),
 			'Set::Static#parse_token should be able to parse range tokens'
 		)
 
 		assert_equal(
-			{:klass => 'foo',:options => ['foo']},
-			@set.send(:parse_token,',','foo',{:klass => 'foo'}),
+			{:options => ['foo']},
+			@set.send(:parse_token,',','foo',{}),
 			'Set::Static#parse_token should be able to parse option tokens'
 		)
 		assert_equal(
-			{:klass => 'foo',:options => ['foo','bar']},
-			@set.send(:parse_token,',','bar',{:klass => 'foo',:options => ['foo']}),
+			{:options => ['foo','bar']},
+			@set.send(:parse_token,',','bar',{:options => ['foo']}),
 			'Set::Static#parse_token should be able to parse option tokens'
 		)
 
 		assert_equal(
-			{:klass => 'foo',:default => 'bar'},
-			@set.send(:parse_token,':','bar',{:klass => 'foo'}),
+			{:default => 'bar'},
+			@set.send(:parse_token,':','bar',{}),
 			'Set::Static#parse_token should be able to parse default tokens'
 		)
 		assert_equal(
-			{:klass => 'foo',:defaults => ['bar','baz']},
-			@set.send(:parse_token,';','baz',{:klass => 'foo',:defaults => ['bar']}),
+			{:defaults => ['bar','baz']},
+			@set.send(:parse_token,';','baz',{:defaults => ['bar']}),
 			'Set::Static#parse_token should be able to parse defaults tokens'
 		)
 	end

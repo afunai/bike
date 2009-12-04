@@ -83,26 +83,6 @@ class Sofa::Set::Static < Sofa::Field
 		}
 	end
 
-def gsub_block(html,name,replace,&block)
-	rex_open_tag = /\s*<(\w+).+?class=(?:"|"[^"]*?\s)#{name}(?:"|\s).*?>\n?/i 
-	out = ''
-	s = StringScanner.new html
-	until s.eos?
-		if s.scan rex_open_tag
-			open_tag = s[0]
-			inner_html,close_tag = parse_inner_html(s,s[1])
-			inner_html << "\n" if s.scan /\n/
-			out << block.call(open_tag,inner_html,close_tag)
-		else
-			out << s.scan /.+?(?=\t| |<|\z)/m
-		end
-	end
-	out
-end
-
-
-
-
 	def parse_tokens(s,meta = {})
 		until s.eos? || s.scan(/\)/)
 			prefix = s[1] if s.scan /([:;,])?\s*/
@@ -150,6 +130,23 @@ end
 		meta
 	end
 
+def gsub_block(html,class_name,&block)
+	rex_open_tag = /\s*<(\w+).+?class=(?:"|"[^"]*?\s)#{class_name}(?:"|\s).*?>\n?/i 
+	out = ''
+	s = StringScanner.new html
+	until s.eos?
+		if s.scan rex_open_tag
+			open_tag = s[0]
+			inner_html,close_tag = parse_inner_html(s,s[1])
+			close_tag << "\n" if s.scan /\n/
+			out << block.call(open_tag,inner_html,close_tag)
+		else
+			out << s.scan(/.+?(?=\t| |<|\z)/m)
+		end
+	end
+	out
+end
+
 	def parse_block(s)
 		open_tag = s[0].sub(/id=".*?"/i,'id="@(name)"')
 		name     = s[1]
@@ -158,17 +155,11 @@ end
 		inner_html,close_tag = parse_inner_html(s,name)
 
 		if inner_html =~ /<(\w+).+?class=(?:"|"[^"]*?\s)body(?:"|\s)/i
-			sd_tmpl = ''
-			s2 = StringScanner.new inner_html
-			until s2.eos?
-				if s2.scan /\s*<(\w+).+?class=(?:"|"[^"]*?\s)body(?:"|\s).*?>\n?/i
-					item_html = s2[0] + parse_inner_html(s2,s2[1]).join
-					item_html << "\n" if s2.scan /\n/
-					sd_tmpl << '$()'
-				else
-					sd_tmpl << s2.scan(/.+?(?=\t| |<|\z)/m)
-				end
-			end
+			item_html = ''
+			sd_tmpl = gsub_block(inner_html,'body') {|open,inner,close|
+				item_html = open + inner + close
+				'$()'
+			}
 			sd_tmpl = "#{open_tag}#{sd_tmpl}#{close_tag}"
 		else
 			item_html = inner_html

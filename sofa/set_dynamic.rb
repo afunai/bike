@@ -16,6 +16,10 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@item_object = {}
 	end
 
+	def meta_dir
+		my[:folder][:dir] if my[:folder]
+	end
+
 	def commit(type = :temp)
 		if @storage.is_a? Sofa::Storage::Temp
 			pending_items.each {|id,item|
@@ -46,22 +50,24 @@ class Sofa::Set::Dynamic < Sofa::Field
 
 		if arg[:p_action] == :update && !@workflow.is_a?(Sofa::Workflow::Attachment)
 			out = ''
+# TODO: this could only be done in _get_by_method as _get_submit() is called from tmpl :-(
+elsif arg[:action] == :submit && arg[:orig_action] == :read
+	out = ''
 		elsif arg[:action] == :create
 			item_instance('_1')
 			out = _get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])
 		else
 			out = super
 		end
-		if my[:parent] && (my[:parent] == my[:folder])
-			action = my[:folder][:full_name].gsub('-','/') + '/'
-			out = <<_html
-<form id="#{my[:full_name]}" method="post" action="#{action}">
-#{out}</form>
-_html
-		end
 
 		@workflow.filter_get arg,out
 	end
+
+def _get_submit(arg)
+	<<_html.chomp
+<input id="" type="submit" value="#{arg[:orig_action]}" />
+_html
+end
 
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)

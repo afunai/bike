@@ -161,10 +161,7 @@ class Sofa::Set::Static < Sofa::Field
 			:tmpl      => self_tmpl,
 			:item_html => item_html,
 		}
-		if inner_html =~ /\A\s*<!--(.+?)-->/m
-			s2 = StringScanner.new $1
-			parse_tokens(s2,sd)
-		end
+		parse_tokens(StringScanner.new($1),sd) if inner_html =~ /\A\s*<!--(.+?)-->/m
 		sd
 	end
 

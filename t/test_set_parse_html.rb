@@ -319,7 +319,7 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:tmpl      => <<'_tmpl',
 <ul class="sofa-blog" id="@(name)">$()</ul>
 _tmpl
 					:item_html => '<li>hello</li>',
@@ -329,9 +329,7 @@ _tmpl
 			'Set::Static#parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
-			<<'_html',
-$(foo)
-_html
+			'$(foo)',
 			result[:tmpl],
 			'Set::Static#parse_html[:tmpl] should be a proper template'
 		)
@@ -346,7 +344,7 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:tmpl      => <<'_tmpl',
 <ul class="sofa-blog" id="@(name)">
 $()</ul>
 _tmpl
@@ -357,9 +355,7 @@ _tmpl
 			'Set::Static#parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
-			<<'_html',
-$(foo)
-_html
+			'$(foo)',
 			result[:tmpl],
 			'Set::Static#parse_html[:tmpl] should be a proper template'
 		)
@@ -373,7 +369,7 @@ _html
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
 					:tmpl      => <<'_tmpl'.chomp,
-<ul class="sofa-blog" id="@(name)">$()</ul>
+ <ul class="sofa-blog" id="@(name)">$()</ul>
 _tmpl
 					:item_html => '<li>hello</li>',
 				},
@@ -383,7 +379,7 @@ _tmpl
 		)
 		assert_equal(
 			<<'_html',
-hello $(foo) world
+hello$(foo) world
 _html
 			result[:tmpl],
 			'Set::Static#parse_html[:tmpl] should be a proper template'
@@ -420,8 +416,8 @@ _html
 					:tokens    => ['barbaz'],
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
-<table class="sofa-blog" id="@(name)">
+					:tmpl      => <<'_tmpl',
+	<table class="sofa-blog" id="@(name)">
 		<!-- 1..20 barbaz -->
 $()	</table>
 _tmpl
@@ -449,8 +445,8 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
-<table class="sofa-blog" id="@(name)">
+					:tmpl      => <<'_tmpl',
+	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 _tmpl
@@ -465,8 +461,7 @@ _html
 		assert_equal(
 			<<'_html',
 hello
-	$(foo)
-world
+$(foo)world
 _html
 			result[:tmpl],
 			'Set::Static#parse_html[:tmpl] should be a proper template'
@@ -487,8 +482,8 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
-<table class="sofa-blog" id="@(name)">
+					:tmpl      => <<'_tmpl',
+	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 _tmpl
@@ -515,7 +510,7 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:tmpl      => <<'_tmpl',
 <ul class="sofa-blog" id="@(name)">
 $()</ul>
 _tmpl
@@ -530,9 +525,7 @@ _html
 			'Set::Static#parse_html should be able to parse nested block sofa tags'
 		)
 		assert_equal(
-			<<'_html',
-$(foo)
-_html
+			'$(foo)',
 			result[:tmpl],
 			'Set::Static#parse_html[:tmpl] should be a proper template'
 		)
@@ -557,8 +550,8 @@ _html
 				'foo'   => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
-<ul id="@(name)" class="sofa-blog">
+					:tmpl      => <<'_tmpl',
+	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
 _tmpl
 					:item_html => <<'_html',
@@ -577,8 +570,7 @@ _html
 			<<'_html',
 <html>
 	<h1>$(title)</h1>
-	$(foo)
-</html>
+$(foo)</html>
 _html
 			result[:tmpl],
 			'Set::Static#parse_html[:tmpl] should be a proper template'

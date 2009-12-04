@@ -55,7 +55,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		}.merge(v) : v
 	end
 
-	def parse_block(s)
+	def parse_block(open,inner,close)
 		sd = super
 		sd[:tmpl] += <<_html if sd[:tmpl] !~ /\$\(\.submit\)/
 <div>$(.submit)</div>

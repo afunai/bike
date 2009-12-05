@@ -292,6 +292,10 @@ _html
 			@sd.action,
 			'Set::Dynamic#update should set a proper action'
 		)
+		assert_nil(
+			@sd.result,
+			'Set::Dynamic#result should return nil before the commit'
+		)
 		assert_equal(
 			{
 				'20091122_1234' => {'name' => 'frank','comment' => 'bar'},
@@ -317,24 +321,28 @@ _html
 			'Set::Dynamic#commit should update the original values in the storage'
 		)
 		assert_equal(
-			:update,
+			{
+				'20091122_1234' => @sd.item('20091122_1234'),
+				'20091122_1235' => @sd.item('20091122_1235'),
+				'_1236'         => @sd.item('_1236'),
+			},
 			@sd.result,
-			'Set::Dynamic#commit should set own @result'
+			'Set::Dynamic#result should return a hash of the committed items when :update'
 		)
 		assert_equal(
-			:update,
+			{'comment' => @sd.item('20091122_1234','comment')},
 			@sd.item('20091122_1234').result,
-			'Set::Dynamic#commit should set @result for the items'
+			'Set::Static#result should return a hash of the committed items when :update'
 		)
 		assert_equal(
 			:delete,
 			@sd.item('20091122_1235').result,
-			'Set::Dynamic#commit should set @result for the items'
+			'Set::Static#result should return the committed action unless :update'
 		)
 		assert_equal(
 			:create,
 			@sd.item('_1236').result,
-			'Set::Dynamic#commit should set @result for the items'
+			'Set::Static#result should return the committed action unless :update'
 		)
 	end
 

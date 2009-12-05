@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class TC_Set < Test::Unit::TestCase
+class TC_Set_Static < Test::Unit::TestCase
 
 	def setup
 	end
@@ -12,7 +12,7 @@ class TC_Set < Test::Unit::TestCase
 	end
 
 	def test_initialize
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <html>
 	<h1>title:(text 32)</h1>
 	<ul id="foo" class="sofa-blog">
@@ -43,13 +43,13 @@ _tmpl
 _html
 				},
 			}.merge(Sofa::Set::Static::DEFAULT_ITEMS),
-			set[:item],
+			ss[:item],
 			'Set::Static#initialize should load @meta'
 		)
 	end
 
 	def test_item
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <html>
 	<h1>title:(text 32)</h1>
 	<ul id="main" class="sofa-blog">
@@ -57,7 +57,7 @@ _html
 	</ul>
 </html>
 _html
-		title = set.item('title')
+		title = ss.item('title')
 		assert_instance_of(
 			Sofa::Text,
 			title,
@@ -65,7 +65,7 @@ _html
 		)
 		assert_equal(
 			title.object_id,
-			set.item('title').object_id,
+			ss.item('title').object_id,
 			'Set::Static#item() should cache the loaded items'
 		)
 		assert_equal(
@@ -74,7 +74,7 @@ _html
 			'Set::Static#item() should load the metas of child items'
 		)
 
-		main = set.item('main')
+		main = ss.item('main')
 		assert_instance_of(
 			Sofa::Set::Static::Dynamic,
 			main,
@@ -82,7 +82,7 @@ _html
 		)
 		assert_equal(
 			main.object_id,
-			set.item('main').object_id,
+			ss.item('main').object_id,
 			'Set::Static#item() should cache the loaded items'
 		)
 		assert_equal(
@@ -92,198 +92,212 @@ _html
 		)
 
 		assert_nil(
-			set.item('non-existent'),
+			ss.item('non-existent'),
 			'Set::Static#item should return nil when the item is not in the storage'
 		)
 		assert_nil(
-			set.item(''),
+			ss.item(''),
 			'Set::Static#item should return nil when the item is not in the storage'
 		)
 	end
 
 	def test_val
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text): comment:(text)
 </li>
 _html
-		set.item('name').load 'foo'
+		ss.item('name').load 'foo'
 		assert_equal(
 			{'name' => 'foo'},
-			set.val,
+			ss.val,
 			'Set::Static#val should not include the value of the empty item'
 		)
-		set.item('comment').load 'bar'
+		ss.item('comment').load 'bar'
 		assert_equal(
 			{'name' => 'foo','comment' => 'bar'},
-			set.val,
+			ss.val,
 			'Set::Static#val should not include the value of the empty item'
 		)
 	end
 
 	def test_get
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
 _html
-		set.load_default
+		ss.load_default
 		assert_equal(
 			<<'_html',
 <li>
 	nobody: peek a boo
 </li>
 _html
-			set.get,
+			ss.get,
 			'Set::Static#get should return the html by [:tmpl]'
 		)
 
-		comment = set.item('comment')
+		comment = ss.item('comment')
 		def comment._g_foo(arg)
 			'foo foo'
 		end
-		assert_equal('foo foo',set.item('comment').get(:action => 'foo'))
+		assert_equal('foo foo',ss.item('comment').get(:action => 'foo'))
 		assert_equal(
 			<<'_html',
 <li>
 	nobody: foo foo
 </li>
 _html
-			set.get(:action => 'foo'),
+			ss.get(:action => 'foo'),
 			'Set::Static#get should pass :action to the child items'
 		)
 	end
 
 	def test_get_by_tmpl
-		set = Sofa::Set::Static.new(:html => 'foo:(text)')
-		set.item('foo').load 'hello'
+		ss = Sofa::Set::Static.new(:html => 'foo:(text)')
+		ss.item('foo').load 'hello'
 		assert_equal(
 			'foo hello foo',
-			set.send(:_get_by_tmpl,{},'foo $() foo'),
+			ss.send(:_get_by_tmpl,{},'foo $() foo'),
 			'Set#_get_by_tmpl should replace %() with @val'
 		)
 
-		set[:baz] = 1234
+		ss[:baz] = 1234
 		assert_equal(
 			'foo 1234 foo',
-			set.send(:_get_by_tmpl,{},'foo @(baz) foo'),
+			ss.send(:_get_by_tmpl,{},'foo @(baz) foo'),
 			'Set#_get_by_tmpl should replace @(...) with @meta[...]'
 		)
 	end
 
 	def test_recursive_tmpl
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>$()</li>
 _html
 		assert_nothing_raised(
 			'Set::Static#get should avoid recursive reference to [:tmpl]'
 		) {
-			set.get
+			ss.get
 		}
 	end
 
 	def test_load_default
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
 _html
-		set.load_default
+		ss.load_default
 		assert_equal(
 			'nobody',
-			set.item('name').val,
+			ss.item('name').val,
 			'Set::Static#load_default should load all the child items with their [:default]'
 		)
 		assert_equal(
 			'peek a boo',
-			set.item('comment').val,
+			ss.item('comment').val,
 			'Set::Static#load_default should load all the child items with their [:default]'
 		)
 	end
 
 	def test_load
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
 _html
-		set.load('name' => 'carl')
+		ss.load('name' => 'carl')
 		assert_equal(
 			{'name' => 'carl'},
-			set.val,
+			ss.val,
 			'Set::Static#load should not touch the item for which value is not given'
 		)
-		set.load('name' => 'frank','comment' => 'cut the schmuck some slack.')
+		ss.load('name' => 'frank','comment' => 'cut the schmuck some slack.')
 		assert_equal(
 			{'name' => 'frank','comment' => 'cut the schmuck some slack.'},
-			set.val,
+			ss.val,
 			'Set::Static#load should load the items at once'
 		)
-		set.load('name' => 'carl')
+		ss.load('name' => 'carl')
 		assert_equal(
 			{'name' => 'carl','comment' => 'cut the schmuck some slack.'},
-			set.val,
+			ss.val,
 			'Set::Static#load should not touch the item for which value is not given'
 		)
 	end
 
 	def test_create
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
 _html
-		set.create('name' => 'carl')
+		ss.create('name' => 'carl')
 		assert_equal(
 			{'name' => 'carl'},
-			set.val,
+			ss.val,
 			'Set::Static#create should not touch the item for which value is not given'
 		)
 	end
 
 	def test_update
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
 _html
-		set.update('name' => 'carl')
+		ss.update('name' => 'carl')
 		assert_equal(
 			{'name' => 'carl'},
-			set.val,
+			ss.val,
 			'Set::Static#update should not touch the item for which value is not given'
 		)
-		set.update('name' => 'frank','comment' => 'cut the schmuck some slack.')
+		ss.update('name' => 'frank','comment' => 'cut the schmuck some slack.')
 		assert_equal(
 			{'name' => 'frank','comment' => 'cut the schmuck some slack.'},
-			set.val,
+			ss.val,
 			'Set::Static#udpate should load the items at once'
 		)
-		set.update('name' => 'carl')
+		ss.update('name' => 'carl')
 		assert_equal(
 			{'name' => 'carl','comment' => 'cut the schmuck some slack.'},
-			set.val,
+			ss.val,
 			'Set::Static#update should not touch the item for which value is not given'
+		)
+
+		assert_nil(
+			ss.result,
+			'Set::Static#result should return nil before the commit'
+		)
+		ss.commit
+		assert_equal(
+			{
+				'name'    => ss.item('name'),
+				'comment' => ss.item('comment'),
+			},
+			ss.result,
+			'Set::Static#result should return a hash of the committed items when :update'
 		)
 	end
 
 	def test_delete
-		set = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
 	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
 </li>
 _html
-		set.item('name').load 'foo'
+		ss.item('name').load 'foo'
 
-		set.delete
+		ss.delete
 		assert_equal(
 			:delete,
-			set.action,
+			ss.action,
 			'Set::Static#delete should set @action'
 		)
 		assert_equal(
 			{'name' => 'foo'},
-			set.val,
+			ss.val,
 			'Set::Static#delete should not touch any item'
 		)
 	end

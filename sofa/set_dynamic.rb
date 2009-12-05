@@ -21,19 +21,20 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 	def commit(type = :temp)
+		items = pending_items
 		if @storage.is_a? Sofa::Storage::Temp
-			pending_items.each {|id,item|
+			items.each {|id,item|
 				action = item.action
 				item.commit(type) && _commit(action,id,item)
 			}
 		elsif type == :persistent
-			pending_items.each {|id,item|
+			items.each {|id,item|
 				action = item.action
 				item.commit(:temp) && _commit(action,id,item) && item.commit(:persistent)
 			}
 		end
 		if pending_items.empty?
-			@result = @action
+			@result = (@action == :update) ? items : @action
 			@action = nil
 			self
 		end
@@ -81,7 +82,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 
 	def _g_submit(arg)
 		<<_html.chomp
-<input id="" type="submit" value="#{arg[:orig_action]}" />
+<input id="#{my[:name]}.submit" type="submit" value="#{arg[:orig_action]}" />
 _html
 	end
 

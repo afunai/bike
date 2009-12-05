@@ -105,7 +105,8 @@ _html
 	def _commit(action,id,item)
 		case action
 			when :create
-				@storage.store(:new_id,item.val)
+				new_id = @storage.store(:new_id,item.val)
+				item[:id] = new_id
 			when :update
 				@storage.store(item[:id],item.val)
 				@storage.delete(id) if item[:id] != id

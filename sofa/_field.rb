@@ -195,7 +195,7 @@ class Sofa::Field
 				''
 			elsif name == ''
 				arg = arg.merge(:orig_action => arg[:action],:action => action.intern) if action
-				_get_by_method arg
+				_get_by_self_reference arg
 			else
 				steps = name.split '-'
 				item_arg = steps.inject(arg) {|a,s|
@@ -214,6 +214,10 @@ class Sofa::Field
 				end
 			end
 		}.gsub(/^\s+\n/,'')
+	end
+
+	def _get_by_self_reference(arg)
+		_get_by_method arg
 	end
 
 	def _get_default(arg)

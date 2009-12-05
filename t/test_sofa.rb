@@ -316,6 +316,29 @@ class TC_Sofa < Test::Unit::TestCase
 		)
 	end
 
+	def test_conds_of_with_cond_id
+		sofa = Sofa.new
+
+		assert_equal(
+			['foo','bar'],
+			sofa.instance_eval {
+				steps_of '/foo/bar/20091205/9/baz=1234/qux=4567/'
+			},
+			'Sofa#conds_of should extract cond[:id] from the path sequence'
+		)
+		assert_equal(
+			{
+				:id  => '20091205_0009',
+				:baz => '1234',
+				:qux => '4567',
+			},
+			sofa.instance_eval {
+				conds_of '/foo/bar/20091205/9/baz=1234/qux=4567/'
+			},
+			'Sofa#conds_of should extract cond[:id] from the path sequence'
+		)
+	end
+
 	def test_action_of
 		sofa = Sofa.new
 

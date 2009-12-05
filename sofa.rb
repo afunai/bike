@@ -6,10 +6,11 @@ class Sofa
 	Dir['./sofa/*.rb'].sort.each {|file| require file }
 
 	module REX
-		ID     = /^\d{8}_\d{4,}/
-		ID_NEW = /^_\d/
-		COND   = /^(.+?)=(.+)$/
-		COND_D = /^(19\d\d|2\d\d\d)\d{0,4}$/
+		ID      = /^\d{8}_\d{4,}/
+		ID_NEW  = /^_\d/
+		COND    = /^(.+?)=(.+)$/
+		COND_D  = /^(19\d\d|2\d\d\d)\d{0,4}$/
+		PATH_ID = /\/((?:19|2\d)\d{6})\/(\d+)/
 	end
 
 	def self.[](name)
@@ -54,7 +55,8 @@ Sofa.client = 'root'
 		else
 			base[:folder].update params
 base.persistent_commit
-return response_see_other :location => '/acorn/200912/'
+ids = base.result.values.collect {|item| item[:id] }
+return response_see_other :location => base[:folder][:dir] + "/id=#{ids.join ','}/"
 			if base.is_a? Sofa::Set::Dynamic
 				if base.valid?
 					base.commit
@@ -113,7 +115,7 @@ return response_see_other :location => '/acorn/200912/'
 	end
 
 	def steps_of(path)
-		_dirname(path).split('/').select {|step_or_cond|
+		_dirname(path).gsub(REX::PATH_ID,'').split('/').select {|step_or_cond|
 			step_or_cond != '' && step_or_cond !~ REX::COND && step_or_cond !~ REX::COND_D
 		}
 	end
@@ -128,7 +130,10 @@ return response_see_other :location => '/acorn/200912/'
 	end
 
 	def conds_of(path)
-		_dirname(path).split('/').inject({}) {|conds,step_or_cond|
+		dir   = _dirname path.gsub(REX::PATH_ID,'')
+		conds = $& ? {:id => sprintf('%.8d_%.4d',$1,$2)} : {}
+
+		dir.split('/').inject(conds) {|conds,step_or_cond|
 			if step_or_cond =~ REX::COND
 				conds[$1.intern] = $2
 			elsif step_or_cond =~ REX::COND_D

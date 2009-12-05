@@ -124,7 +124,7 @@ _html
 		)
 	end
 
-	def test_g_create
+	def test_get_create
 		@sd.load(
 			'1234' => {'name' => 'frank','comment' => 'bar'},
 			'1235' => {'name' => 'carl', 'comment' => 'baz'}
@@ -140,6 +140,48 @@ _html
 			result,
 			'Set::Dynamic#_g_create should not include the _g_create() of existing items'
 		)
+	end
+
+	def test_get_by_self_reference
+		ss = Sofa::Set::Static.new(
+			:html => '<ul class="sofa-blog"><li class="body"></li>$(.pipco)</ul>'
+		)
+		sd = ss.item('main')
+		def sd._g_jawaka(arg)
+			'JAWAKA'
+		end
+
+		sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
+		sd[:tmpl_jawaka] = nil
+		assert_equal(
+			'<ul class="sofa-blog"><foo>JAWAKA</foo></ul>',
+			ss.get(:action => :pipco),
+			'Set::Dynamic#_get_by_self_reference should work via [:parent]._get_by_tmpl()'
+		)
+
+		sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
+		sd[:tmpl_jawaka] = 'via tmpl'
+		assert_equal(
+			'<ul class="sofa-blog"><foo>JAWAKA</foo></ul>',
+			ss.get(:action => :pipco),
+			'Set::Dynamic#_get_by_self_reference should not recur'
+		)
+
+		sd[:tmpl_pipco]  = '<foo>$(.pipco)</foo>'
+		sd[:tmpl_jawaka] = nil
+		assert_nothing_raised(
+			'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
+		) {
+			ss.get(:action => :pipco)
+		}
+
+		sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
+		sd[:tmpl_jawaka] = '<bar>$(.pipco)</bar>'
+		assert_nothing_raised(
+			'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
+		) {
+			ss.get(:action => :pipco)
+		}
 	end
 
 	def test_load_default

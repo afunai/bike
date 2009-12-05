@@ -63,11 +63,11 @@ class Sofa::Set::Dynamic < Sofa::Field
 	def _get_by_self_reference(arg)
 		if _hide? arg
 			''
-		elsif action_tmpl = my["tmpl_#{arg[:action]}"]
+		elsif action_tmpl = my["tmpl_#{arg[:action]}".intern]
 			# action_tmpl should be resolved here to prevent an infinite reference.
 			action_tmpl.gsub(/\$\((?:\.([\w\-]+))?\)/) {
 				self_arg = $1 ? arg.merge(:action => $1.intern) : arg
-				_get_by_method arg
+				_get_by_method self_arg
 			}
 		else
 			_get_by_method arg
@@ -79,11 +79,11 @@ class Sofa::Set::Dynamic < Sofa::Field
 		(arg[:orig_action] == :read && arg[:action] == :submit)
 	end
 
-def _g_submit(arg)
-	<<_html.chomp
+	def _g_submit(arg)
+		<<_html.chomp
 <input id="" type="submit" value="#{arg[:orig_action]}" />
 _html
-end
+	end
 
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)

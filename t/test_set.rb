@@ -139,7 +139,7 @@ _html
 		)
 
 		comment = set.item('comment')
-		def comment._get_foo(arg)
+		def comment._g_foo(arg)
 			'foo foo'
 		end
 		assert_equal('foo foo',set.item('comment').get(:action => 'foo'))

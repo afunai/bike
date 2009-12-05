@@ -12,11 +12,11 @@ class Sofa::Text < Sofa::Field
 
 	private
 
-	def _get_update(arg)
+	def _g_update(arg)
 		<<_html.chomp
 <input type="text" name="#{my[:name]}" value="#{val}" />
 _html
 	end
-	alias :_get_create :_get_update
+	alias :_g_create :_g_update
 
 end

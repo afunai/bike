@@ -5,7 +5,7 @@
 
 class Sofa::Foo < Sofa::Field
 	class Bar < Sofa::Field
-		def _get_test(arg)
+		def _g_test(arg)
 			'just a test.'
 		end
 	end
@@ -123,7 +123,7 @@ class TC_Field < Test::Unit::TestCase
 		assert_equal(
 			'just a test.',
 			@f.get(:action => :test),
-			'Field#get should relay the result of _get_*()'
+			'Field#get should relay the result of _g_*()'
 		)
 
 		@f[:tmpl_foo] = 'foo foo'

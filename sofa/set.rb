@@ -50,14 +50,14 @@ end
 	private
 
 	def _get(arg)
-		if respond_to?("_get_#{arg[:action]}",true)
-			__send__("_get_#{arg[:action]}",arg)
+		if respond_to?("_g_#{arg[:action]}",true)
+			_get_by_method arg
 		else
 			_get_by_tmpl(arg,my[:tmpl])
 		end
 	end
 
-	def _get_default(arg)
+	def _g_default(arg)
 		collect_item(arg[:conds] || {}) {|item|
 			item_arg = arg[item[:id]] || {}
 			item_arg[:action] ||= arg[:action]

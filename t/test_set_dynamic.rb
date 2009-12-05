@@ -108,7 +108,7 @@ _html
 
 		@sd.each {|ss|
 			ss.each {|item|
-				def item._get_update(arg)
+				def item._g_update(arg)
 					'moo!'
 				end
 			}
@@ -124,7 +124,7 @@ _html
 		)
 	end
 
-	def test_get_create
+	def test_g_create
 		@sd.load(
 			'1234' => {'name' => 'frank','comment' => 'bar'},
 			'1235' => {'name' => 'carl', 'comment' => 'baz'}
@@ -133,12 +133,12 @@ _html
 		assert_match(
 			/<input/,
 			result,
-			'Set::Dynamic#_get_create should return the _get_create() of a newly created item'
+			'Set::Dynamic#_g_create should return the _g_create() of a newly created item'
 		)
 		assert_no_match(
 			/bar/,
 			result,
-			'Set::Dynamic#_get_create should not include the _get_create() of existing items'
+			'Set::Dynamic#_g_create should not include the _g_create() of existing items'
 		)
 	end
 

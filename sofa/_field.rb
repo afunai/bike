@@ -178,8 +178,8 @@ class Sofa::Field
 	end
 
 	def _get_by_method(arg)
-		m = "_get_#{arg[:action]}"
-		respond_to?(m,true) ? __send__(m,arg) : _get_default(arg)
+		m = "_g_#{arg[:action]}"
+		respond_to?(m,true) ? __send__(m,arg) : _g_default(arg)
 	end
 
 	def _get_by_tmpl(arg,tmpl = '')
@@ -221,7 +221,7 @@ class Sofa::Field
 		_get_by_method arg
 	end
 
-	def _get_default(arg)
+	def _g_default(arg)
 		Rack::Utils.escape_html val.to_s
 	end
 

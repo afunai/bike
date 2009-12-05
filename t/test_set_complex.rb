@@ -6,10 +6,10 @@
 class TC_Set_Complex < Test::Unit::TestCase
 
 	class ::Sofa::Set::Dynamic
-		def _get_vegetable(arg)
+		def _g_vegetable(arg)
 			"'potato'"
 		end
-		def _get_enormous(arg)
+		def _g_enormous(arg)
 			"'mouth'"
 		end
 	end

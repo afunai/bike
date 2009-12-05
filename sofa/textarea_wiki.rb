@@ -9,7 +9,7 @@ class Sofa::Textarea::Wiki < Sofa::Textarea
 
 	private
 
-	def _get_read(arg)
+	def _g_default(arg)
 		wiki @val.to_s
 	end
 

@@ -79,7 +79,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 		(arg[:orig_action] == :read && arg[:action] == :submit)
 	end
 
-def _get_submit(arg)
+def _g_submit(arg)
 	<<_html.chomp
 <input id="" type="submit" value="#{arg[:orig_action]}" />
 _html

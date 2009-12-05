@@ -53,7 +53,7 @@ Sofa.client = 'root'
 			response_ok :body => base.get(params)
 		else
 			base[:folder].update params
-base.commit :persistent
+base.persistent_commit
 return response_see_other :location => '/acorn/200912/'
 			if base.is_a? Sofa::Set::Dynamic
 				if base.valid?

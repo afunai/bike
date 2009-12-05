@@ -154,6 +154,23 @@ _html
 		)
 	end
 
+	def test_get_by_tmpl
+		set = Sofa::Set::Static.new(:html => 'foo:(text)')
+		set.item('foo').load 'hello'
+		assert_equal(
+			'foo hello foo',
+			set.send(:_get_by_tmpl,{},'foo $() foo'),
+			'Set#_get_by_tmpl should replace %() with @val'
+		)
+
+		set[:baz] = 1234
+		assert_equal(
+			'foo 1234 foo',
+			set.send(:_get_by_tmpl,{},'foo @(baz) foo'),
+			'Set#_get_by_tmpl should replace @(...) with @meta[...]'
+		)
+	end
+
 	def test_recursive_tmpl
 		set = Sofa::Set::Static.new(:html => <<'_html')
 <li>$()</li>

@@ -57,6 +57,45 @@ end
 		end
 	end
 
+	def _get_by_tmpl(arg,tmpl = '')
+		tmpl.gsub(/@\((.+?)\)/) {
+			steps = $1.split '-'
+			id    = steps.pop
+			item  = item steps
+			item ? item[id.intern] : '???'
+		}.gsub(/\$\((.*?)(?:\.([\w\-]+))?\)/) {
+			name,action = $1,$2
+			cond_action,action = action.split('-',2) if action =~ /-/
+			if cond_action && (cond_action.intern != arg[:action] || !item.permit?(arg[:action]))
+				''
+			elsif name == ''
+				arg = arg.merge(:orig_action => arg[:action],:action => action.intern) if action
+				_get_by_self_reference arg
+			else
+				steps = name.split '-'
+				item_arg = steps.inject(arg) {|a,s|
+					a[s] || {:p_action => a[:action],:action => a[:action]}
+				}
+				item = item steps
+				if item.nil?
+					'???'
+				elsif action
+					item_arg = item_arg.merge(
+						:orig_action => item_arg[:action],
+						:action      => action.intern
+					)
+					item.instance_eval { _get(item_arg) } # skip the authorization
+				else
+					item.get(item_arg)
+				end
+			end
+		}.gsub(/^\s+\n/,'')
+	end
+
+	def _get_by_self_reference(arg)
+		_get_by_method arg
+	end
+
 	def _g_default(arg)
 		collect_item(arg[:conds] || {}) {|item|
 			item_arg = arg[item[:id]] || {}

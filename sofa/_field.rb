@@ -205,9 +205,10 @@ class Sofa::Field
 				if item.nil?
 					'???'
 				elsif action
-					item_arg = item_arg.dup
-					item_arg[:orig_action] = item_arg[:action]
-					item_arg[:action] = action.intern
+					item_arg = item_arg.merge(
+						:orig_action => item_arg[:action],
+						:action      => action.intern
+					)
 					item.instance_eval { _get(item_arg) } # skip the authorization
 				else
 					item.get(item_arg)

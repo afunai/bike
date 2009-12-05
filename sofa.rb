@@ -38,11 +38,10 @@ class Sofa
 		req    = Rack::Request.new env
 		method = req.request_method.downcase
 		path   = req.path_info
-		params = params_from_request req
 		action = action_of path
 		base   = base_of path
-
-		return [404,{},'Not Found'] unless base
+		return response_not_found unless base
+		params = params_from_request req,base
 
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req
@@ -54,14 +53,15 @@ Sofa.client = 'root'
 			response_ok :body => base.get(params)
 		else
 			base[:folder].update params
-base.persistent_commit
-ids = base.result.values.collect {|item| item[:id] }
-return response_see_other :location => base[:folder][:dir] + "/id=#{ids.join ','}/"
+			base.persistent_commit
+
 			if base.is_a? Sofa::Set::Dynamic
-				if base.valid?
-					base.commit
-					response_see_other :location => base.workflow.next(action)
+				if base.result
+# wf.next_action
+					ids = base.result.values.collect {|item| item[:id] }
+					response_see_other :location => base[:folder][:dir] + "/id=#{ids.join ','}/"
 				else
+					# base.errors
 				end
 			else
 			end
@@ -70,12 +70,8 @@ return response_see_other :location => base[:folder][:dir] + "/id=#{ids.join ','
 
 	private
 
-	def params_from_request(req)
+	def params_from_request(req,base = base_of(req.path_info))
 		params = rebuild_params req.params
-
-# TODO: base should be set only once in call()
-		base = base_of req.path_info
-		return {} unless base
 
 		params_of_base = base[:name].split('-').inject(params) {|p,s| p[s] ||= {} }
 		params_of_base[:conds] ||= {}

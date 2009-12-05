@@ -174,13 +174,7 @@ class Sofa::Field
 	end
 
 	def _get(arg)
-		action = arg[:action]
-		action = :default unless my[:"tmpl_#{action}"] || respond_to?("_get_#{action}",true)
-		if tmpl = my[:"tmpl_#{action}"]
-			_get_by_tmpl(arg,tmpl)
-		else
-			_get_by_method(arg)
-		end
+		_get_by_method arg
 	end
 
 	def _get_by_method(arg)

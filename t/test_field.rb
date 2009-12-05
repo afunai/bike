@@ -128,25 +128,23 @@ class TC_Field < Test::Unit::TestCase
 
 		@f[:tmpl_foo] = 'foo foo'
 		assert_equal(
-			'foo foo',
+			'hello',
 			@f.get(:action => :foo),
-			'Field#get should look for [:tmpl_*]'
+			'Field#get should not use [:tmpl_*] directly'
 		)
 	end
 
 	def test_get_by_tmpl
 		@f.instance_variable_set(:@val,'hello')
-		@f[:tmpl_foo] = 'foo $() foo'
 		assert_equal(
 			'foo hello foo',
-			@f.get(:action => :foo),
+			@f.send(:_get_by_tmpl,{},'foo $() foo'),
 			'Field#_get_by_tmpl should replace %() with @val'
 		)
 
-		@f[:tmpl_foo] = 'foo @(baz) foo'
 		assert_equal(
 			'foo 1234 foo',
-			@f.get(:action => :foo),
+			@f.send(:_get_by_tmpl,{},'foo @(baz) foo'),
 			'Field#_get_by_tmpl should replace @(...) with @meta[...]'
 		)
 	end

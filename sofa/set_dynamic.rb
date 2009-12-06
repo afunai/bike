@@ -108,6 +108,7 @@ _html
 	def _commit(action,id,item)
 		case action
 			when :create
+				return if item.empty?
 				new_id = @storage.store(:new_id,item.val)
 				item[:id] = new_id
 			when :update

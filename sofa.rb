@@ -57,9 +57,11 @@ Sofa.client = 'root'
 
 			if base.is_a? Sofa::Set::Dynamic
 				if base.result
-# wf.next_action
 					ids = base.result.values.collect {|item| item[:id] }
-					response_see_other :location => base[:folder][:dir] + "/id=#{ids.join ','}/"
+					action = base.workflow.next_action(params)
+					response_see_other(
+						:location => base[:folder][:dir] + "/id=#{ids.join ','}/#{action}.html"
+					)
 				else
 					# base.errors
 				end

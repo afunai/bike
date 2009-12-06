@@ -49,6 +49,10 @@ class Sofa::Workflow
 	def after_post
 	end
 
+	def next_action(params)
+		(@sd.default_action == :read) ? :index : :done
+	end
+
 end
 
 

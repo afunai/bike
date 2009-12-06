@@ -48,4 +48,30 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_post_simple_create
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/update.html',
+			{
+				:input => "main-_1-name=fz&main-_1-comment=hi.&main-_1.status-public=create"
+			}
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#call with post method should return status 303'
+		)
+		assert_match(
+			/id=(\d+_\d+)/,
+			res.headers['Location'],
+			'Sofa#call with post method should return a proper location'
+		)
+
+		new_id = res.headers['Location'][/id=(\d+_\d+)/,1]
+		assert_equal(
+			{'name' => 'fz','comment' => 'hi.'},
+			Sofa::Set::Static::Folder.root.item('t_store','main',new_id).val,
+			'Sofa#call with post method should store the item in the storage'
+		)
+	end
+
 end

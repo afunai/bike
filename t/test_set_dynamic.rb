@@ -144,7 +144,7 @@ _html
 
 	def test_get_by_self_reference
 		ss = Sofa::Set::Static.new(
-			:html => '<ul class="sofa-blog"><li class="body"></li>$(.pipco)</ul>'
+			:html => '<ul class="sofa-attachment"><li class="body"></li>$(.pipco)</ul>'
 		)
 		sd = ss.item('main')
 		def sd._g_jawaka(arg)
@@ -154,7 +154,7 @@ _html
 		sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
 		sd[:tmpl_jawaka] = nil
 		assert_equal(
-			'<ul class="sofa-blog"><foo>JAWAKA</foo></ul>',
+			'<ul class="sofa-attachment"><foo>JAWAKA</foo></ul>',
 			ss.get(:action => :pipco),
 			'Set::Dynamic#_get_by_self_reference should work via [:parent]._get_by_tmpl()'
 		)
@@ -162,7 +162,7 @@ _html
 		sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
 		sd[:tmpl_jawaka] = 'via tmpl'
 		assert_equal(
-			'<ul class="sofa-blog"><foo>JAWAKA</foo></ul>',
+			'<ul class="sofa-attachment"><foo>JAWAKA</foo></ul>',
 			ss.get(:action => :pipco),
 			'Set::Dynamic#_get_by_self_reference should not recur'
 		)

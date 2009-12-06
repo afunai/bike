@@ -76,7 +76,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 	def _hide?(arg)
-		(arg[:p_action] == :update && !@workflow.is_a?(Sofa::Workflow::Attachment)) ||
+		(arg[:p_action] && arg[:p_action] != :read && !@workflow.is_a?(Sofa::Workflow::Attachment)) ||
 		(arg[:orig_action] == :read && arg[:action] == :submit)
 	end
 

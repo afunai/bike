@@ -25,7 +25,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 		assert_match(
 			/^<html>/,
 			folder[:html],
-			'Folder#initialize should load [:html] from [:dir]/_.html'
+			'Folder#initialize should load [:html] from [:dir]/index.html'
 		)
 		assert_instance_of(
 			Sofa::Set::Dynamic,

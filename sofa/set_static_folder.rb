@@ -37,7 +37,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	end
 
 	def load_html(dir,parent)
-		html_file = ::File.join Sofa['ROOT_DIR'],dir,'_.html'
+		html_file = ::File.join Sofa['ROOT_DIR'],dir,'index.html'
 		if ::File.exists? html_file
 			::File.open(html_file) {|f| f.read }
 		elsif parent

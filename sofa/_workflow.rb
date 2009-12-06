@@ -55,7 +55,7 @@ class Sofa::Workflow
 
 	def _g_submit(arg)
 		<<_html.chomp
-<input id="#{@sd[:name]}.submit" type="submit" value="#{arg[:orig_action]}" />
+<input name="#{@sd[:name]}.status-public" type="submit" value="#{arg[:orig_action]}" />
 _html
 	end
 
@@ -82,5 +82,11 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 		:update => 0b1010,
 		:delete => 0b1010,
 	}
+
+	def _g_submit(arg)
+		<<_html.chomp
+<input name="#{@sd[:name]}.status-temp" type="submit" value="update" />
+_html
+	end
 
 end

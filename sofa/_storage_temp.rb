@@ -25,6 +25,7 @@ class Sofa::Storage::Temp < Sofa::Storage
 
 	def store(id,v)
 		id = new_id if id == :new_id
+		@val = {} unless @val.is_a? ::Hash
 		@val[id] = v
 		id
 	end

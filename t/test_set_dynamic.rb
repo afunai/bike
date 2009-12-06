@@ -7,7 +7,7 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 
 	def setup
 		@sd = Sofa::Set::Dynamic.new(
-			:id        => 'main',
+			:id        => 'foo',
 			:klass     => 'set-dynamic',
 			:workflow  => 'blog',
 			:group     => ['roy','don'],
@@ -19,6 +19,9 @@ _tmpl
 	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
 _html
 		)
+		def @sd._g_submit(arg)
+			"[#{my[:id]}-#{arg[:orig_action]}]\n"
+		end
 		Sofa.client = 'root'
 	end
 
@@ -118,6 +121,7 @@ _html
 <ul id="foo" class="sofa-blog">
 	<li>moo!: moo!</li>
 </ul>
+[foo-update]
 _html
 			@sd.get(:conds => {:id => '1235'},:action => :update),
 			'Set::Dynamic#get should pass the given action to lower items'
@@ -147,6 +151,9 @@ _html
 			:html => '<ul class="sofa-attachment"><li class="body"></li>$(.pipco)</ul>'
 		)
 		sd = ss.item('main')
+		def sd._g_submit(arg)
+			''
+		end
 		def sd._g_jawaka(arg)
 			'JAWAKA'
 		end

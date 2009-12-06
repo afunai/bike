@@ -55,17 +55,5 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		}.merge(v) : v
 	end
 
-	def parse_block(open,inner,close)
-		sd = super
-		sd[:tmpl] += <<_html if sd[:tmpl] !~ /\$\(\.submit\)/
-<div>$(.submit)</div>
-_html
-		sd[:tmpl] = <<_html
-<form id="@(name)" method="post" action="@(dir)/update.html">
-#{sd[:tmpl]}</form>
-_html
-		sd
-	end
-
 end
 

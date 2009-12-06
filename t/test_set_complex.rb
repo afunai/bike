@@ -21,6 +21,9 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:update    => 0b1110,
 			:delete    => 0b1010,
 		}
+		def _g_submit(arg)
+			'[pipco]'
+		end
 	end
 
 	class ::Sofa::Tomago < ::Sofa::Field
@@ -82,6 +85,18 @@ _html
 				},
 			}
 		)
+
+		[
+			@sd,
+			@sd.item('20091123_0001','files'),
+			@sd.item('20091123_0001','replies'),
+			@sd.item('20091123_0002','files'),
+			@sd.item('20091123_0002','replies'),
+		].each {|sd|
+			def sd._g_submit(arg)
+				"[#{my[:id]}-#{arg[:orig_action]}]\n"
+			end
+		}
 	end
 
 	def teardown
@@ -172,6 +187,7 @@ _html
 			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
 		</ul>
+[files-update]
 		'mouth'
 	</li>
 	<li id="main-20091123_0002">
@@ -179,9 +195,11 @@ _html
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=update,p_action=update)</li>
 		</ul>
+[files-update]
 		'mouth'
 	</li>
 </ul>
+[main-update]
 _html
 			result,
 			'Set#get should distribute the action to its items'
@@ -200,6 +218,7 @@ _html
 			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
 		</ul>
+[files-update]
 		'mouth'
 	</li>
 	<li id="main-20091123_0002">
@@ -214,6 +233,7 @@ _html
 		'potato'
 	</li>
 </ul>
+[main-update]
 _html
 			@sd.get(:action => :update),
 			'Field#get should fall back to a possible action if the given action is not permitted'
@@ -229,6 +249,7 @@ _html
 			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
 		</ul>
+[files-update]
 		'mouth'
 	</li>
 	<li id="main-20091123_0002">
@@ -238,6 +259,7 @@ _html
 		</ul>
 	</li>
 </ul>
+[main-update]
 _html
 			@sd.get(:action => :update),
 			'Field#get should preserve the given action wherever possible'
@@ -277,6 +299,7 @@ _html
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
 		</ul>
+[replies-update]
 		'potato'
 	</li>
 </ul>
@@ -305,6 +328,7 @@ _html
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
 		</ul>
+[replies-update]
 		'potato'
 	</li>
 </ul>

@@ -53,6 +53,12 @@ class Sofa::Workflow
 		(@sd.default_action == :read) ? :index : :done
 	end
 
+	def _g_submit(arg)
+		<<_html.chomp
+<input id="#{@sd[:name]}.submit" type="submit" value="#{arg[:orig_action]}" />
+_html
+	end
+
 end
 
 

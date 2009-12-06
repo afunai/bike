@@ -10,6 +10,11 @@ class Sofa::Set::Dynamic < Sofa::Field
 	attr_reader :storage,:workflow
 
 	def initialize(meta = {})
+		meta[:tmpl] = "#{meta[:tmpl]}$(.submit)" unless meta[:tmpl] =~ /\$\(\.submit\)/
+		meta[:tmpl] = <<_html if meta[:parent].is_a? Sofa::Set::Static::Folder
+<form id="@(name)" method="post" action="@(dir)/update.html">
+#{meta[:tmpl]}</form>
+_html
 		@meta        = meta
 		@storage     = Sofa::Storage.instance self
 		@workflow    = Sofa::Workflow.instance self
@@ -81,9 +86,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 	def _g_submit(arg)
-		<<_html.chomp
-<input id="#{my[:name]}.submit" type="submit" value="#{arg[:orig_action]}" />
-_html
+		@workflow._g_submit arg
 	end
 
 	def _post(action,v = nil)

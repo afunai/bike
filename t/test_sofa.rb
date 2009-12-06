@@ -494,6 +494,7 @@ class TC_Sofa < Test::Unit::TestCase
 		assert_equal(
 			{
 				'main'  => {
+					:conds          => {:id => '20091120_0001'},
 					'20091120_0001' => {
 						'files' => {
 							:conds  => {:qux => '456'}, 

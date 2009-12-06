@@ -80,6 +80,11 @@ Sofa.client = 'root'
 		params_of_base[:conds].merge!(conds_of req.path_info)
 		params_of_base[:action] = action_of req.path_info
 
+		base[:name].split('-').inject(params) {|p,s|
+			p[:conds] ||= {:id => s} if s =~ REX::ID
+			p[s]
+		}
+
 		params
 	end
 

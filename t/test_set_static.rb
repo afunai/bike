@@ -48,6 +48,31 @@ _html
 		)
 	end
 
+	def test_empty?
+		ss = Sofa::Set::Static.new(:html => <<'_html')
+<html>
+	<h1>title:(text 32)</h1>
+</html>
+_html
+		ss.load 'title' => 'foo'
+		assert(
+			!ss.empty?,
+			'Set::Static#empty? should return false if any item has a value'
+		)
+
+		ss.load 'title' => nil
+		assert(
+			ss.empty?,
+			'Set::Static#empty? should return true if the all items do not have a value'
+		)
+
+		ss.load 'title' => ''
+		assert(
+			ss.empty?,
+			'Set::Static#empty? should return true if the all items do not have a value'
+		)
+	end
+
 	def test_item
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <html>

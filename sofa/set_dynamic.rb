@@ -112,7 +112,7 @@ _html
 				item[:id] = new_id
 			when :update
 				@storage.store(item[:id],item.val)
-				@storage.delete(id) if item[:id] != id
+				@storage.delete(id) if item[:id] != id || item.empty?
 			when :delete
 				@storage.delete(id)
 		end

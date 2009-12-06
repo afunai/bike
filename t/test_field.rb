@@ -112,6 +112,20 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
+	def test_empty?
+		@f.load 'foo'
+		assert(
+			!@f.empty?,
+			'Field#empty? should return false if the field has a value'
+		)
+
+		@f.load nil
+		assert(
+			@f.empty?,
+			'Field#empty? should return true if the field has no value'
+		)
+	end
+
 	def test_get
 		@f.instance_variable_set(:@val,'hello')
 		assert_equal(

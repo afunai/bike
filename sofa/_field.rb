@@ -137,12 +137,6 @@ class Sofa::Field
 		self
 	end
 
-	def persistent_commit
-		f = self
-		f = f[:parent] until f.nil? || (f.storage && !f.storage.is_a?(Sofa::Storage::Temp))
-		f ? f.commit(:persistent) : self.commit(:persistent)
-	end
-
 	def commit(type = :temp)
 		if valid?
 			@result = @action

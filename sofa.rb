@@ -104,6 +104,8 @@ Sofa.client = 'root'
 
 			if item_id == 'action'
 				hash[:action] = (special || val).intern
+			elsif item_id == 'status'
+				hash[:status] = (special || val).intern
 			elsif item_id == 'conds'
 				hash[:conds] ||= {}
 				hash[:conds][special.intern] = val

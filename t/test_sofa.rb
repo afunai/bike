@@ -113,7 +113,8 @@ class TC_Sofa < Test::Unit::TestCase
 				'foo-bar.action'    => 'update',
 				'foo-baz'           => ['boo','bee'],
 				'foo'               => 'oops',
-				'qux.action-create' => 'submit'
+				'qux.action-create' => 'submit',
+				'qux.status-public' => 'oops'
 			)
 		}
 		assert_equal(
@@ -131,6 +132,7 @@ class TC_Sofa < Test::Unit::TestCase
 				},
 				'qux' => {
 					:action => :create,
+					:status => :public,
 				},
 			},
 			hash,

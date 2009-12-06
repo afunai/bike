@@ -53,7 +53,7 @@ Sofa.client = 'root'
 			response_ok :body => base.get(params)
 		else
 			base[:folder].update params
-			base.persistent_commit
+			base[:folder].commit :persistent
 
 			if base.is_a? Sofa::Set::Dynamic
 				if base.result

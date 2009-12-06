@@ -23,7 +23,11 @@ class Sofa::Storage::File < Sofa::Storage
 			v = load_file id
 			YAML.load(v) if v
 		else
-			{} # too many to return
+			# this could be HUGE.
+			_select_all({}).inject({}) {|v,id|
+				v[id] = YAML.load(load_file id)
+				v
+			}
 		end
 	end
 

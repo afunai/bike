@@ -116,7 +116,7 @@ end
 				when Sofa::REX::ID_NEW
 					action = :create
 				when Sofa::REX::ID
-					action = v['_action'] ? v['_action'].intern : :update
+					action = v[:action] || :update
 				when /^_submit/
 					next true # not a item value
 			end

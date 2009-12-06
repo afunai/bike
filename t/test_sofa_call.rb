@@ -61,7 +61,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'Sofa#call with post method should return status 303'
 		)
 		assert_match(
-			/id=(\d+_\d+)/,
+			/id=\d+_\d+/,
 			res.headers['Location'],
 			'Sofa#call with post method should return a proper location'
 		)

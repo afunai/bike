@@ -96,7 +96,7 @@ _html
 				v.each_key {|id|
 					next unless id.is_a? ::String
 					item = item_instance id
-					item_action = id[Sofa::REX::ID_NEW] ? :create : (v[id][:delete] ? :delete : :update)
+					item_action = id[Sofa::REX::ID_NEW] ? :create : (v[id][:action] || :update)
 					item.post(item_action,v[id])
 				}
 			when :load,:load_default,:create

@@ -281,7 +281,7 @@ _html
 		)
 
 		# delete an item
-		@sd.update('20091122_1235' => {:delete => true})
+		@sd.update('20091122_1235' => {:action => :delete})
 		assert_equal(
 			{'name' => 'carl','comment' => 'baz'},
 			@sd.item('20091122_1235').val,
@@ -420,7 +420,7 @@ _html
 			Sofa::Error::Forbidden,
 			"'nobody' should not delete frank's item"
 		) {
-			@sd.update('20091122_0001' => {'_action' => 'delete'})
+			@sd.update('20091122_0001' => {:action => :delete})
 		}
 	end
 
@@ -484,7 +484,7 @@ _html
 			Sofa::Error::Forbidden,
 			"carl should not delete frank's item"
 		) {
-			@sd.update('20091122_0001' => {'_action' => 'delete'})
+			@sd.update('20091122_0001' => {:action => :delete})
 		}
 	end
 
@@ -533,7 +533,7 @@ _html
 			Sofa::Error::Forbidden,
 			"roy should not delete frank's item"
 		) {
-			@sd.update('20091122_0001' => {'_action' => 'delete'})
+			@sd.update('20091122_0001' => {:action => :delete})
 		}
 	end
 
@@ -586,12 +586,12 @@ _html
 		assert_nothing_raised(
 			'frank should be able to delete his own item'
 		) {
-			@sd.update('20091122_0001' => {'_action' => 'delete'})
+			@sd.update('20091122_0001' => {:action => :delete})
 		}
 		assert_nothing_raised(
 			"frank should be able to delete carl's item"
 		) {
-			@sd.update('20091122_0002' => {'_action' => 'delete'})
+			@sd.update('20091122_0002' => {:action => :delete})
 		}
 	end
 

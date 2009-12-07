@@ -117,7 +117,7 @@ end
 					action = :create
 				when Sofa::REX::ID
 					action = v[:action] || :update
-				when /^_submit/
+				when id.is_a?(::Symbol)
 					next true # not a item value
 			end
 			permit?(action) || (action != :create && item(id) && item(id).permit?(action))

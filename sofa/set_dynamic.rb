@@ -52,7 +52,7 @@ _html
 	end
 
 	def _get(arg)
-		if _hide? arg
+		if @workflow._hide? arg
 			''
 		else
 			@workflow._get(arg) || super
@@ -60,7 +60,7 @@ _html
 	end
 
 	def _get_by_self_reference(arg)
-		if _hide? arg
+		if @workflow._hide? arg
 			''
 		elsif action_tmpl = my["tmpl_#{arg[:action]}".intern]
 			# action_tmpl should be resolved here to prevent an infinite reference.
@@ -71,11 +71,6 @@ _html
 		else
 			_get_by_method arg
 		end
-	end
-
-	def _hide?(arg)
-		(arg[:p_action] && arg[:p_action] != :read && !@workflow.is_a?(Sofa::Workflow::Attachment)) ||
-		(arg[:orig_action] == :read && arg[:action] == :submit)
 	end
 
 	def _g_submit(arg)

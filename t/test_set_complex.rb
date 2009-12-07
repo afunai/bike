@@ -97,6 +97,11 @@ _html
 				"[#{my[:id]}-#{arg[:orig_action]}]\n"
 			end
 		}
+
+		@sd.item('20091123_0001','files')[:tmpl_submit_create] = '[c]'
+		@sd.item('20091123_0002','files')[:tmpl_submit_create] = '[c]'
+		@sd.item('20091123_0001','files')[:tmpl_submit_delete] = '[d]'
+		@sd.item('20091123_0002','files')[:tmpl_submit_delete] = '[d]'
 	end
 
 	def teardown
@@ -184,18 +189,18 @@ _html
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
 		<ul id="main-20091123_0001-files" class="sofa-attachment">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)[d]</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)[d]</li>
+			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
 		</ul>
-[files-update]
 		'mouth'
 	</li>
 	<li id="main-20091123_0002">
 		'RE'(action=update,p_action=update): 'wee'(action=update,p_action=update)
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=update,p_action=update)</li>
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=update,p_action=update)[d]</li>
+			<li id="main-20091123_0002-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
 		</ul>
-[files-update]
 		'mouth'
 	</li>
 </ul>
@@ -215,10 +220,10 @@ _html
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
 		<ul id="main-20091123_0001-files" class="sofa-attachment">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)[d]</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)[d]</li>
+			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
 		</ul>
-[files-update]
 		'mouth'
 	</li>
 	<li id="main-20091123_0002">
@@ -246,10 +251,10 @@ _html
 	<li id="main-20091123_0001">
 		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
 		<ul id="main-20091123_0001-files" class="sofa-attachment">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)</li>
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)[d]</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)[d]</li>
+			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
 		</ul>
-[files-update]
 		'mouth'
 	</li>
 	<li id="main-20091123_0002">

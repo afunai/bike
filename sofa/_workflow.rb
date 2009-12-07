@@ -47,12 +47,17 @@ class Sofa::Workflow
 	end
 
 	def _get(arg)
-		if arg[:action] == :create
-			@sd.instance_eval {
-				item_instance('_1')
-				_get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])
-			}
-		end
+		@sd.instance_eval {
+			if arg[:action] == :create
+					item_instance('_1')
+					_get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])
+			end
+		}
+	end
+
+	def _hide?(arg)
+		(arg[:p_action] && arg[:p_action] != :read) ||
+		(arg[:orig_action] == :read && arg[:action] == :submit)
 	end
 
 	def _g_submit(arg)
@@ -85,10 +90,28 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 		:delete => 0b1010,
 	}
 
-	def _g_submit(arg)
-		<<_html.chomp
-<input name="#{@sd[:name]}.status-temp" type="submit" value="update" />
+	def _get(arg)
+		@sd.instance_eval {
+			if arg[:action] == :create || arg[:action] == :update
+				new_item = item_instance '_001'
+				item_outs = _g_default(arg) {|item,item_arg|
+					action = item[:id][Sofa::REX::ID_NEW] ? :create : :delete
+					button_tmpl = my["tmpl_submit_#{action}".intern] || <<_html.chomp
+<input type="submit" name="@(name).action-#{action}" value="#{action}">
 _html
+					button = item.send(:_get_by_tmpl,{},button_tmpl)
+					item_arg[:action] = :create if action == :create
+					item_tmpl = item[:tmpl].sub(/.*\$\(.*?\)/,"\\&#{button}")
+					item.send(:_get_by_tmpl,item_arg,item_tmpl)
+				}
+				tmpl = my[:tmpl].gsub('$()',item_outs.join)
+				_get_by_tmpl({:action => :update},tmpl)
+			end
+		}
+	end
+
+	def _hide?(arg)
+		arg[:action] == :submit
 	end
 
 end

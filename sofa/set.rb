@@ -96,11 +96,11 @@ end
 		_get_by_method arg
 	end
 
-	def _g_default(arg)
+	def _g_default(arg,&block)
 		collect_item(arg[:conds] || {}) {|item|
 			item_arg = arg[item[:id]] || {}
 			item_arg[:action] ||= arg[:action]
-			item.get item_arg
+			block ? block.call(item,item_arg) : item.get(item_arg)
 		}
 	end
 

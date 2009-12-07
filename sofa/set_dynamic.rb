@@ -52,18 +52,11 @@ _html
 	end
 
 	def _get(arg)
-		@workflow.before_get arg
-
 		if _hide? arg
-			out = ''
-		elsif arg[:action] == :create
-			item_instance('_1')
-			out = _get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])
+			''
 		else
-			out = super
+			@workflow._get(arg) || super
 		end
-
-		@workflow.filter_get arg,out
 	end
 
 	def _get_by_self_reference(arg)

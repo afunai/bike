@@ -36,13 +36,6 @@ class Sofa::Workflow
 		(roles & self.class.const_get(:PERM)[action].to_i) > 0
 	end
 
-	def before_get(arg)
-	end
-
-	def filter_get(arg,out)
-		out
-	end
-
 	def before_post(action,v)
 	end
 
@@ -51,6 +44,15 @@ class Sofa::Workflow
 
 	def next_action(params)
 		(@sd.default_action == :read) ? :index : :done
+	end
+
+	def _get(arg)
+		if arg[:action] == :create
+			@sd.instance_eval {
+				item_instance('_1')
+				_get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])
+			}
+		end
 	end
 
 	def _g_submit(arg)

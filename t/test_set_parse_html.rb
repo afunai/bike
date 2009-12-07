@@ -132,6 +132,21 @@ _html
 			@set.send(:parse_token,nil,'1..32',{}),
 			'Set::Static#parse_token should be able to parse range tokens'
 		)
+		assert_equal(
+			{:max => 32},
+			@set.send(:parse_token,nil,'..32',{}),
+			'Set::Static#parse_token should be able to parse partial range tokens'
+		)
+		assert_equal(
+			{:min => 1},
+			@set.send(:parse_token,nil,'1..',{}),
+			'Set::Static#parse_token should be able to parse partial range tokens'
+		)
+		assert_equal(
+			{:min => -32,:max => -1},
+			@set.send(:parse_token,nil,'-32..-1',{}),
+			'Set::Static#parse_token should be able to parse minus range tokens'
+		)
 
 		assert_equal(
 			{:options => ['foo']},

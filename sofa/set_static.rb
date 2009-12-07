@@ -143,10 +143,10 @@ class Sofa::Set::Static < Sofa::Field
 				meta[:options] << token
 			else
 				case token
-					when /(\d+)\.\.(\d+)/
-						meta[:min] = $1.to_i
-						meta[:max] = $2.to_i
-					when /(\d+)\*(\d+)/
+					when /^(-?\d+)?\.\.(-?\d+)?$/
+						meta[:min] = $1.to_i if $1
+						meta[:max] = $2.to_i if $2
+					when /^(\d+)\*(\d+)$/
 						meta[:width]  = $1.to_i
 						meta[:height] = $2.to_i
 					else

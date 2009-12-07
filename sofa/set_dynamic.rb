@@ -92,14 +92,19 @@ _html
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)
 		case action
-			when :update
-				v.each_key {|id|
+			when :create
+				@storage.build({})
+				v.each_key.sort_by {|id| id.to_s }.each {|id|
 					next unless id.is_a? ::String
-					item = item_instance id
-					item_action = id[Sofa::REX::ID_NEW] ? :create : (v[id][:action] || :update)
-					item.post(item_action,v[id])
+					item_instance(id).post(:create,v[id])
 				}
-			when :load,:load_default,:create
+			when :update
+				v.each_key.sort_by {|id| id.to_s }.each {|id|
+					next unless id.is_a? ::String
+					item_action = id[Sofa::REX::ID_NEW] ? :create : (v[id][:action] || :update)
+					item_instance(id).post(item_action,v[id])
+				}
+			when :load,:load_default
 				@storage.build v
 		end
 		@workflow.after_post

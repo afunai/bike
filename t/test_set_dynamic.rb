@@ -210,17 +210,64 @@ _html
 	end
 
 	def test_create
-		@sd.create('1235' => {'name' => 'carl'})
+		s = @sd.storage
+		def s.new_id
+			@c ||= 0
+			(@c += 1).to_s
+		end
+
+		@sd.create({})
 		assert_equal(
-			{'1235' => {'name' => 'carl'}},
+			{},
 			@sd.val,
-			'Set::Dynamic#create should create the storage with the given values'
+			'Set::Dynamic#create should build the empty storage by default'
 		)
-		@sd.create('1234' => {'name' => 'frank'})
+
+		@sd.create('20091207_1235' => {'name' => 'carl'})
 		assert_equal(
-			{'1234' => {'name' => 'frank'}},
+			{'name' => 'carl'},
+			@sd.item('20091207_1235').val,
+			'Set::Dynamic#create should create the new items in the empty storage'
+		)
+		@sd.commit
+		assert_equal(
+			{'1' => {'name' => 'carl'}},
 			@sd.val,
-			'Set::Dynamic#create should overwrite all values in the storage'
+			'Set::Dynamic#create should create the new items in the empty storage'
+		)
+
+		@sd.create('20091207_1234' => {'name' => 'frank'})
+		assert_equal(
+			{'name' => 'frank'},
+			@sd.item('20091207_1234').val,
+			'Set::Dynamic#create should create the new items in the empty storage'
+		)
+		assert_equal(
+			{},
+			@sd.val,
+			'Set::Dynamic#val should be empty before the commit'
+		)
+		@sd.commit
+		assert_equal(
+			{'2' => {'name' => 'frank'}},
+			@sd.val,
+			'Set::Dynamic#create should overwrite all items in the storage'
+		)
+
+		@sd.create('_2' => {'name' => 'frank'},'_1' => {'name' => 'bobby'})
+		assert_equal(
+			{},
+			@sd.val,
+			'Set::Dynamic#val should be empty before the commit'
+		)
+		@sd.commit
+		assert_equal(
+			{
+				'4' => {'name' => 'frank','comment' => 'hi.'},
+				'3' => {'name' => 'bobby','comment' => 'hi.'},
+			},
+			@sd.val,
+			'Set::Dynamic#create should create multiple items in the empty storage'
 		)
 	end
 

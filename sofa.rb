@@ -59,6 +59,7 @@ Sofa.client = 'root'
 				if base.result
 					ids = base.result.values.collect {|item| item[:id] }
 					action = base.workflow.next_action(params)
+# TODO: action = :update unless base_params[:status] # submit from attachment
 					response_see_other(
 						:location => base[:folder][:dir] + "/id=#{ids.join ','}/#{action}.html"
 					)

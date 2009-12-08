@@ -74,4 +74,25 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_post_with_attachment
+		Sofa::Set::Static::Folder.root.item('t_attachment','main').storage.clear
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_attachment/main/update.html',
+			{
+				:input => "_1-files-_1-file=wow.jpg&_1-files.status-public=create"
+			}
+		)
+		assert_match(
+			'update.html',
+			res.headers['Location'],
+			'Sofa#call without the root status should always return :update'
+		)
+		assert_equal(
+			{},
+			Sofa::Set::Static::Folder.root.item('t_attachment','main').val,
+			'Sofa#call without the root status should not update the persistent storage'
+		)
+	end
+
 end

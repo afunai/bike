@@ -125,6 +125,10 @@ Sofa.client = 'root'
 		}
 	end
 
+def tid_of(path)
+	'moo!'
+end
+
 	def steps_of(path)
 		_dirname(path).gsub(REX::PATH_ID,'').split('/').select {|step_or_cond|
 			step_or_cond != '' && step_or_cond !~ REX::COND && step_or_cond !~ REX::COND_D

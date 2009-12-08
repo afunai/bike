@@ -367,4 +367,27 @@ _html
 		)
 	end
 
+	def test_commit_partial
+		Sofa.client = 'don'
+		@sd.update(
+			'20091123_0002' => {
+				'replies' => {
+					'_0001' => {
+						'_owner' => 'don',
+						'reply'  => 'yum.',
+					},
+				},
+			}
+		)
+		item_count = @sd.val('20091123_0002','replies').size
+
+		@sd.commit :temp
+
+		assert_equal(
+			item_count + 1,
+			@sd.val('20091123_0002','replies').size,
+			'Field#val should change after the commit :temp'
+		)
+	end
+
 end

@@ -94,16 +94,16 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'Sofa#call without the root status should not update the persistent storage'
 		)
 
-		tid = res.headers['Location'][%r{\/(\d+)},1]
+		tid = res.headers['Location'][/\d{10}\.\d+/]
 		assert_instance_of(
 			Sofa::Set::Dynamic,
 			Sofa.transaction[tid],
 			'the suspended SD should be kept in Sofa.transaction'
 		)
 		assert_equal(
-			['_012'],
-			Sofa.transaction[tid].send(:pending_items).keys,
-			'the suspended SD should not be committed yet'
+			{},
+			Sofa.transaction[tid].send(:pending_items),
+			'the suspended SD should be committed :temp'
 		)
 
 		res = Rack::MockRequest.new(@sofa).post(
@@ -120,10 +120,26 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		assert_not_equal(
 			{},
 			Sofa::Set::Static::Folder.root.item('t_attachment','main').val,
-			'Sofa#call without the root status should not update the persistent storage'
+			'Sofa#call with the root status should update the persistent storage'
 		)
 
-		new_id = res.headers['Location'][/id=#{Sofa::REX::ID}/,1]
+		new_id   = res.headers['Location'][/id=(\d+_\d+)/,1]
+		new_item = Sofa::Set::Static::Folder.root.item('t_attachment','main',new_id)
+		assert_not_equal(
+			{},
+			new_item.val,
+			'Sofa#call with the root status should commit all the pending items'
+		)
+		assert_equal(
+			'hello.',
+			new_item.val['comment'],
+			'Sofa#call with the root status should commit the root items'
+		)
+		assert_equal(
+			{'file' => 'wow.jpg'},
+			new_item.val['files'].values.first,
+			'Sofa#call with the root status should commit the descendant items'
+		)
 	end
 
 end

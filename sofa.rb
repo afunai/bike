@@ -48,17 +48,18 @@ class Sofa
 		params = params_from_request req
 		path   = req.path_info
 
-if tid = tid_of(path)
-	base = Sofa.transaction[tid]
-else
-		base   = base_of path
-end
-		return response_not_found unless base
-
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req
 		Sofa.current[:session] = env['rack.session']
-		Sofa.current[:base]    = base
+
+		if tid = tid_of(path)
+			base = Sofa.transaction[tid]
+		else
+			base = base_of path
+		end
+		return response_not_found unless base
+
+		Sofa.current[:base] = base
 Sofa.client = 'root'
 
 		if method == 'get'
@@ -88,7 +89,15 @@ Sofa.client = 'root'
 			else
 				tid ||= new_tid
 				Sofa.transaction[tid] ||= base
-				response_see_other(:location => "/#{tid}/update.html")
+				items = base.instance_eval {
+					@item_object.values.select {|item| item.pending? }
+				}
+
+				base.commit :temp
+
+				item_ids = items.collect {|item| item[:id] }
+				id_step  = "id=#{item_ids.join ','}/" unless item_ids.empty?
+				response_see_other(:location => "/#{tid}/#{id_step}update.html")
 			end
 		end
 	end
@@ -96,11 +105,12 @@ Sofa.client = 'root'
 	private
 
 def new_tid
-	'12345'
+	t = Time.now
+	t.strftime('%m%d%H%M%S.') + t.usec.to_s
 end
 
 def tid_of(path)
-	path[/12345/]
+	path[/\d{10}\.\d+/]
 end
 
 	def params_from_request(req)

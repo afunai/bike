@@ -43,10 +43,13 @@ _html
 				action = item.action
 				item.commit(type) && _commit(action,id,item)
 			}
-		elsif type == :persistent
+		else
 			items.each {|id,item|
 				action = item.action || :update
-				item.commit(:temp) && _commit(action,id,item) && item.commit(:persistent)
+				result = item.commit(:temp)
+				if result && type == :persistent
+					_commit(action,id,item) && item.commit(:persistent)
+				end
 			}
 		end
 		if pending_items.empty?

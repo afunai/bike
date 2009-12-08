@@ -89,6 +89,42 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
+	def test_short_name
+		item = Sofa::Set::Static::Folder.root.item(
+			'foo','bar','main','20091120_0001','replies','20091208_0001','reply'
+		)
+
+		Sofa.current[:base] = nil
+		assert_equal(
+			'reply',
+			item[:short_name],
+			'Field#[:short_name] should return [:id] if no base SD is defined'
+		)
+
+		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		assert_equal(
+			'20091120_0001-replies-20091208_0001-reply',
+			item[:short_name],
+			'Field#[:short_name] should return the path name from the base SD'
+		)
+
+		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item(
+			'foo','bar','main','20091120_0001','replies'
+		)
+		assert_equal(
+			'20091208_0001-reply',
+			item[:short_name],
+			'Field#[:short_name] should return the path name from the base SD'
+		)
+
+		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		assert_equal(
+			'',
+			Sofa::Set::Static::Folder.root.item('foo','bar','main')[:short_name],
+			'Field#[:short_name] should return empty string for the base SD itself'
+		)
+	end
+
 	def test_sd
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
@@ -109,6 +145,16 @@ class TC_Field < Test::Unit::TestCase
 		assert_nil(
 			Sofa::Set::Static::Folder.root[:sd],
 			'Field#[:workflow] should return nil if there is no set_dynamic in the ancestors'
+		)
+	end
+
+	def test_path
+		item = Sofa::Set::Static::Folder.root.item('foo','main')
+		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		assert_equal(
+			'/foo/bar/main',
+			item[:base_path],
+			'Field#[:base_path] should return the path name of the base SD'
 		)
 	end
 

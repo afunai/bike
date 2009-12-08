@@ -55,6 +55,12 @@ class Sofa::Field
 		my[:parent] ? "#{my[:parent][:full_name]}-#{my[:id]}" : my[:id]
 	end
 
+	def meta_short_name
+		return '' if Sofa.base && my[:full_name] == Sofa.base[:full_name]
+		my[:parent] && Sofa.base && my[:parent][:full_name] != Sofa.base[:full_name] ?
+			"#{my[:parent][:short_name]}-#{my[:id]}" : my[:id]
+	end
+
 	def meta_folder
 		f = self
 		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Static::Folder)

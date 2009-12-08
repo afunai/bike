@@ -41,11 +41,10 @@ class Sofa
 	def call(env)
 		req    = Rack::Request.new env
 		method = req.request_method.downcase
+		params = params_from_request req
 		path   = req.path_info
-		action = action_of path
 		base   = base_of path
 		return response_not_found unless base
-		params = params_from_request req,base
 
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req
@@ -85,7 +84,7 @@ Sofa.client = 'root'
 
 	private
 
-	def params_from_request(req,base = base_of(req.path_info))
+	def params_from_request(req)
 		params = rebuild_params req.params
 
 		params[:conds] ||= {}

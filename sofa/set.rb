@@ -69,8 +69,9 @@ end
 			if cond_action && (cond_action.intern != arg[:action] || !item.permit?(arg[:action]))
 				''
 			elsif name == ''
-				arg = arg.merge(:orig_action => arg[:action],:action => action.intern) if action
-				_get_by_self_reference arg
+				self_arg = action ?
+					arg.merge(:orig_action => arg[:action],:action => action.intern) : arg
+				_get_by_self_reference self_arg
 			else
 				steps = name.split '-'
 				item_arg = steps.inject(arg) {|a,s|

@@ -191,6 +191,22 @@ _html
 		}
 	end
 
+	def test_get_by_self_reference_multiple_vars
+		ss = Sofa::Set::Static.new(
+			:html => '<ul class="sofa-attachment">$(.pipco)<li class="body">foo:(text)</li></ul>'
+		)
+		sd = ss.item('main')
+		def sd._g_pipco(arg)
+			'PIPCO'
+		end
+
+		assert_equal(
+			'<ul class="sofa-attachment">PIPCO</ul>',
+			ss.get(:action => :pipco),
+			'Set::Dynamic#_get_by_self_reference should not be affected by previous $(.action)'
+		)
+	end
+
 	def test_load_default
 	end
 

@@ -445,10 +445,8 @@ class TC_Sofa < Test::Unit::TestCase
 		}
 		assert_equal(
 			{
-				'main'  => {
-					:conds  => {:qux => '456'},
-					:action => :wink,
-				},
+				:conds  => {:qux => '456'},
+				:action => :wink,
 				'acorn' => 'round',
 				'coax'  => 'true',
 				'some'  => {'doors' => 'open'},
@@ -470,10 +468,8 @@ class TC_Sofa < Test::Unit::TestCase
 		}
 		assert_equal(
 			{
-				'main'  => {
-					:conds  => {:qux => '456'},
-					:action => nil,
-				},
+				:conds  => {:qux => '456'},
+				:action => nil,
 				'acorn' => 'round',
 				'coax'  => 'true',
 				'some'  => {'doors' => 'open'},
@@ -495,15 +491,8 @@ class TC_Sofa < Test::Unit::TestCase
 		}
 		assert_equal(
 			{
-				'main'  => {
-					:conds          => {:id => '20091120_0001'},
-					'20091120_0001' => {
-						'files' => {
-							:conds  => {:qux => '456'}, 
-							:action => nil,
-						},
-					},
-				},
+				:conds  => {:qux => '456'}, 
+				:action => nil,
 				'acorn' => 'round',
 				'coax'  => 'true',
 				'some'  => {'doors' => 'open'},
@@ -525,10 +514,8 @@ class TC_Sofa < Test::Unit::TestCase
 		}
 		assert_equal(
 			{
-				'main'  => {
-					:conds  => {:qux => '456'},
-					:action => nil,
-				},
+				:conds  => {:qux => '456'},
+				:action => nil,
 				'acorn' => 'round',
 				'some'  => {'doors' => 'open',:action => :open},
 			},

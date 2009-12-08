@@ -9,7 +9,7 @@ class Sofa::Textarea < Sofa::Field
 
 	def _g_create(arg)
 		<<_html
-<textarea name="#{my[:name]}" cols="#{my[:width]}" rows="#{my[:height]}">#{val}</textarea>
+<textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}">#{val}</textarea>
 _html
 	end
 	alias :_g_update :_g_create

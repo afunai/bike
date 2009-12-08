@@ -50,9 +50,9 @@ class TC_Sofa_Call < Test::Unit::TestCase
 
 	def test_post_simple_create
 		res = Rack::MockRequest.new(@sofa).post(
-			'http://example.com/t_store/update.html',
+			'http://example.com/t_store/main/update.html',
 			{
-				:input => "main-_1-name=fz&main-_1-comment=hi.&main-_1.status-public=create"
+				:input => "_1-name=fz&_1-comment=hi.&_1.status-public=create"
 			}
 		)
 		assert_equal(

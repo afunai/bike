@@ -19,6 +19,7 @@ _tmpl
 	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
 _html
 		)
+		@sd[:tmpl_menu_action] = ''
 		def @sd._g_submit(arg)
 			"[#{my[:id]}-#{arg[:orig_action]}]\n"
 		end

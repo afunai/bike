@@ -93,15 +93,13 @@ _html
 			@sd.item('20091123_0002','files'),
 			@sd.item('20091123_0002','replies'),
 		].each {|sd|
+			sd[:tmpl_menu_action] = ''
+			sd[:tmpl_submit_create] = '[c]'
+			sd[:tmpl_submit_delete] = '[d]'
 			def sd._g_submit(arg)
 				"[#{my[:id]}-#{arg[:orig_action]}]\n"
 			end
 		}
-
-		@sd.item('20091123_0001','files')[:tmpl_submit_create] = '[c]'
-		@sd.item('20091123_0002','files')[:tmpl_submit_create] = '[c]'
-		@sd.item('20091123_0001','files')[:tmpl_submit_delete] = '[d]'
-		@sd.item('20091123_0002','files')[:tmpl_submit_delete] = '[d]'
 	end
 
 	def teardown

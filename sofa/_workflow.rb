@@ -49,8 +49,8 @@ class Sofa::Workflow
 	def _get(arg)
 		@sd.instance_eval {
 			if arg[:action] == :create
-					item_instance('_1')
-					_get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])
+				item_instance('_1')
+				_get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])
 			end
 		}
 	end
@@ -62,7 +62,7 @@ class Sofa::Workflow
 
 	def _g_submit(arg)
 		<<_html.chomp
-<input name="#{@sd[:name]}.status-public" type="submit" value="#{arg[:orig_action]}" />
+<input name="#{@sd[:short_name]}.status-public" type="submit" value="#{arg[:orig_action]}" />
 _html
 	end
 
@@ -97,7 +97,7 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 				item_outs = _g_default(arg) {|item,item_arg|
 					action = item[:id][Sofa::REX::ID_NEW] ? :create : :delete
 					button_tmpl = my["tmpl_submit_#{action}".intern] || <<_html.chomp
-<input type="submit" name="@(name).action-#{action}" value="#{action}">
+<input type="submit" name="@(short_name).action-#{action}" value="#{action}">
 _html
 					button = item.send(:_get_by_tmpl,{},button_tmpl)
 					item_arg[:action] = :create if action == :create

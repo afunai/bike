@@ -10,19 +10,30 @@ class Sofa::Set::Dynamic < Sofa::Field
 	attr_reader :storage,:workflow
 
 	def initialize(meta = {})
-		meta[:tmpl] = "#{meta[:tmpl]}$(.submit)" unless meta[:tmpl] =~ /\$\(\.submit\)/
-		meta[:tmpl] = <<_html if meta[:parent].is_a? Sofa::Set::Static::Folder
-<form id="@(name)" method="post" action="@(dir)/update.html">
-#{meta[:tmpl]}</form>
-_html
 		@meta        = meta
 		@storage     = Sofa::Storage.instance self
 		@workflow    = Sofa::Workflow.instance self
 		@item_object = {}
+		unless @workflow.is_a? Sofa::Workflow::Attachment
+			my[:tmpl] = "#{my[:tmpl]}$(.submit)" unless my[:tmpl] =~ /\$\(\.submit\)/
+			my[:tmpl] = "$(.menu_action)#{my[:tmpl]}" unless my[:tmpl] =~ /\$\(\.menu_action\)/
+		end
+		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
+<form id="@(name)" method="post" action="@(base_path)/update.html">
+#{my[:tmpl]}</form>
+_html
 	end
 
 	def meta_dir
 		my[:folder][:dir] if my[:folder]
+	end
+
+	def meta_path
+		"#{my[:dir]}/#{my[:name].gsub('-','/')}"
+	end
+
+	def meta_base_path
+		Sofa.base ? Sofa.base[:path] : my[:path]
 	end
 
 	def commit(type = :temp)
@@ -34,7 +45,7 @@ _html
 			}
 		elsif type == :persistent
 			items.each {|id,item|
-				action = item.action
+				action = item.action || :update
 				item.commit(:temp) && _commit(action,id,item) && item.commit(:persistent)
 			}
 		end
@@ -76,6 +87,16 @@ _html
 	def _g_submit(arg)
 		@workflow._g_submit arg
 	end
+
+def _g_menu_action(arg)
+#return ''
+	<<_html
+<p>
+	<a href="#{my[:path]}/create.html">create</a>
+	<a href="#{my[:path]}/update.html">update</a>
+</p>
+_html
+end
 
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)

@@ -34,6 +34,10 @@ class Sofa
 		self.session[:client] = id
 	end
 
+	def self.base
+		self.current[:base]
+	end
+
 	def call(env)
 		req    = Rack::Request.new env
 		method = req.request_method.downcase
@@ -46,24 +50,30 @@ class Sofa
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req
 		Sofa.current[:session] = env['rack.session']
+		Sofa.current[:base]    = base
 Sofa.client = 'root'
 
 		if method == 'get'
-			base = base[:folder] if base.is_a? Sofa::Set::Dynamic
+			until base.is_a? Sofa::Set::Static::Folder
+				params = {base[:id] => params}
+				params[:conds] = {:id => base[:id]} if base[:parent].is_a? Sofa::Set::Dynamic
+				base = base[:parent]
+			end if base.is_a? Sofa::Set::Dynamic
+
 			response_ok :body => base.get(params)
 		else
-			base[:folder].update params
+			base.update params
 			base[:folder].commit :persistent
 
 			if base.is_a? Sofa::Set::Dynamic
 				if base.result
-					ids = base.result.values.collect {|item| item[:id] }
-					action = base.workflow.next_action(params)
-# TODO: cleanup
-params_of_base = base[:name].split('-').inject(params) {|p,s| p[s] ||= {} }
-action = :update unless params_of_base[:status]
+					ids = base.result.values.collect {|item|
+						item[:id] if item[:id][Sofa::REX::ID]
+					}.compact
+					id_step = "id=#{ids.join ','}/" unless ids.empty?
+					action = params[:status] ? base.workflow.next_action(params) : :update
 					response_see_other(
-						:location => base[:folder][:dir] + "/id=#{ids.join ','}/#{action}.html"
+						:location => base[:path] + "/#{id_step}#{action}.html"
 					)
 				else
 					# base.errors
@@ -78,15 +88,9 @@ action = :update unless params_of_base[:status]
 	def params_from_request(req,base = base_of(req.path_info))
 		params = rebuild_params req.params
 
-		params_of_base = base[:name].split('-').inject(params) {|p,s| p[s] ||= {} }
-		params_of_base[:conds] ||= {}
-		params_of_base[:conds].merge!(conds_of req.path_info)
-		params_of_base[:action] = action_of req.path_info
-
-		base[:name].split('-').inject(params) {|p,s|
-			p[:conds] ||= {:id => s} if s =~ REX::ID
-			p[s]
-		}
+		params[:conds] ||= {}
+		params[:conds].merge!(conds_of req.path_info)
+		params[:action] = action_of req.path_info
 
 		params
 	end

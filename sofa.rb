@@ -62,9 +62,8 @@ Sofa.client = 'root'
 			response_ok :body => base.get(params)
 		else
 			base.update params
-			base[:folder].commit :persistent
-
-			if base.is_a? Sofa::Set::Dynamic
+			if params[:status]
+				base[:folder].commit :persistent
 				if base.result
 					ids = base.result.values.collect {|item|
 						item[:id] if item[:id][Sofa::REX::ID]
@@ -78,6 +77,7 @@ Sofa.client = 'root'
 					# base.errors
 				end
 			else
+				response_see_other(:location => 'moo_update.html')
 			end
 		end
 	end

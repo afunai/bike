@@ -26,6 +26,10 @@ class Sofa
 		self.current[:session] || (@@fake_session ||= {})
 	end
 
+	def self.transaction
+		self.session[:transaction] ||= {}
+	end
+
 	def self.client
 		self.session[:client] ||= 'nobody'
 	end
@@ -43,7 +47,12 @@ class Sofa
 		method = req.request_method.downcase
 		params = params_from_request req
 		path   = req.path_info
+
+if tid = tid_of(path)
+	base = Sofa.transaction[tid]
+else
 		base   = base_of path
+end
 		return response_not_found unless base
 
 		Sofa.current[:env]     = env
@@ -77,12 +86,22 @@ Sofa.client = 'root'
 					# base.errors
 				end
 			else
-				response_see_other(:location => 'moo_update.html')
+				tid ||= new_tid
+				Sofa.transaction[tid] ||= base
+				response_see_other(:location => "/#{tid}/update.html")
 			end
 		end
 	end
 
 	private
+
+def new_tid
+	'12345'
+end
+
+def tid_of(path)
+	path[/12345/]
+end
 
 	def params_from_request(req)
 		params = rebuild_params req.params
@@ -124,10 +143,6 @@ Sofa.client = 'root'
 			params
 		}
 	end
-
-def tid_of(path)
-	'moo!'
-end
 
 	def steps_of(path)
 		_dirname(path).gsub(REX::PATH_ID,'').split('/').select {|step_or_cond|

@@ -80,7 +80,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_attachment/main/update.html',
 			{
-				:input => "_1-files-_1-file=wow.jpg&_1-files.status-public=create"
+				:input => "_012-files-_1-file=wow.jpg&_012-files.status-public=create"
 			}
 		)
 		assert_match(
@@ -93,6 +93,37 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			Sofa::Set::Static::Folder.root.item('t_attachment','main').val,
 			'Sofa#call without the root status should not update the persistent storage'
 		)
+
+		tid = res.headers['Location'][%r{\/(\d+)},1]
+		assert_instance_of(
+			Sofa::Set::Dynamic,
+			Sofa.transaction[tid],
+			'the suspended SD should be kept in Sofa.transaction'
+		)
+		assert_equal(
+			['_012'],
+			Sofa.transaction[tid].send(:pending_items).keys,
+			'the suspended SD should not be committed yet'
+		)
+
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/#{tid}/update.html",
+			{
+				:input => "_012-comment=hello.&.status-public=create"
+			}
+		)
+		assert_no_match(
+			/update\.html/,
+			res.headers['Location'],
+			'Sofa#call with the root status should commit the transaction'
+		)
+		assert_not_equal(
+			{},
+			Sofa::Set::Static::Folder.root.item('t_attachment','main').val,
+			'Sofa#call without the root status should not update the persistent storage'
+		)
+
+		new_id = res.headers['Location'][/id=#{Sofa::REX::ID}/,1]
 	end
 
 end

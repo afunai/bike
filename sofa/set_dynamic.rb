@@ -24,6 +24,14 @@ class Sofa::Set::Dynamic < Sofa::Field
 _html
 	end
 
+	def meta_tid
+		unless @tid
+			t = Time.now
+			@tid = t.strftime('%m%d%H%M%S.') + t.usec.to_s
+		end
+		@tid
+	end
+
 	def meta_dir
 		my[:folder][:dir] if my[:folder]
 	end

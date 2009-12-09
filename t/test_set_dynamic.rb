@@ -43,6 +43,25 @@ _html
 		)
 	end
 
+	def test_meta_tid
+		tid = @sd[:tid]
+		assert_match(
+			/^\d{10}\.\d+$/,
+			tid,
+			'Set::Dynamic#meta_tid should return an unique id per an instance'
+		)
+		assert_equal(
+			tid,
+			@sd[:tid],
+			'Set::Dynamic#meta_tid should return the same id throughout the lifecycle of the item'
+		)
+		assert_not_equal(
+			tid,
+			Sofa::Set::Dynamic.new[:tid],
+			'Set::Dynamic#meta_tid should be unique to an item'
+		)
+	end
+
 	def test_item
 		@sd.load('1234' => {'name' => 'frank'})
 		assert_instance_of(

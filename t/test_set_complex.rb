@@ -412,8 +412,11 @@ _html
 
 	def test_post_mixed
 		Sofa.client = 'don'
+
+		# create a sub-item on the pending item
 		@sd.update(
 			'_1234' => {
+				'_owner'  => 'don',
 				'replies' => {
 					'_0001' => {
 						'_owner' => 'don',
@@ -441,6 +444,7 @@ _html
 			'Field#val should change after the commit :temp'
 		)
 
+		# delete the sub-item
 		new_id = new_val.keys.find {|id| new_val[id] == {'_owner' => 'don','reply'  => 'yum.'} }
 		@sd.update(
 			'_1234' => {
@@ -466,8 +470,33 @@ _html
 
 		new_val = @sd.val('_1234','replies').dup
 		assert_equal(
-			orig_val,
+			{},
 			new_val,
+			'Field#val should change after the commit :temp'
+		)
+
+		# create an another sub-item
+		@sd.update(
+			'_1234' => {
+				'_owner'  => 'don',
+				'replies' => {
+					'_0001' => {
+						'_owner' => 'don',
+						'reply'  => 'yuck.',
+					},
+				},
+			}
+		)
+
+		orig_storage = @sd.storage
+		@sd.instance_variable_set(:@storage,nil) # pretend persistent
+		@sd.commit :temp
+		@sd.instance_variable_set(:@storage,orig_storage)
+
+		new_val = @sd.val('_1234','replies').dup
+		assert_equal(
+			{'_owner' => 'don','reply'  => 'yuck.'},
+			new_val.values.first,
 			'Field#val should change after the commit :temp'
 		)
 	end

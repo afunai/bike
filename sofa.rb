@@ -76,10 +76,7 @@ Sofa.client = 'root'
 
 			response_ok :body => base.get(params)
 		else
-p params
 			base.update params
-i =  base.item('_001','files','20091209_0001')
-i.instance_eval { @action = :delete } if i
 			if params[:status]
 				base[:folder].commit :persistent
 				if base.result
@@ -101,9 +98,6 @@ i.instance_eval { @action = :delete } if i
 					@item_object.values.select {|item| item.pending? }
 				}
 				base.commit :temp
-i =  base.item('_001','files','20091209_0001')
-p i.action if i
-#p base.val('_001'),base.item('_001').pending?
 
 				item_ids = items.collect {|item| item[:id] }
 				id_step  = "id=#{item_ids.join ','}/" unless item_ids.empty?

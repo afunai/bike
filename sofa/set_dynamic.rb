@@ -104,17 +104,13 @@ end
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)
 		case action
-			when :create
-				@storage.build({})
+			when :create,:update
+				@storage.build({}) if action == :create
+
 				v.each_key.sort_by {|id| id.to_s }.each {|id|
 					next unless id.is_a? ::String
-					item_instance(id).post(:create,v[id])
-				}
-			when :update
-				v.each_key.sort_by {|id| id.to_s }.each {|id|
-					next unless id.is_a? ::String
-					item_action = id[Sofa::REX::ID_NEW] ? :create : (v[id][:action] || :update)
-					item_instance(id).post(item_action,v[id])
+					v[id][:action] ||= id[Sofa::REX::ID_NEW] ? :create : :update
+					item_instance(id).post(v[id][:action],v[id])
 				}
 			when :load,:load_default
 				@storage.build v
@@ -130,9 +126,13 @@ end
 				item[:id] = new_id
 			when :update
 				@storage.store(item[:id],item.val)
-				@storage.delete(id) if item[:id] != id || item.empty?
+				if item[:id] != id || item.empty?
+					@storage.delete(id)
+					@item_object.delete id
+				end
 			when :delete
 				@storage.delete(id)
+				@item_object.delete id
 		end
 	end
 
@@ -160,11 +160,5 @@ end
 		end
 		@item_object[id]
 	end
-
-def new_item_instance
-	new_id = '_001'
-	new_id.succ! while @item_object[new_id]
-	item_instance new_id
-end
 
 end

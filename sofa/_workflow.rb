@@ -97,20 +97,14 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 				new_item = item_instance '_001'
 
 				item_outs = _g_default(arg) {|item,item_arg|
-					if item.result == :delete
-						<<_html
-<input type="hidden" name="#{item[:short_name]}.action-delete" value="delete">
-_html
-					else
-						action = item[:id][Sofa::REX::ID_NEW] ? :create : :delete
-						button_tmpl = my["tmpl_submit_#{action}".intern] || <<_html.chomp
+					action = item[:id][Sofa::REX::ID_NEW] ? :create : :delete
+					button_tmpl = my["tmpl_submit_#{action}".intern] || <<_html.chomp
 <input type="submit" name="@(short_name).action-#{action}" value="#{action}">
 _html
-						button = item.send(:_get_by_tmpl,{},button_tmpl)
-						item_arg[:action] = :create if action == :create
-						item_tmpl = item[:tmpl].sub(/.*\$\(.*?\)/,"\\&#{button}")
-						item.send(:_get_by_tmpl,item_arg,item_tmpl)
-					end
+					button = item.send(:_get_by_tmpl,{},button_tmpl)
+					item_arg[:action] = :create if action == :create
+					item_tmpl = item[:tmpl].sub(/.*\$\(.*?\)/,"\\&#{button}")
+					item.send(:_get_by_tmpl,item_arg,item_tmpl)
 				}
 				tmpl = my[:tmpl].gsub('$()',item_outs.join)
 				_get_by_tmpl({:action => :update},tmpl)

@@ -61,28 +61,6 @@ _html
 		)
 	end
 
-# TODO: remove
-def test_new_item_instance
-	item_1 = @sd.send :new_item_instance
-	assert_instance_of(
-		Sofa::Set::Static,
-		item_1,
-		'Set::Dynamic#item_instance(:new) should return a new instance'
-	)
-
-	item_2 = @sd.send :new_item_instance
-	assert_instance_of(
-		Sofa::Set::Static,
-		item_2,
-		'Set::Dynamic#item_instance(:new) should return a new instance'
-	)
-	assert_not_equal(
-		item_1,
-		item_2,
-		'Set::Dynamic#item_instance(:new) should return an unique instance'
-	)
-end
-
 	def test_val
 		@sd.load(
 			'1234' => {'name' => 'frank'},

@@ -138,6 +138,15 @@ class TC_Sofa < Test::Unit::TestCase
 			hash,
 			'Sofa#rebuild_params should be able to rebuild any combination of symbols and items'
 		)
+
+		hash = sofa.instance_eval {
+			rebuild_params('.tid'  => '1234.567')
+		}
+		assert_equal(
+			{:tid => '1234.567'},
+			hash,
+			'Sofa#rebuild_params should be able to rebuild the tid param'
+		)
 	end
 
 	def test_steps_of

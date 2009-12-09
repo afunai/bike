@@ -133,7 +133,7 @@ end
 			steps = name.split '-'
 
 			if special
-				item_id,special = special.split('-',2)
+				special_id,special_val = special.split('-',2)
 			else
 				item_id = steps.pop
 			end
@@ -141,13 +141,15 @@ end
 			hash = steps.inject(params) {|v,k| v[k] ||= {} }
 			val  = src[key]
 
-			if item_id == 'action'
-				hash[:action] = (special || val).intern
-			elsif item_id == 'status'
-				hash[:status] = (special || val).intern
-			elsif item_id == 'conds'
+			if special_id == 'action'
+				hash[:action] = (special_val || val).intern
+			elsif special_id == 'status'
+				hash[:status] = (special_val || val).intern
+			elsif special_id == 'conds'
 				hash[:conds] ||= {}
-				hash[:conds][special.intern] = val
+				hash[:conds][special_val.intern] = val
+			elsif special_id == 'tid'
+				hash[:tid] = val
 			elsif hash[item_id].is_a? ::Hash
 				hash[item_id][:self] = val
 			else

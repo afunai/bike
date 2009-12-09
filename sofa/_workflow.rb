@@ -49,8 +49,8 @@ class Sofa::Workflow
 	def _get(arg)
 		@sd.instance_eval {
 			if arg[:action] == :create
-				item_instance('_1')
-				_get_by_tmpl({:action => :create,:conds => {:id => '_1'}},my[:tmpl])
+				item_instance '_001'
+				_get_by_tmpl({:action => :create,:conds => {:id => '_001'}},my[:tmpl])
 			end
 		}
 	end
@@ -93,16 +93,24 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 	def _get(arg)
 		@sd.instance_eval {
 			if arg[:action] == :create || arg[:action] == :update
+				@item_object.delete '_001'
 				new_item = item_instance '_001'
+
 				item_outs = _g_default(arg) {|item,item_arg|
-					action = item[:id][Sofa::REX::ID_NEW] ? :create : :delete
-					button_tmpl = my["tmpl_submit_#{action}".intern] || <<_html.chomp
+					if item.result == :delete
+						<<_html
+<input type="hidden" name="#{item[:short_name]}.action-delete" value="delete">
+_html
+					else
+						action = item[:id][Sofa::REX::ID_NEW] ? :create : :delete
+						button_tmpl = my["tmpl_submit_#{action}".intern] || <<_html.chomp
 <input type="submit" name="@(short_name).action-#{action}" value="#{action}">
 _html
-					button = item.send(:_get_by_tmpl,{},button_tmpl)
-					item_arg[:action] = :create if action == :create
-					item_tmpl = item[:tmpl].sub(/.*\$\(.*?\)/,"\\&#{button}")
-					item.send(:_get_by_tmpl,item_arg,item_tmpl)
+						button = item.send(:_get_by_tmpl,{},button_tmpl)
+						item_arg[:action] = :create if action == :create
+						item_tmpl = item[:tmpl].sub(/.*\$\(.*?\)/,"\\&#{button}")
+						item.send(:_get_by_tmpl,item_arg,item_tmpl)
+					end
 				}
 				tmpl = my[:tmpl].gsub('$()',item_outs.join)
 				_get_by_tmpl({:action => :update},tmpl)

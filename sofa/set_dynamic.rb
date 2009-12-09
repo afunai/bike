@@ -33,7 +33,7 @@ _html
 	end
 
 	def meta_base_path
-		Sofa.base ? Sofa.base[:path] : my[:path]
+		Sofa.tid || (Sofa.base ? Sofa.base[:path] : my[:path])
 	end
 
 	def commit(type = :temp)
@@ -160,5 +160,11 @@ end
 		end
 		@item_object[id]
 	end
+
+def new_item_instance
+	new_id = '_001'
+	new_id.succ! while @item_object[new_id]
+	item_instance new_id
+end
 
 end

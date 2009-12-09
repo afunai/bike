@@ -379,13 +379,95 @@ _html
 				},
 			}
 		)
-		item_count = @sd.val('20091123_0002','replies').size
+		orig_val = @sd.val('20091123_0002','replies').dup
 
 		@sd.commit :temp
-
+		new_val = @sd.val('20091123_0002','replies').dup
 		assert_equal(
-			item_count + 1,
-			@sd.val('20091123_0002','replies').size,
+			orig_val.size + 1,
+			new_val.size,
+			'Field#val should change after the commit :temp'
+		)
+
+		new_id = new_val.keys.find {|id| new_val[id] == {'_owner' => 'don','reply'  => 'yum.'} }
+		@sd.update(
+			'20091123_0002' => {
+				'replies' => {
+					new_id => {
+						:action => :delete,
+						'reply' => 'yum.',
+					},
+				},
+			}
+		)
+
+		@sd.commit :temp
+		new_val = @sd.val('20091123_0002','replies').dup
+		assert_equal(
+			orig_val,
+			new_val,
+			'Field#val should change after the commit :temp'
+		)
+	end
+
+	def test_post_mixed
+		Sofa.client = 'don'
+		@sd.update(
+			'_1234' => {
+				'replies' => {
+					'_0001' => {
+						'_owner' => 'don',
+						'reply'  => 'yum.',
+					},
+				},
+			}
+		)
+		orig_val = @sd.val('_1234','replies').dup
+		assert_equal(
+			{},
+			orig_val,
+			'Field#val should change after the commit :temp'
+		)
+
+		orig_storage = @sd.storage
+		@sd.instance_variable_set(:@storage,nil) # pretend persistent
+		@sd.commit :temp
+		@sd.instance_variable_set(:@storage,orig_storage)
+
+		new_val = @sd.val('_1234','replies').dup
+		assert_equal(
+			{'_owner' => 'don','reply'  => 'yum.'},
+			new_val.values.first,
+			'Field#val should change after the commit :temp'
+		)
+
+		new_id = new_val.keys.find {|id| new_val[id] == {'_owner' => 'don','reply'  => 'yum.'} }
+		@sd.update(
+			'_1234' => {
+				'replies' => {
+					new_id => {
+						:action  => :delete,
+						'_owner' => 'don',
+						'reply'  => 'yum.',
+					},
+				},
+			}
+		)
+		assert_equal(
+			:delete,
+			@sd.item('_1234','replies',new_id).action,
+			'Set::Dynamic#post should not overwrite the action of descendant'
+		)
+
+		orig_storage = @sd.storage
+		@sd.instance_variable_set(:@storage,nil) # pretend persistent
+		@sd.commit :temp
+		@sd.instance_variable_set(:@storage,orig_storage)
+
+		new_val = @sd.val('_1234','replies').dup
+		assert_equal(
+			orig_val,
+			new_val,
 			'Field#val should change after the commit :temp'
 		)
 	end

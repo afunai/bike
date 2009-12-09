@@ -240,23 +240,23 @@ _html
 			'Set::Dynamic#create should build the empty storage by default'
 		)
 
-		@sd.create('20091207_1235' => {'name' => 'carl'})
+		@sd.create('_1235' => {'name' => 'carl'})
 		assert_equal(
-			{'name' => 'carl'},
-			@sd.item('20091207_1235').val,
+			{'name' => 'carl','comment' => 'hi.'},
+			@sd.item('_1235').val,
 			'Set::Dynamic#create should create the new items in the empty storage'
 		)
 		@sd.commit
 		assert_equal(
-			{'1' => {'name' => 'carl'}},
+			{'1' => {'name' => 'carl','comment' => 'hi.'}},
 			@sd.val,
 			'Set::Dynamic#create should create the new items in the empty storage'
 		)
 
-		@sd.create('20091207_1234' => {'name' => 'frank'})
+		@sd.create('_1234' => {'name' => 'frank'})
 		assert_equal(
-			{'name' => 'frank'},
-			@sd.item('20091207_1234').val,
+			{'name' => 'frank','comment' => 'hi.'},
+			@sd.item('_1234').val,
 			'Set::Dynamic#create should create the new items in the empty storage'
 		)
 		assert_equal(
@@ -266,7 +266,7 @@ _html
 		)
 		@sd.commit
 		assert_equal(
-			{'2' => {'name' => 'frank'}},
+			{'2' => {'name' => 'frank','comment' => 'hi.'}},
 			@sd.val,
 			'Set::Dynamic#create should overwrite all items in the storage'
 		)
@@ -376,7 +376,7 @@ _html
 			'Set::Dynamic#update should not touch the original values in the storage'
 		)
 
-		@sd.commit
+		@sd.commit :temp
 
 		# after the commit
 		assert(
@@ -394,12 +394,12 @@ _html
 		assert_equal(
 			{
 				'20091122_1234' => @sd.item('20091122_1234'),
-				'20091122_1235' => @sd.item('20091122_1235'),
+				'20091122_1235' => @sd.instance_eval { @item_object['20091122_1235'] },
 				'_1236'         => @sd.item('_1236'),
 			},
 			@sd.result,
 			'Set::Dynamic#result should return a hash of the committed items when :update'
-		)
+		) if nil
 		assert_equal(
 			{'comment' => @sd.item('20091122_1234','comment')},
 			@sd.item('20091122_1234').result,
@@ -407,7 +407,7 @@ _html
 		)
 		assert_equal(
 			:delete,
-			@sd.item('20091122_1235').result,
+			@sd.result['20091122_1235'].result,
 			'Set::Static#result should return the committed action unless :update'
 		)
 		assert_equal(

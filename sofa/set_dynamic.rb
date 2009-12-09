@@ -20,16 +20,17 @@ class Sofa::Set::Dynamic < Sofa::Field
 		end
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
 <form id="@(name)" method="post" action="@(base_path)/update.html">
+<input type="hidden" name=".tid" value="@(tid)" />
 #{my[:tmpl]}</form>
 _html
 	end
 
 	def meta_tid
-		unless @tid
+		unless @meta[:tid]
 			t = Time.now
-			@tid = t.strftime('%m%d%H%M%S.') + t.usec.to_s
+			@meta[:tid] = t.strftime('%m%d%H%M%S.') + t.usec.to_s
 		end
-		@tid
+		@meta[:tid]
 	end
 
 	def meta_dir
@@ -41,7 +42,7 @@ _html
 	end
 
 	def meta_base_path
-		Sofa.tid || (Sofa.base ? Sofa.base[:path] : my[:path])
+		Sofa.base ? Sofa.base[:path] : my[:path]
 	end
 
 	def commit(type = :temp)
@@ -104,7 +105,7 @@ def _g_menu_action(arg)
 	<<_html
 <p>
 	<a href="#{my[:path]}/create.html">create</a>
-	<a href="#{my[:path]}/update.html">update</a>
+	<a href="./update.html">update</a>
 </p>
 _html
 end

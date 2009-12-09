@@ -54,15 +54,15 @@ class Sofa::Storage::File < Sofa::Storage
 	private
 
 	def _select_by_id(conds)
-		glob(conds[:id].to_a).collect {|f| f[Sofa::REX::ID] }
+		glob(conds[:id].to_a).collect {|f| f[Sofa::REX::ID] }.compact
 	end
 
 	def _select_by_d(conds)
-		glob(conds[:d].to_s).collect {|f| f[Sofa::REX::ID] }
+		glob(conds[:d].to_s).collect {|f| f[Sofa::REX::ID] }.compact
 	end
 
 	def _select_all(conds)
-		glob.collect {|f| f[Sofa::REX::ID] }
+		glob.collect {|f| f[Sofa::REX::ID] }.compact
 	end
 
 	def glob(id = :all)

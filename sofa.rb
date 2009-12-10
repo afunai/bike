@@ -11,6 +11,7 @@ class Sofa
 		COND    = /^(.+?)=(.+)$/
 		COND_D  = /^(19\d\d|2\d\d\d)\d{0,4}$/
 		PATH_ID = /\/((?:19|2\d)\d{6})\/(\d+)/
+		TID     = /\d{10}\.\d+/
 	end
 
 	def self.[](name)
@@ -47,7 +48,7 @@ class Sofa
 		method = req.request_method.downcase
 		params = params_from_request req
 		path   = req.path_info
-		tid    = tid_of(path) || params[:tid]
+		tid    = tid_of path
 
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req
@@ -133,8 +134,6 @@ Sofa.client = 'root'
 			elsif special_id == 'conds'
 				hash[:conds] ||= {}
 				hash[:conds][special_val.intern] = val
-			elsif special_id == 'tid'
-				hash[:tid] = val
 			elsif hash[item_id].is_a? ::Hash
 				hash[item_id][:self] = val
 			else
@@ -146,12 +145,12 @@ Sofa.client = 'root'
 	end
 
 	def tid_of(path)
-		path[/\d{10}\.\d+/]
+		path[Sofa::REX::TID]
 	end
 
 	def steps_of(path)
 		_dirname(path).gsub(REX::PATH_ID,'').split('/').select {|step_or_cond|
-			step_or_cond != '' && step_or_cond !~ REX::COND && step_or_cond !~ REX::COND_D
+			step_or_cond != '' && step_or_cond !~ Regexp.union(REX::COND,REX::COND_D,REX::TID)
 		}
 	end
 

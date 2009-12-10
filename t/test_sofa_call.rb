@@ -94,7 +94,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'Sofa#call without the root status should not update the persistent storage'
 		)
 
-		tid = res.headers['Location'][/\d{10}\.\d+/]
+		tid = res.headers['Location'][Sofa::REX::TID]
 		assert_instance_of(
 			Sofa::Set::Dynamic,
 			Sofa.transaction[tid],

@@ -46,7 +46,7 @@ _html
 	def test_meta_tid
 		tid = @sd[:tid]
 		assert_match(
-			/^\d{10}\.\d+$/,
+			Sofa::REX::TID,
 			tid,
 			'Set::Dynamic#meta_tid should return an unique id per an instance'
 		)

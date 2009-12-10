@@ -138,15 +138,6 @@ class TC_Sofa < Test::Unit::TestCase
 			hash,
 			'Sofa#rebuild_params should be able to rebuild any combination of symbols and items'
 		)
-
-		hash = sofa.instance_eval {
-			rebuild_params('.tid'  => '1234.567')
-		}
-		assert_equal(
-			{:tid => '1234.567'},
-			hash,
-			'Sofa#rebuild_params should be able to rebuild the tid param'
-		)
 	end
 
 	def test_steps_of
@@ -179,6 +170,13 @@ class TC_Sofa < Test::Unit::TestCase
 				steps_of '/foo//bar/baz=123/'
 			},
 			'Sofa#steps_of should distinguish item steps from conds'
+		)
+		assert_equal(
+			['foo','bar'],
+			sofa.instance_eval {
+				steps_of '/1234567890.123456/foo/bar/'
+			},
+			'Sofa#steps_of should distinguish item steps from a tid'
 		)
 	end
 

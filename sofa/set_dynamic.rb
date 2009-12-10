@@ -19,8 +19,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 			my[:tmpl] = "$(.menu_action)#{my[:tmpl]}" unless my[:tmpl] =~ /\$\(\.menu_action\)/
 		end
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
-<form id="@(name)" method="post" action="@(base_path)/update.html">
-<input type="hidden" name=".tid" value="@(tid)" />
+<form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">
 #{my[:tmpl]}</form>
 _html
 	end

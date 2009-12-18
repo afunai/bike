@@ -16,7 +16,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@item_object = {}
 		unless @workflow.is_a? Sofa::Workflow::Attachment
 			my[:tmpl] = "#{my[:tmpl]}$(.submit)" unless my[:tmpl] =~ /\$\(\.submit\)/
-			my[:tmpl] = "#{my[:tmpl]}$(.menu_create)" unless my[:tmpl] =~ /\$\(\.menu_create\)/
+			my[:tmpl] = "#{my[:tmpl]}$(.action_create)" unless my[:tmpl] =~ /\$\(\.action_create\)/
 		end
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
 <form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">
@@ -99,7 +99,7 @@ _html
 		@workflow._g_submit arg
 	end
 
-	def _g_menu_create(arg)
+	def _g_action_create(arg)
 		<<_html
 <div><a href="#{_g_uri_create arg}">create</a></div>
 _html

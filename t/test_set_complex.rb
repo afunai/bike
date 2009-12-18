@@ -93,7 +93,7 @@ _html
 			@sd.item('20091123_0002','files'),
 			@sd.item('20091123_0002','replies'),
 		].each {|sd|
-			sd[:tmpl_menu_create] = ''
+			sd[:tmpl_action_create] = ''
 			sd[:tmpl_submit_create] = '[c]'
 			sd[:tmpl_submit_delete] = '[d]'
 			def sd._g_submit(arg)

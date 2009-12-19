@@ -99,6 +99,10 @@ _html
 			def sd._g_submit(arg)
 				"[#{my[:id]}-#{arg[:orig_action]}]\n"
 			end
+
+			sd.each {|item|
+				item[:tmpl_action_update] = ''
+			}
 		}
 	end
 

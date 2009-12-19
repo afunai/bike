@@ -41,6 +41,10 @@ class Sofa::Set::Static < Sofa::Field
 		}
 	end
 
+def _g_action_update(arg)
+	'[u]'
+end
+
 	def _post(action,v = {})
 		each {|item|
 			id = item[:id]

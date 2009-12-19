@@ -17,6 +17,10 @@ class Sofa::Set::Dynamic < Sofa::Field
 		unless @workflow.is_a? Sofa::Workflow::Attachment
 			my[:tmpl] = "#{my[:tmpl]}$(.submit)" unless my[:tmpl] =~ /\$\(\.submit\)/
 			my[:tmpl] = "#{my[:tmpl]}$(.action_create)" unless my[:tmpl] =~ /\$\(\.action_create\)/
+			my[:item_html].sub!(
+				/.*:\(.*?\)/m,
+				'\&$(.action_update)'
+			) if my[:item_html].is_a?(::String) && my[:item_html] !~ /\$\(\.action_update\)/
 		end
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
 <form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">
@@ -82,17 +86,7 @@ _html
 	end
 
 	def _get_by_self_reference(arg)
-		if @workflow._hide? arg
-			''
-		elsif action_tmpl = my["tmpl_#{arg[:action]}".intern]
-			# action_tmpl should be resolved here to prevent an infinite reference.
-			action_tmpl.gsub(/\$\((?:\.([\w\-]+))?\)/) {
-				self_arg = $1 ? arg.merge(:action => $1.intern) : arg
-				_get_by_method self_arg
-			}
-		else
-			_get_by_method arg
-		end
+		@workflow._hide?(arg) ? '' : super
 	end
 
 	def _g_submit(arg)

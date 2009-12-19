@@ -109,6 +109,7 @@ _html
 			'1234' => {'name' => 'frank','comment' => 'bar'},
 			'1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
+		@sd.each {|item| item[:tmpl_action_update] = '' }
 		assert_equal(
 			<<'_html',
 <ul id="foo" class="sofa-blog">

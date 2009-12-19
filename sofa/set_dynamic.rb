@@ -18,7 +18,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 			my[:tmpl] = "#{my[:tmpl]}$(.submit)" unless my[:tmpl] =~ /\$\(\.submit\)/
 			my[:tmpl] = "#{my[:tmpl]}$(.action_create)" unless my[:tmpl] =~ /\$\(\.action_create\)/
 			my[:item_html].sub!(
-				/.*:\(.*?\)/m,
+				/:\(.*?\)/m,
 				'\&$(.action_update)'
 			) if my[:item_html].is_a?(::String) && my[:item_html] !~ /\$\(\.action_update\)/
 		end

@@ -41,9 +41,16 @@ class Sofa::Set::Static < Sofa::Field
 		}
 	end
 
-def _g_action_update(arg)
-	'[u]'
-end
+	def _g_action_update(arg)
+		<<_html.chomp
+<span><a href="#{_g_uri_update arg}">update</a></span>
+_html
+	end
+
+	def _g_uri_update(arg)
+		base_path = my[:parent] ? my[:parent][:path] : ''
+		base_path + "/id=#{my[:id]}/update.html"
+	end
 
 	def _post(action,v = {})
 		each {|item|

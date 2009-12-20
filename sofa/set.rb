@@ -94,7 +94,9 @@ end
 	end
 
 	def _get_by_self_reference(arg)
-		if action_tmpl = my["tmpl_#{arg[:action]}".intern]
+		if arg[:action].to_s =~ /^action_/ && arg[:orig_action] != :read
+			''
+		elsif action_tmpl = my["tmpl_#{arg[:action]}".intern]
 			# action_tmpl should be resolved here to prevent an infinite reference.
 			action_tmpl.gsub(/\$\((?:\.([\w\-]+))?\)/) {
 				self_arg = $1 ? arg.merge(:action => $1.intern) : arg

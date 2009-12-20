@@ -17,7 +17,9 @@ class Sofa::Set::Static < Sofa::Field
 	}
 
 	def initialize(meta = {})
-		@meta = meta.merge Sofa::Parser.parse_html(meta[:html].to_s)
+		@meta = meta
+		@meta.merge!(Sofa::Parser.parse_html meta[:html]) if meta[:html]
+		@meta[:item] ||= {}
 		@meta[:item].merge! self.class.const_get(:DEFAULT_ITEMS)
 		@item_object = {}
 	end

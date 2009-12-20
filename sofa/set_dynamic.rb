@@ -14,13 +14,16 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@storage     = Sofa::Storage.instance self
 		@workflow    = Sofa::Workflow.instance self
 		@item_object = {}
+
+		my[:item_arg] = Sofa::Parser.parse_html my[:item_html].to_s
+
 		unless @workflow.is_a? Sofa::Workflow::Attachment
 			my[:tmpl] = "#{my[:tmpl]}$(.submit)" unless my[:tmpl] =~ /\$\(\.submit\)/
 			my[:tmpl] = "#{my[:tmpl]}$(.action_create)" unless my[:tmpl] =~ /\$\(\.action_create\)/
-			my[:item_html].sub!(
-				/:\(.*?\)/m,
+			my[:item_arg][:tmpl].sub!(
+				/\$\(.*?\)/m,
 				'\&$(.action_update)'
-			) if my[:item_html].is_a?(::String) && my[:item_html] !~ /\$\(\.action_update\)/
+			) unless my[:item_arg][:tmpl] =~ /\$\(\.action_update\)/
 		end
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
 <form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">
@@ -147,12 +150,12 @@ _html
 
 	def item_instance(id)
 		unless @item_object[id]
-# TODO: cache the parsed item_html
 			@item_object[id] = Sofa::Field.instance(
 				:id     => id,
 				:parent => self,
 				:klass  => 'set-static',
-				:html   => my[:item_html]
+				:tmpl   => my[:item_arg][:tmpl],
+				:item   => my[:item_arg][:item]
 			)
 			if id[Sofa::REX::ID_NEW]
 				@item_object[id].load_default

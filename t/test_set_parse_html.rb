@@ -6,7 +6,6 @@
 class TC_Set_Parse_HTML < Test::Unit::TestCase
 
 	def setup
-		@set = Sofa::Set::Static.new
 	end
 
 	def teardown
@@ -15,34 +14,34 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 	def test_scan_tokens
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
-			@set.send(:scan_tokens,StringScanner.new('foo bar baz')),
+			Sofa::Parser.scan_tokens(StringScanner.new('foo bar baz')),
 			'Set::Static#scan_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar','baz baz']},
-			@set.send(:scan_tokens,StringScanner.new('foo "bar" "baz baz"')),
+			Sofa::Parser.scan_tokens(StringScanner.new('foo "bar" "baz baz"')),
 			'Set::Static#scan_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
-			@set.send(:scan_tokens,StringScanner.new("foo 'bar' baz")),
+			Sofa::Parser.scan_tokens(StringScanner.new("foo 'bar' baz")),
 			'Set::Static#scan_tokens should be able to parse quoted tokens'
 		)
 
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
-			@set.send(:scan_tokens,StringScanner.new("foo 'bar' baz) qux")),
+			Sofa::Parser.scan_tokens(StringScanner.new("foo 'bar' baz) qux")),
 			'Set::Static#scan_tokens should stop scanning at an ending bracket'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar (bar?)','baz']},
-			@set.send(:scan_tokens,StringScanner.new("foo 'bar (bar?)' baz) qux")),
+			Sofa::Parser.scan_tokens(StringScanner.new("foo 'bar (bar?)' baz) qux")),
 			'Set::Static#scan_tokens should ignore brackets inside quoted tokens'
 		)
 	end
 
 	def test_parse_empty_tag
-		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world')
+		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz") world')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz baz']}},
 			result[:item],
@@ -54,7 +53,7 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 			'Set::Static#parse_html[:tmpl] should be a proper template'
 		)
 
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 <h1>foo:(bar "baz baz")</h1>
 <p>bar:(a b c)</p>
 _html
@@ -77,7 +76,7 @@ _html
 	end
 
 	def test_obscure_markup
-		result = @set.send(:parse_html,'hello foo:(bar baz:(1) baz) world')
+		result = Sofa::Parser.parse_html('hello foo:(bar baz:(1) baz) world')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:default => '(1',:tokens => ['baz']}},
 			result[:item],
@@ -89,7 +88,7 @@ _html
 			'Set::Static#parse_html[:tmpl] should be a proper template'
 		)
 
-		result = @set.send(:parse_html,'hello foo:(bar baz world')
+		result = Sofa::Parser.parse_html('hello foo:(bar baz world')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
@@ -101,7 +100,7 @@ _html
 			'Set::Static#parse_html should be able to parse a tag that is not closed'
 		)
 
-		result = @set.send(:parse_html,'hello foo:(bar "baz"world)')
+		result = Sofa::Parser.parse_html('hello foo:(bar "baz"world)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
@@ -113,7 +112,7 @@ _html
 			'Set::Static#parse_html should be able to parse tokens without a delimiter'
 		)
 
-		result = @set.send(:parse_html,'hello foo:(bar,"baz")')
+		result = Sofa::Parser.parse_html('hello foo:(bar,"baz")')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz']}},
 			result[:item],
@@ -124,61 +123,61 @@ _html
 	def test_parse_token
 		assert_equal(
 			{:width => 160,:height => 120},
-			@set.send(:parse_token,nil,'160*120',{}),
+			Sofa::Parser.parse_token(nil,'160*120',{}),
 			'Set::Static#parse_token should be able to parse dimension tokens'
 		)
 		assert_equal(
 			{:min => 1,:max => 32},
-			@set.send(:parse_token,nil,'1..32',{}),
+			Sofa::Parser.parse_token(nil,'1..32',{}),
 			'Set::Static#parse_token should be able to parse range tokens'
 		)
 		assert_equal(
 			{:max => 32},
-			@set.send(:parse_token,nil,'..32',{}),
+			Sofa::Parser.parse_token(nil,'..32',{}),
 			'Set::Static#parse_token should be able to parse partial range tokens'
 		)
 		assert_equal(
 			{:min => 1},
-			@set.send(:parse_token,nil,'1..',{}),
+			Sofa::Parser.parse_token(nil,'1..',{}),
 			'Set::Static#parse_token should be able to parse partial range tokens'
 		)
 		assert_equal(
 			{:min => -32,:max => -1},
-			@set.send(:parse_token,nil,'-32..-1',{}),
+			Sofa::Parser.parse_token(nil,'-32..-1',{}),
 			'Set::Static#parse_token should be able to parse minus range tokens'
 		)
 
 		assert_equal(
 			{:options => ['foo']},
-			@set.send(:parse_token,',','foo',{}),
+			Sofa::Parser.parse_token(',','foo',{}),
 			'Set::Static#parse_token should be able to parse option tokens'
 		)
 		assert_equal(
 			{:options => ['foo','bar']},
-			@set.send(:parse_token,',','bar',{:options => ['foo']}),
+			Sofa::Parser.parse_token(',','bar',{:options => ['foo']}),
 			'Set::Static#parse_token should be able to parse option tokens'
 		)
 
 		assert_equal(
 			{:default => 'bar'},
-			@set.send(:parse_token,':','bar',{}),
+			Sofa::Parser.parse_token(':','bar',{}),
 			'Set::Static#parse_token should be able to parse default tokens'
 		)
 		assert_equal(
 			{:defaults => ['bar','baz']},
-			@set.send(:parse_token,';','baz',{:defaults => ['bar']}),
+			Sofa::Parser.parse_token(';','baz',{:defaults => ['bar']}),
 			'Set::Static#parse_token should be able to parse defaults tokens'
 		)
 	end
 
 	def test_parse_options
-		result = @set.send(:parse_html,'hello foo:(bar ,"baz baz","world",hi qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar ,"baz baz","world",hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set::Static#parse_html should be able to parse a sequence of CSV'
 		)
-		result = @set.send(:parse_html,'hello foo:(bar "baz baz","world",hi qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz","world",hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
@@ -187,26 +186,26 @@ _html
 	end
 
 	def test_parse_options_with_spaces
-		result = @set.send(:parse_html,'hello foo:(bar world, qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar world, qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['world','qux']}},
 			result[:item],
 			'Set::Static#parse_html should allow spaces after the comma'
 		)
-		result = @set.send(:parse_html,'hello foo:(bar world ,qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar world ,qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['qux'],:tokens => ['world']}},
 			result[:item],
 			'Set::Static#parse_html should not allow spaces before the comma'
 		)
-		result = @set.send(:parse_html,'hello foo:(bar "baz baz", "world", hi qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz", "world", hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set::Static#parse_html should allow spaces after the comma'
 		)
 
-		result = @set.send(:parse_html,<<'_eos')
+		result = Sofa::Parser.parse_html(<<'_eos')
 hello foo:(bar
 	"baz baz",
 	"world",
@@ -221,13 +220,13 @@ _eos
 	end
 
 	def test_parse_defaults
-		result = @set.send(:parse_html,'hello foo:(bar ;"baz baz";"world";hi qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar ;"baz baz";"world";hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set::Static#parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
-		result = @set.send(:parse_html,'hello foo:(bar "baz baz";"world";hi qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz";"world";hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
@@ -236,26 +235,26 @@ _eos
 	end
 
 	def test_parse_defaults_with_spaces
-		result = @set.send(:parse_html,'hello foo:(bar world; qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar world; qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['world','qux']}},
 			result[:item],
 			'Set::Static#parse_html should allow spaces after the semicolon'
 		)
-		result = @set.send(:parse_html,'hello foo:(bar world ;qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar world ;qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['qux'],:tokens => ['world']}},
 			result[:item],
 			'Set::Static#parse_html should not allow spaces before the semicolon'
 		)
-		result = @set.send(:parse_html,'hello foo:(bar "baz baz"; "world"; hi qux)')
+		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz"; "world"; hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Set::Static#parse_html should allow spaces after the comma'
 		)
 
-		result = @set.send(:parse_html,<<'_eos')
+		result = Sofa::Parser.parse_html(<<'_eos')
 hello foo:(bar
 	"baz baz";
 	"world";
@@ -270,7 +269,7 @@ _eos
 	end
 
 	def test_parse_duplicate_tag
-		result = @set.send(:parse_html,'hello foo:(bar "baz baz") world foo:(boo) $(foo)!')
+		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz") world foo:(boo) $(foo)!')
 		assert_equal(
 			{'foo' => {:klass => 'boo'}},
 			result[:item],
@@ -285,7 +284,7 @@ _eos
 
 	def test_scan_inner_html
 		s = StringScanner.new 'bar</foo>bar'
-		inner_html,close_tag = @set.send(:scan_inner_html,s,'foo')
+		inner_html,close_tag = Sofa::Parser.scan_inner_html(s,'foo')
 		assert_equal(
 			'bar',
 			inner_html,
@@ -298,7 +297,7 @@ _eos
 		)
 
 		s = StringScanner.new '<foo>bar</foo></foo>'
-		inner_html,close_tag = @set.send(:scan_inner_html,s,'foo')
+		inner_html,close_tag = Sofa::Parser.scan_inner_html(s,'foo')
 		assert_equal(
 			'<foo>bar</foo>',
 			inner_html,
@@ -306,7 +305,7 @@ _eos
 		)
 
 		s = StringScanner.new "baz\n\t<foo>bar</foo>\n</foo>"
-		inner_html,close_tag = @set.send(:scan_inner_html,s,'foo')
+		inner_html,close_tag = Sofa::Parser.scan_inner_html(s,'foo')
 		assert_equal(
 			"baz\n\t<foo>bar</foo>\n",
 			inner_html,
@@ -315,7 +314,7 @@ _eos
 	end
 
 	def test_parse_block_tag
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 <ul class="sofa-blog" id="foo"><li>hello</li></ul>
 _html
 		assert_equal(
@@ -338,7 +337,7 @@ _tmpl
 			'Set::Static#parse_html[:tmpl] should be a proper template'
 		)
 
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 <ul class="sofa-blog" id="foo">
 	<li>hello</li>
 </ul>
@@ -364,7 +363,7 @@ _tmpl
 			'Set::Static#parse_html[:tmpl] should be a proper template'
 		)
 
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 hello <ul class="sofa-blog" id="foo"><li>hello</li></ul> world
 _html
 		assert_equal(
@@ -391,7 +390,7 @@ _html
 	end
 
 	def test_look_a_like_block_tag
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 hello <ul class="not-sofa-blog" id="foo"><li>hello</li></ul> world
 _html
 		assert_equal(
@@ -404,7 +403,7 @@ _html
 	end
 
 	def test_block_tags_with_options
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 hello
 	<table class="sofa-blog" id="foo">
 		<!-- 1..20 barbaz -->
@@ -436,7 +435,7 @@ _html
 	end
 
 	def test_block_tags_with_tbody
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 hello
 	<table class="sofa-blog" id="foo">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
@@ -473,7 +472,7 @@ _html
 	end
 
 	def test_block_tags_with_nested_tbody
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 hello
 	<table class="sofa-blog" id="foo">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
@@ -502,7 +501,7 @@ _html
 	end
 
 	def test_nested_block_tags
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 <ul class="sofa-blog" id="foo">
 	<li>
 		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
@@ -536,7 +535,7 @@ _html
 	end
 
 	def test_combination
-		result = @set.send(:parse_html,<<'_html')
+		result = Sofa::Parser.parse_html <<'_html'
 <html>
 	<h1>title:(text 32)</h1>
 	<ul id="foo" class="sofa-blog">

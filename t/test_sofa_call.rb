@@ -77,6 +77,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 	def test_post_with_attachment
 		Sofa::Set::Static::Folder.root.item('t_attachment','main').storage.clear
 
+		# post an attachment
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_attachment/main/update.html',
 			{
@@ -106,6 +107,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'the suspended SD should be committed :temp'
 		)
 
+		# post the item
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://example.com/#{tid}/update.html",
 			{
@@ -139,6 +141,25 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			{'file' => 'wow.jpg'},
 			new_item.val['files'].values.first,
 			'Sofa#call with the root status should commit the descendant items'
+		)
+
+		# post a reply
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/1234567890.123456/t_attachment/main/#{new_id}/replies/update.html",
+			{
+				:input => "_001-reply=wow.&.status-public=create"
+			}
+		)
+		assert_equal(303,res.status)
+		assert_match(
+			%r{/#{new_id}/replies/index.html},
+			res.headers['Location'],
+			'Sofa#call with a sub-app status should commit the root item'
+		)
+		assert_not_equal(
+			{},
+			Sofa::Set::Static::Folder.root.item('t_attachment','main',new_id,'replies').val,
+			'Sofa#call with a sub-app status should update the persistent storage'
 		)
 	end
 

@@ -25,6 +25,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 				'\&$(.action_update)'
 			) unless my[:item_arg][:tmpl] =~ /\$\(\.action_update\)/
 		end
+		my[:tmpl] = "#{my[:tmpl]}$(.navi)" unless my[:tmpl] =~ /\$\(\.navi\)/
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
 <form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">
 #{my[:tmpl]}</form>

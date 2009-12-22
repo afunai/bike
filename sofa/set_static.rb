@@ -50,8 +50,8 @@ _html
 	end
 
 	def _g_uri_update(arg)
-		base_path = my[:parent] ? my[:parent][:path] : ''
-		base_path + "/id=#{my[:id]}/update.html"
+		my[:parent].is_a?(Sofa::Set::Dynamic) ?
+			"#{my[:parent][:path]}/id=#{my[:id]}/update.html" : ''
 	end
 
 	def _post(action,v = {})

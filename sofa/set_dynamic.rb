@@ -17,6 +17,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 
 		my[:item_arg] = Sofa::Parser.parse_html my[:item_html].to_s
 
+		my[:tmpl] = "#{my[:tmpl]}$(.navi)" unless my[:tmpl] =~ /\$\(\.navi\)/
 		unless @workflow.is_a? Sofa::Workflow::Attachment
 			my[:tmpl] = "#{my[:tmpl]}$(.submit)" unless my[:tmpl] =~ /\$\(\.submit\)/
 			my[:tmpl] = "#{my[:tmpl]}$(.action_create)" unless my[:tmpl] =~ /\$\(\.action_create\)/
@@ -25,7 +26,6 @@ class Sofa::Set::Dynamic < Sofa::Field
 				'\&$(.action_update)'
 			) unless my[:item_arg][:tmpl] =~ /\$\(\.action_update\)/
 		end
-		my[:tmpl] = "#{my[:tmpl]}$(.navi)" unless my[:tmpl] =~ /\$\(\.navi\)/
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
 <form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">
 #{my[:tmpl]}</form>
@@ -105,6 +105,10 @@ _html
 
 	def _g_uri_create(arg)
 		"#{my[:path]}/create.html"
+	end
+
+	def _g_navi(arg)
+		arg[:orig_action] == :read ? '&lt;--&gt;' : ''
 	end
 
 	def _post(action,v = nil)

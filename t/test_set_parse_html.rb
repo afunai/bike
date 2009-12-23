@@ -15,28 +15,28 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
 			Sofa::Parser.scan_tokens(StringScanner.new('foo bar baz')),
-			'Set::Static#scan_tokens should be able to parse unquoted tokens into array'
+			'Parser.scan_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar','baz baz']},
 			Sofa::Parser.scan_tokens(StringScanner.new('foo "bar" "baz baz"')),
-			'Set::Static#scan_tokens should be able to parse quoted tokens'
+			'Parser.scan_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
 			Sofa::Parser.scan_tokens(StringScanner.new("foo 'bar' baz")),
-			'Set::Static#scan_tokens should be able to parse quoted tokens'
+			'Parser.scan_tokens should be able to parse quoted tokens'
 		)
 
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
 			Sofa::Parser.scan_tokens(StringScanner.new("foo 'bar' baz) qux")),
-			'Set::Static#scan_tokens should stop scanning at an ending bracket'
+			'Parser.scan_tokens should stop scanning at an ending bracket'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar (bar?)','baz']},
 			Sofa::Parser.scan_tokens(StringScanner.new("foo 'bar (bar?)' baz) qux")),
-			'Set::Static#scan_tokens should ignore brackets inside quoted tokens'
+			'Parser.scan_tokens should ignore brackets inside quoted tokens'
 		)
 	end
 
@@ -45,12 +45,12 @@ class TC_Set_Parse_HTML < Test::Unit::TestCase
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz baz']}},
 			result[:item],
-			'Set::Static#parse_html should be able to parse empty sofa tags'
+			'Parser.parse_html should be able to parse empty sofa tags'
 		)
 		assert_equal(
 			'hello $(foo) world',
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 
 		result = Sofa::Parser.parse_html <<'_html'
@@ -63,7 +63,7 @@ _html
 				'bar' => {:klass => 'a',:tokens => ['b','c']},
 			},
 			result[:item],
-			'Set::Static#parse_html should be able to parse empty sofa tags'
+			'Parser.parse_html should be able to parse empty sofa tags'
 		)
 		assert_equal(
 			<<'_html',
@@ -71,7 +71,7 @@ _html
 <p>$(bar)</p>
 _html
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 	end
 
@@ -80,36 +80,36 @@ _html
 		assert_equal(
 			{'foo' => {:klass => 'bar',:default => '(1',:tokens => ['baz']}},
 			result[:item],
-			'Set::Static#parse_html should not parse nested empty tag'
+			'Parser.parse_html should not parse nested empty tag'
 		)
 		assert_equal(
 			'hello $(foo) baz) world',
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 
 		result = Sofa::Parser.parse_html('hello foo:(bar baz world')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
-			'Set::Static#parse_html should be able to parse a tag that is not closed'
+			'Parser.parse_html should be able to parse a tag that is not closed'
 		)
 		assert_equal(
 			'hello $(foo)',
 			result[:tmpl],
-			'Set::Static#parse_html should be able to parse a tag that is not closed'
+			'Parser.parse_html should be able to parse a tag that is not closed'
 		)
 
 		result = Sofa::Parser.parse_html('hello foo:(bar "baz"world)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
-			'Set::Static#parse_html should be able to parse tokens without a delimiter'
+			'Parser.parse_html should be able to parse tokens without a delimiter'
 		)
 		assert_equal(
 			'hello $(foo)',
 			result[:tmpl],
-			'Set::Static#parse_html should be able to parse tokens without a delimiter'
+			'Parser.parse_html should be able to parse tokens without a delimiter'
 		)
 
 		result = Sofa::Parser.parse_html('hello foo:(bar,"baz")')
@@ -124,49 +124,49 @@ _html
 		assert_equal(
 			{:width => 160,:height => 120},
 			Sofa::Parser.parse_token(nil,'160*120',{}),
-			'Set::Static#parse_token should be able to parse dimension tokens'
+			'Parser.parse_token should be able to parse dimension tokens'
 		)
 		assert_equal(
 			{:min => 1,:max => 32},
 			Sofa::Parser.parse_token(nil,'1..32',{}),
-			'Set::Static#parse_token should be able to parse range tokens'
+			'Parser.parse_token should be able to parse range tokens'
 		)
 		assert_equal(
 			{:max => 32},
 			Sofa::Parser.parse_token(nil,'..32',{}),
-			'Set::Static#parse_token should be able to parse partial range tokens'
+			'Parser.parse_token should be able to parse partial range tokens'
 		)
 		assert_equal(
 			{:min => 1},
 			Sofa::Parser.parse_token(nil,'1..',{}),
-			'Set::Static#parse_token should be able to parse partial range tokens'
+			'Parser.parse_token should be able to parse partial range tokens'
 		)
 		assert_equal(
 			{:min => -32,:max => -1},
 			Sofa::Parser.parse_token(nil,'-32..-1',{}),
-			'Set::Static#parse_token should be able to parse minus range tokens'
+			'Parser.parse_token should be able to parse minus range tokens'
 		)
 
 		assert_equal(
 			{:options => ['foo']},
 			Sofa::Parser.parse_token(',','foo',{}),
-			'Set::Static#parse_token should be able to parse option tokens'
+			'Parser.parse_token should be able to parse option tokens'
 		)
 		assert_equal(
 			{:options => ['foo','bar']},
 			Sofa::Parser.parse_token(',','bar',{:options => ['foo']}),
-			'Set::Static#parse_token should be able to parse option tokens'
+			'Parser.parse_token should be able to parse option tokens'
 		)
 
 		assert_equal(
 			{:default => 'bar'},
 			Sofa::Parser.parse_token(':','bar',{}),
-			'Set::Static#parse_token should be able to parse default tokens'
+			'Parser.parse_token should be able to parse default tokens'
 		)
 		assert_equal(
 			{:defaults => ['bar','baz']},
 			Sofa::Parser.parse_token(';','baz',{:defaults => ['bar']}),
-			'Set::Static#parse_token should be able to parse defaults tokens'
+			'Parser.parse_token should be able to parse defaults tokens'
 		)
 	end
 
@@ -175,13 +175,13 @@ _html
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
-			'Set::Static#parse_html should be able to parse a sequence of CSV'
+			'Parser.parse_html should be able to parse a sequence of CSV'
 		)
 		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz","world",hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
-			'Set::Static#parse_html should be able to parse a sequence of CSV'
+			'Parser.parse_html should be able to parse a sequence of CSV'
 		)
 	end
 
@@ -190,19 +190,19 @@ _html
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['world','qux']}},
 			result[:item],
-			'Set::Static#parse_html should allow spaces after the comma'
+			'Parser.parse_html should allow spaces after the comma'
 		)
 		result = Sofa::Parser.parse_html('hello foo:(bar world ,qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['qux'],:tokens => ['world']}},
 			result[:item],
-			'Set::Static#parse_html should not allow spaces before the comma'
+			'Parser.parse_html should not allow spaces before the comma'
 		)
 		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz", "world", hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
-			'Set::Static#parse_html should allow spaces after the comma'
+			'Parser.parse_html should allow spaces after the comma'
 		)
 
 		result = Sofa::Parser.parse_html(<<'_eos')
@@ -215,7 +215,7 @@ _eos
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
-			'Set::Static#parse_html should allow spaces after the comma'
+			'Parser.parse_html should allow spaces after the comma'
 		)
 	end
 
@@ -224,13 +224,13 @@ _eos
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
-			'Set::Static#parse_html should be able to parse a sequence of CSV as [:defaults]'
+			'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
 		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz";"world";hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
-			'Set::Static#parse_html should be able to parse a sequence of CSV as [:defaults]'
+			'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
 	end
 
@@ -239,19 +239,19 @@ _eos
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['world','qux']}},
 			result[:item],
-			'Set::Static#parse_html should allow spaces after the semicolon'
+			'Parser.parse_html should allow spaces after the semicolon'
 		)
 		result = Sofa::Parser.parse_html('hello foo:(bar world ;qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['qux'],:tokens => ['world']}},
 			result[:item],
-			'Set::Static#parse_html should not allow spaces before the semicolon'
+			'Parser.parse_html should not allow spaces before the semicolon'
 		)
 		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz"; "world"; hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
-			'Set::Static#parse_html should allow spaces after the comma'
+			'Parser.parse_html should allow spaces after the comma'
 		)
 
 		result = Sofa::Parser.parse_html(<<'_eos')
@@ -264,7 +264,7 @@ _eos
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
-			'Set::Static#parse_html should allow spaces after the comma'
+			'Parser.parse_html should allow spaces after the comma'
 		)
 	end
 
@@ -278,7 +278,7 @@ _eos
 		assert_equal(
 			'hello $(foo) world $(foo) $(foo)!',
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 	end
 
@@ -288,12 +288,12 @@ _eos
 		assert_equal(
 			'bar',
 			inner_html,
-			'Set::Static#scan_inner_html should extract the inner html from the scanner'
+			'Parser.scan_inner_html should extract the inner html from the scanner'
 		)
 		assert_equal(
 			'</foo>',
 			close_tag,
-			'Set::Static#scan_inner_html should extract the inner html from the scanner'
+			'Parser.scan_inner_html should extract the inner html from the scanner'
 		)
 
 		s = StringScanner.new '<foo>bar</foo></foo>'
@@ -301,7 +301,7 @@ _eos
 		assert_equal(
 			'<foo>bar</foo>',
 			inner_html,
-			'Set::Static#scan_inner_html should be aware of nested tags'
+			'Parser.scan_inner_html should be aware of nested tags'
 		)
 
 		s = StringScanner.new "baz\n\t<foo>bar</foo>\n</foo>"
@@ -309,7 +309,7 @@ _eos
 		assert_equal(
 			"baz\n\t<foo>bar</foo>\n",
 			inner_html,
-			'Set::Static#scan_inner_html should be aware of nested tags'
+			'Parser.scan_inner_html should be aware of nested tags'
 		)
 	end
 
@@ -329,12 +329,12 @@ _tmpl
 				}
 			},
 			result[:item],
-			'Set::Static#parse_html should be able to parse block sofa tags'
+			'Parser.parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
 			'$(foo)',
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 
 		result = Sofa::Parser.parse_html <<'_html'
@@ -355,12 +355,12 @@ _tmpl
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should be able to parse block sofa tags'
+			'Parser.parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
 			'$(foo)',
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 
 		result = Sofa::Parser.parse_html <<'_html'
@@ -378,14 +378,14 @@ _tmpl
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should be able to parse block sofa tags'
+			'Parser.parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
 			<<'_html',
 hello$(foo) world
 _html
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 	end
 
@@ -398,7 +398,7 @@ _html
 hello <ul class="not-sofa-blog" id="foo"><li>hello</li></ul> world
 _html
 			result[:tmpl],
-			"Set::Static#parse_html[:tmpl] should skip a class which does not start with 'sofa'"
+			"Parser.parse_html[:tmpl] should skip a class which does not start with 'sofa'"
 		)
 	end
 
@@ -430,7 +430,7 @@ _html
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should aware of <tbody class="body">'
+			'Parser.parse_html should aware of <tbody class="body">'
 		)
 	end
 
@@ -459,7 +459,7 @@ _html
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should aware of <tbody class="body">'
+			'Parser.parse_html should aware of <tbody class="body">'
 		)
 		assert_equal(
 			<<'_html',
@@ -467,7 +467,7 @@ hello
 $(foo)world
 _html
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 	end
 
@@ -496,7 +496,7 @@ _html
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should aware of nested <tbody class="body">'
+			'Parser.parse_html should aware of nested <tbody class="body">'
 		)
 	end
 
@@ -525,12 +525,12 @@ _html
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should be able to parse nested block sofa tags'
+			'Parser.parse_html should be able to parse nested block sofa tags'
 		)
 		assert_equal(
 			'$(foo)',
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 	end
 
@@ -567,7 +567,7 @@ _html
 				},
 			},
 			result[:item],
-			'Set::Static#parse_html should be able to parse combination of mixed sofa tags'
+			'Parser.parse_html should be able to parse combination of mixed sofa tags'
 		)
 		assert_equal(
 			<<'_html',
@@ -576,7 +576,7 @@ _html
 $(foo)</html>
 _html
 			result[:tmpl],
-			'Set::Static#parse_html[:tmpl] should be a proper template'
+			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 	end
 

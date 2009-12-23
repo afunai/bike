@@ -82,15 +82,11 @@ _html
 	end
 
 	def _get(arg)
-		if @workflow._hide? arg
-			''
-		else
-			@workflow._get(arg) || super
-		end
+		(@workflow._get(arg) || super) unless @workflow._hide? arg
 	end
 
 	def _get_by_self_reference(arg)
-		@workflow._hide?(arg) ? '' : super
+		super unless @workflow._hide?(arg)
 	end
 
 	def _g_submit(arg)
@@ -108,8 +104,17 @@ _html
 	end
 
 	def _g_navi(arg)
-		arg[:orig_action] == :read ? '&lt;--&gt;' : ''
+		uri_prev = _g_uri_prev arg
+		uri_next = _g_uri_next arg
+		<<_html if (arg[:orig_action] == :read) && (uri_prev || uri_next)
+_html
 	end
+
+def _g_uri_prev(arg)
+end
+
+def _g_uri_next(arg)
+end
 
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)

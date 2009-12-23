@@ -94,16 +94,17 @@ end
 	end
 
 	def _get_by_self_reference(arg)
-		if arg[:action].to_s =~ /^action_/ && arg[:orig_action] != :read
-			''
-		elsif action_tmpl = my["tmpl_#{arg[:action]}".intern]
+		return nil if arg[:action].to_s =~ /^action_/ && arg[:orig_action] != :read
+		return nil unless out = _get_by_method(arg)
+
+		if action_tmpl = my["tmpl_#{arg[:action]}".intern]
 			# action_tmpl should be resolved here to prevent an infinite reference.
 			action_tmpl.gsub(/\$\((?:\.([\w\-]+))?\)/) {
 				self_arg = $1 ? arg.merge(:action => $1.intern) : arg
 				_get_by_method self_arg
 			}
 		else
-			_get_by_method arg
+			out
 		end
 	end
 

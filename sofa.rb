@@ -1,3 +1,8 @@
+# encoding: UTF-8
+
+# Author::    Akira FUNAI
+# Copyright:: Copyright (c) 2009 Akira FUNAI
+
 require 'rubygems'
 
 class Sofa
@@ -48,13 +53,13 @@ class Sofa
 		method = req.request_method.downcase
 		params = params_from_request req
 		path   = req.path_info
-		tid    = tid_of path
+		tid    = Sofa::Path.tid_of path
 
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req
 		Sofa.current[:session] = env['rack.session']
 
-		base = Sofa.transaction[tid] || base_of(path)
+		base = Sofa.transaction[tid] || Sofa::Path.base_of(path)
 		return response_not_found unless base
 
 		Sofa.current[:base] = base
@@ -107,8 +112,8 @@ Sofa.client = 'root'
 		params = rebuild_params req.params
 
 		params[:conds] ||= {}
-		params[:conds].merge!(conds_of req.path_info)
-		params[:action] = action_of req.path_info
+		params[:conds].merge!(Sofa::Path.conds_of req.path_info)
+		params[:action] = Sofa::Path.action_of req.path_info
 
 		params
 	end
@@ -142,52 +147,6 @@ Sofa.client = 'root'
 
 			params
 		}
-	end
-
-	def tid_of(path)
-		path[Sofa::REX::TID]
-	end
-
-	def steps_of(path)
-		_dirname(path).gsub(REX::PATH_ID,'').split('/').select {|step_or_cond|
-			step_or_cond != '' && step_or_cond !~ Regexp.union(REX::COND,REX::COND_D,REX::TID)
-		}
-	end
-
-	def base_of(path)
-		base = Sofa::Set::Static::Folder.root.item(steps_of path)
-		if base.is_a? Sofa::Set::Static::Folder
-			base.item 'main'
-		else
-			base
-		end
-	end
-
-	def conds_of(path)
-		dir   = _dirname path.gsub(REX::PATH_ID,'')
-		conds = $& ? {:id => sprintf('%.8d_%.4d',$1,$2)} : {}
-
-		dir.split('/').inject(conds) {|conds,step_or_cond|
-			if step_or_cond =~ REX::COND
-				conds[$1.intern] = $2
-			elsif step_or_cond =~ REX::COND_D
-				conds[:d] = $&
-			end
-			conds
-		}
-	end
-
-	def action_of(path)
-		basename = _basename path
-		basename && basename !~ /^index/ ? basename.split('.').first.intern : nil
-	end
-
-	def _dirname(path) # returns '/foo/bar/' for '/foo/bar/'
-		path[%r{^.*/}] || ''
-	end
-
-	def _basename(path) # returns nil for '/foo/bar/'
-		path[%r{[^/]+$}]
 	end
 
 	def response_ok(result = {})

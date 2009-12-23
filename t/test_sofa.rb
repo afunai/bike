@@ -141,199 +141,143 @@ class TC_Sofa < Test::Unit::TestCase
 	end
 
 	def test_steps_of
-		sofa = Sofa.new
-
 		assert_equal(
 			['foo','bar'],
-			sofa.instance_eval {
-				steps_of '/foo/bar/'
-			},
-			'Sofa#steps_of should be able to extract item steps from path_info'
+			Sofa::Path.steps_of('/foo/bar/'),
+			'Sofa::Path.steps_of should be able to extract item steps from path_info'
 		)
 		assert_equal(
 			['foo','bar'],
-			sofa.instance_eval {
-				steps_of '/foo/bar/create.html'
-			},
-			'Sofa#steps_of should ignore the pseudo-filename'
+			Sofa::Path.steps_of('/foo/bar/create.html'),
+			'Sofa::Path.steps_of should ignore the pseudo-filename'
 		)
 		assert_equal(
 			['foo'],
-			sofa.instance_eval {
-				steps_of '/foo/bar'
-			},
-			'Sofa#steps_of should ignore the last step without a following slash'
+			Sofa::Path.steps_of('/foo/bar'),
+			'Sofa::Path.steps_of should ignore the last step without a following slash'
 		)
 		assert_equal(
 			['foo','bar'],
-			sofa.instance_eval {
-				steps_of '/foo//bar/baz=123/'
-			},
-			'Sofa#steps_of should distinguish item steps from conds'
+			Sofa::Path.steps_of('/foo//bar/baz=123/'),
+			'Sofa::Path.steps_of should distinguish item steps from conds'
 		)
 		assert_equal(
 			['foo','bar'],
-			sofa.instance_eval {
-				steps_of '/1234567890.123456/foo/bar/'
-			},
-			'Sofa#steps_of should distinguish item steps from a tid'
+			Sofa::Path.steps_of('/1234567890.123456/foo/bar/'),
+			'Sofa::Path.steps_of should distinguish item steps from a tid'
 		)
 	end
 
 	def test_steps_of_with_empty_steps
-		sofa = Sofa.new
-
 		assert_equal(
 			[],
-			sofa.instance_eval {
-				steps_of ''
-			},
-			'Sofa#steps_of should return empty array when there is no item steps'
+			Sofa::Path.steps_of(''),
+			'Sofa::Path.steps_of should return empty array when there is no item steps'
 		)
 		assert_equal(
 			[],
-			sofa.instance_eval {
-				steps_of '/'
-			},
-			'Sofa#steps_of should return empty array when there is no item steps'
+			Sofa::Path.steps_of('/'),
+			'Sofa::Path.steps_of should return empty array when there is no item steps'
 		)
 		assert_equal(
 			[],
-			sofa.instance_eval {
-				steps_of '/index.html'
-			},
-			'Sofa#steps_of should return empty array when there is no item steps'
+			Sofa::Path.steps_of('/index.html'),
+			'Sofa::Path.steps_of should return empty array when there is no item steps'
 		)
 	end
 
 	def test_steps_of_with_cond_d
-		sofa = Sofa.new
-
 		assert_equal(
 			['foo','bar'],
-			sofa.instance_eval {
-				steps_of '/foo/bar/2009/'
-			},
-			'Sofa#steps_of should distinguish item steps from ambiguous conds[:d]'
+			Sofa::Path.steps_of('/foo/bar/2009/'),
+			'Sofa::Path.steps_of should distinguish item steps from ambiguous conds[:d]'
 		)
 		assert_equal(
 			['foo','bar'],
-			sofa.instance_eval {
-				steps_of '/foo/bar/1970/'
-			},
-			'Sofa#steps_of should distinguish item steps from ambiguous conds[:d]'
+			Sofa::Path.steps_of('/foo/bar/1970/'),
+			'Sofa::Path.steps_of should distinguish item steps from ambiguous conds[:d]'
 		)
 		assert_equal(
 			['foo','bar','3001'],
-			sofa.instance_eval {
-				steps_of '/foo/bar/3001/'
-			},
-			'Sofa#steps_of should be patched in the next millennium :-)'
+			Sofa::Path.steps_of('/foo/bar/3001/'),
+			'Sofa::Path.steps_of should be patched in the next millennium :-)'
 		)
 	end
 
 	def test_conds_of
-		sofa = Sofa.new
-
 		assert_equal(
 			{},
-			sofa.instance_eval {
-				conds_of '/foo/bar/'
-			},
-			'Sofa#conds_of should return empty hash when there is no conds'
+			Sofa::Path.conds_of('/foo/bar/'),
+			'Sofa::Path.conds_of should return empty hash when there is no conds'
 		)
 		assert_equal(
 			{
 				:baz => '123',
 				:qux => '456',
 			},
-			sofa.instance_eval {
-				conds_of '/foo/bar/baz=123/qux=456/'
-			},
-			'Sofa#conds_of should be able to extract conds from path_info'
+			Sofa::Path.conds_of('/foo/bar/baz=123/qux=456/'),
+			'Sofa::Path.conds_of should be able to extract conds from path_info'
 		)
 		assert_equal(
 			{
 				:baz => '123',
 				:qux => '456',
 			},
-			sofa.instance_eval {
-				conds_of '/foo/bar/baz=123/qux=456/create.html'
-			},
-			'Sofa#conds_of should ignore the pseudo-filename'
+			Sofa::Path.conds_of('/foo/bar/baz=123/qux=456/create.html'),
+			'Sofa::Path.conds_of should ignore the pseudo-filename'
 		)
 		assert_equal(
 			{
 				:baz => '1234',
 			},
-			sofa.instance_eval {
-				conds_of '/foo/bar//baz=1234//qux=4567'
-			},
-			'Sofa#conds_of should ignore the item steps and the last step without a slash'
+			Sofa::Path.conds_of('/foo/bar//baz=1234//qux=4567'),
+			'Sofa::Path.conds_of should ignore the item steps and the last step without a slash'
 		)
 	end
 
 	def test_conds_of_with_empty_conds
-		sofa = Sofa.new
-
 		assert_equal(
 			{},
-			sofa.instance_eval {
-				conds_of ''
-			},
-			'Sofa#conds_of should return empty hash when there is no conds'
+			Sofa::Path.conds_of(''),
+			'Sofa::Path.conds_of should return empty hash when there is no conds'
 		)
 		assert_equal(
 			{},
-			sofa.instance_eval {
-				conds_of '/'
-			},
-			'Sofa#conds_of should return empty hash when there is no conds'
+			Sofa::Path.conds_of('/'),
+			'Sofa::Path.conds_of should return empty hash when there is no conds'
 		)
 		assert_equal(
 			{},
-			sofa.instance_eval {
-				conds_of '/index.html'
-			},
-			'Sofa#conds_of should return empty hash when there is no conds'
+			Sofa::Path.conds_of('/index.html'),
+			'Sofa::Path.conds_of should return empty hash when there is no conds'
 		)
 	end
 
 	def test_conds_of_with_cond_d
-		sofa = Sofa.new
-
 		assert_equal(
 			{
 				:d   => '200911',
 				:baz => '1234',
 				:qux => '4567',
 			},
-			sofa.instance_eval {
-				conds_of '/foo/bar/200911/baz=1234/qux=4567/'
-			},
-			'Sofa#conds_of should be able to distinguish ambiguous cond[:d]'
+			Sofa::Path.conds_of('/foo/bar/200911/baz=1234/qux=4567/'),
+			'Sofa::Path.conds_of should be able to distinguish ambiguous cond[:d]'
 		)
 		assert_equal(
 			{
 				:baz => '1234',
 				:qux => '4567',
 			},
-			sofa.instance_eval {
-				conds_of '/foo/bar/20091129_0001/baz=1234/qux=4567/'
-			},
-			'Sofa#conds_of should ignore the full-formatted id'
+			Sofa::Path.conds_of('/foo/bar/20091129_0001/baz=1234/qux=4567/'),
+			'Sofa::Path.conds_of should ignore the full-formatted id'
 		)
 	end
 
 	def test_conds_of_with_cond_id
-		sofa = Sofa.new
-
 		assert_equal(
 			['foo','bar'],
-			sofa.instance_eval {
-				steps_of '/foo/bar/20091205/9/baz=1234/qux=4567/'
-			},
-			'Sofa#conds_of should extract cond[:id] from the path sequence'
+			Sofa::Path.steps_of('/foo/bar/20091205/9/baz=1234/qux=4567/'),
+			'Sofa::Path.steps_of should ignore cond[:id]'
 		)
 		assert_equal(
 			{
@@ -341,98 +285,76 @@ class TC_Sofa < Test::Unit::TestCase
 				:baz => '1234',
 				:qux => '4567',
 			},
-			sofa.instance_eval {
-				conds_of '/foo/bar/20091205/9/baz=1234/qux=4567/'
-			},
-			'Sofa#conds_of should extract cond[:id] from the path sequence'
+			Sofa::Path.conds_of('/foo/bar/20091205/9/baz=1234/qux=4567/'),
+			'Sofa::Path.conds_of should extract cond[:id] from the path sequence'
 		)
 	end
 
 	def test_action_of
-		sofa = Sofa.new
-
 		assert_equal(
 			:create,
-			sofa.instance_eval {
-				action_of '/foo/bar/create.html'
-			},
-			'Sofa#action_of should extract the action from path_info'
+			Sofa::Path.action_of('/foo/bar/create.html'),
+			'Sofa::Path.action_of should extract the action from path_info'
 		)
 
 		assert_nil(
-			sofa.instance_eval {
-				action_of '/foo/bar/index.html'
-			},
-			'Sofa#action_of should return nil if the pseudo-filename is index.*'
+			Sofa::Path.action_of('/foo/bar/index.html'),
+			'Sofa::Path.action_of should return nil if the pseudo-filename is index.*'
 		)
 		assert_nil(
-			sofa.instance_eval {
-				action_of '/foo/bar/'
-			},
-			'Sofa#action_of should return nil if no pseudo-filename is given'
+			Sofa::Path.action_of('/foo/bar/'),
+			'Sofa::Path.action_of should return nil if no pseudo-filename is given'
 		)
 	end
 
 	def test_base_of
-		sofa = Sofa.new
-
-		sd = sofa.instance_eval {
-			base_of '/foo/bar/main/index.html'
-		}
+		sd = Sofa::Path.base_of '/foo/bar/main/index.html'
 		assert_instance_of(
 			Sofa::Set::Dynamic,
 			sd,
-			'Sofa#base_of should return a set_dynamic'
+			'Sofa::Path.base_of should return a set_dynamic'
 		)
 		assert_equal(
 			'-foo-bar-main',
 			sd[:full_name],
-			'Sofa#base_of should return a set_dynamic at the bottom of the given steps'
+			'Sofa::Path.base_of should return a set_dynamic at the bottom of the given steps'
 		)
 
-		sd = sofa.instance_eval {
-			base_of '/foo/bar/index.html'
-		}
+		sd = Sofa::Path.base_of '/foo/bar/index.html'
 		assert_instance_of(
 			Sofa::Set::Dynamic,
 			sd,
-			'Sofa#base_of should return a set_dynamic'
+			'Sofa::Path.base_of should return a set_dynamic'
 		)
 		assert_equal(
 			'-foo-bar-main',
 			sd[:full_name],
-			"Sofa#base_of should return the item('main') if the given steps point at a folder"
+			"Sofa::Path.base_of should return the item('main') if the given steps point at a folder"
 		)
 
-		sd = sofa.instance_eval {
-			base_of '/foo/bar/20091120_0001/comment/index.html'
-		}
+		sd = Sofa::Path.base_of '/foo/bar/20091120_0001/comment/index.html'
 		assert_instance_of(
 			Sofa::Text,
 			sd,
-			'Sofa#base_of should return a text if designated'
+			'Sofa::Path.base_of should return a text if designated'
 		)
 
-		sd = sofa.instance_eval {
-			base_of '/foo/bar/20091120_0001/files/index.html'
-		}
+		sd = Sofa::Path.base_of '/foo/bar/20091120_0001/files/index.html'
 		assert_instance_of(
 			Sofa::Set::Dynamic,
 			sd,
-			'Sofa#base_of should return a set_dynamic'
+			'Sofa::Path.base_of should return a set_dynamic'
 		)
 		assert_equal(
 			'-foo-bar-main-20091120_0001-files',
 			sd[:full_name],
-			"Sofa#base_of should be able to dive into any depth from the folder"
+			"Sofa::Path.base_of should be able to dive into any depth from the folder"
 		)
 
-		sd = sofa.instance_eval {
-			base_of '/foo/bar/20091120_0002/files/index.html'
-		}
+		sd = Sofa::Path.base_of '/foo/bar/20091120_0002/files/index.html'
 		assert_nil(
 			sd,
-			'Sofa#base_of should return nil if there is no set_dynamic at the steps'
+			'Sofa::Path.base_of should return nil if there is no set_dynamic at the steps'
 		)
 	end
 

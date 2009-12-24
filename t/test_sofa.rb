@@ -261,7 +261,7 @@ class TC_Sofa < Test::Unit::TestCase
 				:qux => '4567',
 			},
 			Sofa::Path.conds_of('/foo/bar/200911/baz=1234/qux=4567/'),
-			'Sofa::Path.conds_of should be able to distinguish ambiguous cond[:d]'
+			'Sofa::Path.conds_of should be able to distinguish ambiguous conds[:d]'
 		)
 		assert_equal(
 			{
@@ -277,7 +277,7 @@ class TC_Sofa < Test::Unit::TestCase
 		assert_equal(
 			['foo','bar'],
 			Sofa::Path.steps_of('/foo/bar/20091205/9/baz=1234/qux=4567/'),
-			'Sofa::Path.steps_of should ignore cond[:id]'
+			'Sofa::Path.steps_of should ignore conds[:id]'
 		)
 		assert_equal(
 			{
@@ -286,7 +286,7 @@ class TC_Sofa < Test::Unit::TestCase
 				:qux => '4567',
 			},
 			Sofa::Path.conds_of('/foo/bar/20091205/9/baz=1234/qux=4567/'),
-			'Sofa::Path.conds_of should extract cond[:id] from the path sequence'
+			'Sofa::Path.conds_of should extract conds[:id] from the path sequence'
 		)
 	end
 
@@ -355,6 +355,41 @@ class TC_Sofa < Test::Unit::TestCase
 		assert_nil(
 			sd,
 			'Sofa::Path.base_of should return nil if there is no set_dynamic at the steps'
+		)
+	end
+
+	def test_path_of
+		assert_equal(
+			'20091224/123/',
+			Sofa::Path.path_of(:id => '20091224_0123'),
+			'Sofa::Path.path_of should return a special combination of pseudo-steps for conds[:id]'
+		)
+		assert_equal(
+			'20091224/123/',
+			Sofa::Path.path_of(:d => '2009',:id => '20091224_0123'),
+			'Sofa::Path.path_of should ignore the other conds if there is conds[:id]'
+		)
+
+		assert_equal(
+			'foo=bar/',
+			Sofa::Path.path_of(:foo => 'bar'),
+			'Sofa::Path.path_of should return a path of which steps represent the conds'
+		)
+		assert_equal(
+			'foo=bar/p=123/',
+			Sofa::Path.path_of(:p => 123,:foo => 'bar'),
+			'Sofa::Path.path_of should return the step for conds[:p] at the tail end'
+		)
+		assert_equal(
+			'foo=bar/order=desc/p=123/',
+			Sofa::Path.path_of(:p => 123,:order =>'desc',:foo => 'bar'),
+			'Sofa::Path.path_of should return the step for conds[:order] at the tail end'
+		)
+
+		assert_equal(
+			'foo=1,2,3/',
+			Sofa::Path.path_of(:foo => [1,2,3]),
+			'Sofa::Path.path_of should return multiple values as a comma-separated form'
 		)
 	end
 

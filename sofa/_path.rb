@@ -46,6 +46,18 @@ module Sofa::Path
 		basename && basename !~ /^index/ ? basename.split('.').first.intern : nil
 	end
 
+	def path_of(conds)
+		if conds[:id] =~ Sofa::REX::ID
+			'%s/%d/' % [$1,$2.to_i]
+		else
+			conds.keys.sort_by {|k|
+				[:order,:p].include?(k) ? k.to_s : "_#{k}"
+			}.collect {|cid|
+				"#{cid}=#{Array(conds[cid]).join ','}/"
+			}.join
+		end
+	end
+
 	def _dirname(path) # returns '/foo/bar/' for '/foo/bar/'
 		path[%r{^.*/}] || ''
 	end

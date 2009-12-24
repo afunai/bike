@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class TC_Set_Parse_HTML < Test::Unit::TestCase
+class TC_Parser < Test::Unit::TestCase
 
 	def setup
 	end

@@ -48,9 +48,12 @@ class TC_Storage < Test::Unit::TestCase
 
 			storage = klass.new sd
 			storage.build(
-				'20091114_0001' => {'name' => 'bar','comment' => 'I am BAR!'},
-				'20091115_0001' => {'name' => 'qux','comment' => 'Qux! Qux!'},
-				'20091114_0002' => {'name' => 'baz','comment' => 'BAZ BAZ...'}
+				'20091114_0001' => {'name' => 'bar',  'comment' => 'I am BAR!'},
+				'20091115_0001' => {'name' => 'qux',  'comment' => 'Qux! Qux!'},
+				'20091114_0002' => {'name' => 'baz',  'comment' => 'BAZ BAZ...'},
+				'20091225_0001' => {'name' => 'quux', 'comment' => 'Quux?'},
+				'20091225_0002' => {'name' => 'corge','comment' => 'Corge.'},
+				'20091226_0001' => {'name' => 'bar',  'comment' => 'I am BAR again!'}
 			)
 
 			_test_select(storage)
@@ -65,7 +68,14 @@ class TC_Storage < Test::Unit::TestCase
 
 	def _test_select(storage)
 		assert_equal(
-			['20091114_0001','20091114_0002','20091115_0001'],
+			[
+				'20091114_0001',
+				'20091114_0002',
+				'20091115_0001',
+				'20091225_0001',
+				'20091225_0002',
+				'20091226_0001',
+			],
 			storage.select,
 			"#{storage.class}#select should return item ids that match given conds"
 		)
@@ -83,26 +93,40 @@ class TC_Storage < Test::Unit::TestCase
 
 	def _test_sort(storage)
 		assert_equal(
-			['20091114_0001','20091114_0002','20091115_0001'],
+			[
+				'20091114_0001',
+				'20091114_0002',
+				'20091115_0001',
+				'20091225_0001',
+				'20091225_0002',
+				'20091226_0001',
+			],
 			storage.select(:order => 'd'),
 			"#{storage.class}#_sort should sort the item ids returned by _select()"
 		)
 		assert_equal(
-			['20091115_0001','20091114_0002','20091114_0001'],
+			[
+				'20091226_0001',
+				'20091225_0002',
+				'20091225_0001',
+				'20091115_0001',
+				'20091114_0002',
+				'20091114_0001',
+			],
 			storage.select(:order => '-d'),
 			"#{storage.class}#_sort should sort the item ids returned by _select()"
 		)
 	end
 
 	def _test_page(storage)
-		storage.sd[:p_size] = 2
+		storage.sd[:p_size] = 4
 		assert_equal(
-			['20091114_0001','20091114_0002'],
+			['20091114_0001','20091114_0002','20091115_0001','20091225_0001'],
 			storage.select(:p => 1),
 			"#{storage.class}#_page should paginate the item ids returned by _select()"
 		)
 		assert_equal(
-			['20091115_0001'],
+			['20091225_0002','20091226_0001'],
 			storage.select(:p => 2),
 			"#{storage.class}#_page should paginate the item ids returned by _select()"
 		)

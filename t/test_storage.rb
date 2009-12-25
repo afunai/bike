@@ -159,7 +159,6 @@ class TC_Storage < Test::Unit::TestCase
 		assert_equal(
 			{
 				:prev => {:d => '200912',:p => 1},
-				:next => nil,
 				:sibs => {:p => [1,2]},
 			},
 			storage.navi(:d => '200912',:p => 2),
@@ -185,7 +184,6 @@ class TC_Storage < Test::Unit::TestCase
 		)
 		assert_equal(
 			{
-				:prev => nil,
 				:next => {:d => '200911',:p => 2},
 				:sibs => {:p => [1,2]},
 			},

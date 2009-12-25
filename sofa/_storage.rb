@@ -51,38 +51,35 @@ class Sofa::Storage
 	end
 
 	def navi(conds)
-		lower_cid = navi_prev = navi_next = navi_sibs = nil
+		navi = {}
+		lower_cid = nil
 
 		(([:id,:p,:d] & conds.keys) | conds.keys).each {|cid|
 			next unless respond_to?("_sibs_#{cid}",true)
 			sibs = __send__("_sibs_#{cid}",conds)
 
 			if i = sibs.index(conds[cid])
-				if !navi_prev && i > 0
-					navi_prev = conds.merge(cid => sibs[i - 1])
-					navi_prev[lower_cid] = :last if lower_cid
+				if !navi[:prev] && i > 0
+					navi[:prev] = conds.merge(cid => sibs[i - 1])
+					navi[:prev][lower_cid] = :last if lower_cid
 				end
-				if !navi_next && i < (sibs.size - 1)
-					navi_next = conds.merge(cid => sibs[i + 1])
-					navi_next[lower_cid] = 1 if lower_cid
+				if !navi[:next] && i < (sibs.size - 1)
+					navi[:next] = conds.merge(cid => sibs[i + 1])
+					navi[:next][lower_cid] = 1 if lower_cid
 				end
 			end
-			navi_sibs ||= {cid => sibs} if navi_prev || navi_next
+			navi[:sibs] ||= {cid => sibs} if navi[:prev] || navi[:next]
 
-			break if navi_prev && navi_next
+			break if navi[:prev] && navi[:next]
 			lower_cid = cid
 		}
 
-		{
-			:prev => navi_prev,
-			:next => navi_next,
-			:sibs => navi_sibs || {},
-		}
+		navi
 	end
 
 	private
 
-	def _select(conds = {})
+	def _select(conds)
 # TODO: cast / sanitize
 		if conds[:id]
 			_select_by_id(conds) | (@sd.instance_variable_get(:@item_object).keys & conds[:id].to_a)
@@ -117,23 +114,19 @@ class Sofa::Storage
 
 	def _sibs_p(conds)
 		return [] if @sd[:p_size].to_i == 0
-		p_count = (_item_count(conds) / @sd[:p_size].to_f).ceil
+		p_count = (_select_without(:id,:p,conds).size / @sd[:p_size].to_f).ceil
 		(1..p_count).to_a
 	end
 
 	def _sibs_d(conds)
 		rex_d = /^\d{#{conds[:d].length}}/
-		_select.collect {|id| id[rex_d] }.uniq
+		_select_without(:id,:p,:d,conds).collect {|id| id[rex_d] }.uniq
 	end
 
-	def _item_count(conds)
-		_select_without(:p,conds).size
-	end
-
-	def _select_without(cid,conds)
-		c = conds.dup
-		c.delete cid
-		_select(c)
+	def _select_without(*cids)
+		conds = cids.pop.dup
+		cids.each {|cid| conds.delete cid }
+		_select(conds)
 	end
 
 	def new_id

@@ -155,6 +155,15 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def _test_navi(storage)
+		_test_navi_p(storage)
+		_test_navi_id(storage)
+		_test_navi_d(storage)
+		_test_navi_all(storage)
+
+		storage.sd[:p_size] = 10
+	end
+
+	def _test_navi_p(storage)
 		storage.sd[:p_size] = 2
 		assert_equal(
 			{
@@ -176,7 +185,7 @@ class TC_Storage < Test::Unit::TestCase
 		assert_equal(
 			{
 				:prev => {:d => '200911',:p => 1},
-				:next => {:d => '200912',:p => 1},
+				:next => {:d => '200912',:p => :first},
 				:sibs => {:p => [1,2]},
 			},
 			storage.navi(:d => '200911',:p => 2),
@@ -190,7 +199,100 @@ class TC_Storage < Test::Unit::TestCase
 			storage.navi(:d => '200911',:p => 1),
 			"#{storage.class}#navi should return the next conditions for the given conds"
 		)
-		storage.sd[:p_size] = 100
+	end
+
+	def _test_navi_id(storage)
+		storage.sd[:p_size] = 2
+		assert_equal(
+			{
+				:prev => {:id => '20091225_0002'},
+				:sibs => {
+					:id => [
+						'20091114_0001',
+						'20091114_0002',
+						'20091115_0001',
+						'20091225_0001',
+						'20091225_0002',
+						'20091226_0001',
+					],
+				},
+			},
+			storage.navi(:id => '20091226_0001'),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+
+		assert_equal(
+			{
+				:prev => {:d => '200912',:id => '20091225_0002'},
+				:sibs => {:id => ['20091225_0001','20091225_0002','20091226_0001']},
+			},
+			storage.navi(:d => '200912',:id => '20091226_0001'),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+		assert_equal(
+			{
+				:prev => {:d => '200911',:id => :last},
+				:next => {:d => '200912',:id => '20091225_0002'},
+				:sibs => {:id => ['20091225_0001','20091225_0002','20091226_0001']},
+			},
+			storage.navi(:d => '200912',:id => '20091225_0001'),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+		assert_equal(
+			{
+				:prev => {:d => '200911',:id => '20091114_0002'},
+				:next => {:d => '200912',:id => :first},
+				:sibs => {:id => ['20091114_0001','20091114_0002','20091115_0001']},
+			},
+			storage.navi(:d => '200911',:id => '20091115_0001'),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+		assert_equal(
+			{
+				:next => {:d => '200911',:id => '20091114_0002'},
+				:sibs => {:id => ['20091114_0001','20091114_0002','20091115_0001']},
+			},
+			storage.navi(:d => '200911',:id => '20091114_0001'),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+	end
+
+	def _test_navi_d(storage)
+		storage.sd[:p_size] = nil
+		assert_equal(
+			{
+				:prev => {:d => '200911'},
+				:sibs => {:d => ['200911','200912']},
+			},
+			storage.navi(:d => '200912'),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+		assert_equal(
+			{
+				:next => {:d => '200912'},
+				:sibs => {:d => ['200911','200912']},
+			},
+			storage.navi(:d => '200911'),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+
+		assert_equal(
+			{
+				:next => {:d => '200911',:order => '-d'},
+				:sibs => {:d => ['200912','200911']},
+			},
+			storage.navi(:d => '200912',:order => '-d'),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+	end
+
+	def _test_navi_all(storage)
+		storage.sd[:p_size] = nil
+		assert_equal(
+			{},
+			storage.navi({}),
+			"#{storage.class}#navi without conds should return an empty navi"
+		)
 	end
 
 	def test_store

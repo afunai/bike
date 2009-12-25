@@ -104,13 +104,14 @@ _html
 	end
 
 	def _g_navi(arg)
-		uri_prev = _g_uri_prev arg
-		uri_next = _g_uri_next arg
-		<<_html if (arg[:orig_action] == :read) && (uri_prev || uri_next)
+		arg[:navi] = @storage.navi(arg[:conds] || {})
+		<<_html if (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
+#{_g_uri_prev arg} | #{_g_uri_next arg}
 _html
 	end
 
 def _g_uri_prev(arg)
+	Sofa::Path.path_of arg[:navi][:prev]
 end
 
 def _g_uri_next(arg)

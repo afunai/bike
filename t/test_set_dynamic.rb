@@ -179,6 +179,7 @@ _html
 		def sd._g_jawaka(arg)
 			'JAWAKA'
 		end
+		sd[:tmpl_navi] = ''
 
 		sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
 		sd[:tmpl_jawaka] = nil
@@ -221,11 +222,36 @@ _html
 		def sd._g_pipco(arg)
 			'PIPCO'
 		end
+		sd[:tmpl_navi] = ''
 
 		assert_equal(
 			'<ul class="sofa-attachment">PIPCO</ul>',
 			ss.get(:action => :pipco),
 			'Set::Dynamic#_get_by_self_reference should not be affected by previous $(.action)'
+		)
+	end
+
+	def test_get_uri_prev
+		@sd[:p_size] = 2
+		@sd.load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091202_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091203_0001' => {'name' => 'frank','comment' => 'bar'}
+		)
+		@sd[:tmpl_navi] = '$(.uri_prev)'
+
+		assert_equal(
+			'd=200912/p=1/',
+			@sd.send(
+				:_get_by_self_reference,
+				:action      => :navi,
+				:conds       => {:d => '200912',:p => 2},
+				:orig_action => :read
+			),
+			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
 		)
 	end
 

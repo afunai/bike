@@ -34,6 +34,14 @@ class Sofa::Storage
 		item_ids = _page(item_ids,conds)
 	end
 
+def navi(conds)
+	{
+		:prev => conds,
+		:next => conds,
+		:sibs => [],
+	}
+end
+
 	def build(v)
 		self
 	end

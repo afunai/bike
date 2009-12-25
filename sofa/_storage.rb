@@ -51,28 +51,28 @@ class Sofa::Storage
 	end
 
 	def navi(conds)
-		if @sd[:p_size] && !conds[:id]
-			p = conds[:p] || 1
-			p_count = (_item_count(conds) / @sd[:p_size].to_f).ceil
-			sibs = (p_count.to_i > 1) ? (1..p_count).to_a : []
-			navi_prev = conds.merge(:p => p - 1) if p > 1
-			navi_next = conds.merge(:p => p + 1) if p < p_count
-			navi_sibs = {:p => sibs}
-		end
-		if (!navi_prev || !navi_next) && sibs = _sibs(conds)
-			sib_cid  = sibs.keys.first
-			sib_vals = sibs.values.first
-			if i = sib_vals.index(conds[sib_cid])
+		lower_cid = navi_prev = navi_next = navi_sibs = nil
+
+		(([:id,:p,:d] & conds.keys) | conds.keys).each {|cid|
+			next unless respond_to?("_sibs_#{cid}",true)
+			sibs = __send__("_sibs_#{cid}",conds)
+
+			if i = sibs.index(conds[cid])
 				if !navi_prev && i > 0
-					navi_prev = conds.merge(sib_cid => sib_vals[i - 1])
-					navi_prev[conds[:id] ? :id : :p] = :last
+					navi_prev = conds.merge(cid => sibs[i - 1])
+					navi_prev[lower_cid] = :last if lower_cid
 				end
-				if !navi_next && i < (sib_vals.size - 1)
-					navi_next = conds.merge(sib_cid => sib_vals[i + 1])
-					navi_next[conds[:id] ? :id : :p] = 1
+				if !navi_next && i < (sibs.size - 1)
+					navi_next = conds.merge(cid => sibs[i + 1])
+					navi_next[lower_cid] = 1 if lower_cid
 				end
 			end
-		end
+			navi_sibs ||= {cid => sibs} if navi_prev || navi_next
+
+			break if navi_prev && navi_next
+			lower_cid = cid
+		}
+
 		{
 			:prev => navi_prev,
 			:next => navi_next,
@@ -111,29 +111,23 @@ class Sofa::Storage
 		item_ids[(page - 1) * size,size].to_a
 	end
 
-	def _item_count(conds)
-		_select_without(:p,conds).size
-	end
-
-	def _sibs(conds)
-		if conds[:id]
-			cid = :id 
-		else 
-			cid = (conds.keys - [:p,:order]).find {|k| respond_to?("_sibs_#{k}",true) }
-		end
-		if cid
-			sibs = __send__("_sibs_#{cid}",conds)
-			{cid => _sort(sibs,conds)} unless sibs.empty?
-		end
-	end
-
 	def _sibs_id(conds)
 		_select_without(:id,conds)
+	end
+
+	def _sibs_p(conds)
+		return [] if @sd[:p_size].to_i == 0
+		p_count = (_item_count(conds) / @sd[:p_size].to_f).ceil
+		(1..p_count).to_a
 	end
 
 	def _sibs_d(conds)
 		rex_d = /^\d{#{conds[:d].length}}/
 		_select.collect {|id| id[rex_d] }.uniq
+	end
+
+	def _item_count(conds)
+		_select_without(:p,conds).size
 	end
 
 	def _select_without(cid,conds)

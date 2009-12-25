@@ -59,8 +59,8 @@ class TC_Storage < Test::Unit::TestCase
 			_test_select(storage)
 			_test_sort(storage)
 			_test_page(storage)
-
 			_test_val(storage)
+			_test_navi(storage)
 
 			storage.clear
 		}
@@ -152,6 +152,47 @@ class TC_Storage < Test::Unit::TestCase
 			storage.val(''),
 			"#{storage.class}#val should return nil when there is no item"
 		)
+	end
+
+	def _test_navi(storage)
+		storage.sd[:p_size] = 2
+		assert_equal(
+			{
+				:prev => {:d => '200912',:p => 1},
+				:next => nil,
+				:sibs => {:p => [1,2]},
+			},
+			storage.navi(:d => '200912',:p => 2),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+		assert_equal(
+			{
+				:prev => {:d => '200911',:p => :last},
+				:next => {:d => '200912',:p => 2},
+				:sibs => {:p => [1,2]},
+			},
+			storage.navi(:d => '200912',:p => 1),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+		assert_equal(
+			{
+				:prev => {:d => '200911',:p => 1},
+				:next => {:d => '200912',:p => 1},
+				:sibs => {:p => [1,2]},
+			},
+			storage.navi(:d => '200911',:p => 2),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+		assert_equal(
+			{
+				:prev => nil,
+				:next => {:d => '200911',:p => 2},
+				:sibs => {:p => [1,2]},
+			},
+			storage.navi(:d => '200911',:p => 1),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+		storage.sd[:p_size] = 100
 	end
 
 	def test_store

@@ -110,13 +110,15 @@ _html
 _html
 	end
 
-def _g_uri_prev(arg)
-	arg[:navi] ||= @storage.navi(arg[:conds] || {})
-	Sofa::Path.path_of(arg[:navi][:prev]) if arg[:navi][:prev]
-end
+	def _g_uri_prev(arg)
+		arg[:navi] ||= @storage.navi(arg[:conds] || {})
+		Sofa::Path.path_of(arg[:navi][:prev]) if arg[:navi][:prev]
+	end
 
-def _g_uri_next(arg)
-end
+	def _g_uri_next(arg)
+		arg[:navi] ||= @storage.navi(arg[:conds] || {})
+		Sofa::Path.path_of(arg[:navi][:next]) if arg[:navi][:next]
+	end
 
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)

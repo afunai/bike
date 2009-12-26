@@ -231,7 +231,7 @@ _html
 		)
 	end
 
-	def test_get_uri_prev
+	def test_get_uri_prev_next
 		@sd[:p_size] = 2
 		@sd.load(
 			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
@@ -250,6 +250,14 @@ _html
 			),
 			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
 		)
+		assert_nil(
+			@sd.send(
+				:_g_uri_next,
+				:conds => {:d => '200912',:p => 2}
+			),
+			'Set::Dynamic#_g_uri_next should return nil if there is no next conds'
+		)
+
 		assert_equal(
 			'd=200911/p=2/',
 			@sd.send(
@@ -265,6 +273,14 @@ _html
 				:conds => {:d => '200911',:p => 2}
 			),
 			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
+		)
+		assert_equal(
+			'd=200912/p=1/',
+			@sd.send(
+				:_g_uri_next,
+				:conds => {:d => '200911',:p => 2}
+			),
+			'Set::Dynamic#_g_uri_next should return the next uri for the given conds'
 		)
 		assert_nil(
 			@sd.send(

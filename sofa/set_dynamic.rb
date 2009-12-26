@@ -104,14 +104,15 @@ _html
 	end
 
 	def _g_navi(arg)
-		arg[:navi] = @storage.navi(arg[:conds] || {})
+		arg[:navi] ||= @storage.navi(arg[:conds] || {})
 		<<_html if (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
 #{_g_uri_prev arg} | #{_g_uri_next arg}
 _html
 	end
 
 def _g_uri_prev(arg)
-	Sofa::Path.path_of arg[:navi][:prev]
+	arg[:navi] ||= @storage.navi(arg[:conds] || {})
+	Sofa::Path.path_of(arg[:navi][:prev]) if arg[:navi][:prev]
 end
 
 def _g_uri_next(arg)

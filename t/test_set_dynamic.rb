@@ -241,17 +241,49 @@ _html
 			'20091202_0001' => {'name' => 'frank','comment' => 'bar'},
 			'20091203_0001' => {'name' => 'frank','comment' => 'bar'}
 		)
-		@sd[:tmpl_navi] = '$(.uri_prev)'
 
 		assert_equal(
 			'd=200912/p=1/',
 			@sd.send(
-				:_get_by_self_reference,
-				:action      => :navi,
-				:conds       => {:d => '200912',:p => 2},
-				:orig_action => :read
+				:_g_uri_prev,
+				:conds => {:d => '200912',:p => 2}
 			),
 			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
+		)
+		assert_equal(
+			'd=200911/p=2/',
+			@sd.send(
+				:_g_uri_prev,
+				:conds => {:d => '200912',:p => 1}
+			),
+			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
+		)
+		assert_equal(
+			'd=200911/p=1/',
+			@sd.send(
+				:_g_uri_prev,
+				:conds => {:d => '200911',:p => 2}
+			),
+			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
+		)
+		assert_nil(
+			@sd.send(
+				:_g_uri_prev,
+				:conds => {:d => '200911',:p => 1}
+			),
+			'Set::Dynamic#_g_uri_prev should return nil if there is no previous conds'
+		)
+
+		@sd[:tmpl_navi] = '$(.uri_prev)'
+		assert_equal(
+			'd=200911/p=1/',
+			@sd.send(
+				:_get_by_self_reference,
+				:action      => :navi,
+				:conds       => {:d => '200911',:p => 2},
+				:orig_action => :read
+			),
+			'Set::Dynamic#_g_navi should pass the conds to the sub-tmpl'
 		)
 	end
 

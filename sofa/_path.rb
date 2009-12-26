@@ -47,15 +47,18 @@ module Sofa::Path
 	end
 
 	def path_of(conds)
-		if conds[:id] =~ Sofa::REX::ID
-			'%s/%d/' % [$1,$2.to_i]
-		else
-			conds.keys.sort_by {|k|
-				[:order,:p].include?(k) ? k.to_s : "_#{k}"
-			}.collect {|cid|
+		(
+			(conds.keys - [:order,:p,:id]) |
+			([:order,:p,:id] & conds.keys)
+		).collect {|cid|
+			if cid == :id && conds[:id] =~ Sofa::REX::ID
+				'%s/%d/' % [$1,$2.to_i]
+			elsif cid == :d
+				conds[:id] ? '' : "#{conds[:d]}/"
+			else
 				"#{cid}=#{Array(conds[cid]).join ','}/"
-			}.join
-		end
+			end
+		}.join
 	end
 
 	def _dirname(path) # returns '/foo/bar/' for '/foo/bar/'

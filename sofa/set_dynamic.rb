@@ -16,7 +16,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@item_object = {}
 
 		my[:item_arg] = Sofa::Parser.parse_html my[:item_html].to_s
-
+my[:p_size] = meta[:max] || 10
 		my[:tmpl] = "#{my[:tmpl]}$(.navi)" unless my[:tmpl] =~ /\$\(\.navi\)/
 		unless @workflow.is_a? Sofa::Workflow::Attachment
 			my[:tmpl] = "#{my[:tmpl]}$(.submit)" unless my[:tmpl] =~ /\$\(\.submit\)/

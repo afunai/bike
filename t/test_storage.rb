@@ -167,36 +167,36 @@ class TC_Storage < Test::Unit::TestCase
 		storage.sd[:p_size] = 2
 		assert_equal(
 			{
-				:prev => {:d => '200912',:p => 1},
-				:sibs => {:p => [1,2]},
+				:prev => {:d => '200912',:p => '1'},
+				:sibs => {:p => ['1','2']},
 			},
-			storage.navi(:d => '200912',:p => 2),
+			storage.navi(:d => '200912',:p => '2'),
 			"#{storage.class}#navi should return the next conditions for the given conds"
 		)
 		assert_equal(
 			{
-				:prev => {:d => '200911',:p => 2},
-				:next => {:d => '200912',:p => 2},
-				:sibs => {:p => [1,2]},
+				:prev => {:d => '200911',:p => '2'},
+				:next => {:d => '200912',:p => '2'},
+				:sibs => {:p => ['1','2']},
 			},
-			storage.navi(:d => '200912',:p => 1),
+			storage.navi(:d => '200912',:p => '1'),
 			"#{storage.class}#navi should return the next conditions for the given conds"
 		)
 		assert_equal(
 			{
-				:prev => {:d => '200911',:p => 1},
-				:next => {:d => '200912',:p => 1},
-				:sibs => {:p => [1,2]},
+				:prev => {:d => '200911',:p => '1'},
+				:next => {:d => '200912',:p => '1'},
+				:sibs => {:p => ['1','2']},
 			},
-			storage.navi(:d => '200911',:p => 2),
+			storage.navi(:d => '200911',:p => '2'),
 			"#{storage.class}#navi should return the next conditions for the given conds"
 		)
 		assert_equal(
 			{
-				:next => {:d => '200911',:p => 2},
-				:sibs => {:p => [1,2]},
+				:next => {:d => '200911',:p => '2'},
+				:sibs => {:p => ['1','2']},
 			},
-			storage.navi(:d => '200911',:p => 1),
+			storage.navi(:d => '200911',:p => '1'),
 			"#{storage.class}#navi should return the next conditions for the given conds"
 		)
 	end

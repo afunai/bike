@@ -61,14 +61,14 @@ class Sofa::Storage
 					navi[:prev] = conds.merge(cid => sibs[i - 1])
 					if ![:id,:p].include? cid
 						navi[:prev][:id] = _select_without(:id,navi[:prev]).last if conds[:id]
-						navi[:prev][:p] = _p_count(navi[:prev]) if conds[:p]
+						navi[:prev][:p] = _p_count(navi[:prev]).to_s if conds[:p]
 					end
 				end
 				if !navi[:next] && i < (sibs.size - 1)
 					navi[:next] = conds.merge(cid => sibs[i + 1])
 					if ![:id,:p].include? cid
 						navi[:next][:id] = _select_without(:id,navi[:next]).first if conds[:id]
-						navi[:next][:p] = 1 if conds[:p]
+						navi[:next][:p] = '1' if conds[:p]
 					end
 				end
 			end
@@ -118,7 +118,7 @@ class Sofa::Storage
 
 	def _sibs_p(conds)
 		p_count = _p_count(conds)
-		p_count ? (1..p_count).to_a : []
+		p_count ? (1..p_count).collect {|i| i.to_s } : []
 	end
 
 	def _sibs_d(conds)

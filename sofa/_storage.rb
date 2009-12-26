@@ -52,8 +52,6 @@ class Sofa::Storage
 
 	def navi(conds)
 		navi = {}
-		lower_cid = nil
-
 		(([:id,:p,:d] & conds.keys) | conds.keys).each {|cid|
 			next unless respond_to?("_sibs_#{cid}",true)
 			sibs = __send__("_sibs_#{cid}",conds)
@@ -61,17 +59,22 @@ class Sofa::Storage
 			if i = sibs.index(conds[cid])
 				if !navi[:prev] && i > 0
 					navi[:prev] = conds.merge(cid => sibs[i - 1])
-					navi[:prev][lower_cid] = :last if lower_cid
+					if ![:id,:p].include? cid
+						navi[:prev][:id] = _select_without(:id,navi[:prev]).last if conds[:id]
+						navi[:prev][:p] = :last if conds[:p]
+					end
 				end
 				if !navi[:next] && i < (sibs.size - 1)
 					navi[:next] = conds.merge(cid => sibs[i + 1])
-					navi[:next][lower_cid] = :first if lower_cid
+					if ![:id,:p].include? cid
+						navi[:next][:id] = _select_without(:id,navi[:next]).first if conds[:id]
+						navi[:next][:p] = 1 if conds[:p]
+					end
 				end
 			end
 			navi[:sibs] ||= {cid => sibs} if navi[:prev] || navi[:next]
 
 			break if navi[:prev] && navi[:next]
-			lower_cid = cid
 		}
 
 		navi
@@ -109,7 +112,7 @@ class Sofa::Storage
 	end
 
 	def _sibs_id(conds)
-		_sort(_select_without(:id,:p,conds),conds)
+		_select_without(:id,conds)
 	end
 
 	def _sibs_p(conds)
@@ -120,16 +123,13 @@ class Sofa::Storage
 
 	def _sibs_d(conds)
 		rex_d = /^\d{#{conds[:d].length}}/
-		_sort(
-			_select_without(:id,:p,:d,conds).collect {|id| id[rex_d] }.uniq,
-			conds
-		)
+		_select_without(:id,:p,:d,conds).collect {|id| id[rex_d] }.uniq
 	end
 
 	def _select_without(*cids)
 		conds = cids.pop.dup
 		cids.each {|cid| conds.delete cid }
-		_select(conds)
+		_sort(_select(conds),conds)
 	end
 
 	def new_id

@@ -185,7 +185,7 @@ class TC_Storage < Test::Unit::TestCase
 		assert_equal(
 			{
 				:prev => {:d => '200911',:p => 1},
-				:next => {:d => '200912',:p => :first},
+				:next => {:d => '200912',:p => 1},
 				:sibs => {:p => [1,2]},
 			},
 			storage.navi(:d => '200911',:p => 2),
@@ -231,7 +231,7 @@ class TC_Storage < Test::Unit::TestCase
 		)
 		assert_equal(
 			{
-				:prev => {:d => '200911',:id => :last},
+				:prev => {:d => '200911',:id => '20091115_0001'},
 				:next => {:d => '200912',:id => '20091225_0002'},
 				:sibs => {:id => ['20091225_0001','20091225_0002','20091226_0001']},
 			},
@@ -241,7 +241,7 @@ class TC_Storage < Test::Unit::TestCase
 		assert_equal(
 			{
 				:prev => {:d => '200911',:id => '20091114_0002'},
-				:next => {:d => '200912',:id => :first},
+				:next => {:d => '200912',:id => '20091225_0001'},
 				:sibs => {:id => ['20091114_0001','20091114_0002','20091115_0001']},
 			},
 			storage.navi(:d => '200911',:id => '20091115_0001'),

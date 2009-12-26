@@ -104,10 +104,11 @@ class Sofa::Storage
 	end
 
 	def _page(item_ids,conds)
+		size = @sd[:p_size].to_i
+		return item_ids if size < 1
+
 		page = conds[:p].to_i
 		page = 1 if page < 1
-		size = @sd[:p_size].to_i
-		size = 10 if size < 1
 		item_ids[(page - 1) * size,size].to_a
 	end
 

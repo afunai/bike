@@ -175,7 +175,7 @@ class TC_Storage < Test::Unit::TestCase
 		)
 		assert_equal(
 			{
-				:prev => {:d => '200911',:p => :last},
+				:prev => {:d => '200911',:p => 2},
 				:next => {:d => '200912',:p => 2},
 				:sibs => {:p => [1,2]},
 			},

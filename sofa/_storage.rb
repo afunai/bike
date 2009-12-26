@@ -61,7 +61,7 @@ class Sofa::Storage
 					navi[:prev] = conds.merge(cid => sibs[i - 1])
 					if ![:id,:p].include? cid
 						navi[:prev][:id] = _select_without(:id,navi[:prev]).last if conds[:id]
-						navi[:prev][:p] = :last if conds[:p]
+						navi[:prev][:p] = _p_count(navi[:prev]) if conds[:p]
 					end
 				end
 				if !navi[:next] && i < (sibs.size - 1)
@@ -116,9 +116,8 @@ class Sofa::Storage
 	end
 
 	def _sibs_p(conds)
-		return [] if @sd[:p_size].to_i == 0
-		p_count = (_select_without(:id,:p,conds).size / @sd[:p_size].to_f).ceil
-		(1..p_count).to_a
+		p_count = _p_count(conds)
+		p_count ? (1..p_count).to_a : []
 	end
 
 	def _sibs_d(conds)
@@ -130,6 +129,10 @@ class Sofa::Storage
 		conds = cids.pop.dup
 		cids.each {|cid| conds.delete cid }
 		_sort(_select(conds),conds)
+	end
+
+	def _p_count(conds)
+		(_select_without(:id,:p,conds).size / @sd[:p_size].to_f).ceil unless @sd[:p_size].to_f == 0
 	end
 
 	def new_id

@@ -106,7 +106,9 @@ _html
 	def _g_navi(arg)
 		arg[:navi] ||= @storage.navi(arg[:conds] || {})
 		<<_html if (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
-#{_g_uri_prev arg} | #{_g_uri_next arg}
+<a href="#{my[:path]}/#{_g_uri_prev arg}">&lt;&lt;</a>
+|
+<a href="#{my[:path]}/#{_g_uri_next arg}">&gt;&gt;</a>
 _html
 	end
 

@@ -65,10 +65,7 @@ end
 			item ? item[id.intern] : '???'
 		}.gsub(/\$\((.*?)(?:\.([\w\-]+))?\)/) {
 			name,action = $1,$2
-			cond_action,action = action.split('-',2) if action =~ /-/
-			if cond_action && (cond_action.intern != arg[:action] || !item.permit?(arg[:action]))
-				''
-			elsif name == ''
+			if name == ''
 				self_arg = action ?
 					arg.merge(:orig_action => arg[:action],:action => action.intern) : arg
 				_get_by_self_reference self_arg

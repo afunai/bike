@@ -9,9 +9,6 @@ class TC_Set_Complex < Test::Unit::TestCase
 		def _g_vegetable(arg)
 			"'potato'"
 		end
-		def _g_enormous(arg)
-			"'mouth'"
-		end
 	end
 
 	class ::Sofa::Workflow::Pipco < ::Sofa::Workflow
@@ -50,11 +47,9 @@ _tmpl
 		<ul id="files" class="sofa-attachment">
 			<li id="@(name)">file:(tomago :'foo.jpg')</li>
 		</ul>
-		$(files.update-enormous)
 		<ul id="replies" class="sofa-pipco">
 			<li id="@(name)">reply:(tomago :'hi.')</li>
 		</ul>
-		$(replies.update-enormous)
 		$(replies.vegetable)
 	</li>
 _html
@@ -120,11 +115,6 @@ _html
 			result,
 			'Set#get should include $(foo.baz) whenever the action :baz is permitted'
 		)
-		assert_no_match(
-			/'mouth'/,
-			result,
-			'Set#get should not include $(foo.bar-baz) when the parent action is not :bar'
-		)
 		assert_equal(
 			<<'_html',
 <ul id="main" class="sofa-pipco">
@@ -176,11 +166,6 @@ _html
 			result,
 			'Set::Dynamic#get(:action => :update) should not include any value of child apps'
 		)
-		assert_match(
-			/'mouth'/,
-			result,
-			'Set#get should include $(foo.bar-baz) when the parent action is :bar'
-		)
 		assert_no_match(
 			/<form.+<form/m,
 			result,
@@ -196,7 +181,6 @@ _html
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)[d]</li>
 			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
 		</ul>
-		'mouth'
 	</li>
 	<li id="main-20091123_0002">
 		'RE'(action=update,p_action=update): 'wee'(action=update,p_action=update)
@@ -204,7 +188,6 @@ _html
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=update,p_action=update)[d]</li>
 			<li id="main-20091123_0002-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
 		</ul>
-		'mouth'
 	</li>
 </ul>
 [main-update]
@@ -227,7 +210,6 @@ _html
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)[d]</li>
 			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
 		</ul>
-		'mouth'
 	</li>
 	<li id="main-20091123_0002">
 		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
@@ -258,7 +240,6 @@ _html
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)[d]</li>
 			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
 		</ul>
-		'mouth'
 	</li>
 	<li id="main-20091123_0002">
 		'RE'(action=read,p_action=update): 'wee'(action=update,p_action=update)

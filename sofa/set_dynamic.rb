@@ -104,14 +104,23 @@ _html
 	end
 
 	def _g_navi(arg)
-return _get_by_action_tmpl(arg) if _get_by_action_tmpl(arg)
-
 		arg[:navi] ||= @storage.navi(arg[:conds] || {})
-		<<_html if (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
-<a href="#{my[:path]}/#{_g_uri_prev arg}">&lt;&lt;</a>
-|
-<a href="#{my[:path]}/#{_g_uri_next arg}">&gt;&gt;</a>
-_html
+		return unless (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
+
+		div = my[:tmpl_navi] || '<div>$(.navi_prev) | $(.navi_next)</div>'
+		div.gsub(/\$\(\.(navi_prev|navi_next|uri_prev|uri_next)\)/) {
+			__send__("_g_#{$1}",arg)
+		}
+	end
+
+	def _g_navi_prev(arg)
+		button = my[:tmpl_navi_prev] || 'prev'
+		(uri = _g_uri_prev(arg)) ? "<a href=\"#{my[:path]}/#{uri}\">#{button}</a>" : button
+	end
+
+	def _g_navi_next(arg)
+		button = my[:tmpl_navi_next] || 'next'
+		(uri = _g_uri_next(arg)) ? "<a href=\"#{my[:path]}/#{uri}\">#{button}</a>" : button
 	end
 
 	def _g_uri_prev(arg)

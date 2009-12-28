@@ -128,7 +128,7 @@ _html
 		return unless uris && uris.size > 1
 
 		item_tmpl = nil
-		div = my[:tmpl_navi_p] || '<span><span class="item">$()</span></span> | '
+		div = my[:tmpl_navi_p] || '<span class="item">$() </span> | '
 		div = Sofa::Parser.gsub_block(div,'item') {|open,inner,close|
 			item_tmpl = open + inner + close
 			'$(.items)'

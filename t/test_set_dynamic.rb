@@ -309,7 +309,50 @@ _html
 				:conds       => {:d => '200911',:p => '2'},
 				:orig_action => :read
 			),
-			'Set::Dynamic#_g_navi should pass the conds to the sub-tmpl'
+			'Set::Dynamic#_g_navi should pass the conds to the subsequent calls to _g_*()'
+		)
+	end
+
+	def test_recurring_action_tmpl
+		@sd.load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank','comment' => 'bar'}
+		)
+		@sd[:tmpl_navi] = '$(.navi)'
+
+		result = nil
+		assert_nothing_raised(
+			'Set::Dynamic#_g_navi should not call itself recursively'
+		) {
+			result = @sd.send(
+				:_get_by_self_reference,
+				:action      => :navi,
+				:conds       => {:d => '20091128'},
+				:orig_action => :read
+			)
+		}
+		assert_equal(
+			'$(.navi)',
+			result,
+			'Set::Dynamic#_g_navi should ignore $(.navi)'
+		)
+
+		@sd[:tmpl_navi] = nil
+		@sd[:tmpl_navi_next] = '$(.navi)'
+		assert_nothing_raised(
+			'Set::Dynamic#_g_navi should not call itself recursively'
+		) {
+			result = @sd.send(
+				:_get_by_self_reference,
+				:action      => :navi,
+				:conds       => {:d => '20091128'},
+				:orig_action => :read
+			)
+		}
+		assert_match(
+			/\$\(\.navi\)/,
+			result,
+			'Set::Dynamic#_g_navi_next should ignore $(.navi)'
 		)
 	end
 

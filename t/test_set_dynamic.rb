@@ -176,6 +176,9 @@ _html
 		def sd._g_submit(arg)
 			''
 		end
+		def sd._g_pipco(arg)
+			_get_by_action_tmpl(arg) || 'PIPCO'
+		end
 		def sd._g_jawaka(arg)
 			'JAWAKA'
 		end
@@ -199,6 +202,13 @@ _html
 
 		sd[:tmpl_pipco]  = '<foo>$(.pipco)</foo>'
 		sd[:tmpl_jawaka] = nil
+		assert_nothing_raised(
+			'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
+		) {
+			ss.get(:action => :pipco)
+		}
+
+		sd[:tmpl_pipco]  = '<foo>$()</foo>'
 		assert_nothing_raised(
 			'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
 		) {

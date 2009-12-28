@@ -92,17 +92,18 @@ end
 
 	def _get_by_self_reference(arg)
 		return nil if arg[:action].to_s =~ /^action_/ && arg[:orig_action] != :read
-		return nil unless out = _get_by_method(arg)
-
-		_get_by_action_tmpl(arg) || out
+		_get_by_method(arg)
 	end
 
 	def _get_by_action_tmpl(arg)
-		action_tmpl = my["tmpl_#{arg[:action]}".intern]
-		action_tmpl.gsub(/\$\((?:\.([\w\-]+))?\)/) {
-			self_arg = $1 ? arg.merge(:action => $1.intern) : arg
-			_get_by_method self_arg
-		} if action_tmpl
+		if !arg[:recur] && action_tmpl = my["tmpl_#{arg[:action]}".intern]
+			action_tmpl.gsub(/\$\((?:\.([\w\-]+))?\)/) {
+				self_arg = arg.dup
+				self_arg[:action] = $1.intern if $1
+				self_arg[:recur] = true
+				_get_by_method self_arg
+			}
+		end
 	end
 
 	def _g_default(arg,&block)

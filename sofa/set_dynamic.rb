@@ -94,7 +94,7 @@ _html
 	end
 
 	def _g_action_create(arg)
-		<<_html
+		_get_by_action_tmpl(arg) || <<_html
 <div><a href="#{_g_uri_create arg}">create</a></div>
 _html
 	end
@@ -104,6 +104,8 @@ _html
 	end
 
 	def _g_navi(arg)
+return _get_by_action_tmpl(arg) if _get_by_action_tmpl(arg)
+
 		arg[:navi] ||= @storage.navi(arg[:conds] || {})
 		<<_html if (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
 <a href="#{my[:path]}/#{_g_uri_prev arg}">&lt;&lt;</a>

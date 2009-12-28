@@ -26,7 +26,7 @@ module Sofa::Parser
 	end
 
 	def gsub_block(html,class_name,&block)
-		rex_open_tag = /\s*<(\w+).+?class=(?:"|"[^"]*?\s)#{class_name}(?:"|\s).*?>\n?/i 
+		rex_open_tag = /\s*<(\w+)[^>]+?class=(?:"|"[^"]*?\s)#{class_name}(?:"|\s).*?>\n?/i 
 		out = ''
 		s = StringScanner.new html
 		until s.eos?

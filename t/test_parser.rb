@@ -580,4 +580,52 @@ _html
 		)
 	end
 
+	def test_gsub_block
+		match = nil
+		result = Sofa::Parser.gsub_block('a<div class="foo">bar</div>c','foo') {|open,inner,close|
+			match = [open,inner,close]
+			'b'
+		}
+		assert_equal(
+			'abc',
+			result,
+			'Parser.gsub_block should replace tag blocks of the matching class with the given value'
+		)
+		assert_equal(
+			['<div class="foo">','bar','</div>'],
+			match,
+			'Parser.gsub_block should pass the matching element to its block'
+		)
+
+		result = Sofa::Parser.gsub_block('<p><div class="foo">bar</div></p>','foo') {|open,inner,close|
+			match = [open,inner,close]
+			'b'
+		}
+		assert_equal(
+			'<p>b</p>',
+			result,
+			'Parser.gsub_block should replace tag blocks of the matching class with the given value'
+		)
+		assert_equal(
+			['<div class="foo">','bar','</div>'],
+			match,
+			'Parser.gsub_block should pass the matching element to its block'
+		)
+
+		result = Sofa::Parser.gsub_block('a<p><div class="foo">bar</div></p>c','foo') {|open,inner,close|
+			match = [open,inner,close]
+			'b'
+		}
+		assert_equal(
+			'a<p>b</p>c',
+			result,
+			'Parser.gsub_block should replace tag blocks of the matching class with the given value'
+		)
+		assert_equal(
+			['<div class="foo">','bar','</div>'],
+			match,
+			'Parser.gsub_block should pass the matching element to its block'
+		)
+	end
+
 end

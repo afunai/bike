@@ -356,6 +356,50 @@ _html
 		)
 	end
 
+	def test_uri_p
+		@sd.load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank','comment' => 'bar'}
+		)
+
+		@sd[:p_size] = 2
+		assert_equal(
+			['200911/p=1/','200911/p=2/'],
+			@sd.send(
+				:_uri_p,
+				:conds => {:d => '200911',:p => '1'}
+			),
+			'Set::Dynamic#_uri_p should return the array of the sibling conds'
+		)
+
+		@sd[:p_size] = nil
+		assert_nil(
+			@sd.send(
+				:_uri_p,
+				:conds => {:d => '200911'}
+			),
+			'Set::Dynamic#_uri_p should return nil if the siblings are not :p'
+		)
+
+		@sd[:p_size] = 2
+		assert_nil(
+			@sd.send(
+				:_uri_p,
+				:conds => {:d => '200911',:id => '20091129_0001'}
+			),
+			'Set::Dynamic#_uri_p should return nil if the siblings are not :p'
+		)
+		assert_nil(
+			@sd.send(
+				:_uri_p,
+				:conds => {:d => '200911',:p => '1',:id => '20091129_0001'}
+			),
+			'Set::Dynamic#_uri_p should return nil if the siblings are not :p'
+		)
+	end
+
 	def test_load_default
 	end
 

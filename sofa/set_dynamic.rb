@@ -160,7 +160,12 @@ _html
 		if arg[:navi][:sibs] && arg[:navi][:sibs].keys.first == :p
 			base_conds = arg[:conds].dup
 			base_conds.delete :p
-			arg[:navi][:sibs].values.first.collect {|cond|
+			conds = arg[:navi][:sibs].values.first
+			if arg[:conds] && p = arg[:conds][:p]
+				range = ['1',conds.last] + ((p.to_i - 5)..(p.to_i + 5)).to_a.collect {|i| i.to_s }
+				conds = conds & range
+			end
+			conds.collect {|cond|
 				Sofa::Path.path_of base_conds.merge(:p => cond)
 			}
 		end

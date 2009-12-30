@@ -655,9 +655,42 @@ _html
 			html,
 			'Parser.gsub_action_tmpl should replace the action template with a value from the block'
 		)
+
+		result,html = _test_gsub_action_tmpl 'a<div class="bar foo-navi">Foo</div>c'
+		assert_equal(
+			{
+				:id     => 'foo',
+				:action => 'navi',
+				:tmpl   => '<div class="bar foo-navi">Foo</div>',
+			},
+			result,
+			'Parser.gsub_action_tmpl should yield action templates'
+		)
+
+		result,html = _test_gsub_action_tmpl 'a<div class="bar foo-navi baz">Foo</div>c'
+		assert_equal(
+			{
+				:id     => 'foo',
+				:action => 'navi',
+				:tmpl   => '<div class="bar foo-navi baz">Foo</div>',
+			},
+			result,
+			'Parser.gsub_action_tmpl should yield action templates'
+		)
 	end
 
 	def test_gsub_action_tmpl_with_empty_id
+		result,html = _test_gsub_action_tmpl 'a<div class="navi">Foo</div>c'
+		assert_equal(
+			{
+				:id     => nil,
+				:action => 'navi',
+				:tmpl   => '<div class="navi">Foo</div>',
+			},
+			result,
+			'Parser.gsub_action_tmpl should yield action templates'
+		)
+
 		result,html = _test_gsub_action_tmpl 'a<div class="foo navi">Foo</div>c'
 		assert_equal(
 			{
@@ -667,6 +700,37 @@ _html
 			},
 			result,
 			'Parser.gsub_action_tmpl should yield action templates'
+		)
+
+		result,html = _test_gsub_action_tmpl 'a<div class="foo navi baz">Foo</div>c'
+		assert_equal(
+			{
+				:id     => nil,
+				:action => 'navi',
+				:tmpl   => '<div class="foo navi baz">Foo</div>',
+			},
+			result,
+			'Parser.gsub_action_tmpl should yield action templates'
+		)
+	end
+
+	def test_gsub_action_tmpl_with_ambiguous_klass
+		result,html = _test_gsub_action_tmpl 'a<div class="not_navi">Foo</div>c'
+		assert_equal(
+			{},
+			result,
+			'Parser.gsub_action_tmpl should ignore classes other than action, view, navi or submit'
+		)
+
+		result,html = _test_gsub_action_tmpl 'a<div class="navi_bar">Foo</div>c'
+		assert_equal(
+			{
+				:id     => nil,
+				:action => 'navi_bar',
+				:tmpl   => '<div class="navi_bar">Foo</div>',
+			},
+			result,
+			'Parser.gsub_action_tmpl should yield an action template if the klass looks like special'
 		)
 	end
 

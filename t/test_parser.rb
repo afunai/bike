@@ -628,4 +628,33 @@ _html
 		)
 	end
 
+	def _test_gsub_action_tmpl(html)
+		result = {}
+		html = Sofa::Parser.gsub_action_tmpl(html) {|id,action,tmpl|
+			result[:id]     = id
+			result[:action] = action
+			result[:tmpl]   = tmpl
+			'b'
+		}
+		[result,html]
+	end
+
+	def test_gsub_action_tmpl
+		result,html = _test_gsub_action_tmpl 'a<div class="foo-navi">Foo</div>c'
+		assert_equal(
+			{
+				:id     => 'foo',
+				:action => 'navi',
+				:tmpl   => '<div class="foo-navi">Foo</div>',
+			},
+			result,
+			'Parser.gsub_action_tmpl should yield action templates'
+		)
+		assert_equal(
+			'abc',
+			html,
+			'Parser.gsub_action_tmpl should replace the action template with a value from the block'
+		)
+	end
+
 end

@@ -14,7 +14,7 @@ module Sofa::Parser
 			item[id] = parse_block(open,inner,close)
 			"$(#{id})"
 		}
-# TODO: parse_action_tmpl eg. <div id="main-submit">...</div> -> item['main']['tmpl_submit']
+# TODO: parse_action_tmpl
 		html = gsub_scalar(html) {|id,meta|
 			item[id] = meta
 			"$(#{id})"
@@ -22,6 +22,15 @@ module Sofa::Parser
 		{
 			:item => item,
 			:tmpl => html,
+		}
+	end
+
+	def gsub_action_tmpl(html,&block)
+		rex_klass = /(?:\w+\-)?(?:action|view|navi|submit)\w*/
+		gsub_block(html,rex_klass) {|open,inner,close|
+			klass = open[/class=(?:"|"[^"]*?\s)(#{rex_klass})/,1]
+			id,action = klass.split('-',2)
+			block.call(id,action,open + inner + close)
 		}
 	end
 

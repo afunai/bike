@@ -657,4 +657,17 @@ _html
 		)
 	end
 
+	def test_gsub_action_tmpl_with_empty_id
+		result,html = _test_gsub_action_tmpl 'a<div class="foo navi">Foo</div>c'
+		assert_equal(
+			{
+				:id     => nil,
+				:action => 'navi',
+				:tmpl   => '<div class="foo navi">Foo</div>',
+			},
+			result,
+			'Parser.gsub_action_tmpl should yield action templates'
+		)
+	end
+
 end

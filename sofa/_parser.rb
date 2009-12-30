@@ -28,9 +28,9 @@ module Sofa::Parser
 	def gsub_action_tmpl(html,&block)
 		rex_klass = /(?:\w+\-)?(?:action|view|navi|submit)\w*/
 		gsub_block(html,rex_klass) {|open,inner,close|
-			klass = open[/class=(?:"|"[^"]*?\s)(#{rex_klass})/,1]
-			id,action = klass.split('-',2)
-			block.call(id,action,open + inner + close)
+			klass = open[/class=(?:"|"[^"]*?\s)(#{rex_klass})(?:"|\s)/,1]
+			id,action = (klass =~ /-/) ? klass.split('-',2) : [nil,klass]
+			block.call(id,action,(open + inner + close))
 		}
 	end
 

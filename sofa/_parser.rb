@@ -15,6 +15,11 @@ module Sofa::Parser
 			"$(#{id})"
 		}
 # TODO: parse_action_tmpl
+html = gsub_action_tmpl(html) {|id,action,tmpl|
+	id ||= 'main'
+	item[id]["tmpl_#{action}".intern] = tmpl if item[id]
+	"$(#{id}.#{action})"
+}
 		html = gsub_scalar(html) {|id,meta|
 			item[id] = meta
 			"$(#{id})"

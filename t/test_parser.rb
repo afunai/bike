@@ -734,4 +734,54 @@ _html
 		)
 	end
 
+	def test_action_tmpl_in_ss
+		result = Sofa::Parser.parse_html <<'_html'
+<html>
+	<ul id="foo" class="sofa-blog">
+		<li>subject:(text)</li>
+	</ul>
+	<div class="foo-navi">bar</div>
+</html>
+_html
+		assert_equal(
+			<<'_html',
+	<div class="foo-navi">bar</div>
+_html
+			result[:item]['foo'][:tmpl_navi],
+			'Parser.parse_html should parse action templates in the html'
+		)
+		assert_equal(
+			<<'_html',
+<html>
+$(foo)$(foo.navi)</html>
+_html
+			result[:tmpl],
+			'Parser.parse_html should replace action templates with proper tags'
+		)
+
+		result = Sofa::Parser.parse_html <<'_html'
+<html>
+	<ul id="main" class="sofa-blog">
+		<li>subject:(text)</li>
+	</ul>
+	<div class="navi">bar</div>
+</html>
+_html
+		assert_equal(
+			<<'_html',
+	<div class="navi">bar</div>
+_html
+			result[:item]['main'][:tmpl_navi],
+			"Parser.parse_html should set action templates to item['main'] by default"
+		)
+		assert_equal(
+			<<'_html',
+<html>
+$(main)$(main.navi)</html>
+_html
+			result[:tmpl],
+			"Parser.parse_html should set action templates to item['main'] by default"
+		)
+	end
+
 end

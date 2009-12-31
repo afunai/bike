@@ -847,4 +847,25 @@ _html
 		)
 	end
 
+	def test_action_tmpl_in_dd
+		sd = Sofa::Set::Dynamic.new(
+			:tmpl => <<'_html'
+	<li>$(text)</li>
+	<div class="foo-navi">bar</div>
+_html
+		)
+		assert_equal(
+			<<'_html',
+	<div class="foo-navi">bar</div>
+_html
+			sd[:tmpl_navi],
+			'Set::Dynamic.initialize should parse action templates in the meta[:tmpl]'
+		)
+		assert_match(
+			%r{\$\(\.navi\)},
+			sd[:tmpl],
+			'Set::Dynamic.initialize should parse action templates in the meta[:tmpl]'
+		)
+	end
+
 end

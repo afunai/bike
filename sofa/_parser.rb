@@ -14,12 +14,19 @@ module Sofa::Parser
 			item[id] = parse_block(open,inner,close)
 			"$(#{id})"
 		}
-# TODO: parse_action_tmpl
-html = gsub_action_tmpl(html) {|id,action,tmpl|
-	id ||= 'main'
-	item[id]["tmpl_#{action}".intern] = tmpl if item[id]
-	"$(#{id}.#{action})"
-}
+		html = gsub_action_tmpl(html) {|id,action,open,inner,close|
+			id ||= 'main'
+			if item[id]
+				inner = gsub_action_tmpl(inner) {|i,a,*t|
+					item[id]["tmpl_#{a}".intern] = t.join
+					"$(.#{a})"
+				}
+				item[id]["tmpl_#{action}".intern] = open + inner + close
+				"$(#{id}.#{action})"
+			else
+				open + inner + close
+			end
+		}
 		html = gsub_scalar(html) {|id,meta|
 			item[id] = meta
 			"$(#{id})"
@@ -35,7 +42,7 @@ html = gsub_action_tmpl(html) {|id,action,tmpl|
 		gsub_block(html,rex_klass) {|open,inner,close|
 			klass = open[/class=(?:"|"[^"]*?\s)(#{rex_klass})(?:"|\s)/,1]
 			id,action = (klass =~ /-/) ? klass.split('-',2) : [nil,klass]
-			block.call(id,action,(open + inner + close))
+			block.call(id,action,open,inner,close)
 		}
 	end
 

@@ -630,10 +630,10 @@ _html
 
 	def _test_gsub_action_tmpl(html)
 		result = {}
-		html = Sofa::Parser.gsub_action_tmpl(html) {|id,action,tmpl|
+		html = Sofa::Parser.gsub_action_tmpl(html) {|id,action,*tmpl|
 			result[:id]     = id
 			result[:action] = action
-			result[:tmpl]   = tmpl
+			result[:tmpl]   = tmpl.join
 			'b'
 		}
 		[result,html]
@@ -758,7 +758,9 @@ _html
 			result[:tmpl],
 			'Parser.parse_html should replace action templates with proper tags'
 		)
+	end
 
+	def test_action_tmpl_in_ss_with_nil_id
 		result = Sofa::Parser.parse_html <<'_html'
 <html>
 	<ul id="main" class="sofa-blog">
@@ -781,6 +783,67 @@ $(main)$(main.navi)</html>
 _html
 			result[:tmpl],
 			"Parser.parse_html should set action templates to item['main'] by default"
+		)
+	end
+
+	def test_action_tmpl_in_ss_with_non_existent_id
+		result = Sofa::Parser.parse_html <<'_html'
+<html>
+	<ul id="main" class="sofa-blog">
+		<li>subject:(text)</li>
+	</ul>
+	<div class="non_existent-navi">bar</div>
+</html>
+_html
+		assert_nil(
+			result[:item]['non_existent'],
+			'Parser.parse_html should ignore the action template without a corresponding SD'
+		)
+		assert_equal(
+			<<'_html',
+<html>
+$(main)	<div class="non_existent-navi">bar</div>
+</html>
+_html
+			result[:tmpl],
+			'Parser.parse_html should ignore the action template without a corresponding SD'
+		)
+	end
+
+	def test_action_tmpl_in_ss_with_nested_action_tmpl
+		result = Sofa::Parser.parse_html <<'_html'
+<html>
+	<ul id="foo" class="sofa-blog">
+		<li>subject:(text)</li>
+	</ul>
+	<div class="foo-navi"><span class="navi_prev">prev</span></div>
+</html>
+_html
+		assert_equal(
+			<<'_html',
+	<div class="foo-navi">$(.navi_prev)</div>
+_html
+			result[:item]['foo'][:tmpl_navi],
+			'Parser.parse_html should parse nested action templates'
+		)
+		assert_equal(
+			'<span class="navi_prev">prev</span>',
+			result[:item]['foo'][:tmpl_navi_prev],
+			'Parser.parse_html should parse nested action templates'
+		)
+
+		result = Sofa::Parser.parse_html <<'_html'
+<html>
+	<ul id="foo" class="sofa-blog">
+		<li>subject:(text)</li>
+	</ul>
+	<div class="foo-navi"><span class="bar-navi_prev">prev</span></div>
+</html>
+_html
+		assert_equal(
+			'<span class="bar-navi_prev">prev</span>',
+			result[:item]['foo'][:tmpl_navi_prev],
+			'Parser.parse_html should ignore the id of a nested action template'
 		)
 	end
 

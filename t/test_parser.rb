@@ -858,20 +858,41 @@ _html
 		result = Sofa::Parser.parse_html <<'_html'
 <ul id="foo" class="sofa-blog">
 	<li class="body">$(text)</li>
-	<div class="foo-navi">bar</div>
+	<div class="navi">bar</div>
 </ul>
 _html
 		assert_equal(
 			<<'_html',
-	<div class="foo-navi">bar</div>
+	<div class="navi">bar</div>
 _html
 			result[:item]['foo'][:tmpl_navi],
-			'Parser.parse_html should parse action templates in child SDs'
+			'Parser.parse_html should parse action templates in sd[:tmpl]'
 		)
 		assert_match(
 			%r{\$\(\.navi\)},
 			result[:item]['foo'][:tmpl],
-			'Parser.parse_html should parse action templates in child SDs'
+			'Parser.parse_html should parse action templates in sd[:tmpl]'
+		)
+	end
+
+	def test_action_tmpl_in_sd_with_nested_action_tmpl
+		result = Sofa::Parser.parse_html <<'_html'
+<ul id="foo" class="sofa-blog">
+	<li class="body">$(text)</li>
+	<div class="navi"><span class="navi_prev">prev</span></div>
+</ul>
+_html
+		assert_equal(
+			<<'_html',
+	<div class="navi">$(.navi_prev)</div>
+_html
+			result[:item]['foo'][:tmpl_navi],
+			'Parser.parse_html should parse nested action templates in sd[:tmpl]'
+		)
+		assert_equal(
+			'<span class="navi_prev">prev</span>',
+			result[:item]['foo'][:tmpl_navi_prev],
+			'Parser.parse_html should parse nested action templates in sd[:tmpl]'
 		)
 	end
 

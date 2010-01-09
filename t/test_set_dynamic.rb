@@ -11,9 +11,10 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 			:klass     => 'set-dynamic',
 			:workflow  => 'blog',
 			:group     => ['roy','don'],
-			:tmpl      => <<'_tmpl',
+			:tmpl      => <<'_tmpl'.chomp,
 <ul id="foo" class="sofa-blog">
 $()</ul>
+$(.submit)
 _tmpl
 			:item_html => <<'_html'
 	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>

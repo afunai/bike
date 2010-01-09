@@ -30,9 +30,10 @@ _html
 				'foo'   => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
+					:tmpl      => <<'_tmpl'.chomp,
 	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
+$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_html => <<'_html',
 		<li>

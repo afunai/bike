@@ -16,26 +16,13 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@item_object = {}
 
 		my[:item_arg] = Sofa::Parser.parse_html my[:item_html].to_s
+		my[:item_arg][:tmpl].sub!(
+			/\$\(.*?\)/m,
+			'\&$(.action_update)'
+		) unless @workflow.is_a?(Sofa::Workflow::Attachment) ||
+			my[:item_arg][:tmpl] =~ /\$\(\.action_update\)/
+
 my[:p_size] = meta[:max] || 10
-
-my[:tmpl] = Sofa::Parser.gsub_action_tmpl(my[:tmpl].to_s) {|id,action,open,inner,close|
-	inner = Sofa::Parser.gsub_action_tmpl(inner) {|i,a,*t|
-		@meta["tmpl_#{a}".intern] = t.join
-		"$(.#{a})"
-	}
-	@meta["tmpl_#{action}".intern] = open + inner + close
-	"$(.#{action})"
-}
-
-		my[:tmpl] = "#{my[:tmpl]}$(.navi)" unless my[:tmpl] =~ /\$\(\.navi\)/
-		unless @workflow.is_a? Sofa::Workflow::Attachment
-			my[:tmpl] = "#{my[:tmpl]}$(.submit)" unless my[:tmpl] =~ /\$\(\.submit\)/
-			my[:tmpl] = "#{my[:tmpl]}$(.action_create)" unless my[:tmpl] =~ /\$\(\.action_create\)/
-			my[:item_arg][:tmpl].sub!(
-				/\$\(.*?\)/m,
-				'\&$(.action_update)'
-			) unless my[:item_arg][:tmpl] =~ /\$\(\.action_update\)/
-		end
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
 <form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">
 #{my[:tmpl]}</form>

@@ -322,8 +322,9 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
+					:tmpl      => <<'_tmpl'.chomp,
 <ul class="sofa-blog" id="@(name)">$()</ul>
+$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_html => '<li>hello</li>',
 				}
@@ -347,9 +348,10 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
+					:tmpl      => <<'_tmpl'.chomp,
 <ul class="sofa-blog" id="@(name)">
 $()</ul>
+$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_html => "\t<li>hello</li>\n",
 				},
@@ -372,7 +374,7 @@ _html
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
 					:tmpl      => <<'_tmpl'.chomp,
- <ul class="sofa-blog" id="@(name)">$()</ul>
+ <ul class="sofa-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_html => '<li>hello</li>',
 				},
@@ -419,10 +421,11 @@ _html
 					:tokens    => ['barbaz'],
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
+					:tmpl      => <<'_tmpl'.chomp,
 	<table class="sofa-blog" id="@(name)">
 		<!-- 1..20 barbaz -->
 $()	</table>
+$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_html => <<'_html',
 		<tbody class="body"><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
@@ -448,10 +451,11 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
+					:tmpl      => <<'_tmpl'.chomp,
 	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
+$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_html => <<'_html',
 		<tbody class="body"><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
@@ -485,10 +489,11 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
+					:tmpl      => <<'_tmpl'.chomp,
 	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
+$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_html => <<'_html',
 		<tbody class="body"><tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody></tbody>
@@ -513,9 +518,10 @@ _html
 				'foo' => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
+					:tmpl      => <<'_tmpl'.chomp,
 <ul class="sofa-blog" id="@(name)">
 $()</ul>
+$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_html => <<'_html',
 	<li>
@@ -553,9 +559,10 @@ _html
 				'foo'   => {
 					:klass     => 'set-dynamic',
 					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl',
+					:tmpl      => <<'_tmpl'.chomp,
 	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
+$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_html => <<'_html',
 		<li>
@@ -847,24 +854,24 @@ _html
 		)
 	end
 
-	def test_action_tmpl_in_dd
-		sd = Sofa::Set::Dynamic.new(
-			:tmpl => <<'_html'
-	<li>$(text)</li>
+	def test_action_tmpl_in_sd
+		result = Sofa::Parser.parse_html <<'_html'
+<ul id="foo" class="sofa-blog">
+	<li class="body">$(text)</li>
 	<div class="foo-navi">bar</div>
+</ul>
 _html
-		)
 		assert_equal(
 			<<'_html',
 	<div class="foo-navi">bar</div>
 _html
-			sd[:tmpl_navi],
-			'Set::Dynamic.initialize should parse action templates in the meta[:tmpl]'
+			result[:item]['foo'][:tmpl_navi],
+			'Parser.parse_html should parse action templates in child SDs'
 		)
 		assert_match(
 			%r{\$\(\.navi\)},
-			sd[:tmpl],
-			'Set::Dynamic.initialize should parse action templates in the meta[:tmpl]'
+			result[:item]['foo'][:tmpl],
+			'Parser.parse_html should parse action templates in child SDs'
 		)
 	end
 

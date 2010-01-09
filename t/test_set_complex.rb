@@ -37,9 +37,10 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:klass     => 'set-dynamic',
 			:workflow  => 'pipco',
 			:group     => ['roy','don'],
-			:tmpl      => <<'_tmpl',
+			:tmpl      => <<'_tmpl'.chomp,
 <ul id="@(name)" class="sofa-pipco">
 $()</ul>
+$(.navi)$(.submit)$(.action_create)
 _tmpl
 			:item_html => <<'_html'
 	<li id="@(name)">

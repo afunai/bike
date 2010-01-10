@@ -28,20 +28,33 @@ _html
 			{
 				'title' => {:klass => 'text',:tokens => ['32']},
 				'foo'   => {
-					:klass     => 'set-dynamic',
-					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:klass    => 'set-dynamic',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl'.chomp,
 	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_html => <<'_html',
+					:item_arg => {
+						:tmpl => <<'_tmpl',
 		<li>
-			subject:(text 64)
-			body:(textarea 72*10)
+			$(subject)$(.action_update)
+			$(body)
 			<ul><li>qux</li></ul>
 		</li>
-_html
+_tmpl
+						:item => {
+							'body'    => {
+								:width  => 72,
+								:height => 10,
+								:klass  => 'textarea',
+							},
+							'subject' => {
+								:klass  => 'text',
+								:tokens => ['64'],
+							},
+						}
+					},
 				},
 			}.merge(Sofa::Set::Static::DEFAULT_ITEMS),
 			ss[:item],
@@ -112,8 +125,11 @@ _html
 			'Set::Static#item() should cache the loaded items'
 		)
 		assert_equal(
-			"\t\t<li>hi</li>\n",
-			main[:item_html],
+			{
+				:tmpl => "\t\t<li>hi</li>\n",
+				:item => {},
+			},
+			main[:item_arg],
 			'Set::Static#item() should load the metas of child items'
 		)
 

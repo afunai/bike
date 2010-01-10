@@ -16,7 +16,7 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 $()</ul>
 $(.submit)
 _tmpl
-			:item_html => <<'_html'
+			:item_arg  => Sofa::Parser.parse_html(<<'_html')
 	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
 _html
 		)

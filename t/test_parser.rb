@@ -320,14 +320,17 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass     => 'set-dynamic',
-					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:klass    => 'set-dynamic',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl'.chomp,
 <ul class="sofa-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_html => '<li>hello</li>',
-				}
+					:item_arg => {
+						:tmpl => '<li>hello</li>',
+						:item => {},
+					},
+				},
 			},
 			result[:item],
 			'Parser.parse_html should be able to parse block sofa tags'
@@ -346,14 +349,17 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass     => 'set-dynamic',
-					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:klass    => 'set-dynamic',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl'.chomp,
 <ul class="sofa-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_html => "\t<li>hello</li>\n",
+					:item_arg => {
+						:tmpl => "\t<li>hello</li>\n",
+						:item => {},
+					},
 				},
 			},
 			result[:item],
@@ -371,12 +377,15 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass     => 'set-dynamic',
-					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:klass    => 'set-dynamic',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl'.chomp,
  <ul class="sofa-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_html => '<li>hello</li>',
+					:item_arg => {
+						:tmpl => '<li>hello</li>',
+						:item => {},
+					},
 				},
 			},
 			result[:item],
@@ -396,9 +405,9 @@ _html
 hello <ul class="not-sofa-blog" id="foo"><li>hello</li></ul> world
 _html
 		assert_equal(
-			<<'_html',
+			<<'_tmpl',
 hello <ul class="not-sofa-blog" id="foo"><li>hello</li></ul> world
-_html
+_tmpl
 			result[:tmpl],
 			"Parser.parse_html[:tmpl] should skip a class which does not start with 'sofa'"
 		)
@@ -416,20 +425,26 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:min       => 1,
-					:max       => 20,
-					:tokens    => ['barbaz'],
-					:klass     => 'set-dynamic',
-					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:min      => 1,
+					:max      => 20,
+					:tokens   => ['barbaz'],
+					:klass    => 'set-dynamic',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl'.chomp,
 	<table class="sofa-blog" id="@(name)">
 		<!-- 1..20 barbaz -->
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_html => <<'_html',
-		<tbody class="body"><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
-_html
+					:item_arg => {
+						:tmpl => <<'_tmpl',
+		<tbody class="body"><!-- qux --><tr><th>$(bar)$(.action_update)</th><th>$(baz)</th></tr></tbody>
+_tmpl
+						:item => {
+							'bar' => {:klass => 'text'},
+							'baz' => {:klass => 'text'},
+						},
+					},
 				},
 			},
 			result[:item],
@@ -449,27 +464,33 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass     => 'set-dynamic',
-					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:klass    => 'set-dynamic',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl'.chomp,
 	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_html => <<'_html',
-		<tbody class="body"><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
-_html
+					:item_arg => {
+						:tmpl => <<'_tmpl',
+		<tbody class="body"><tr><th>$(bar)$(.action_update)</th><th>$(baz)</th></tr></tbody>
+_tmpl
+						:item => {
+							'bar' => {:klass => 'text'},
+							'baz' => {:klass => 'text'},
+						},
+					},
 				},
 			},
 			result[:item],
 			'Parser.parse_html should aware of <tbody class="body">'
 		)
 		assert_equal(
-			<<'_html',
+			<<'_tmpl',
 hello
 $(foo)world
-_html
+_tmpl
 			result[:tmpl],
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
@@ -487,17 +508,23 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass     => 'set-dynamic',
-					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:klass    => 'set-dynamic',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl'.chomp,
 	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_html => <<'_html',
-		<tbody class="body"><tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody></tbody>
-_html
+					:item_arg => {
+						:tmpl => <<'_tmpl',
+		<tbody class="body"><tbody><tr><th>$(bar)$(.action_update)</th><th>$(baz)</th></tr></tbody></tbody>
+_tmpl
+						:item => {
+							'bar' => {:klass => 'text'},
+							'baz' => {:klass => 'text'},
+						},
+					},
 				},
 			},
 			result[:item],
@@ -516,18 +543,33 @@ _html
 		assert_equal(
 			{
 				'foo' => {
-					:klass     => 'set-dynamic',
-					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:klass    => 'set-dynamic',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl'.chomp,
 <ul class="sofa-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_html => <<'_html',
+					:item_arg => {
+						:tmpl => <<'_tmpl',
 	<li>
-		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
-	</li>
-_html
+$(bar)$(.action_update)	</li>
+_tmpl
+						:item => {
+							'bar' => {
+								:klass    => 'set-dynamic',
+								:workflow => 'blog',
+								:tmpl     => <<'_tmpl'.chomp,
+		<ul class="sofa-blog" id="@(name)">$()</ul>
+$(.navi)$(.submit)$(.action_create)
+_tmpl
+								:item_arg => {
+									:tmpl => '<li>baz</li>',
+									:item => {},
+								},
+							},
+						},
+					},
 				},
 			},
 			result[:item],
@@ -557,31 +599,44 @@ _html
 			{
 				'title' => {:klass => 'text',:tokens => ['32']},
 				'foo'   => {
-					:klass     => 'set-dynamic',
-					:workflow  => 'blog',
-					:tmpl      => <<'_tmpl'.chomp,
+					:klass    => 'set-dynamic',
+					:workflow => 'blog',
+					:tmpl     => <<'_tmpl'.chomp,
 	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_html => <<'_html',
+					:item_arg => {
+						:tmpl => <<'_tmpl',
 		<li>
-			subject:(text 64)
-			body:(textarea 72*10)
+			$(subject)$(.action_update)
+			$(body)
 			<ul><li>qux</li></ul>
 		</li>
-_html
+_tmpl
+						:item => {
+							'body' => {
+								:width  => 72,
+								:height => 10,
+								:klass  => 'textarea',
+							},
+							'subject' => {
+								:tokens => ['64'],
+								:klass  => 'text',
+							},
+						},
+					},
 				},
 			},
 			result[:item],
 			'Parser.parse_html should be able to parse combination of mixed sofa tags'
 		)
 		assert_equal(
-			<<'_html',
+			<<'_tmpl',
 <html>
 	<h1>$(title)</h1>
 $(foo)</html>
-_html
+_tmpl
 			result[:tmpl],
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
@@ -751,17 +806,17 @@ _html
 </html>
 _html
 		assert_equal(
-			<<'_html',
+			<<'_tmpl',
 	<div class="foo-navi">bar</div>
-_html
+_tmpl
 			result[:item]['foo'][:tmpl_navi],
 			'Parser.parse_html should parse action templates in the html'
 		)
 		assert_equal(
-			<<'_html',
+			<<'_tmpl',
 <html>
 $(foo)$(foo.navi)</html>
-_html
+_tmpl
 			result[:tmpl],
 			'Parser.parse_html should replace action templates with proper tags'
 		)
@@ -777,17 +832,17 @@ _html
 </html>
 _html
 		assert_equal(
-			<<'_html',
+			<<'_tmpl',
 	<div class="navi">bar</div>
-_html
+_tmpl
 			result[:item]['main'][:tmpl_navi],
 			"Parser.parse_html should set action templates to item['main'] by default"
 		)
 		assert_equal(
-			<<'_html',
+			<<'_tmpl',
 <html>
 $(main)$(main.navi)</html>
-_html
+_tmpl
 			result[:tmpl],
 			"Parser.parse_html should set action templates to item['main'] by default"
 		)
@@ -807,11 +862,11 @@ _html
 			'Parser.parse_html should ignore the action template without a corresponding SD'
 		)
 		assert_equal(
-			<<'_html',
+			<<'_tmpl',
 <html>
 $(main)	<div class="non_existent-navi">bar</div>
 </html>
-_html
+_tmpl
 			result[:tmpl],
 			'Parser.parse_html should ignore the action template without a corresponding SD'
 		)

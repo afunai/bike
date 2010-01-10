@@ -42,7 +42,7 @@ class TC_Set_Complex < Test::Unit::TestCase
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-			:item_html => <<'_html'
+			:item_arg => Sofa::Parser.parse_html(<<'_html')
 	<li id="@(name)">
 		name:(tomago 32 :'nobody'): comment:(tomago 64 :'hello.')
 		<ul id="files" class="sofa-attachment">

@@ -15,13 +15,6 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@workflow    = Sofa::Workflow.instance self
 		@item_object = {}
 
-		my[:item_arg] = Sofa::Parser.parse_html my[:item_html].to_s
-		my[:item_arg][:tmpl].sub!(
-			/\$\(.*?\)/m,
-			'\&$(.action_update)'
-		) unless @workflow.is_a?(Sofa::Workflow::Attachment) ||
-			my[:item_arg][:tmpl].include?('$(.action_update)')
-
 my[:p_size] = meta[:max] || 10
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
 <form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">

@@ -27,15 +27,28 @@ module Sofa::Parser
 				open + inner + close
 			end
 		}
-# TODO: add $(.navi) etc. to item[*]
 		html = gsub_scalar(html) {|id,meta|
 			item[id] = meta
 			"$(#{id})"
 		}
+
+		item.each {|id,meta|
+			next unless meta[:klass] == 'set-dynamic'
+			tmpl = meta[:tmpl]
+			tmpl << '$(.navi)' unless _include_menu?(html,tmpl,id,'navi')
+			next if meta[:workflow].downcase == 'attachment'
+			tmpl << '$(.submit)' unless _include_menu?(html,tmpl,id,'submit')
+			tmpl << '$(.action_create)' unless _include_menu?(html,tmpl,id,'action_create')
+		}
+
 		{
 			:item => item,
 			:tmpl => html,
 		}
+	end
+
+	def _include_menu?(html,tmpl,id,action)
+		html.include?("$(#{id}.#{action})") || tmpl.include?("$(.#{action})")
 	end
 
 	def gsub_action_tmpl(html,&block)
@@ -102,18 +115,10 @@ module Sofa::Parser
 			"$(.#{action})"
 		}
 
-# TODO: move up to parse_html
-tmpl = "#{open_tag}#{sd_tmpl}#{close_tag}"
-tmpl << '$(.navi)' unless tmpl.include? '$(.navi)'
-unless workflow.downcase == 'attachment'
-	tmpl << '$(.submit)' unless tmpl.include? '$(.submit)'
-	tmpl << '$(.action_create)' unless tmpl.include? '$(.action_create)'
-end
-
 		sd = {
 			:klass     => 'set-dynamic',
 			:workflow  => workflow,
-			:tmpl      => tmpl,
+			:tmpl      => "#{open_tag}#{sd_tmpl}#{close_tag}",
 			:item_html => item_html,
 		}
 		sd.merge! action_tmpl

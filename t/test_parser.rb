@@ -896,4 +896,41 @@ _html
 		)
 	end
 
+	def test_supplement_menus_in_sd
+		result = Sofa::Parser.parse_html <<'_html'
+<ul id="foo" class="sofa-blog">
+	<li class="body">$(text)</li>
+</ul>
+_html
+		assert_match(
+			/\$\(\.navi\)/,
+			result[:item]['foo'][:tmpl],
+			'Parser.parse_html should supplement sd[:tmpl] with default menus'
+		)
+
+		result = Sofa::Parser.parse_html <<'_html'
+<ul id="foo" class="sofa-blog">
+	<div class="navi">bar</div>
+	<li class="body">$(text)</li>
+</ul>
+_html
+		assert_no_match(
+			/\$\(\.navi\).*\$\(\.navi\)/m,
+			result[:item]['foo'][:tmpl],
+			'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
+		)
+
+		result = Sofa::Parser.parse_html <<'_html'
+<div class="foo-navi">bar</div>
+<ul id="foo" class="sofa-blog">
+	<li class="body">$(text)</li>
+</ul>
+_html
+		assert_no_match(
+			/\$\(\.navi\)/,
+			result[:item]['foo'][:tmpl],
+			'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
+		)
+	end
+
 end

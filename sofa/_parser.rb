@@ -104,10 +104,10 @@ module Sofa::Parser
 
 # TODO: move up to parse_html
 tmpl = "#{open_tag}#{sd_tmpl}#{close_tag}"
-tmpl << '$(.navi)' unless tmpl =~ /\$\(\.navi\)/
+tmpl << '$(.navi)' unless tmpl.include? '$(.navi)'
 unless workflow.downcase == 'attachment'
-	tmpl << '$(.submit)' unless tmpl =~ /\$\(\.submit\)/
-	tmpl << '$(.action_create)' unless tmpl =~ /\$\(\.action_create\)/
+	tmpl << '$(.submit)' unless tmpl.include? '$(.submit)'
+	tmpl << '$(.action_create)' unless tmpl.include? '$(.action_create)'
 end
 
 		sd = {

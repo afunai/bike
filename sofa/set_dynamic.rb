@@ -20,7 +20,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 			/\$\(.*?\)/m,
 			'\&$(.action_update)'
 		) unless @workflow.is_a?(Sofa::Workflow::Attachment) ||
-			my[:item_arg][:tmpl] =~ /\$\(\.action_update\)/
+			my[:item_arg][:tmpl].include?('$(.action_update)')
 
 my[:p_size] = meta[:max] || 10
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder

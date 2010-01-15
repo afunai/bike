@@ -51,6 +51,7 @@ class Sofa::Storage
 	end
 
 	def navi(conds)
+		conds[:p] = '1' unless conds[:p] || conds[:id] || (@sd[:p_size].to_i < 1)
 		navi = {}
 		(([:id,:p,:d] & conds.keys) | conds.keys).each {|cid|
 			next unless respond_to?("_sibs_#{cid}",true)

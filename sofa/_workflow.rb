@@ -73,6 +73,10 @@ end
 
 class Sofa::Workflow::Blog < Sofa::Workflow
 
+	DEFAULT_META = {
+		:p_size => 10,
+	}
+
 	PERM = {
 		:create => 0b1100,
 		:read   => 0b1111,
@@ -84,6 +88,10 @@ end
 
 
 class Sofa::Workflow::Attachment < Sofa::Workflow
+
+	DEFAULT_META = {
+		:p_size => 0,
+	}
 
 	PERM = {
 		:create => 0b1010,

@@ -42,6 +42,7 @@ class TC_Storage < Test::Unit::TestCase
 
 	def test_fetch
 		sd = Sofa::Set::Static::Folder.root.item('t_select','main')
+		sd[:p_size] = 10
 
 		Sofa::Storage.constants.collect {|c| Sofa::Storage.const_get c }.each {|klass|
 			next unless klass.is_a?(::Class) && klass.available?

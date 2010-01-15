@@ -18,7 +18,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 
 @meta[:item_arg] ||= {}
 
-my[:p_size] = meta[:max] || 10
+my[:p_size] = meta[:max] if meta[:max]
 		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
 <form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">
 #{my[:tmpl]}</form>

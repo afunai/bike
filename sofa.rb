@@ -7,7 +7,6 @@ require 'rubygems'
 
 class Sofa
 
-	require 'sofa/_field'
 	Dir['./sofa/*.rb'].sort.each {|file| require file }
 
 	module REX

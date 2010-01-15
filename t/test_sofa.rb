@@ -387,6 +387,12 @@ class TC_Sofa < Test::Unit::TestCase
 		)
 
 		assert_equal(
+			'foo=bar/',
+			Sofa::Path.path_of(:p => 1,:foo => 'bar'),
+			'Sofa::Path.path_of should omit the step for conds[:p] when conds[:p] == 1'
+		)
+
+		assert_equal(
 			'foo=1,2,3/',
 			Sofa::Path.path_of(:foo => [1,2,3]),
 			'Sofa::Path.path_of should return multiple values as a comma-separated form'

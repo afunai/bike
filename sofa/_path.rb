@@ -55,7 +55,7 @@ module Sofa::Path
 				'%s/%d/' % [$1,$2.to_i]
 			elsif cid == :d
 				conds[:id] ? '' : "#{conds[:d]}/"
-			else
+			elsif cid != :p || conds[:p].to_i > 1
 				"#{cid}=#{Array(conds[cid]).join ','}/"
 			end
 		}.join

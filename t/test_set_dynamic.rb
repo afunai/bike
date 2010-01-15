@@ -283,7 +283,7 @@ _html
 		)
 
 		assert_equal(
-			'200912/p=1/',
+			'200912/',
 			@sd.send(
 				:_g_uri_prev,
 				:conds => {:d => '200912',:p => '2'}
@@ -307,7 +307,7 @@ _html
 			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
 		)
 		assert_equal(
-			'200911/p=1/',
+			'200911/',
 			@sd.send(
 				:_g_uri_prev,
 				:conds => {:d => '200911',:p => '2'}
@@ -315,7 +315,7 @@ _html
 			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
 		)
 		assert_equal(
-			'200912/p=1/',
+			'200912/',
 			@sd.send(
 				:_g_uri_next,
 				:conds => {:d => '200911',:p => '2'}
@@ -332,7 +332,7 @@ _html
 
 		@sd[:tmpl_navi] = '$(.uri_prev)'
 		assert_equal(
-			'200911/p=1/',
+			'200911/',
 			@sd.send(
 				:_get_by_self_reference,
 				:action      => :navi,
@@ -396,7 +396,7 @@ _html
 
 		@sd[:p_size] = 2
 		assert_equal(
-			['200911/p=1/','200911/p=2/'],
+			['200911/','200911/p=2/'],
 			@sd.send(
 				:_uri_p,
 				:conds => {:d => '200911',:p => '1'}

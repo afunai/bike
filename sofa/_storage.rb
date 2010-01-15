@@ -124,7 +124,7 @@ class Sofa::Storage
 
 	def _sibs_d(conds)
 		rex_d = /^\d{#{conds[:d].length}}/
-		_select_without(:id,:p,:d,conds).collect {|id| id[rex_d] }.uniq
+		_select_without(:id,:p,:d,conds).collect {|id| id[rex_d] }.uniq.compact
 	end
 
 	def _select_without(*cids)

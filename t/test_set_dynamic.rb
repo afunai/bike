@@ -44,6 +44,35 @@ _html
 		)
 	end
 
+	class Sofa::Workflow::Default_meta < Sofa::Workflow
+		DEFAULT_META = {:foo => 'FOO'}
+	end
+	def test_default_meta
+		sd = Sofa::Set::Dynamic.new(:workflow  => 'default_meta')
+		assert_equal(
+			'FOO',
+			sd[:foo],
+			'Set::Dynamic#[] should look for the default value in the workflow'
+		)
+
+		sd = Sofa::Set::Dynamic.new(:workflow  => 'default_meta',:foo => 'BAR')
+		assert_equal(
+			'BAR',
+			sd[:foo],
+			'workflow.DEFAULT_META should be eclipsed by @meta'
+		)
+
+		sd = Sofa::Set::Dynamic.new(:workflow  => 'default_meta')
+		def sd.meta_foo
+			'abc'
+		end
+		assert_equal(
+			'abc',
+			sd[:foo],
+			'workflow.DEFAULT_META should be eclipsed by meta_*()'
+		)
+	end
+
 	def test_meta_tid
 		tid = @sd[:tid]
 		assert_match(

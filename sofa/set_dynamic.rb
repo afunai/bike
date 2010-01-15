@@ -13,6 +13,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@meta        = meta
 		@storage     = Sofa::Storage.instance self
 		@workflow    = Sofa::Workflow.instance self
+		@meta        = @workflow.class.const_get(:DEFAULT_META).merge @meta
 		@item_object = {}
 
 @meta[:item_arg] ||= {}

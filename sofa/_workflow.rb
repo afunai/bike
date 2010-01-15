@@ -5,6 +5,8 @@
 
 class Sofa::Workflow
 
+	DEFAULT_META = {}
+
 	ROLE_ADMIN = 0b1000
 	ROLE_GROUP = 0b0100
 	ROLE_OWNER = 0b0010

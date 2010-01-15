@@ -10,6 +10,8 @@ $KCODE = 'UTF8'
 
 class Sofa::Field
 
+	DEFAULT_META = {}
+
 	def self.instance(meta = {})
 		k = meta[:klass].to_s.split(/-/).inject(Sofa) {|c,name|
 			name = name.capitalize
@@ -21,7 +23,7 @@ class Sofa::Field
 	attr_reader :action,:result
 
 	def initialize(meta = {})
-		@meta = meta
+		@meta = self.class.const_get(:DEFAULT_META).merge meta
 		@val  = val_cast(nil)
 	end
 

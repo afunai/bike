@@ -4,6 +4,7 @@
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
 class Sofa::Foo < Sofa::Field
+	DEFAULT_META = {:foo => 'foo foo'}
 	class Bar < Sofa::Field
 		def _g_test(arg)
 			'just a test.'
@@ -169,6 +170,32 @@ class TC_Field < Test::Unit::TestCase
 		assert(
 			@f.empty?,
 			'Field#empty? should return true if the field has no value'
+		)
+	end
+
+	def test_default_meta
+		f = Sofa::Field.instance(:klass => 'foo')
+		assert_equal(
+			'foo foo',
+			f[:foo],
+			'Field#[] should look for the default value in DEFAULT_META'
+		)
+
+		f = Sofa::Field.instance(:klass => 'foo',:foo => 'bar')
+		assert_equal(
+			'bar',
+			f[:foo],
+			'Field.DEFAULT_META should be eclipsed by @meta'
+		)
+
+		f = Sofa::Field.instance(:klass => 'foo')
+		def f.meta_foo
+			'abc'
+		end
+		assert_equal(
+			'abc',
+			f[:foo],
+			'Field.DEFAULT_META should be eclipsed by meta_*()'
 		)
 	end
 

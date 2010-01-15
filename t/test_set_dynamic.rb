@@ -401,6 +401,61 @@ _html
 		)
 	end
 
+	def test_g_view_ym
+		@sd.load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20100111_0001' => {'name' => 'frank','comment' => 'bar'}
+		)
+		assert_equal(
+			<<'_html',
+<div class="view_ym">
+	<span class="y">
+		2009 |
+		<span class="m"><a href="/foo/200911/">11</a></span>
+		<span class="m"><a href="/foo/200912/">12</a></span>
+		<br/>
+	</span>
+	<span class="y">
+		2010 |
+		<span class="m"><a href="/foo/201001/">01</a></span>
+		<br/>
+	</span>
+</div>
+_html
+			@sd.send(
+				:_g_view_ym,
+				{:conds => {}}
+			),
+			'Set::Dynamic#_g_view_ym should return the available ym conds'
+		)
+
+		assert_equal(
+			<<'_html',
+<div class="view_ym">
+	<span class="y">
+		2009 |
+		<span class="m"><a href="/foo/200911/">11</a></span>
+		<span class="m"><span class="current">12</span></span>
+		<br/>
+	</span>
+	<span class="y">
+		2010 |
+		<span class="m"><a href="/foo/201001/">01</a></span>
+		<br/>
+	</span>
+</div>
+_html
+			@sd.send(
+				:_g_view_ym,
+				{:conds => {:d => '200912'}}
+			),
+			'Set::Dynamic#_g_view_ym should distinguish the current cond[:d] if available'
+		)
+	end
+
 	def test_load_default
 	end
 

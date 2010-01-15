@@ -163,6 +163,68 @@ _html
 		end
 	end
 
+	def _g_view_ym(arg)
+		uris = _uri_ym arg
+		return unless uris && uris.size > 1
+
+		year_tmpl = month_tmpl = nil
+		div = my[:tmpl_view_ym] || <<'_tmpl'
+<div class="view_ym">
+	<span class="y">
+		$(.y) |
+		<span class="m">$()</span>
+		<br/>
+	</span>
+</div>
+_tmpl
+		div = Sofa::Parser.gsub_block(div,'y') {|open,inner,close|
+			inner = Sofa::Parser.gsub_block(inner,'m') {|*t|
+				month_tmpl = t.join
+				'$(.months)'
+			}
+			year_tmpl = open + inner + close
+			'$(.years)'
+		}
+		years = uris.inject({}) {|y,u|
+			year = u[/(\d{4})\d\d\/$/,1]
+			y[year] ||= []
+			y[year] << u
+			y
+		}
+		div.gsub('$(.years)') {
+			years.keys.sort.collect {|year|
+				year_tmpl.gsub('$(.y)',year).gsub('$(.months)') {
+					years[year].collect {|uri|
+						d = uri[/(\d{6})\//,1]
+						y = d[/^\d{4}/]
+						m = d[/\d\d$/]
+						month_tmpl.gsub(/\$\((?:\.(ym|m))?\)/) {
+							label = ($1 == 'ym') ? _label_ym(y,m) : _label_m(m)
+							(arg[:conds] && arg[:conds][:d] == d) ?
+								"<span class=\"current\">#{label}</span>" :
+								"<a href=\"#{my[:path]}/#{uri}\">#{label}</a>"
+						}
+					}.join
+				}
+			}.join
+		}
+	end
+
+	def _uri_ym(arg)
+		@storage.__send__(:_sibs_d,:d => '000000').collect {|ym|
+			Sofa::Path.path_of :d => ym
+		}
+	end
+
+# TODO: move to Sofa::I18n
+def _label_ym(y,m)
+	'%1$s/%2$s' % [y,_label_m(m)]
+end
+
+def _label_m(m)
+	m
+end
+
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)
 		case action

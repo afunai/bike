@@ -75,6 +75,7 @@ class Sofa::Workflow::Blog < Sofa::Workflow
 
 	DEFAULT_META = {
 		:p_size => 10,
+#		:conds  => {:d => '200912',:p => '2'},
 	}
 
 	PERM = {

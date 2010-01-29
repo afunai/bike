@@ -97,7 +97,7 @@ _html
 	end
 
 	def _g_navi(arg)
-		arg[:navi] ||= @storage.navi(arg[:conds] || {})
+		arg[:navi] ||= @storage.navi(conds_of arg)
 		return unless (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
 
 		div = my[:tmpl_navi] || '<div>$(.navi_prev) | $(.navi_p)$(.navi_next)</div>'
@@ -129,7 +129,7 @@ _html
 		div.gsub('$(.items)') {
 			uris.collect {|uri|
 				p = uri[/p=(\d+)/,1] || '1'
-				if arg[:conds][:p] == p
+				if conds_of(arg)[:p] == p
 					item_tmpl.gsub('$()',p)
 				else
 					item_tmpl.gsub('$()',"<a href=\"#{my[:path]}/#{uri}\">#{p}</a>")
@@ -139,22 +139,22 @@ _html
 	end
 
 	def _g_uri_prev(arg)
-		arg[:navi] ||= @storage.navi(arg[:conds] || {})
+		arg[:navi] ||= @storage.navi(conds_of arg)
 		Sofa::Path.path_of(arg[:navi][:prev]) if arg[:navi][:prev]
 	end
 
 	def _g_uri_next(arg)
-		arg[:navi] ||= @storage.navi(arg[:conds] || {})
+		arg[:navi] ||= @storage.navi(conds_of arg)
 		Sofa::Path.path_of(arg[:navi][:next]) if arg[:navi][:next]
 	end
 
 	def _uri_p(arg)
-		arg[:navi] ||= @storage.navi(arg[:conds] || {})
+		arg[:navi] ||= @storage.navi(conds_of arg)
 		if arg[:navi][:sibs] && arg[:navi][:sibs].keys.first == :p
-			base_conds = arg[:conds].dup
+			base_conds = conds_of(arg).dup
 			base_conds.delete :p
 			conds = arg[:navi][:sibs].values.first
-			if arg[:conds] && p = arg[:conds][:p]
+			if p = conds_of(arg)[:p]
 				range = ['1',conds.last] + ((p.to_i - 5)..(p.to_i + 5)).to_a.collect {|i| i.to_s }
 				conds = conds & range
 			end
@@ -201,7 +201,7 @@ _tmpl
 						m = d[/\d\d$/]
 						month_tmpl.gsub(/\$\((?:\.(ym|m))?\)/) {
 							label = ($1 == 'ym') ? _label_ym(y,m) : _label_m(m)
-							(arg[:conds] && arg[:conds][:d] == d) ?
+							(conds_of(arg)[:d] == d) ?
 								"<span class=\"current\">#{label}</span>" :
 								"<a href=\"#{my[:path]}/#{uri}\">#{label}</a>"
 						}

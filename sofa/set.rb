@@ -107,7 +107,7 @@ end
 	end
 
 	def _g_default(arg,&block)
-		collect_item(arg[:conds] || {}) {|item|
+		collect_item(conds_of arg) {|item|
 			item_arg = arg[item[:id]] || {}
 			item_arg[:action] ||= arg[:action]
 			block ? block.call(item,item_arg) : item.get(item_arg)
@@ -115,7 +115,7 @@ end
 	end
 
 	def permit_get?(arg)
-		permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
+		permit?(arg[:action]) || collect_item(conds_of arg).any? {|item|
 			item.permit? arg[:action]
 		}
 	end
@@ -139,6 +139,16 @@ end
 			h[id] = @item_object[id] if @item_object[id].pending?
 			h
 		}
+	end
+
+	def conds_of(arg)
+		if arg[:conds].is_a?(::Hash) && !arg[:conds].empty?
+			arg[:conds]
+		elsif my[:conds].is_a? ::Hash
+			my[:conds]
+		else
+			{}
+		end
 	end
 
 end

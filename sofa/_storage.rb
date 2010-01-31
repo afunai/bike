@@ -29,6 +29,7 @@ class Sofa::Storage
 	end
 
 	def select(conds = {})
+		conds = _cast(conds)
 		item_ids = _select(conds)
 		item_ids = _sort(item_ids,conds)
 		item_ids = _page(item_ids,conds)
@@ -83,8 +84,32 @@ class Sofa::Storage
 
 	private
 
+	def _cast(conds)
+		conds.each {|cid,val|
+			case cid
+				when :d
+					conds[:d] = conds[:d].to_s
+					conds[:d] = _sibs_d(conds).last if conds[:d] =~ /9999(99)?(99)?/
+					conds[:d] = nil unless conds[:d] =~ Sofa::REX::COND_D
+				when :id
+					conds[:id] = Array(conds[:id]).collect {|id|
+						case id
+							when '99999999_9999','last'
+								_sibs_id(conds).last
+							when Sofa::REX::ID,Sofa::REX::ID_NEW
+								id
+						end
+					}.uniq.compact
+				when :p
+					conds[:p] = conds[:p].to_s
+					conds[:p] = _sibs_p(conds).last if conds[:p] == 'last'
+					conds[:p] = nil unless conds[:p] =~ /^\d+$/
+			end
+		}
+		conds
+	end
+
 	def _select(conds)
-# TODO: cast / sanitize
 		if conds[:id]
 			_select_by_id(conds) | (@sd.instance_variable_get(:@item_object).keys & conds[:id].to_a)
 		elsif cid = (conds.keys - [:order,:p]).first

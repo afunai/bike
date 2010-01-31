@@ -110,7 +110,6 @@ class Sofa::Field
 	end
 
 	def get(arg = {})
-#arg[:conds] = my[:conds] if my[:conds] && (arg[:conds].nil? || arg[:conds].empty?)
 		if permit_get? arg
 			_get(arg)
 		else

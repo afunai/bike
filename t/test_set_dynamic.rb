@@ -94,10 +94,10 @@ _html
 	end
 
 	def test_item
-		@sd.load('1234' => {'name' => 'frank'})
+		@sd.load('20100131_1234' => {'name' => 'frank'})
 		assert_instance_of(
 			Sofa::Set::Static,
-			@sd.item('1234'),
+			@sd.item('20100131_1234'),
 			'Set::Dynamic#item should return the child set in the storage'
 		)
 
@@ -113,20 +113,20 @@ _html
 
 	def test_val
 		@sd.load(
-			'1234' => {'name' => 'frank'},
-			'1235' => {'name' => 'carl'}
+			'20100131_1234' => {'name' => 'frank'},
+			'20100131_1235' => {'name' => 'carl'}
 		)
 		assert_equal(
 			{
-				'1234' => {'name' => 'frank'},
-				'1235' => {'name' => 'carl'},
+				'20100131_1234' => {'name' => 'frank'},
+				'20100131_1235' => {'name' => 'carl'},
 			},
 			@sd.val,
 			'Set::Dynamic#val without arg should return values of all items in the storage'
 		)
 		assert_equal(
 			{'name' => 'frank'},
-			@sd.val('1234'),
+			@sd.val('20100131_1234'),
 			'Set::Dynamic#val with an item id should return the value of the item in the storage'
 		)
 		assert_nil(
@@ -137,8 +137,8 @@ _html
 
 	def test_get
 		@sd.load(
-			'1234' => {'name' => 'frank','comment' => 'bar'},
-			'1235' => {'name' => 'carl', 'comment' => 'baz'}
+			'20100131_1234' => {'name' => 'frank','comment' => 'bar'},
+			'20100131_1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
 		@sd[:tmpl_navi] = ''
 		@sd.each {|item| item[:tmpl_action_update] = '' }
@@ -158,7 +158,7 @@ _html
 	<li>carl: baz</li>
 </ul>
 _html
-			@sd.get(:conds => {:id => '1235'}),
+			@sd.get(:conds => {:id => '20100131_1235'}),
 			'Set::Dynamic#get should return the html by [:tmpl]'
 		)
 
@@ -176,7 +176,7 @@ _html
 </ul>
 [foo-update]
 _html
-			@sd.get(:conds => {:id => '1235'},:action => :update),
+			@sd.get(:conds => {:id => '20100131_1235'},:action => :update),
 			'Set::Dynamic#get should pass the given action to lower items'
 		)
 	end

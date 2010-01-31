@@ -20,6 +20,7 @@ _tmpl
 	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
 _html
 		)
+		@sd[:conds] = {}
 		@sd[:tmpl_action_create] = ''
 		def @sd._g_submit(arg)
 			"[#{my[:id]}-#{arg[:orig_action]}]\n"

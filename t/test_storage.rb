@@ -178,11 +178,6 @@ class TC_Storage < Test::Unit::TestCase
 			storage.select(:d => '20091115'),
 			"#{storage.class}#select should return item ids that match given conds"
 		)
-		assert_equal(
-			['20091226_0001'],
-			storage.select(:d => '99999999'),
-			"#{storage.class}#select should recognize 'the last' conds"
-		)
 	end
 
 	def _test_sort(storage)

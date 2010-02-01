@@ -45,6 +45,22 @@ _html
 		Sofa.base ? Sofa.base[:path] : my[:path]
 	end
 
+def get(arg = {})
+	arg[:conds] = ppconds_of arg
+arg[:conds] = @storage.send(:_cast,arg[:conds])
+	super
+end
+
+def ppconds_of(arg)
+	if arg[:conds].is_a? ::Hash
+		arg[:conds]
+	elsif my[:conds].is_a? ::Hash
+		my[:conds].dup
+	else
+		{}
+	end
+end
+
 	def commit(type = :temp)
 		items = pending_items
 		if @storage.is_a? Sofa::Storage::Temp
@@ -97,7 +113,7 @@ _html
 	end
 
 	def _g_navi(arg)
-		arg[:navi] ||= @storage.navi(conds_of arg)
+		arg[:navi] ||= @storage.navi(arg[:conds] || {})
 		return unless (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
 
 		div = my[:tmpl_navi] || '<div>$(.navi_prev) | $(.navi_p)$(.navi_next)</div>'
@@ -129,7 +145,7 @@ _html
 		div.gsub('$(.items)') {
 			uris.collect {|uri|
 				p = uri[/p=(\d+)/,1] || '1'
-				if conds_of(arg)[:p] == p
+				if arg[:conds][:p] == p
 					item_tmpl.gsub('$()',p)
 				else
 					item_tmpl.gsub('$()',"<a href=\"#{my[:path]}/#{uri}\">#{p}</a>")
@@ -139,22 +155,22 @@ _html
 	end
 
 	def _g_uri_prev(arg)
-		arg[:navi] ||= @storage.navi(conds_of arg)
+		arg[:navi] ||= @storage.navi(arg[:conds] || {})
 		Sofa::Path.path_of(arg[:navi][:prev]) if arg[:navi][:prev]
 	end
 
 	def _g_uri_next(arg)
-		arg[:navi] ||= @storage.navi(conds_of arg)
+		arg[:navi] ||= @storage.navi(arg[:conds] || {})
 		Sofa::Path.path_of(arg[:navi][:next]) if arg[:navi][:next]
 	end
 
 	def _uri_p(arg)
-		arg[:navi] ||= @storage.navi(conds_of arg)
+		arg[:navi] ||= @storage.navi(arg[:conds] || {})
 		if arg[:navi][:sibs] && arg[:navi][:sibs].keys.first == :p
-			base_conds = conds_of(arg).dup
+			base_conds = arg[:conds].dup
 			base_conds.delete :p
 			conds = arg[:navi][:sibs].values.first
-			if p = conds_of(arg)[:p]
+			if p = arg[:conds][:p]
 				range = ['1',conds.last] + ((p.to_i - 5)..(p.to_i + 5)).to_a.collect {|i| i.to_s }
 				conds = conds & range
 			end
@@ -201,7 +217,7 @@ _tmpl
 						m = d[/\d\d$/]
 						month_tmpl.gsub(/\$\((?:\.(ym|m))?\)/) {
 							label = ($1 == 'ym') ? _label_ym(y,m) : _label_m(m)
-							(conds_of(arg)[:d] == d) ?
+							(arg[:conds][:d] == d) ?
 								"<span class=\"current\">#{label}</span>" :
 								"<a href=\"#{my[:path]}/#{uri}\">#{label}</a>"
 						}

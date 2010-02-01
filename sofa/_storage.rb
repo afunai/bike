@@ -29,7 +29,6 @@ class Sofa::Storage
 	end
 
 	def select(conds = {})
-		conds = _cast(conds)
 		item_ids = _select(conds)
 		item_ids = _sort(item_ids,conds)
 		item_ids = _page(item_ids,conds)
@@ -55,7 +54,7 @@ class Sofa::Storage
 		conds[:p] = '1' unless conds[:p] || conds[:id] || (@sd[:p_size].to_i < 1)
 		navi = {}
 		(([:id,:p,:d] & conds.keys) | conds.keys).each {|cid|
-			next unless respond_to?("_sibs_#{cid}",true)
+			next unless conds[cid] && respond_to?("_sibs_#{cid}",true)
 			sibs = __send__("_sibs_#{cid}",conds)
 
 			if i = sibs.index(conds[cid])
@@ -85,7 +84,7 @@ class Sofa::Storage
 	private
 
 	def _cast(conds)
-		conds.each {|cid,val|
+		([:d,:id,:p] & conds.keys).each {|cid|
 			case cid
 				when :d
 					conds[:d] = conds[:d].to_s

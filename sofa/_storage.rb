@@ -81,32 +81,11 @@ class Sofa::Storage
 		navi
 	end
 
-	private
-
-	def _cast(conds)
-		([:d,:id,:p] & conds.keys).each {|cid|
-			case cid
-				when :d
-					conds[:d] = conds[:d].to_s
-					conds[:d] = _sibs_d(conds).last if conds[:d] =~ /9999(99)?(99)?/
-					conds[:d] = nil unless conds[:d] =~ Sofa::REX::COND_D
-				when :id
-					conds[:id] = Array(conds[:id]).collect {|id|
-						case id
-							when '99999999_9999','last'
-								_sibs_id(conds).last
-							when Sofa::REX::ID,Sofa::REX::ID_NEW
-								id
-						end
-					}.uniq.compact
-				when :p
-					conds[:p] = conds[:p].to_s
-					conds[:p] = _sibs_p(conds).last if conds[:p] == 'last'
-					conds[:p] = nil unless conds[:p] =~ /^\d+$/
-			end
-		}
-		conds
+	def last(cid,conds)
+		__send__("_sibs_#{cid}",conds).last
 	end
+
+	private
 
 	def _select(conds)
 		if conds[:id]

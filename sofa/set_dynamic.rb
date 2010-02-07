@@ -45,21 +45,10 @@ _html
 		Sofa.base ? Sofa.base[:path] : my[:path]
 	end
 
-def get(arg = {})
-	arg[:conds] = ppconds_of arg
-arg[:conds] = @storage.send(:_cast,arg[:conds])
-	super
-end
-
-def ppconds_of(arg)
-	if arg[:conds].is_a? ::Hash
-		arg[:conds]
-	elsif my[:conds].is_a? ::Hash
-		my[:conds].dup
-	else
-		{}
+	def get(arg = {})
+		arg[:conds] = _cast arg[:conds]
+		super
 	end
-end
 
 	def commit(type = :temp)
 		items = pending_items
@@ -88,6 +77,34 @@ end
 
 	def _val
 		@storage.val
+	end
+
+	def _cast(conds)
+		if !conds.is_a?(::Hash) || conds.empty?
+			conds = my[:conds].is_a?(::Hash) ? my[:conds].dup : {}
+		end
+		([:d,:id,:p] & conds.keys).each {|cid|
+			case cid
+				when :d
+					conds[:d] = conds[:d].to_s
+					conds[:d] = @storage.last(:d,conds) if conds[:d] =~ /9999(99)?(99)?/
+					conds[:d] = nil unless conds[:d] =~ Sofa::REX::COND_D
+				when :id
+					conds[:id] = Array(conds[:id]).collect {|id|
+						case id
+							when '99999999_9999','last'
+								@storage.last(:id,conds)
+							when Sofa::REX::ID,Sofa::REX::ID_NEW
+								id
+						end
+					}.uniq.compact
+				when :p
+					conds[:p] = conds[:p].to_s
+					conds[:p] = @storage.last(:p,conds) if conds[:p] == 'last'
+					conds[:p] = nil unless conds[:p] =~ /^\d+$/
+			end
+		}
+		conds
 	end
 
 	def _get(arg)

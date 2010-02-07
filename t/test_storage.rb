@@ -57,102 +57,15 @@ class TC_Storage < Test::Unit::TestCase
 				'20091226_0001' => {'name' => 'bar',  'comment' => 'I am BAR again!'}
 			)
 
-			_test_cast(storage)
 			_test_select(storage)
 			_test_sort(storage)
 			_test_page(storage)
 			_test_val(storage)
 			_test_navi(storage)
+			_test_last(storage)
 
 			storage.clear
 		}
-	end
-
-	def _test_cast(storage)
-		assert_equal(
-			{:d => '20100131'},
-			storage.send(
-				:_cast,
-				{:d => ['20100131']}
-			),
-			"#{storage.class}#_cast should cast conds[:d] as a string"
-		)
-		assert_equal(
-			{:d => nil},
-			storage.send(
-				:_cast,
-				{:d => '30100131'}
-			),
-			"#{storage.class}#_cast should bang malformed conds[:d]"
-		)
-		assert_equal(
-			{:d => '20091226'},
-			storage.send(
-				:_cast,
-				{:d => '99999999'}
-			),
-			"#{storage.class}#_cast should cast 'the last' conds"
-		)
-		assert_equal(
-			{:d => '200912'},
-			storage.send(
-				:_cast,
-				{:d => '999999'}
-			),
-			"#{storage.class}#_cast should cast 'the last' conds"
-		)
-
-		assert_equal(
-			{:id => ['20091226_0001']},
-			storage.send(
-				:_cast,
-				{:id => '20091226_0001'}
-			),
-			"#{storage.class}#_cast should cast conds[:id] as an array"
-		)
-		assert_equal(
-			{:id => ['20091226_0001']},
-			storage.send(
-				:_cast,
-				{:id => ['20091226_0001','../i_am_evil']}
-			),
-			"#{storage.class}#_cast should bang malformed conds[:id]"
-		)
-		assert_equal(
-			{:id => ['20091114_0001','20091226_0001']},
-			storage.send(
-				:_cast,
-				{:id => ['20091114_0001','last']}
-			),
-			"#{storage.class}#_cast should cast 'the last' conds"
-		)
-
-		storage.sd[:p_size] = 2
-		assert_equal(
-			{:p => '123'},
-			storage.send(
-				:_cast,
-				{:p => ['123']}
-			),
-			"#{storage.class}#_cast should cast conds[:p] as a string"
-		)
-		assert_equal(
-			{:p => nil},
-			storage.send(
-				:_cast,
-				{:p => 'i am evil'}
-			),
-			"#{storage.class}#_cast should bang malformed conds[:p]"
-		)
-		assert_equal(
-			{:p => '3'},
-			storage.send(
-				:_cast,
-				{:p => 'last'}
-			),
-			"#{storage.class}#_cast should cast 'the last' conds"
-		)
-		storage.sd[:p_size] = 10
 	end
 
 	def _test_select(storage)
@@ -382,6 +295,33 @@ class TC_Storage < Test::Unit::TestCase
 			storage.navi({}),
 			"#{storage.class}#navi without conds should return an empty navi"
 		)
+	end
+
+	def _test_last(storage)
+		assert_equal(
+			'20091226',
+			storage.last(:d,:d => '99999999'),
+			"#{storage.class}#last should cast 'the last' conds"
+		)
+		assert_equal(
+			'200912',
+			storage.last(:d,:d => '999999'),
+			"#{storage.class}#last should cast 'the last' conds"
+		)
+
+		assert_equal(
+			'20091226_0001',
+			storage.last(:id,:id => ['20091114_0001','last']),
+			"#{storage.class}#last should cast 'the last' conds"
+		)
+
+		storage.sd[:p_size] = 2
+		assert_equal(
+			'3',
+			storage.last(:p,:p => 'last'),
+			"#{storage.class}#last should cast 'the last' conds"
+		)
+		storage.sd[:p_size] = 10
 	end
 
 	def test_store

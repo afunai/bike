@@ -486,6 +486,117 @@ _html
 		)
 	end
 
+	def test_cast_d
+		@sd.load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank','comment' => 'bar'}
+		)
+
+		assert_equal(
+			{:d => '20100131'},
+			@sd.send(
+				:_cast,
+				{:d => ['20100131']}
+			),
+			'Set::Dynamic#_cast should cast conds[:d] as a string'
+		)
+		assert_equal(
+			{:d => nil},
+			@sd.send(
+				:_cast,
+				{:d => '30100131'}
+			),
+			'Set::Dynamic#_cast should bang malformed conds[:d]'
+		)
+		assert_equal(
+			{:d => '20091201'},
+			@sd.send(
+				:_cast,
+				{:d => '99999999'}
+			),
+			"Set::Dynamic#_cast should cast 'the last' conds"
+		)
+		assert_equal(
+			{:d => '200912'},
+			@sd.send(
+				:_cast,
+				{:d => '999999'}
+			),
+			"Set::Dynamic#_cast should cast 'the last' conds"
+		)
+	end
+
+	def test_cast_id
+		@sd.load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091226_0001' => {'name' => 'frank','comment' => 'bar'}
+		)
+
+		assert_equal(
+			{:id => ['20091226_0001']},
+			@sd.send(
+				:_cast,
+				{:id => '20091226_0001'}
+			),
+			'Set::Dynamic#_cast should cast conds[:id] as an array'
+		)
+		assert_equal(
+			{:id => ['20091226_0001']},
+			@sd.send(
+				:_cast,
+				{:id => ['20091226_0001','../i_am_evil']}
+			),
+			'Set::Dynamic#_cast should bang malformed conds[:id]'
+		)
+		assert_equal(
+			{:id => ['20091114_0001','20091226_0001']},
+			@sd.send(
+				:_cast,
+				{:id => ['20091114_0001','last']}
+			),
+			"Set::Dynamic#_cast should cast 'the last' conds"
+		)
+	end
+
+	def test_cast_p
+		@sd.load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091226_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20100207_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20100207_0002' => {'name' => 'frank','comment' => 'bar'}
+		)
+
+		@sd[:p_size] = 2
+		assert_equal(
+			{:p => '123'},
+			@sd.send(
+				:_cast,
+				{:p => ['123']}
+			),
+			'Set::Dynamic#_cast should cast conds[:p] as a string'
+		)
+		assert_equal(
+			{:p => nil},
+			@sd.send(
+				:_cast,
+				{:p => 'i am evil'}
+			),
+			'Set::Dynamic#_cast should bang malformed conds[:p]'
+		)
+		assert_equal(
+			{:p => '3'},
+			@sd.send(
+				:_cast,
+				{:p => 'last'}
+			),
+			"Set::Dynamic#_cast should cast 'the last' conds"
+		)
+		@sd[:p_size] = 10
+	end
+
 	def test_load_default
 	end
 

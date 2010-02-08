@@ -93,6 +93,24 @@ _html
 		)
 	end
 
+	def test_meta_base_path
+		item = Sofa::Set::Static::Folder.root.item('foo','main')
+
+		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','sub')
+		assert_equal(
+			'/foo/bar/sub',
+			item[:base_path],
+			'Field#[:base_path] should return the path name of the base SD'
+		)
+
+		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		assert_equal(
+			'/foo/bar',
+			item[:base_path],
+			"Field#[:base_path] should omit 'main' in the path"
+		)
+	end
+
 	def test_item
 		@sd.load('20100131_1234' => {'name' => 'frank'})
 		assert_instance_of(

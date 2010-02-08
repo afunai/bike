@@ -149,16 +149,6 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
-	def test_path
-		item = Sofa::Set::Static::Folder.root.item('foo','main')
-		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		assert_equal(
-			'/foo/bar/main',
-			item[:base_path],
-			'Field#[:base_path] should return the path name of the base SD'
-		)
-	end
-
 	def test_empty?
 		@f.load 'foo'
 		assert(

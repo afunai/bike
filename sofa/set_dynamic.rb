@@ -38,7 +38,7 @@ _html
 	end
 
 	def meta_path
-		"#{my[:dir]}/#{my[:name].gsub('-','/')}"
+		(my[:name] == 'main') ? my[:dir] : "#{my[:dir]}/#{my[:name].sub(/^main-?/,'').gsub('-','/')}"
 	end
 
 	def meta_base_path

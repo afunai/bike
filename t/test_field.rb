@@ -60,7 +60,7 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
-	def test_name
+	def test_meta_name
 		item = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
 			'main',
@@ -75,7 +75,7 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
-	def test_full_name
+	def test_meta_full_name
 		item = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
 			'-foo-bar-main',
@@ -90,7 +90,7 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
-	def test_short_name
+	def test_meta_short_name
 		item = Sofa::Set::Static::Folder.root.item(
 			'foo','bar','main','20091120_0001','replies','20091208_0001','reply'
 		)
@@ -126,26 +126,26 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
-	def test_sd
+	def test_meta_sd
 		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
 			sd,
 			sd[:sd],
-			'Field#[:workflow] should return the nearest set_dynamic'
+			'Field#[:sd] should return the nearest set_dynamic'
 		)
 		assert_equal(
 			sd,
 			sd.item('20091120_0001')[:sd],
-			'Field#[:workflow] should return the nearest set_dynamic'
+			'Field#[:sd] should return the nearest set_dynamic'
 		)
 		assert_equal(
 			sd,
 			sd.item('20091120_0001','name')[:sd],
-			'Field#[:workflow] should return the nearest set_dynamic'
+			'Field#[:sd] should return the nearest set_dynamic'
 		)
 		assert_nil(
 			Sofa::Set::Static::Folder.root[:sd],
-			'Field#[:workflow] should return nil if there is no set_dynamic in the ancestors'
+			'Field#[:sd] should return nil if there is no set_dynamic in the ancestors'
 		)
 	end
 

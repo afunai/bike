@@ -75,6 +75,10 @@ class Sofa::Field
 		f
 	end
 
+	def meta_client
+		Sofa.client
+	end
+
 	def meta_owner
 		@meta[:owner] || (my[:parent] ? my[:parent][:owner] : 'root')
 	end
@@ -93,9 +97,9 @@ class Sofa::Field
 
 	def meta_roles
 		roles  = Sofa::Workflow::ROLE_GUEST
-		roles |= Sofa::Workflow::ROLE_ADMIN if my[:admins].include? Sofa.client
-		roles |= Sofa::Workflow::ROLE_GROUP if my[:group].include? Sofa.client
-		roles |= Sofa::Workflow::ROLE_OWNER if my[:owner] == Sofa.client
+		roles |= Sofa::Workflow::ROLE_ADMIN if my[:admins].include? my[:client]
+		roles |= Sofa::Workflow::ROLE_GROUP if my[:group].include? my[:client]
+		roles |= Sofa::Workflow::ROLE_OWNER if my[:owner] == my[:client]
 		roles
 	end
 

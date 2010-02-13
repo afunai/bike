@@ -149,6 +149,15 @@ class TC_Field < Test::Unit::TestCase
 		)
 	end
 
+	def test_meta_client
+		Sofa.client = 'frank'
+		assert_equal(
+			'frank',
+			Sofa::Field.new[:client],
+			'Field#[:client] should return the client of the current thread'
+		)
+	end
+
 	def test_empty?
 		@f.load 'foo'
 		assert(

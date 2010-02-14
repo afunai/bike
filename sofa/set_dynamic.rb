@@ -115,6 +115,16 @@ _html
 		super unless @workflow._hide?(arg)
 	end
 
+	def _g_login(arg)
+		<<_html
+<form id="#{my[:name]}" method="post" action="#{my[:base_path]}/login.html">
+	<label for="id">id</label><input type="text" id="id" name="id" size="10" value="" />
+	<label for="pw">pw</label><input type="password" id="pw" name="pw" size="10" value="" />
+	<input type="submit" value="login" />
+</form>
+_html
+	end
+
 	def _g_submit(arg)
 		@workflow._g_submit arg
 	end

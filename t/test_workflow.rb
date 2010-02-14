@@ -121,6 +121,26 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
+	def test_wf_permit_login_action?
+		wf = Sofa::Workflow::Foo.new(nil)
+		assert(
+			wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:login),
+			'Set::Workflow#permit? should always permit :login'
+		)
+		assert(
+			wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:login),
+			'Set::Workflow#permit? should always permit :login'
+		)
+		assert(
+			wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:login),
+			'Set::Workflow#permit? should always permit :login'
+		)
+		assert(
+			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:login),
+			'Set::Workflow#permit? should always permit :login'
+		)
+	end
+
 	def test_wf_permit_abnormal_action?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(

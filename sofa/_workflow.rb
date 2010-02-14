@@ -35,7 +35,7 @@ class Sofa::Workflow
 	end
 
 	def permit?(roles,action)
-		(roles & self.class.const_get(:PERM)[action].to_i) > 0
+		(action == :login) || ((roles & self.class.const_get(:PERM)[action].to_i) > 0)
 	end
 
 	def before_post(action,v)

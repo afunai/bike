@@ -44,19 +44,19 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_guest?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_GUEST,:create) },
+			!wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_GUEST,:read) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_GUEST,:update) },
+			!wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_GUEST,:delete) },
+			!wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
@@ -64,19 +64,19 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_owner?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_OWNER,:create) },
+			!wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_OWNER,:read) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_OWNER,:update) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_OWNER,:delete) },
+			!wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
@@ -84,19 +84,19 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_group?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_GROUP,:create) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_GROUP,:read) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_GROUP,:update) },
+			!wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_GROUP,:delete) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
@@ -104,19 +104,19 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_admin?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:create) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:read) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:update) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:delete) },
+			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
@@ -124,7 +124,7 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_abnormal_action?
 		wf = Sofa::Workflow::Foo.new(nil)
 		assert(
-			!wf.instance_eval { permit?(Sofa::Workflow::ROLE_ADMIN,:'non-exist') },
+			!wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:'non-exist'),
 			'Set::Workflow#permit? should always return false for non-exist actions'
 		)
 	end

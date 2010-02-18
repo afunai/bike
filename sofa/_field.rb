@@ -117,7 +117,8 @@ class Sofa::Field
 		if permit_get? arg
 			_get(arg)
 		else
-			(arg[:action] = default_action) ? _get(arg) : 'xxx'
+			arg[:action] = (arg[:action] && my[:client] == 'nobody') ? :login : default_action
+			arg[:action] ? _get(arg) : 'xxx'
 		end
 	end
 

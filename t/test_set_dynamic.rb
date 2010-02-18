@@ -862,9 +862,9 @@ _html
 		arg = {:action => :update}
 		@sd.get arg
 		assert_equal(
-			:read,
+			:login,
 			arg[:action],
-			'Set::Dynamic#get should retreat from the forbidden action'
+			'Set::Dynamic#get should retreat to :login when sd[:client] is nobody'
 		)
 	end
 

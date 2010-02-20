@@ -61,51 +61,59 @@ class Sofa
 		base = Sofa.transaction[tid] || Sofa::Path.base_of(path)
 		return response_not_found unless base
 
+base[:tid] = tid
 		Sofa.current[:base] = base
 Sofa.client = 'root'
 
 		if method == 'get'
-			until base.is_a? Sofa::Set::Static::Folder
-				params = {base[:id] => params}
-				params[:conds] = {:id => base[:id]} if base[:parent].is_a? Sofa::Set::Dynamic
-				base = base[:parent]
-			end if base.is_a? Sofa::Set::Dynamic
-
-			response_ok :body => base.get(params)
+			get(base,params)
 		else
-			base.update params
-			if params[:status]
-				base[:folder].commit :persistent
-				if base.result
-					ids = base.result.values.collect {|item|
-						item[:id] if item[:id][Sofa::REX::ID]
-					}.compact
-					id_step = "id=#{ids.join ','}/" unless ids.empty? || base[:parent] != base[:folder]
-					action = params[:status] ? base.workflow.next_action(params) : :update
-					response_see_other(
-						:location => base[:path] + "/#{id_step}#{action}.html"
-					)
-				else
-					# base.errors
-				end
-			else
-				base[:tid] = tid
-				Sofa.transaction[tid] ||= base
-				items = base.instance_eval {
-					@item_object.values.select {|item| item.pending? }
-				}
-				base.commit :temp
-
-				item_ids = items.collect {|item| item[:id] }
-				id_step  = "id=#{item_ids.join ','}/" unless item_ids.empty?
-				response_see_other(
-					:location => base[:path] + "/#{tid}/#{id_step}update.html"
-				)
-			end
+			post(base,params)
 		end
 	end
 
 	private
+
+	def get(base,params)
+		until base.is_a? Sofa::Set::Static::Folder
+			params = {base[:id] => params}
+			params[:conds] = {:id => base[:id]} if base[:parent].is_a? Sofa::Set::Dynamic
+			base = base[:parent]
+		end if base.is_a? Sofa::Set::Dynamic
+
+		response_ok :body => base.get(params)
+	end
+
+	def post(base,params)
+		base.update params
+		if params[:status]
+			base[:folder].commit :persistent
+			if base.result
+				ids = base.result.values.collect {|item|
+					item[:id] if item[:id][Sofa::REX::ID]
+				}.compact
+				id_step = "id=#{ids.join ','}/" unless ids.empty? || base[:parent] != base[:folder]
+				action = params[:status] ? base.workflow.next_action(params) : :update
+				response_see_other(
+					:location => base[:path] + "/#{id_step}#{action}.html"
+				)
+			else
+				# base.errors
+			end
+		else
+			Sofa.transaction[base[:tid]] ||= base
+			items = base.instance_eval {
+				@item_object.values.select {|item| item.pending? }
+			}
+			base.commit :temp
+
+			item_ids = items.collect {|item| item[:id] }
+			id_step  = "id=#{item_ids.join ','}/" unless item_ids.empty?
+			response_see_other(
+				:location => base[:path] + "/#{base[:tid]}/#{id_step}update.html"
+			)
+		end
+	end
 
 	def params_from_request(req)
 		params = rebuild_params req.params

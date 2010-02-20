@@ -74,6 +74,12 @@ Sofa.client = 'root'
 
 	private
 
+def login(base,params)
+end
+
+def logout(base,params)
+end
+
 	def get(base,params)
 		until base.is_a? Sofa::Set::Static::Folder
 			params = {base[:id] => params}

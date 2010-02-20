@@ -93,7 +93,7 @@ Sofa.client = 'root'
 					item[:id] if item[:id][Sofa::REX::ID]
 				}.compact
 				id_step = "id=#{ids.join ','}/" unless ids.empty? || base[:parent] != base[:folder]
-				action = params[:status] ? base.workflow.next_action(params) : :update
+				action = base.workflow.next_action params
 				response_see_other(
 					:location => base[:path] + "/#{id_step}#{action}.html"
 				)

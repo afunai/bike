@@ -29,6 +29,7 @@ class Sofa::Storage
 	end
 
 	def select(conds = {})
+		_cast conds
 		item_ids = _select(conds)
 		item_ids = _sort(item_ids,conds)
 		item_ids = _page(item_ids,conds)
@@ -57,9 +58,7 @@ class Sofa::Storage
 			next unless conds[cid] && respond_to?("_sibs_#{cid}",true)
 			sibs = __send__("_sibs_#{cid}",conds)
 
-# TODO: should be cast in the upper tier?
-c = (cid == :id) ? cast_ids(conds[cid]) : conds[cid]
-			c = c.first if c.is_a?(::Array) && c.size < 2
+			c = (c.is_a?(::Array) && c.size < 2) ? conds[cid].first : conds[cid]
 			if i = sibs.index(c)
 				if !navi[:prev] && i > 0
 					navi[:prev] = conds.merge(cid => sibs[i - 1])
@@ -89,6 +88,33 @@ c = (cid == :id) ? cast_ids(conds[cid]) : conds[cid]
 	end
 
 	private
+
+	def _cast(conds)
+		([:d,:id,:p] & conds.keys).each {|cid|
+			case cid
+				when :d
+					conds[:d] = conds[:d].to_s
+					conds[:d] = last(:d,conds) if conds[:d] =~ /9999(99)?(99)?/
+					conds[:d] = nil unless conds[:d] =~ Sofa::REX::COND_D
+				when :id
+					conds[:id] = Array(conds[:id]).collect {|id|
+						case id
+							when '99999999_9999','last'
+								last(:id,conds)
+							when /\A#{Sofa::REX::ID_SHORT}\z/
+								"00000000_#{id}"
+							when Sofa::REX::ID,Sofa::REX::ID_NEW
+								id
+						end
+					}.uniq.compact
+				when :p
+					conds[:p] = conds[:p].to_s
+					conds[:p] = last(:p,conds) if conds[:p] == 'last'
+					conds[:p] = nil unless conds[:p] =~ /^\d+$/
+			end
+		}
+		conds
+	end
 
 	def _select(conds)
 		if conds[:id]

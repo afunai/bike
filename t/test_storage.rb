@@ -370,14 +370,6 @@ class TC_Storage < Test::Unit::TestCase
 			storage.navi(:id => '00000000_bobby'),
 			"#{storage.class}#navi should return the next conditions for special ids"
 		)
-		assert_equal(
-			{
-				:next => {:id => '00000000_carl'},
-				:sibs => {:id => ['00000000_bobby','00000000_carl','00000000_frank']},
-			},
-			storage.navi(:id => 'bobby'),
-			"#{storage.class}#navi should return the next conditions for short ids"
-		)
 	end
 
 	def test_store
@@ -496,6 +488,125 @@ class TC_Storage < Test::Unit::TestCase
 		assert_nil(
 			storage.val(id2),
 			"#{storage.class}#clear should delete all elements"
+		)
+	end
+
+	def test_cast_d
+		sd = Sofa::Set::Dynamic.new(
+			:klass => 'set-dynamic'
+		).load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank','comment' => 'bar'}
+		)
+		storage = sd.storage
+
+		assert_equal(
+			{:d => '20100131'},
+			storage.send(
+				:_cast,
+				{:d => ['20100131']}
+			),
+			'Storage#_cast should cast conds[:d] as a string'
+		)
+		assert_equal(
+			{:d => nil},
+			storage.send(
+				:_cast,
+				{:d => '30100131'}
+			),
+			'Storage#_cast should bang malformed conds[:d]'
+		)
+		assert_equal(
+			{:d => '20091201'},
+			storage.send(
+				:_cast,
+				{:d => '99999999'}
+			),
+			"Storage#_cast should cast 'the last' conds"
+		)
+		assert_equal(
+			{:d => '200912'},
+			storage.send(
+				:_cast,
+				{:d => '999999'}
+			),
+			"Storage#_cast should cast 'the last' conds"
+		)
+	end
+
+	def test_cast_id
+		sd = Sofa::Set::Dynamic.new(
+			:klass => 'set-dynamic'
+		).load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091226_0001' => {'name' => 'frank','comment' => 'bar'}
+		)
+		storage = sd.storage
+
+		assert_equal(
+			{:id => ['20091226_0001']},
+			storage.send(
+				:_cast,
+				{:id => '20091226_0001'}
+			),
+			'Storage#_cast should cast conds[:id] as an array'
+		)
+		assert_equal(
+			{:id => ['20091226_0001']},
+			storage.send(
+				:_cast,
+				{:id => ['20091226_0001','../i_am_evil']}
+			),
+			'Storage#_cast should bang malformed conds[:id]'
+		)
+		assert_equal(
+			{:id => ['20091114_0001','20091226_0001']},
+			storage.send(
+				:_cast,
+				{:id => ['20091114_0001','last']}
+			),
+			"Storage#_cast should cast 'the last' conds"
+		)
+	end
+
+	def test_cast_p
+		sd = Sofa::Set::Dynamic.new(
+			:klass => 'set-dynamic'
+		).load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091226_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20100207_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20100207_0002' => {'name' => 'frank','comment' => 'bar'}
+		)
+		storage = sd.storage
+
+		sd[:p_size] = 2
+		assert_equal(
+			{:p => '123'},
+			storage.send(
+				:_cast,
+				{:p => ['123']}
+			),
+			'Storage#_cast should cast conds[:p] as a string'
+		)
+		assert_equal(
+			{:p => nil},
+			storage.send(
+				:_cast,
+				{:p => 'i am evil'}
+			),
+			'Storage#_cast should bang malformed conds[:p]'
+		)
+		assert_equal(
+			{:p => '3'},
+			storage.send(
+				:_cast,
+				{:p => 'last'}
+			),
+			"Storage#_cast should cast 'the last' conds"
 		)
 	end
 

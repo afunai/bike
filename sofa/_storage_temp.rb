@@ -41,7 +41,7 @@ class Sofa::Storage::Temp < Sofa::Storage
 	private
 
 	def _select_by_id(conds)
-		val.keys & cast_ids(conds[:id])
+		val.keys & conds[:id].to_a
 	end
 
 	def _select_by_d(conds)

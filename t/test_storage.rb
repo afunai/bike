@@ -475,6 +475,12 @@ class TC_Storage < Test::Unit::TestCase
 			id3,
 			"#{storage.class}#new_id should refer to val['_id'] if available"
 		)
+
+		id4 = storage.store(:new_id,{'foo' => 'duplicated!','_id' => 'carl'})
+		assert_nil(
+			id4,
+			"#{storage.class}#store should not create an item with a duplicate id"
+		)
 	end
 
 	def _test_clear(storage)

@@ -20,12 +20,11 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def val(id = nil)
 		if id
-			v = load_file id
-			YAML.load(v) if v
+			load_yaml id
 		else
 			# this could be HUGE.
 			_select_all({}).inject({}) {|v,id|
-				v[id] = YAML.load(load_file id)
+				v[id] = load_yaml id
 				v
 			}
 		end
@@ -43,8 +42,7 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def store(id,v)
-		id = new_id(v) if id == :new_id
-		save_file(id,v.ya2yaml(:syck_compatible => true)) && id
+		save_yaml(id,v)
 	end
 
 	def delete(id)
@@ -84,7 +82,7 @@ class Sofa::Storage::File < Sofa::Storage
 		end
 	end
 
-	def load_file(id)
+	def load_yaml(id)
 		v = nil
 		file = glob(id.to_a).first
 		::File.open(::File.join(@dir,file),'r') {|f|
@@ -92,18 +90,27 @@ class Sofa::Storage::File < Sofa::Storage
 			v = f.read
 			f.flock ::File::LOCK_UN
 		} if file
-		v
+		YAML.load(v) if v
 	end
 
-	def save_file(id,v)
+	def save_yaml(id,v)
+		new_id = false
+		if id == :new_id
+			id = new_id(v)
+			new_id = true
+		end
+
 		file = "#{file_prefix}#{id}.yaml"
-		::File.open(::File.join(@dir,file),'w') {|f|
+		::File.open(::File.join(@dir,file),'a') {|f|
+			break if new_id && f.pos != 0 # duplicate id
+
 			f.flock ::File::LOCK_EX
+			f.seek 0
 			f.truncate 0
-			f << v
+			f << v.ya2yaml(:syck_compatible => true)
 			f.flock ::File::LOCK_UN
 			f.chmod 0664
-		}
+		} && id
 	end
 
 	def remove_file(id)

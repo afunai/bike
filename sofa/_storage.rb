@@ -57,7 +57,10 @@ class Sofa::Storage
 			next unless conds[cid] && respond_to?("_sibs_#{cid}",true)
 			sibs = __send__("_sibs_#{cid}",conds)
 
-			if i = sibs.index(conds[cid])
+# TODO: should be cast in the upper tier?
+c = (cid == :id) ? cast_ids(conds[cid]).first : conds[cid]
+			c = c.first if c.is_a?(::Array) && c.size < 2
+			if i = sibs.index(c)
 				if !navi[:prev] && i > 0
 					navi[:prev] = conds.merge(cid => sibs[i - 1])
 					if ![:id,:p].include? cid

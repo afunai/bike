@@ -367,8 +367,16 @@ class TC_Storage < Test::Unit::TestCase
 				:next => {:id => '00000000_carl'},
 				:sibs => {:id => ['00000000_bobby','00000000_carl','00000000_frank']},
 			},
- 			storage.navi(:id => '00000000_bobby'),
+			storage.navi(:id => '00000000_bobby'),
 			"#{storage.class}#navi should return the next conditions for special ids"
+		)
+		assert_equal(
+			{
+				:next => {:id => '00000000_carl'},
+				:sibs => {:id => ['00000000_bobby','00000000_carl','00000000_frank']},
+			},
+			storage.navi(:id => 'bobby'),
+			"#{storage.class}#navi should return the next conditions for short ids"
 		)
 	end
 

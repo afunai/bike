@@ -449,18 +449,31 @@ class TC_Storage < Test::Unit::TestCase
 		assert_match(
 			Sofa::REX::ID,
 			id1,
-			"#{storage.class}#new_id should return a unique id for the element"
+			"#{storage.class}#new_id should return a valid id for the element"
 		)
+
 		id2 = storage.store(:new_id,{'foo' => 'bar'})
 		assert_match(
 			Sofa::REX::ID,
 			id2,
-			"#{storage.class}#new_id should return a unique id for the element"
+			"#{storage.class}#new_id should return a valid id for the element"
 		)
 		assert_not_equal(
 			id1,
 			id2,
 			"#{storage.class}#new_id should return a unique id for the element"
+		)
+
+		id3 = storage.store(:new_id,{'foo' => 'bar','_id' => 'carl'})
+		assert_match(
+			Sofa::REX::ID,
+			id3,
+			"#{storage.class}#new_id should return a valid id for the element"
+		)
+		assert_equal(
+			'00000000_carl',
+			id3,
+			"#{storage.class}#new_id should refer to val['_id'] if available"
 		)
 	end
 

@@ -10,12 +10,13 @@ class Sofa
 	Dir['./sofa/*.rb'].sort.each {|file| require file }
 
 	module REX
-		ID      = /^(\d{8})_(\d{4,}|[a-z][a-z0-9\_\-]*)/
-		ID_NEW  = /^_\d/
-		COND    = /^(.+?)=(.+)$/
-		COND_D  = /^(19\d\d|2\d\d\d)\d{0,4}$/
-		PATH_ID = /\/((?:19|2\d)\d{6})\/(\d+)/
-		TID     = /\d{10}\.\d+/
+		ID_SHORT = /[a-z][a-z0-9\_\-]*/
+		ID       = /^(\d{8})_(\d{4,}|#{ID_SHORT})/
+		ID_NEW   = /^_\d/
+		COND     = /^(.+?)=(.+)$/
+		COND_D   = /^(19\d\d|2\d\d\d)\d{0,4}$/
+		PATH_ID  = /\/((?:19|2\d)\d{6})\/(\d+)/
+		TID      = /\d{10}\.\d+/
 	end
 
 	def self.[](name)

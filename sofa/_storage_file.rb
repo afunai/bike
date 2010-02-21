@@ -43,7 +43,7 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def store(id,v)
-		id = new_id if id == :new_id
+		id = new_id(v) if id == :new_id
 		save_file(id,v.ya2yaml(:syck_compatible => true)) && id
 	end
 

@@ -635,7 +635,7 @@ _html
 
 	def test_create
 		s = @sd.storage
-		def s.new_id
+		def s.new_id(v = {})
 			@c ||= 0
 			(@c += 1).to_s
 		end
@@ -701,7 +701,7 @@ _html
 			'20091122_1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
 		s = @sd.storage
-		def s.new_id
+		def s.new_id(v = {})
 			'new!'
 		end
 

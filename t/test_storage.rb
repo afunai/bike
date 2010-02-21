@@ -64,6 +64,13 @@ class TC_Storage < Test::Unit::TestCase
 			_test_navi(storage)
 			_test_last(storage)
 
+			storage.build(
+				'00000000_frank' => {'name' => 'fz',  'comment' => 'I am FZ!'},
+				'00000000_carl'  => {'name' => 'cz',  'comment' => 'I am CZ!'},
+				'00000000_bobby' => {'name' => 'bz',  'comment' => 'I am BZ!'}
+			)
+			_test_fetch_special_id(storage)
+
 			storage.clear
 		}
 	end
@@ -322,6 +329,47 @@ class TC_Storage < Test::Unit::TestCase
 			"#{storage.class}#last should cast 'the last' conds"
 		)
 		storage.sd[:p_size] = 10
+	end
+
+	def _test_fetch_special_id(storage)
+		assert_equal(
+			[
+				'00000000_bobby',
+				'00000000_carl',
+				'00000000_frank',
+			],
+			storage.select,
+			"#{storage.class}#select should be able to select special ids"
+		)
+		assert_equal(
+			['00000000_carl'],
+			storage.select(:id => '00000000_carl'),
+			"#{storage.class}#select should be able to select special ids"
+		)
+		assert_equal(
+			['00000000_bobby'],
+			storage.select(:id => 'bobby'),
+			"#{storage.class}#select should expand short ids"
+		)
+
+		assert_equal(
+			[
+				'00000000_frank',
+				'00000000_carl',
+				'00000000_bobby',
+			],
+			storage.select(:order => '-id'),
+			"#{storage.class}#select should sort special ids"
+		)
+
+		assert_equal(
+			{
+				:next => {:id => '00000000_carl'},
+				:sibs => {:id => ['00000000_bobby','00000000_carl','00000000_frank']},
+			},
+ 			storage.navi(:id => '00000000_bobby'),
+			"#{storage.class}#navi should return the next conditions for special ids"
+		)
 	end
 
 	def test_store

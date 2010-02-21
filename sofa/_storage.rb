@@ -140,6 +140,13 @@ class Sofa::Storage
 		(_select_without(:id,:p,conds).size / @sd[:p_size].to_f).ceil unless @sd[:p_size].to_f == 0
 	end
 
+	def cast_ids(ids)
+		ids.to_a.collect {|i|
+			id = (i =~ /^[a-z]/) ? "00000000_#{i}" : i
+			id if id =~ Sofa::REX::ID
+		}.compact
+	end
+
 	def new_id
 		d = Time.now.strftime '%Y%m%d'
 		if max_in_d = select(:d => d,:order => 'id').last

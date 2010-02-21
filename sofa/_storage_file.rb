@@ -76,9 +76,9 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def pattern_for(id)
 		if id.is_a? Array
-			"{#{id.join ','}}"
+			"{#{cast_ids(id).join ','}}"
 		elsif id == :all
-			'[0-9]*_[0-9]*'
+			'[0-9]*_*'
 		elsif id =~ /\A\d{4,8}\z/
 			"#{id}*"
 		end

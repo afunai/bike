@@ -58,7 +58,7 @@ class Sofa::Storage
 			sibs = __send__("_sibs_#{cid}",conds)
 
 # TODO: should be cast in the upper tier?
-c = (cid == :id) ? cast_ids(conds[cid]).first : conds[cid]
+c = (cid == :id) ? cast_ids(conds[cid]) : conds[cid]
 			c = c.first if c.is_a?(::Array) && c.size < 2
 			if i = sibs.index(c)
 				if !navi[:prev] && i > 0

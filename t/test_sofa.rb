@@ -371,6 +371,33 @@ class TC_Sofa < Test::Unit::TestCase
 		)
 
 		assert_equal(
+			'20091224/123/',
+			Sofa::Path.path_of(:id => ['20091224_0123']),
+			'Sofa::Path.path_of should return a special combination of pseudo-steps for conds[:id]'
+		)
+		assert_equal(
+			'id=20091224_0123,20100222_1234/',
+			Sofa::Path.path_of(:id => ['20091224_0123','20100222_1234']),
+			'Sofa::Path.path_of should return multiple ids as a comma-separated form'
+		)
+		assert_equal(
+			'',
+			Sofa::Path.path_of(:id => []),
+			'Sofa::Path.path_of should return an empty string when given an empty conds[:id]'
+		)
+
+		assert_equal(
+			'id=carl/',
+			Sofa::Path.path_of(:id => '00000000_carl'),
+			"Sofa::Path.path_of should use '/id=xxx/' form for a short id"
+		)
+		assert_equal(
+			'id=20091224_0123,carl/',
+			Sofa::Path.path_of(:id => ['20091224_0123','00000000_carl']),
+			"Sofa::Path.path_of should use short ids in a comma-separated form"
+		)
+
+		assert_equal(
 			'foo=bar/',
 			Sofa::Path.path_of(:foo => 'bar'),
 			'Sofa::Path.path_of should return a path of which steps represent the conds'

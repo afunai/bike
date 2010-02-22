@@ -51,8 +51,15 @@ module Sofa::Path
 			(conds.keys - [:order,:p,:id]) |
 			([:order,:p,:id] & conds.keys)
 		).collect {|cid|
-			if cid == :id && conds[:id] =~ Sofa::REX::ID
-				'%s/%d/' % [$1,$2.to_i]
+			if cid == :id
+				ids = Array(conds[:id]).collect {|id|
+					(id =~ /_(#{Sofa::REX::ID_SHORT})$/) ? $1 : (id if Sofa::REX::ID)
+				}.compact
+				if (ids.size == 1) && (ids.first =~ Sofa::REX::ID)
+					'%s/%d/' % [$1,$2.to_i]
+				elsif ids.size > 0
+					"id=#{ids.join ','}/"
+				end
 			elsif cid == :d
 				conds[:id] ? '' : "#{conds[:d]}/"
 			elsif cid != :p || conds[:p].to_i > 1

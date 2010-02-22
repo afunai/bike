@@ -90,10 +90,9 @@ Sofa.client = 'root'
 		if params[:status]
 			base[:folder].commit :persistent
 			if base.result
-				ids = base.result.values.collect {|item|
-					item[:id] if item[:id][Sofa::REX::ID]
-				}.compact
-				id_step = "id=#{ids.join ','}/" unless ids.empty? || base[:parent] != base[:folder]
+				id_step = Sofa::Path.path_of(
+					:id => base.result.values.collect {|item| item[:id] }
+				) if base[:parent] == base[:folder]
 				action = base.workflow.next_action params
 				response_see_other(
 					:location => base[:path] + "/#{id_step}#{action}.html"
@@ -108,8 +107,9 @@ Sofa.client = 'root'
 			}
 			base.commit :temp
 
-			item_ids = items.collect {|item| item[:id] }
-			id_step  = "id=#{item_ids.join ','}/" unless item_ids.empty?
+			id_step = Sofa::Path.path_of(
+				:id => items.collect {|item| item[:id] }
+			)
 			response_see_other(
 				:location => base[:path] + "/#{base[:tid]}/#{id_step}update.html"
 			)

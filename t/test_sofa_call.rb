@@ -61,12 +61,14 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'Sofa#call with post method should return status 303'
 		)
 		assert_match(
-			/id=\d+_\d+/,
+			Sofa::REX::PATH_ID,
 			res.headers['Location'],
 			'Sofa#call with post method should return a proper location'
 		)
 
-		new_id = res.headers['Location'][/id=(\d+_\d+)/,1]
+		res.headers['Location'] =~ Sofa::REX::PATH_ID
+		new_id = sprintf('%.8d_%.4d',$1,$2)
+
 		assert_equal(
 			{'name' => 'fz','comment' => 'hi.'},
 			Sofa::Set::Static::Folder.root.item('t_store','main',new_id).val,
@@ -125,7 +127,8 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'Sofa#call with the root status should update the persistent storage'
 		)
 
-		new_id   = res.headers['Location'][/id=(\d+_\d+)/,1]
+		res.headers['Location'] =~ Sofa::REX::PATH_ID
+		new_id   = sprintf('%.8d_%.4d',$1,$2)
 		new_item = Sofa::Set::Static::Folder.root.item('t_attachment','main',new_id)
 		assert_not_equal(
 			{},

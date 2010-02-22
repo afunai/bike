@@ -89,8 +89,13 @@ Sofa.client = 'root'
 		)
 	end
 
-def logout(base,params)
-end
+	def logout(base,params)
+		Sofa.client = nil
+		path = Sofa::Path.path_of params[:conds]
+		response_see_other(
+			:location => "#{base[:path]}/#{path}index.html"
+		)
+	end
 
 	def get(base,params)
 		until base.is_a? Sofa::Set::Static::Folder

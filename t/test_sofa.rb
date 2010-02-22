@@ -622,4 +622,23 @@ class TC_Sofa < Test::Unit::TestCase
 		)
 	end
 
+	def test_logout
+		Sofa.client = 'frank'
+		res = Sofa.new.send(
+			:logout,
+			Sofa::Set::Static::Folder.root.item('foo','main'),
+			{'id' => 'test','pw' => 'test',:conds => {:id => '20100222_0123'}}
+		)
+		assert_equal(
+			'nobody',
+			Sofa.client,
+			'Sofa#logout should clear Sofa.client'
+		)
+		assert_match(
+			%r{/foo/20100222/123/index.html},
+			res[1]['Location'],
+			'Sofa#logout should return a proper location header'
+		)
+	end
+
 end

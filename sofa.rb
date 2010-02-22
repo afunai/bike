@@ -200,7 +200,7 @@ _html
 			303,
 			{
 				'Content-Type'   => 'text/html',
-				'content-Length' => body.size.to_s,
+				'Content-Length' => body.size.to_s,
 				'Location'       => location,
 			},
 			body

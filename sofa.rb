@@ -68,6 +68,8 @@ Sofa.client = 'root'
 
 		if method == 'get'
 			get(base,params)
+		elsif params[:action] == :login
+			login(base,params)
 		else
 			post(base,params)
 		end
@@ -80,10 +82,11 @@ Sofa.client = 'root'
 		if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
 			Sofa.client = params['id']
 		else
-			# TODO: set the error status on the session.
+# TODO: set the error status on the session.
+			Sofa.client = nil
 		end
 		path   = Sofa::Path.path_of params[:conds]
-		action = (params[:orig_action] =~ /\A\w+\z/) ? params[:orig_action] : 'index'
+		action = (params['dest_action'] =~ /\A\w+\z/) ? params['dest_action'] : 'index'
 		response_see_other(
 			:location => "#{base[:path]}/#{path}#{action}.html"
 		)

@@ -166,4 +166,54 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_post_login
+		Sofa.client = nil
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/foo/20100222/1/login.html",
+			{
+				:input => "id=test&pw=test&dest_action=update"
+			}
+		)
+		assert_equal(
+			'test',
+			Sofa.client,
+			'Sofa#call with :login action should set Sofa.client upon success'
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#call with :login action should return status 303'
+		)
+		assert_match(
+			%r{/foo/20100222/1/update.html},
+			res.headers['Location'],
+			'Sofa#call with :login action should return a proper location'
+		)
+	end
+
+	def test_post_login_with_wrong_pw
+		Sofa.client = nil
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/foo/20100222/1/login.html",
+			{
+				:input => "id=test&pw=wrong&dest_action=update"
+			}
+		)
+		assert_equal(
+			'nobody',
+			Sofa.client,
+			'Sofa#call with :login action should not set Sofa.client upon failure'
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#call with :login action should return status 303'
+		)
+		assert_match(
+			%r{/foo/20100222/1/update.html},
+			res.headers['Location'],
+			'Sofa#call with :login action should return a proper location'
+		)
+	end
+
 end

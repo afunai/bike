@@ -552,7 +552,7 @@ class TC_Sofa < Test::Unit::TestCase
 		res = Sofa.new.send(
 			:login,
 			Sofa::Set::Static::Folder.root.item('foo','main'),
-			{'id' => 'test','pw' => 'test',:conds => {:id => '20100222_0123'},:orig_action => 'update'}
+			{'id' => 'test','pw' => 'test',:conds => {:id => '20100222_0123'},'dest_action' => 'update'}
 		)
 		assert_equal(
 			'test',
@@ -608,7 +608,7 @@ class TC_Sofa < Test::Unit::TestCase
 		res = Sofa.new.send(
 			:login,
 			Sofa::Set::Static::Folder.root.item('foo','main'),
-			{'id' => 'test','pw' => 'wrong',:conds => {:id => '20100222_0123'},:orig_action => 'update'}
+			{'id' => 'test','pw' => 'wrong',:conds => {:id => '20100222_0123'},'dest_action' => 'update'}
 		)
 		assert_equal(
 			'nobody',

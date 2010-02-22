@@ -80,8 +80,13 @@ Sofa.client = 'root'
 		if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
 			Sofa.client = params['id']
 		else
-			# error
+			# TODO: set the error status on the session.
 		end
+		path   = Sofa::Path.path_of params[:conds]
+		action = (params[:orig_action] =~ /\A\w+\z/) ? params[:orig_action] : 'index'
+		response_see_other(
+			:location => "#{base[:path]}/#{path}#{action}.html"
+		)
 	end
 
 def logout(base,params)

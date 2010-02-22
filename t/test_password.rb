@@ -63,11 +63,32 @@ class TC_Password < Test::Unit::TestCase
 	end
 
 	def test_update
-		@f.update 'foobar'
-		assert_not_equal(
-			'foobar',
+		@f.load 'original'
+
+		@f.update nil
+		assert_equal(
+			'original',
 			@f.val,
-			'Field::Password#create should store the value as a crypted string'
+			'Field::Password#update should not update with nil'
+		)
+
+		@f.update ''
+		assert_equal(
+			'original',
+			@f.val,
+			'Field::Password#update should not update with an empty string'
+		)
+
+		@f.update 'updated'
+		assert_not_equal(
+			'original',
+			@f.val,
+			'Field::Password#update should update with a non-empty string'
+		)
+		assert_not_equal(
+			'updated',
+			@f.val,
+			'Field::Password#update should store the value as a crypted string'
 		)
 	end
 end

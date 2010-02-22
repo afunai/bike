@@ -28,8 +28,10 @@ _html
 			when :load
 				@val = v
 			when :create,:update
-				salt = ('a'..'z').to_a[rand 26] + ('a'..'z').to_a[rand 26]
-				@val = v.crypt salt
+				if v.is_a?(::String) && !v.empty?
+					salt = ('a'..'z').to_a[rand 26] + ('a'..'z').to_a[rand 26]
+					@val = v.crypt salt
+				end
 		end
 	end
 

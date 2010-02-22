@@ -755,6 +755,11 @@ _html
 			arg[:action],
 			'Set::Dynamic#get should retreat to :login when sd[:client] is nobody'
 		)
+		assert_equal(
+			:update,
+			arg[:dest_action],
+			'Set::Dynamic#get should set arg[:dest_action] when sd[:client] is nobody'
+		)
 	end
 
 	def test_post_by_nobody

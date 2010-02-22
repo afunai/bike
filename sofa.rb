@@ -29,7 +29,7 @@ class Sofa
 	end
 
 	def self.session
-		self.current[:session] || (@@fake_session ||= {})
+		self.current[:session] || ($fake_session ||= {})
 	end
 
 	def self.transaction
@@ -75,8 +75,14 @@ Sofa.client = 'root'
 
 	private
 
-def login(base,params)
-end
+	def login(base,params)
+		user = Sofa::Set::Static::Folder.root.item('_users','main',params['id'].to_s)
+		if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
+			Sofa.client = params['id']
+		else
+			# error
+		end
+	end
 
 def logout(base,params)
 end

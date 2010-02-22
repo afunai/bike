@@ -547,4 +547,56 @@ class TC_Sofa < Test::Unit::TestCase
 		)
 	end
 
+	def test_login
+		Sofa.client = nil
+
+		Sofa.new.send(
+			:login,
+			Sofa::Set::Static::Folder.root.item('foo'),
+			{'id' => 'test','pw' => 'test'}
+		)
+		assert_equal(
+			'test',
+			Sofa.client,
+			'Sofa#login should set Sofa.client given a valid pair of user/password'
+		)
+	end
+
+	def test_login_with_wrong_account
+		Sofa.client = nil
+
+		Sofa.new.send(
+			:login,
+			Sofa::Set::Static::Folder.root.item('foo'),
+			{'id' => 'non-existent','pw' => 'test'}
+		)
+		assert_equal(
+			'nobody',
+			Sofa.client,
+			'Sofa#login should not set Sofa.client with a non-existent user'
+		)
+
+		Sofa.new.send(
+			:login,
+			Sofa::Set::Static::Folder.root.item('foo'),
+			{'id' => 'test','pw' => nil}
+		)
+		assert_equal(
+			'nobody',
+			Sofa.client,
+			'Sofa#login should not set Sofa.client with an empty password'
+		)
+
+		Sofa.new.send(
+			:login,
+			Sofa::Set::Static::Folder.root.item('foo'),
+			{'id' => 'test','pw' => 'wrong pw'}
+		)
+		assert_equal(
+			'nobody',
+			Sofa.client,
+			'Sofa#login should not set Sofa.client with a wrong password'
+		)
+	end
+
 end

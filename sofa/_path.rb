@@ -47,6 +47,7 @@ module Sofa::Path
 	end
 
 	def path_of(conds)
+		conds = {} unless conds.is_a? ::Hash
 		(
 			(conds.keys - [:order,:p,:id]) |
 			([:order,:p,:id] & conds.keys)

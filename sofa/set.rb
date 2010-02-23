@@ -71,9 +71,7 @@ end
 				_get_by_self_reference self_arg
 			else
 				steps = name.split '-'
-				item_arg = steps.inject(arg) {|a,s|
-					a[s] || {:p_action => a[:action],:action => a[:action]}
-				}
+				item_arg = item_arg(arg,steps)
 				item = item steps
 				if item.nil?
 					'???'
@@ -108,9 +106,17 @@ end
 
 	def _g_default(arg,&block)
 		collect_item(arg[:conds] || {}) {|item|
-			item_arg = arg[item[:id]] || {}
-			item_arg[:action] ||= arg[:action]
+			item_arg = item_arg(arg,item[:id])
 			block ? block.call(item,item_arg) : item.get(item_arg)
+		}
+	end
+
+	def item_arg(arg,steps)
+		steps.to_a.inject(arg) {|a,s|
+			i = a[s] || {}
+			i[:p_action] = a[:action]
+			i[:action] ||= a[:action]
+			i
 		}
 	end
 

@@ -405,6 +405,88 @@ _html
 		)
 	end
 
+	def test_item_arg
+		root_arg = {
+			:action => :read,
+			'foo'   => {
+				:action => :update,
+				:conds  => {:d => '2010'},
+				'bar'   => {
+					:action => :delete,
+				},
+			},
+			'baz'   => {
+				'qux' => {:action => :create},
+			},
+		}
+
+		assert_equal(
+			{
+				:p_action => :read,
+				:action   => :update,
+				:conds    => {:d => '2010'},
+				'bar'     => {
+					:action => :delete,
+				},
+			},
+			@sd.send(
+				:item_arg,
+				root_arg,
+				'foo'
+			),
+			'Set#item_arg should return a partial hash of the root arg'
+		)
+		assert_equal(
+			{
+				:p_action => :update,
+				:action   => :delete,
+			},
+			@sd.send(
+				:item_arg,
+				root_arg,
+				['foo','bar']
+			),
+			'Set#item_arg should dig into multiple steps'
+		)
+		assert_equal(
+			{
+				:p_action => :read,
+				:action   => :read,
+				'qux'     => {:action => :create},
+			},
+			@sd.send(
+				:item_arg,
+				root_arg,
+				['baz']
+			),
+			'Set#item_arg should supplement item_arg[:action]'
+		)
+		assert_equal(
+			{
+				:p_action => :read,
+				:action   => :create,
+			},
+			@sd.send(
+				:item_arg,
+				root_arg,
+				['baz','qux']
+			),
+			'Set#item_arg should supplement item_arg[:p_action]'
+		)
+		assert_equal(
+			{
+				:p_action => :read,
+				:action   => :read,
+			},
+			@sd.send(
+				:item_arg,
+				root_arg,
+				['baz','non-existent']
+			),
+			'Set#item_arg should supplement item_arg[:action] & item_arg[:p_action]'
+		)
+	end
+
 	def test_uri_p
 		@sd.load(
 			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},

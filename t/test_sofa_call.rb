@@ -49,6 +49,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 	end
 
 	def test_post_simple_create
+		Sofa.client = 'root'
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
@@ -77,6 +78,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 	end
 
 	def test_post_with_attachment
+		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_attachment','main').storage.clear
 
 		# post an attachment

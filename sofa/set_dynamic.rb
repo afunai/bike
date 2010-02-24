@@ -16,13 +16,8 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@meta        = @workflow.class.const_get(:DEFAULT_META).merge @meta
 		@item_object = {}
 
-@meta[:item_arg] ||= {}
-
-my[:p_size] = meta[:max] if meta[:max]
-		my[:tmpl] = <<_html if my[:parent].is_a? Sofa::Set::Static::Folder
-<form id="@(name)" method="post" action="/@(tid)@(base_path)/update.html">
-#{my[:tmpl]}</form>
-_html
+		my[:item_arg] ||= {}
+		my[:p_size] = meta[:max] if meta[:max]
 	end
 
 	def meta_tid
@@ -50,6 +45,13 @@ _html
 			arg[:conds] = my[:conds].is_a?(::Hash) ? my[:conds].dup : {}
 		end
 		super
+	end
+
+	def _get_by_tmpl(arg,tmpl = '')
+		(arg[:action] == :read || self != Sofa.base) ? super : <<_html
+<form id="#{my[:name]}" method="post" action="/#{my[:tid]}#{my[:base_path]}/update.html">
+#{super}</form>
+_html
 	end
 
 	def commit(type = :temp)

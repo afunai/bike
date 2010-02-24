@@ -259,6 +259,9 @@ _html
 	def test_get_with_partial_action
 		Sofa.client = 'root'
 
+		Sofa.current[:base] = @sd.item('20091123_0002','replies')
+		Sofa.base[:tid] = '123.45'
+
 		result = @sd.get(
 			'20091123_0002' => {
 				'replies' => {
@@ -286,10 +289,12 @@ _html
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
+<form id="main-20091123_0002-replies" method="post" action="/123.45/20091123_0002/replies/update.html">
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
 		</ul>
 [replies-update]
+</form>
 		'potato'
 	</li>
 </ul>
@@ -315,10 +320,12 @@ _html
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
+<form id="main-20091123_0002-replies" method="post" action="/123.45/20091123_0002/replies/update.html">
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
 		</ul>
 [replies-update]
+</form>
 		'potato'
 	</li>
 </ul>

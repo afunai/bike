@@ -118,7 +118,7 @@ _html
 					item.send(:_get_by_tmpl,item_arg,item_tmpl)
 				}
 				tmpl = my[:tmpl].gsub('$()',item_outs.join)
-				_get_by_tmpl({:action => :update},tmpl)
+				_get_by_tmpl({:p_action => arg[:p_action],:action => :update},tmpl)
 			end
 		}
 	end

@@ -66,7 +66,9 @@ base[:tid] = tid
 		Sofa.current[:base] = base
 Sofa.client = 'root'
 
-		if method == 'get'
+		if params[:action] == :logout
+			logout(base,params)
+		elsif method == 'get'
 			get(base,params)
 		elsif params[:action] == :login
 			login(base,params)

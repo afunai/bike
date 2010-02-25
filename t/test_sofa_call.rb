@@ -218,4 +218,45 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_post_logout
+		Sofa.client = 'frank'
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/foo/20100222/1/logout.html",
+			{}
+		)
+		assert_equal(
+			'nobody',
+			Sofa.client,
+			'Sofa#call with :logout action should unset Sofa.client'
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#call with :logout action should return status 303'
+		)
+		assert_match(
+			%r{/foo/20100222/1/index.html},
+			res.headers['Location'],
+			'Sofa#call with :logout action should return a proper location'
+		)
+	end
+
+	def test_get_logout
+		Sofa.client = 'frank'
+		res = Rack::MockRequest.new(@sofa).get(
+			"http://example.com/foo/20100222/1/logout.html",
+			{}
+		)
+		assert_equal(
+			'nobody',
+			Sofa.client,
+			'Sofa#call with :logout action should work via both get and post'
+		)
+		assert_match(
+			%r{/foo/20100222/1/index.html},
+			res.headers['Location'],
+			'Sofa#call with :logout action should work via both get and post'
+		)
+	end
+
 end

@@ -5,12 +5,6 @@
 
 class Sofa::Set::Static::Folder < Sofa::Set::Static
 
-	DEFAULT_ITEMS = {
-		'_owner' => {:klass => 'meta-owner'},
-		'_group' => {:klass => 'meta-group'},
-		'_label' => {:klass => 'text'},
-	}
-
 	def self.root
 		self.new(:id => '')
 	end

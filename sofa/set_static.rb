@@ -9,18 +9,10 @@ class Sofa::Set::Static < Sofa::Field
 
 	include Sofa::Set
 
-	DEFAULT_ITEMS = {
-		'_owner'   => {:klass => 'meta-owner'},
-		'_group'   => {:klass => 'meta-group'},
-		'_status'  => {:klass => 'text'},
-		'_updated' => {:klass => 'text'},
-	}
-
 	def initialize(meta = {})
 		@meta = meta
 		@meta.merge!(Sofa::Parser.parse_html meta[:html]) if meta[:html]
 		@meta[:item] ||= {}
-		@meta[:item].merge! self.class.const_get(:DEFAULT_ITEMS)
 		@item_object = {}
 	end
 

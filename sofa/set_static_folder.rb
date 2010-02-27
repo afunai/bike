@@ -13,6 +13,9 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		meta[:dir]  = meta[:parent] ? ::File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
 		meta[:html] = load_html(meta[:dir],meta[:parent])
 		super
+		my[:item]['_label'] = {:klass => 'text'}
+		my[:item]['_owner'] = {:klass => 'meta-owner'}
+		my[:item]['_group'] = {:klass => 'meta-group'}
 		load load_val(my[:dir],my[:parent])
 	end
 

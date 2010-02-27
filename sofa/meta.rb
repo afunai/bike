@@ -23,8 +23,18 @@ class Sofa::Meta::Owner < Sofa::Field
 
 	include Sofa::Meta
 
-	def post(action,v)
-		super if action == :load || action == :create
+	def post(action,v = nil)
+		raise Sofa::Error::Forbidden unless permit_post?(action,v)
+
+		if action == :load
+			@val = val_cast(v)
+		elsif action == :create
+			@val = Sofa.client
+			@action = action
+		end
+		my[:parent][:owner] = val if my[:parent] && !empty?
+
+		self
 	end
 
 end
@@ -34,8 +44,9 @@ class Sofa::Meta::Group < Sofa::Field
 
 	include Sofa::Meta
 
-	def post(action,v)
-		super if action == :load || action == :create
-	end
+# TODO: remove?
+def post(action,v)
+	super if action == :load || action == :create
+end
 
 end

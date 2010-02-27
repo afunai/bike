@@ -12,6 +12,9 @@ class TC_Set_Complex < Test::Unit::TestCase
 	end
 
 	class ::Sofa::Workflow::Pipco < ::Sofa::Workflow
+		DEFAULT_SUB_ITEMS = {
+			'_owner' => {:klass => 'meta-owner'},
+		}
 		PERM = {
 			:create    => 0b1100,
 			:read      => 0b1111,
@@ -366,10 +369,7 @@ _html
 		@sd.update(
 			'20091123_0002' => {
 				'replies' => {
-					'_0001' => {
-						'_owner' => 'don',
-						'reply'  => 'yum.',
-					},
+					'_0001' => {'reply'  => 'yum.'},
 				},
 			}
 		)

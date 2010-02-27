@@ -71,7 +71,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		new_id = sprintf('%.8d_%.4d',$1,$2)
 
 		assert_equal(
-			{'name' => 'fz','comment' => 'hi.'},
+			{'_owner' => 'root','name' => 'fz','comment' => 'hi.'},
 			Sofa::Set::Static::Folder.root.item('t_store','main',new_id).val,
 			'Sofa#call with post method should store the item in the storage'
 		)

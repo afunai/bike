@@ -620,20 +620,20 @@ _html
 
 		@sd.create('_1235' => {'name' => 'carl'})
 		assert_equal(
-			{'name' => 'carl','comment' => 'hi.'},
+			{'_owner' => 'root','name' => 'carl','comment' => 'hi.'},
 			@sd.item('_1235').val,
 			'Set::Dynamic#create should create the new items in the empty storage'
 		)
 		@sd.commit
 		assert_equal(
-			{'1' => {'name' => 'carl','comment' => 'hi.'}},
+			{'1' => {'_owner' => 'root','name' => 'carl','comment' => 'hi.'}},
 			@sd.val,
 			'Set::Dynamic#create should create the new items in the empty storage'
 		)
 
 		@sd.create('_1234' => {'name' => 'frank'})
 		assert_equal(
-			{'name' => 'frank','comment' => 'hi.'},
+			{'_owner' => 'root','name' => 'frank','comment' => 'hi.'},
 			@sd.item('_1234').val,
 			'Set::Dynamic#create should create the new items in the empty storage'
 		)
@@ -644,7 +644,7 @@ _html
 		)
 		@sd.commit
 		assert_equal(
-			{'2' => {'name' => 'frank','comment' => 'hi.'}},
+			{'2' => {'_owner' => 'root','name' => 'frank','comment' => 'hi.'}},
 			@sd.val,
 			'Set::Dynamic#create should overwrite all items in the storage'
 		)
@@ -658,8 +658,8 @@ _html
 		@sd.commit
 		assert_equal(
 			{
-				'4' => {'name' => 'frank','comment' => 'hi.'},
-				'3' => {'name' => 'bobby','comment' => 'hi.'},
+				'4' => {'_owner' => 'root','name' => 'frank','comment' => 'hi.'},
+				'3' => {'_owner' => 'root','name' => 'bobby','comment' => 'hi.'},
 			},
 			@sd.val,
 			'Set::Dynamic#create should create multiple items in the empty storage'
@@ -702,7 +702,7 @@ _html
 		# create an item
 		@sd.update('_1236' => {'name' => 'roy'})
 		assert_equal(
-			{'name' => 'roy','comment' => 'hi.'},
+			{'_owner' => 'root','name' => 'roy','comment' => 'hi.'},
 			@sd.item('_1236').val,
 			'Set::Dynamic#update should update the values of the item instance'
 		)
@@ -764,7 +764,7 @@ _html
 		assert_equal(
 			{
 				'20091122_1234' => {'name' => 'frank','comment' => 'qux'},
-				'new!'          => {'name' => 'roy',  'comment' => 'hi.'},
+				'new!'          => {'name' => 'roy',  'comment' => 'hi.','_owner' => 'root'},
 			},
 			@sd.val,
 			'Set::Dynamic#commit should update the original values in the storage'

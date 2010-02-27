@@ -56,7 +56,7 @@ _tmpl
 						}
 					},
 				},
-			}.merge(Sofa::Set::Static::DEFAULT_ITEMS),
+			},
 			ss[:item],
 			'Set::Static#initialize should load @meta'
 		)
@@ -91,7 +91,7 @@ _html
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <html>
 	<h1>title:(text 32)</h1>
-	<ul id="main" class="sofa-blog">
+	<ul id="main" class="sofa-attachment">
 		<li>hi</li>
 	</ul>
 </html>

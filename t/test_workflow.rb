@@ -242,7 +242,11 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	class Sofa::Workflow::Test_Default_Action < Sofa::Workflow
+	class Sofa::Workflow::Test_default_action < Sofa::Workflow
+		DEFAULT_SUB_ITEMS = {
+			'_owner' => {:klass => 'meta-owner'},
+			'_group' => {:klass => 'meta-group'},
+		}
 		PERM = {
 			:create => 0b1100,
 			:read   => 0b1000,
@@ -251,8 +255,10 @@ class TC_Workflow < Test::Unit::TestCase
 		}
 	end
 	def test_default_action
-		sd = Sofa::Set::Dynamic.new(:group => ['roy'])
-		sd.instance_eval { @workflow = Sofa::Workflow::Test_Default_Action.new sd }
+		sd = Sofa::Set::Dynamic.new(
+			:workflow => 'test_default_action',
+			:group    => ['roy']
+		)
 		def sd.meta_admins
 			['frank']
 		end
@@ -260,6 +266,8 @@ class TC_Workflow < Test::Unit::TestCase
 			'20091122_0001' => {'_owner' => 'carl'},
 			'20091122_0002' => {'_owner' => 'frank'}
 		)
+		assert_equal('carl', sd.item('20091122_0001')[:owner])
+		assert_equal('frank',sd.item('20091122_0002')[:owner])
 
 		Sofa.client = nil
 		assert_equal(

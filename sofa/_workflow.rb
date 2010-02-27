@@ -6,6 +6,7 @@
 class Sofa::Workflow
 
 	DEFAULT_META = {}
+	DEFAULT_SUB_ITEMS = {}
 
 	ROLE_ADMIN = 0b1000
 	ROLE_GROUP = 0b0100
@@ -32,6 +33,10 @@ class Sofa::Workflow
 
 	def initialize(sd)
 		@sd = sd
+	end
+
+	def default_sub_items
+		self.class.const_get :DEFAULT_SUB_ITEMS
 	end
 
 	def permit?(roles,action)
@@ -76,6 +81,11 @@ class Sofa::Workflow::Blog < Sofa::Workflow
 	DEFAULT_META = {
 		:p_size => 10,
 		:conds  => {:d => '999999',:p => 'last'},
+	}
+
+	DEFAULT_SUB_ITEMS = {
+		'_owner'   => {:klass => 'meta-owner'},
+		'_group'   => {:klass => 'meta-group'},
 	}
 
 	PERM = {

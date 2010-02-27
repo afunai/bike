@@ -64,7 +64,6 @@ class Sofa
 
 base[:tid] = tid
 		Sofa.current[:base] = base
-Sofa.client = 'root'
 
 		if params[:action] == :logout
 			logout(base,params)

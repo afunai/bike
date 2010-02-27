@@ -35,16 +35,16 @@ class TC_Meta < Test::Unit::TestCase
 		assert_equal(
 			'frank',
 			ss.val('_owner'),
-			'Meta::Owne should not be updated'
+			'Meta::Owner should not be updated'
 		)
 		assert(
 			!ss.item('_owner').pending?,
-			'Meta::Owne should not be updated'
+			'Meta::Owner should not be updated'
 		)
 		assert_equal(
 			'frank',
 			ss[:owner],
-			'Meta::Owne should not be updated'
+			'Meta::Owner should not be updated'
 		)
 	end
 

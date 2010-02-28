@@ -28,6 +28,7 @@ class TC_Set_Permit < Test::Unit::TestCase
 			'20100228_0002' => {'_owner' => 'carl', 'foo' => 'def'}
 		)
 		@sd[:owner] = 'frank'
+		@sd.send(:item_instance,'_0001') # create a new pending item
 	end
 
 	def teardown
@@ -60,7 +61,6 @@ class TC_Set_Permit < Test::Unit::TestCase
 			'Set#permit_get? should allow frank to get an update form of any items in his set'
 		)
 
-		@sd.send(:item_instance,'_0001') # create a new pending item
 		assert(
 			@sd.send(
 				:'permit_get?',
@@ -70,6 +70,15 @@ class TC_Set_Permit < Test::Unit::TestCase
 				}
 			),
 			'Set#permit_get? should allow frank to get an update form of a new pending item'
+		)
+		assert(
+			@sd.item('_0001').send(
+				:'permit_get?',
+				{
+					:action => :update,
+				}
+			),
+			'frank should be allowed to get a sub-item of the pending item'
 		)
 	end
 
@@ -91,6 +100,15 @@ class TC_Set_Permit < Test::Unit::TestCase
 			"Set#permit_get? should not allow carl to get an update form of frank's item"
 		)
 		assert(
+			!@sd.item('20100228_0001').send(
+				:'permit_get?',
+				{
+					:action => :update,
+				}
+			),
+			"carl should not be allowed to get a sub-item of frank's item"
+		)
+		assert(
 			@sd.send(
 				:'permit_get?',
 				{
@@ -100,7 +118,6 @@ class TC_Set_Permit < Test::Unit::TestCase
 			'Set#permit_get? should allow carl to get an update form of his own item'
 		)
 
-		@sd.send(:item_instance,'_0001') # create a new pending item
 		assert(
 			@sd.send(
 				:'permit_get?',
@@ -110,6 +127,15 @@ class TC_Set_Permit < Test::Unit::TestCase
 				}
 			),
 			'Set#permit_get? should allow carl to get an update form of a new pending item'
+		)
+		assert(
+			@sd.item('_0001').send(
+				:'permit_get?',
+				{
+					:action => :update,
+				}
+			),
+			'carl should be allowed to get a sub-item of the pending item'
 		)
 	end
 
@@ -174,6 +200,15 @@ class TC_Set_Permit < Test::Unit::TestCase
 			"Set#permit_post? should not allow carl to update frank's item"
 		)
 		assert(
+			!@sd.item('20100228_0001').send(
+				:'permit_post?',
+				:update,
+				{'foo' => 'updated'}
+			),
+			"carl should not be allowed to post a sub-item of frank's item"
+		)
+
+		assert(
 			@sd.send(
 				:'permit_post?',
 				:update,
@@ -194,6 +229,14 @@ class TC_Set_Permit < Test::Unit::TestCase
 				}
 			),
 			'Set#permit_post? should allow carl to create/update a new item'
+		)
+		assert(
+			@sd.item('_0001').send(
+				:'permit_post?',
+				:update,
+				{'foo' => 'updated'}
+			),
+			'carl should be allowed to post a sub-item of the new item'
 		)
 	end
 

@@ -104,7 +104,14 @@ class Sofa::Field
 	end
 
 	def permit?(action)
-		my[:sd] ? my[:sd].workflow.permit?(my[:roles],action) : true
+		return true unless my[:sd]
+		return true if my[:sd].workflow.permit?(my[:roles],action)
+
+		i = self
+		until i.nil?
+			return true if i[:id] =~ Sofa::REX::ID_NEW # descendant of a new item
+			i = i[:parent]
+		end
 	end
 
 	def default_action

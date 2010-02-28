@@ -122,8 +122,7 @@ end
 
 	def permit_get?(arg)
 		permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
-			item.permit?(arg[:action]) ||
-			(item[:id] =~ Sofa::REX::ID_NEW && item.permit?(:create))
+			item.permit? arg[:action]
 		}
 	end
 
@@ -134,7 +133,8 @@ end
 			case id
 				when Sofa::REX::ID_NEW
 					action = :create
-				when Sofa::REX::ID
+#				when Sofa::REX::ID
+				else
 					action = v[:action] || :update
 			end
 			permit?(action) || (action != :create && item(id) && item(id).permit?(action))

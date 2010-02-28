@@ -237,7 +237,7 @@ _html
 		sd[:tmpl_jawaka] = nil
 		assert_equal(
 			'<ul class="sofa-attachment"><foo>JAWAKA</foo></ul>',
-			ss.get(:action => :pipco),
+			ss.get,
 			'Set::Dynamic#_get_by_self_reference should work via [:parent]._get_by_tmpl()'
 		)
 
@@ -245,7 +245,7 @@ _html
 		sd[:tmpl_jawaka] = 'via tmpl'
 		assert_equal(
 			'<ul class="sofa-attachment"><foo>JAWAKA</foo></ul>',
-			ss.get(:action => :pipco),
+			ss.get,
 			'Set::Dynamic#_get_by_self_reference should not recur'
 		)
 
@@ -254,14 +254,14 @@ _html
 		assert_nothing_raised(
 			'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
 		) {
-			ss.get(:action => :pipco)
+			ss.get
 		}
 
 		sd[:tmpl_pipco]  = '<foo>$()</foo>'
 		assert_nothing_raised(
 			'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
 		) {
-			ss.get(:action => :pipco)
+			ss.get
 		}
 
 		sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
@@ -269,7 +269,7 @@ _html
 		assert_nothing_raised(
 			'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
 		) {
-			ss.get(:action => :pipco)
+			ss.get
 		}
 	end
 
@@ -285,7 +285,7 @@ _html
 
 		assert_equal(
 			'<ul class="sofa-attachment">PIPCO</ul>',
-			ss.get(:action => :pipco),
+			ss.get,
 			'Set::Dynamic#_get_by_self_reference should not be affected by previous $(.action)'
 		)
 	end
@@ -830,7 +830,7 @@ _html
 		)
 		Sofa.client = nil
 
-		arg = {:action => :update}
+		arg = {:action => :update,:conds => {:d => '2009'}}
 		@sd.get arg
 		assert_equal(
 			:login,
@@ -886,7 +886,7 @@ _html
 			'Set::Dynamic#get should retreat from the forbidden action'
 		)
 
-		arg = {:action => :update}
+		arg = {:action => :update,:conds => {:d => '2009'}}
 		@sd.get arg
 		assert_equal(
 			:update,
@@ -950,7 +950,7 @@ _html
 			'Set::Dynamic#get should keep the permitted action'
 		)
 
-		arg = {:action => :delete}
+		arg = {:action => :delete,:conds => {:d => '2009'}}
 		@sd.get arg
 		assert_equal(
 			:read,
@@ -999,7 +999,7 @@ _html
 			'Set::Dynamic#get should keep the permitted action'
 		)
 
-		arg = {:action => :delete}
+		arg = {:action => :delete,:conds => {:d => '2009'}}
 		@sd.get arg
 		assert_equal(
 			:delete,

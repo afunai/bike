@@ -121,23 +121,21 @@ end
 	end
 
 	def permit_get?(arg)
-		permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
+		super || collect_item(arg[:conds] || {}).any? {|item|
 			item.permit? arg[:action]
 		}
 	end
 
 	def permit_post?(action,val)
-		(action != :update) || val.all? {|id,v|
-			next true if id.is_a? ::Symbol # not a item value
-
-			case id
-				when Sofa::REX::ID_NEW
-					action = :create
-#				when Sofa::REX::ID
-				else
-					action = v[:action] || :update
+		super || val.all? {|id,v|
+			if id.is_a? ::Symbol
+				true # not a item value
+			elsif id =~ Sofa::REX::ID_NEW
+				permit? :create
+			else
+				item_action = v[:action] || :update
+				item(id) && item(id).permit?(item_action)
 			end
-			permit?(action) || (action != :create && item(id) && item(id).permit?(action))
 		}
 	end
 

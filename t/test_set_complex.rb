@@ -338,16 +338,44 @@ _html
 		)
 	end
 
+	def test_get_partial_forbidden
+		Sofa.client = 'carl'
+		assert_match(
+			/\(action=update/,
+			@sd.item('20091123_0001','files').get(:action => :update)
+		)
+		assert_match(
+			/\(action=update/,
+			@sd.item('20091123_0001','files','20091123_0001').get(:action => :update)
+		)
+
+		@sd.instance_variable_set(:@item_object,{}) # remove item('_001')
+
+		Sofa.client = nil
+		assert_no_match(
+			/\(action=update/,
+			@sd.item('20091123_0001','files').get(:action => :update),
+			'Field#get should not show an inner attachment when the parent is forbidden'
+		)
+		assert_match(
+			/login\.html/,
+			@sd.item('20091123_0001','files').get(:action => :update),
+			'Field#get should not show an inner attachment when the parent is forbidden'
+		)
+		assert_no_match(
+			/\(action=update/,
+			@sd.item('20091123_0001','files','20091123_0001').get(:action => :update),
+			'Field#get should not show an inner attachment when the parent is forbidden'
+		)
+	end
+
 	def test_post_partial
 		Sofa.client = 'don'
 		original_val = YAML.load @sd.val.to_yaml
 		@sd.update(
 			'20091123_0002' => {
 				'replies' => {
-					'_0001' => {
-						'_owner' => 'don',
-						'reply'  => 'yum.',
-					},
+					'_0001' => {'reply' => 'yum.'},
 				},
 			}
 		)
@@ -362,6 +390,40 @@ _html
 			@sd.val,
 			'Field#val should change after the commit'
 		)
+	end
+
+	def test_post_attachment_forbidden
+		Sofa.client = nil
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Field#post to an inner attachment w/o the perm of the parent should be forbidden'
+		) {
+			@sd.update(
+				'20091123_0002' => {
+					'files' => {
+						'_0001' => {'file' => 'evil.jpg'},
+					},
+				}
+			)
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Field#post to an inner attachment w/o the perm of the parent should be forbidden'
+		) {
+			@sd.update(
+				'20091123_0002' => {
+					'files'   => {
+						'20091123_0001' => {'file' => 'evil.png'},
+					}
+				}
+			)
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Field#post to an inner attachment w/o the perm of the parent should be forbidden'
+		) {
+			@sd.item('20091123_0002','files','20091123_0001').update('file' => 'evil.gif')
+		}
 	end
 
 	def test_commit_partial

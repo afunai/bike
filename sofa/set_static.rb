@@ -36,7 +36,7 @@ class Sofa::Set::Static < Sofa::Field
 	end
 
 	def _g_action_update(arg)
-		_get_by_action_tmpl(arg) || <<_html.chomp
+		(_get_by_action_tmpl(arg) || <<_html.chomp) if permit_get?(:action => :update)
 <span><a href="#{_g_uri_update arg}">update</a></span>
 _html
 	end

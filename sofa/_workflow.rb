@@ -105,11 +105,16 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 	}
 
 	PERM = {
-		:create => 0b1010,
-		:read   => 0b1111,
-		:update => 0b1010,
-		:delete => 0b1010,
+		:create => 0b0000,
+		:read   => 0b0000,
+		:update => 0b0000,
+		:delete => 0b0000,
 	}
+
+	def permit?(roles,action)
+		(action == :login) ||
+		(@sd[:parent] && @sd[:parent].permit?(action))
+	end
 
 	def _get(arg)
 		@sd.instance_eval {

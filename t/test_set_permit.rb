@@ -37,7 +37,7 @@ class TC_Set_Permit < Test::Unit::TestCase
 	def test_permit_get_by_frank
 		Sofa.client = 'frank'
 		assert_equal(
-			0b0011,
+			0b0010,
 			@sd[:roles],
 			'frank should be the owner of the set'
 		)
@@ -142,7 +142,7 @@ class TC_Set_Permit < Test::Unit::TestCase
 	def test_permit_post_by_frank
 		Sofa.client = 'frank'
 		assert_equal(
-			0b0011,
+			0b0010,
 			@sd[:roles],
 			'frank should be the owner of the set'
 		)

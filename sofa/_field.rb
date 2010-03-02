@@ -96,10 +96,11 @@ class Sofa::Field
 	end
 
 	def meta_roles
-		roles  = Sofa::Workflow::ROLE_GUEST
+		roles  = Sofa::Workflow::ROLE_NONE
 		roles |= Sofa::Workflow::ROLE_ADMIN if my[:admins].include? my[:client]
 		roles |= Sofa::Workflow::ROLE_GROUP if my[:group].include? my[:client]
 		roles |= Sofa::Workflow::ROLE_OWNER if my[:owner] == my[:client]
+		roles |= Sofa::Workflow::ROLE_GUEST if roles == Sofa::Workflow::ROLE_NONE
 		roles
 	end
 

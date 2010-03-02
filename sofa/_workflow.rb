@@ -12,6 +12,7 @@ class Sofa::Workflow
 	ROLE_GROUP = 0b0100
 	ROLE_OWNER = 0b0010
 	ROLE_GUEST = 0b0001
+	ROLE_NONE  = 0b0000
 
 	PERM = {
 		:create => 0b1111,

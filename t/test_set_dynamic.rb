@@ -971,8 +971,9 @@ _html
 		) {
 			@sd.update('_0001' => {'comment' => 'qux'})
 		}
-		assert_nothing_raised(
-			"roy should be able to update frank's item"
+		assert_raise(
+			Sofa::Error::Forbidden,
+			"roy should not update frank's item"
 		) {
 			@sd.update('20091122_0001' => {'comment' => 'qux'})
 		}

@@ -182,8 +182,8 @@ class TC_Workflow < Test::Unit::TestCase
 			'don should be able to read the item'
 		)
 		assert(
-			sd.item('20091120_0001').permit?(:update),
-			"don should be able to update carl's item"
+			!sd.item('20091120_0001').permit?(:update),
+			"don should not update carl's item"
 		)
 		assert(
 			!sd.item('20091120_0001').permit?(:delete),

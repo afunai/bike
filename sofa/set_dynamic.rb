@@ -112,7 +112,7 @@ _html
 	end
 
 	def _g_action_create(arg)
-		_get_by_action_tmpl(arg) || <<_html
+		(_get_by_action_tmpl(arg) || <<_html) if permit_get?(:action => :create)
 <div><a href="#{_g_uri_create arg}">create</a></div>
 _html
 	end

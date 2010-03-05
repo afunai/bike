@@ -69,8 +69,13 @@ class Sofa::Workflow
 	end
 
 	def _g_submit(arg)
+		if @sd.send(:collect_item,arg[:conds]).all? {|i| i[:id] =~ Sofa::REX::ID_NEW }
+			action = :create
+		else
+			action = arg[:orig_action]
+		end
 		<<_html.chomp
-<input name="#{@sd[:short_name]}.status-public" type="submit" value="#{arg[:orig_action]}" />
+<input name="#{@sd[:short_name]}.status-public" type="submit" value="#{action}" />
 _html
 	end
 

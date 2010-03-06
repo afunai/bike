@@ -116,10 +116,10 @@ base[:tid] = tid
 		if params[:status]
 			base[:folder].commit :persistent
 			if base.result
+				action = base.workflow.next_action params
 				id_step = Sofa::Path.path_of(
 					:id => base.result.values.collect {|item| item[:id] }
-				) if base[:parent] == base[:folder]
-				action = base.workflow.next_action params
+				) if base[:parent] == base[:folder] && action != :done
 				response_see_other(
 					:location => base[:path] + "/#{id_step}#{action}.html"
 				)

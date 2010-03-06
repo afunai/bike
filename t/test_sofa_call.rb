@@ -168,6 +168,28 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_post_enquete
+		Sofa.client = nil
+		Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.clear
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_enquete/main/update.html',
+			{
+				:input => "_1-name=fz&_1-comment=hi.&.status-public=create"
+			}
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#call with post method should return status 303'
+		)
+		assert_no_match(
+			Sofa::REX::PATH_ID,
+			res.headers['Location'],
+			'Sofa#call should not tell the item location when the workflow is enquete'
+		)
+	end
+
 	def test_post_wrong_action
 		Sofa.client = nil
 		assert_raise(

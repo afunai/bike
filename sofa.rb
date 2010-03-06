@@ -14,7 +14,7 @@ class Sofa
 		ID       = /^(\d{8})_(\d{4,}|#{ID_SHORT})/
 		ID_NEW   = /^_\d/
 		COND     = /^(.+?)=(.+)$/
-		COND_D   = /^(19\d\d|2\d\d\d)\d{0,4}$/
+		COND_D   = /^(19\d\d|2\d\d\d|9999)\d{0,4}$/
 		PATH_ID  = /\/((?:19|2\d)\d{6})\/(\d+)/
 		TID      = /\d{10}\.\d+/
 	end

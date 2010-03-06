@@ -48,6 +48,35 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_get_sub
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/'
+		)
+		assert_match(
+			%r{<li>qux</li>},
+			res.body,
+			"Sofa#call() should return sets other than 'main' as well"
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/sub/d=2010/'
+		)
+		assert_match(
+			%r{<li>qux</li>},
+			res.body,
+			"Sofa#call() should pass args for a sd other than 'main' as well"
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/sub/d=2009/'
+		)
+		assert_no_match(
+			%r{<li>qux</li>},
+			res.body,
+			"Sofa#call() should pass args for a sd other than 'main' as well"
+		)
+	end
+
 	def test_post_simple_create
 		Sofa.client = 'root'
 		res = Rack::MockRequest.new(@sofa).post(

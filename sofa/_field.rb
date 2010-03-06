@@ -126,6 +126,7 @@ class Sofa::Field
 			_get(arg)
 		else
 			if arg[:action] && my[:client] == 'nobody'
+# TODO: pass the status 403 to the folder.
 				arg[:dest_action] = arg[:action]
 				arg[:action] = :login
 			else

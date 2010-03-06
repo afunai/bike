@@ -188,6 +188,16 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			res.headers['Location'],
 			'Sofa#call should not tell the item location when the workflow is enquete'
 		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/done.html',
+			{}
+		)
+		assert_no_match(
+			/login/,
+			res.body,
+			'Sofa#call should always allow action :done'
+		)
 	end
 
 	def test_post_wrong_action

@@ -107,6 +107,10 @@ _html
 _html
 	end
 
+	def _g_done(arg)
+		'done.'
+	end
+
 	def _g_submit(arg)
 		@workflow._g_submit arg
 	end

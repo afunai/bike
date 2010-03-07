@@ -278,6 +278,7 @@ end
 				return if item.empty?
 				new_id = @storage.store(:new_id,item.val)
 				item[:id] = new_id
+				@item_object.delete id
 			when :update
 				@storage.store(item[:id],item.val)
 				if item[:id] != id || item.empty?

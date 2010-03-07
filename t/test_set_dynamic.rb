@@ -790,7 +790,7 @@ _html
 		)
 		assert_equal(
 			:create,
-			@sd.item('_1236').result,
+			@sd.result['_1236'].result,
 			'Set::Static#result should return the committed action unless :update'
 		)
 	end

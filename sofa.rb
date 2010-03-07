@@ -124,7 +124,15 @@ base[:tid] = tid
 					:location => base[:path] + "/#{id_step}#{action}.html"
 				)
 			else
-				# base.errors
+				params = {:action => :update}
+				until base.is_a? Sofa::Set::Static::Folder
+					params[:conds] = {:id => base.send(:pending_items).keys}
+					params = {base[:id] => params}
+					base = base[:parent]
+				end
+				response_unprocessable_entity(
+					:body => base.get(params)
+				)
 			end
 		else
 			Sofa.transaction[base[:tid]] ||= base
@@ -234,6 +242,20 @@ _html
 			404,
 			{},
 			'Not Found'
+		]
+	end
+
+	def response_unprocessable_entity(result = {})
+		[
+			422,
+			(
+				result[:headers] ||
+				{
+					'Content-Type'   => 'text/html',
+					'Content-Length' => result[:body].size.to_s,
+				}
+			),
+			result[:body],
 		]
 	end
 

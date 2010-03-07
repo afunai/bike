@@ -10,6 +10,14 @@ class Sofa::Text < Sofa::Field
 		super
 	end
 
+	def errors
+		if (my[:max].to_i > 0) && (val.to_s.size > my[:max])
+			['too long']
+		else
+			[]
+		end
+	end
+
 	private
 
 	def _g_update(arg)

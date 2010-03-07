@@ -22,9 +22,13 @@ class Sofa::Text < Sofa::Field
 
 	def _g_update(arg)
 		<<_html.chomp
-<input type="text" name="#{my[:short_name]}" value="#{val}" />
+<input type="text" name="#{my[:short_name]}" value="#{val}" />#{_g_errors}
 _html
 	end
 	alias :_g_create :_g_update
+
+	def _g_errors(arg = {})
+		errors.first
+	end
 
 end

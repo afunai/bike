@@ -149,7 +149,6 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 	def _get(arg)
 		@sd.instance_eval {
 			if arg[:action] == :create || arg[:action] == :update
-				@item_object.delete '_001'
 				new_item = item_instance '_001'
 
 				item_outs = _g_default(arg) {|item,item_arg|

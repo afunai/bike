@@ -28,7 +28,9 @@ _html
 	alias :_g_create :_g_update
 
 	def _g_errors(arg = {})
-		errors.first
+		<<_html unless valid?
+<span class="sofa-error">#{errors.first}</span>
+_html
 	end
 
 end

@@ -3,8 +3,6 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-require 'rubygems'
-
 class Sofa
 
 	Dir['./sofa/*.rb'].sort.each {|file| require file }

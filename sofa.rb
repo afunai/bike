@@ -114,6 +114,7 @@ base[:tid] = tid
 		if params[:status]
 			base[:folder].commit :persistent
 			if base.result
+				Sofa.transaction[base[:tid]] = nil
 				action = base.workflow.next_action params
 				id_step = Sofa::Path.path_of(
 					:id => base.result.values.collect {|item| item[:id] }

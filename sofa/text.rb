@@ -29,7 +29,7 @@ _html
 
 	def _g_errors(arg = {})
 		<<_html unless valid?
-<span class="sofa-error">#{errors.first}</span>
+<span class="error">#{errors.first}</span>
 _html
 	end
 

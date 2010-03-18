@@ -34,6 +34,10 @@ class Sofa
 		self.session[:transaction] ||= {}
 	end
 
+	def self.message
+		self.session[:message] ||= {}
+	end
+
 	def self.client
 		self.session[:client] ||= 'nobody'
 	end

@@ -123,6 +123,7 @@ base[:tid] = tid
 				id_step = Sofa::Path.path_of(
 					:id => base.result.values.collect {|item| item[:id] }
 				) if base[:parent] == base[:folder] && action != :done
+Sofa.message[base[:tid]] = {:notice => 'item updated.'}
 				response_see_other(
 					:location => base[:path] + "/#{id_step}#{action}.html"
 				)

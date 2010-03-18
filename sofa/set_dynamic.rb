@@ -111,6 +111,14 @@ _html
 		'done.'
 	end
 
+def _g_message(arg)
+	if m = Sofa.message[my[:tid]]
+		<<_html
+<div class="#{m.keys.first}">#{m.values.first}</div>
+_html
+	end
+end
+
 	def _g_submit(arg)
 		@workflow._g_submit arg
 	end

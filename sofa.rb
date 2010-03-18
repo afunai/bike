@@ -125,7 +125,7 @@ base[:tid] = tid
 				) if base[:parent] == base[:folder] && action != :done
 Sofa.message[base[:tid]] = {:notice => 'item updated.'}
 				response_see_other(
-					:location => base[:path] + "/#{id_step}#{action}.html"
+					:location => base[:path] + "/#{base[:tid]}/#{id_step}#{action}.html"
 				)
 			else
 				params = {:action => :update}

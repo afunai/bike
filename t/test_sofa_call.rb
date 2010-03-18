@@ -186,7 +186,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 		assert_equal(303,res.status)
 		assert_match(
-			%r{/#{new_id}/replies/index.html},
+			%r{/#{new_id}/replies/1234567890.123456/index.html},
 			res.headers['Location'],
 			'Sofa#call with a sub-app status should commit the root item'
 		)

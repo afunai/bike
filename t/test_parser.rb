@@ -323,7 +323,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-<ul class="sofa-blog" id="@(name)">$()</ul>
+$(.message)<ul class="sofa-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_arg => {
@@ -352,7 +352,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-<ul class="sofa-blog" id="@(name)">
+$(.message)<ul class="sofa-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -380,7 +380,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
- <ul class="sofa-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
+$(.message) <ul class="sofa-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item_arg => {
 						:tmpl => '<li>hello</li>',
@@ -431,7 +431,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-	<table class="sofa-blog" id="@(name)">
+$(.message)	<table class="sofa-blog" id="@(name)">
 		<!-- 1..20 barbaz -->
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
@@ -467,7 +467,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-	<table class="sofa-blog" id="@(name)">
+$(.message)	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
@@ -511,7 +511,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-	<table class="sofa-blog" id="@(name)">
+$(.message)	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
@@ -546,7 +546,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-<ul class="sofa-blog" id="@(name)">
+$(.message)<ul class="sofa-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -560,7 +560,7 @@ _tmpl
 								:klass    => 'set-dynamic',
 								:workflow => 'blog',
 								:tmpl     => <<'_tmpl'.chomp,
-		<ul class="sofa-blog" id="@(name)">$()</ul>
+$(.message)		<ul class="sofa-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
 								:item_arg => {
@@ -602,7 +602,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-	<ul id="@(name)" class="sofa-blog">
+$(.message)	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl

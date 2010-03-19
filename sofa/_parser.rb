@@ -39,6 +39,7 @@ module Sofa::Parser
 			next if meta[:workflow].downcase == 'attachment'
 			tmpl << '$(.submit)' unless _include_menu?(html,tmpl,id,'submit')
 			tmpl << '$(.action_create)' unless _include_menu?(html,tmpl,id,'action_create')
+			tmpl.insert(0,'$(.message)') unless _include_menu?(html,tmpl,id,'message')
 		}
 
 		{

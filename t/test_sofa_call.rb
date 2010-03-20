@@ -388,4 +388,28 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_message_error
+		Sofa.client = 'root'
+		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
+
+		tid = '1234567890.01234'
+
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/t_store/#{tid}/main/update.html",
+			{
+				:input => "_2-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylongname&.status-public=create"
+			}
+		)
+
+		assert_match(
+			/malformed input\./,
+			res.body,
+			'Sofa#call should include the current Sofa.message'
+		)
+		assert_nil(
+			Sofa.message[tid],
+			'Sofa#call should have used up the Sofa.message'
+		)
+	end
+
 end

@@ -129,6 +129,7 @@ Sofa.message[base[:tid]] = {:notice => ['item updated.']}
 				)
 			else
 				params = {:action => :update}
+Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 				until base.is_a? Sofa::Set::Static::Folder
 					params[:conds] = {:id => base.send(:pending_items).keys}
 					params = {base[:id] => params}

@@ -111,13 +111,18 @@ _html
 		'done.'
 	end
 
-def _g_message(arg)
-	if m = Sofa.message[my[:tid]]
-		<<_html
-<div class="#{m.keys.first}">#{m.values.first}</div>
+	def _g_message(arg)
+		if message = Sofa.message[my[:tid]]
+			Sofa.message.delete my[:tid]
+			message.keys.collect {|type|
+				lis = message[type].collect {|m| "\t<li>#{Rack::Utils.escape_html m}</li>\n" }
+				<<_html
+	<ul class="message #{type}">
+	#{lis}</ul>
 _html
+			}.join
+		end
 	end
-end
 
 	def _g_submit(arg)
 		@workflow._g_submit arg

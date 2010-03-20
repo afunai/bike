@@ -79,6 +79,8 @@ class TC_Sofa_Call < Test::Unit::TestCase
 
 	def test_post_simple_create
 		Sofa.client = 'root'
+		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
+
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
@@ -344,6 +346,45 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			%r{/foo/20100222/1/index.html},
 			res.headers['Location'],
 			'Sofa#call with :logout action should work via both get and post'
+		)
+	end
+
+	def test_message_notice
+		Sofa.client = 'root'
+		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input => "_2-name=fz&_2-comment=hi.&.status-public=create"
+			}
+		)
+
+		tid    = res.headers['Location'][%r{/(\d+.\d+)/},1]
+		new_id = res.headers['Location'][Sofa::REX::PATH_ID]
+
+		assert_equal(
+			{:notice => ['item updated.']},
+			Sofa.message[tid],
+			'Sofa#call with post method should set proper Sofa.message'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			"http://example.com/t_store/#{tid}/#{new_id}index.html"
+		)
+		assert_match(
+			/item updated\./,
+			res.body,
+			'Sofa#call should include the current Sofa.message'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			"http://example.com/t_store/#{tid}/#{new_id}index.html"
+		)
+		assert_no_match(
+			/item updated\./,
+			res.body,
+			'Sofa#call should not include the used Sofa.message again'
 		)
 	end
 

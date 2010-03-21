@@ -201,6 +201,8 @@ class Sofa::Field
 		respond_to?(m,true) ? __send__(m,arg) : _g_default(arg)
 	end
 
+# TODO: _g_done,_g_message (to stop peeping)
+
 	def _g_default(arg)
 		Rack::Utils.escape_html val.to_s
 	end

@@ -79,7 +79,8 @@ base[:tid] = tid
 			end
 		rescue Sofa::Error::Forbidden
 			if params[:action] && Sofa.client == 'nobody'
-				params[:dest_action] = params[:action]
+				Sofa.message[base[:tid]] = {:alert => ['please login.']}
+				params[:dest_action] = (method == 'post') ? :index : params[:action]
 				params[:action] = :login
 			end
 			response_forbidden :body => (_get(base,params) rescue nil)

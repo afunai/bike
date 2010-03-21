@@ -67,14 +67,22 @@ class Sofa
 base[:tid] = tid
 		Sofa.current[:base] = base
 
-		if params[:action] == :logout
-			logout(base,params)
-		elsif method == 'get'
-			get(base,params)
-		elsif params[:action] == :login
-			login(base,params)
-		else
-			post(base,params)
+		begin
+			if params[:action] == :logout
+				logout(base,params)
+			elsif method == 'get'
+				get(base,params)
+			elsif params[:action] == :login
+				login(base,params)
+			else
+				post(base,params)
+			end
+		rescue Sofa::Error::Forbidden
+			if params[:action] && Sofa.client == 'nobody'
+				params[:dest_action] = params[:action]
+				params[:action] = :login
+			end
+			response_forbidden :body => (_get(base,params) rescue nil)
 		end
 	end
 

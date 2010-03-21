@@ -233,29 +233,30 @@ class TC_Sofa_Call < Test::Unit::TestCase
 
 	def test_post_wrong_action
 		Sofa.client = nil
-		assert_raise(
-			Sofa::Error::Forbidden,
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/read.html',
+			{
+				:input => "_1-name=fz&_1-comment=hi.&.status-public=create"
+			}
+		)
+		assert_equal(
+			403,
+			res.status,
 			'post with an action other than :update should be regarded as :update'
-		) {
-			res = Rack::MockRequest.new(@sofa).post(
-				'http://example.com/t_store/main/read.html',
-				{
-					:input => "_1-name=fz&_1-comment=hi.&.status-public=create"
-				}
-			)
-		}
+		)
 
 		Sofa.client = 'root'
-		assert_nothing_raised(
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/read.html',
+			{
+				:input => "_1-name=fz&_1-comment=hi.&.status-public=create"
+			}
+		)
+		assert_equal(
+			303,
+			res.status,
 			'post with an action other than :update should be regarded as :update'
-		) {
-			res = Rack::MockRequest.new(@sofa).post(
-				'http://example.com/t_store/main/read.html',
-				{
-					:input => "_1-name=fz&_1-comment=hi.&.status-public=create"
-				}
-			)
-		}
+		)
 	end
 
 	def test_post_login

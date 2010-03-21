@@ -236,7 +236,7 @@ _html
 		[
 			403,
 			{},
-			'Forbidden'
+			result[:body] || 'Forbidden'
 		]
 	end
 

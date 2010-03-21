@@ -389,24 +389,17 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
-def ptest_message_alert
+def test_message_alert
 	Sofa.client = 'nobody'
 	Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
 
-	tid = '1234567890.01234'
-
 	res = Rack::MockRequest.new(@sofa).get(
-		"http://example.com/t_store/main/update.html"
+		"http://example.com/t_store/main/20100321/1/update.html"
 	)
-
 	assert_match(
 		/please login\./,
 		res.body,
 		'Sofa#call should include the current Sofa.message'
-	)
-	assert_nil(
-		Sofa.message[tid],
-		'Sofa#call should have used up the Sofa.message'
 	)
 end
 

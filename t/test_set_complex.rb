@@ -352,21 +352,18 @@ _html
 		@sd.instance_variable_set(:@item_object,{}) # remove item('_001')
 
 		Sofa.client = nil
-		assert_no_match(
-			/\(action=update/,
-			@sd.item('20091123_0001','files').get(:action => :update),
+		assert_raise(
+			Sofa::Error::Forbidden,
 			'Field#get should not show an inner attachment when the parent is forbidden'
-		)
-		assert_match(
-			/login\.html/,
-			@sd.item('20091123_0001','files').get(:action => :update),
+		) {
+			@sd.item('20091123_0001','files').get(:action => :update)
+		}
+		assert_raise(
+			Sofa::Error::Forbidden,
 			'Field#get should not show an inner attachment when the parent is forbidden'
-		)
-		assert_no_match(
-			/\(action=update/,
-			@sd.item('20091123_0001','files','20091123_0001').get(:action => :update),
-			'Field#get should not show an inner attachment when the parent is forbidden'
-		)
+		) {
+			@sd.item('20091123_0001','files','20091123_0001').get(:action => :update)
+		}
 	end
 
 	def test_post_partial

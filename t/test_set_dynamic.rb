@@ -831,17 +831,12 @@ _html
 		Sofa.client = nil
 
 		arg = {:action => :update,:conds => {:d => '2009'}}
-		@sd.get arg
-		assert_equal(
-			:login,
-			arg[:action],
-			'Set::Dynamic#get should retreat to :login when sd[:client] is nobody'
-		)
-		assert_equal(
-			:update,
-			arg[:dest_action],
-			'Set::Dynamic#get should set arg[:dest_action] when sd[:client] is nobody'
-		)
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Set::Dynamic#get should raise Error::Forbidden when sd[:client] is nobody'
+		) {
+			@sd.get arg
+		}
 	end
 
 	def test_post_by_nobody

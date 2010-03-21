@@ -94,8 +94,8 @@ base[:tid] = tid
 		if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
 			Sofa.client = params['id']
 		else
-# TODO: set the error status on the session.
 			Sofa.client = nil
+			raise Sofa::Error::Forbidden
 		end
 		path   = Sofa::Path.path_of params[:conds]
 		action = (params['dest_action'] =~ /\A\w+\z/) ? params['dest_action'] : 'index'

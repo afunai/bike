@@ -583,42 +583,57 @@ class TC_Sofa < Test::Unit::TestCase
 	def test_login_with_wrong_account
 		Sofa.client = nil
 
-		Sofa.new.send(
-			:login,
-			Sofa::Set::Static::Folder.root.item('foo','main'),
-			{'id' => 'non-existent','pw' => 'test'}
-		)
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Sofa#login should raise Error::Forbidden given a non-existent user'
+		) {
+			Sofa.new.send(
+				:login,
+				Sofa::Set::Static::Folder.root.item('foo','main'),
+				{'id' => 'non-existent','pw' => 'test'}
+			)
+		}
 		assert_equal(
 			'nobody',
 			Sofa.client,
 			'Sofa#login should not set Sofa.client with a non-existent user'
 		)
 
-		Sofa.new.send(
-			:login,
-			Sofa::Set::Static::Folder.root.item('foo','main'),
-			{'id' => 'test','pw' => nil}
-		)
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Sofa#login should raise Error::Forbidden given a empty password'
+		) {
+			Sofa.new.send(
+				:login,
+				Sofa::Set::Static::Folder.root.item('foo','main'),
+				{'id' => 'test','pw' => nil}
+			)
+		}
 		assert_equal(
 			'nobody',
 			Sofa.client,
 			'Sofa#login should not set Sofa.client with an empty password'
 		)
 
-		res = Sofa.new.send(
-			:login,
-			Sofa::Set::Static::Folder.root.item('foo','main'),
-			{'id' => 'test','pw' => 'wrong',:conds => {:id => '20100222_0123'},'dest_action' => 'update'}
-		)
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Sofa#login should raise Error::Forbidden given a wrong password'
+		) {
+			res = Sofa.new.send(
+				:login,
+				Sofa::Set::Static::Folder.root.item('foo','main'),
+				{
+					'id' => 'test',
+					'pw' => 'wrong',
+					:conds => {:id => '20100222_0123'},
+					'dest_action' => 'update'
+				}
+			)
+		}
 		assert_equal(
 			'nobody',
 			Sofa.client,
 			'Sofa#login should not set Sofa.client with a wrong password'
-		)
-		assert_match(
-			%r{/foo/20100222/123/update.html},
-			res[1]['Location'],
-			'Sofa#login should return a proper location header'
 		)
 	end
 

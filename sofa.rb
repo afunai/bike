@@ -151,14 +151,14 @@ Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 		end
 	end
 
-	def _get(base,params)
-		until base.is_a? Sofa::Set::Static::Folder
-			params = {base[:id] => params}
-			params[:conds] = {:id => base[:id]} if base[:parent].is_a? Sofa::Set::Dynamic
-			base = base[:parent]
-		end if base.is_a? Sofa::Set::Dynamic
+	def _get(f,params)
+		until f.is_a? Sofa::Set::Static::Folder
+			params = {f[:id] => params}
+			params[:conds] = {:id => f[:id]} if f[:parent].is_a? Sofa::Set::Dynamic
+			f = f[:parent]
+		end if f.is_a? Sofa::Set::Dynamic
 
-		base.get params
+		f.get params
 	end
 
 	def params_from_request(req)

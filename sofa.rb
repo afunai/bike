@@ -104,13 +104,7 @@ base[:tid] = tid
 	end
 
 	def get(base,params)
-		until base.is_a? Sofa::Set::Static::Folder
-			params = {base[:id] => params}
-			params[:conds] = {:id => base[:id]} if base[:parent].is_a? Sofa::Set::Dynamic
-			base = base[:parent]
-		end if base.is_a? Sofa::Set::Dynamic
-
-		response_ok :body => base.get(params)
+		response_ok :body => _get(base,params)
 	end
 
 	def post(base,params)
@@ -129,15 +123,9 @@ Sofa.message[base[:tid]] = {:notice => ['item updated.']}
 				)
 			else
 				params = {:action => :update}
+				params[:conds] = {:id => base.send(:pending_items).keys}
 Sofa.message[base[:tid]] = {:error => ['malformed input.']}
-				until base.is_a? Sofa::Set::Static::Folder
-					params[:conds] = {:id => base.send(:pending_items).keys}
-					params = {base[:id] => params}
-					base = base[:parent]
-				end
-				response_unprocessable_entity(
-					:body => base.get(params)
-				)
+				response_unprocessable_entity :body => _get(base,params)
 			end
 		else
 			Sofa.transaction[base[:tid]] ||= base
@@ -153,6 +141,16 @@ Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 				:location => base[:path] + "/#{base[:tid]}/#{id_step}update.html"
 			)
 		end
+	end
+
+	def _get(base,params)
+		until base.is_a? Sofa::Set::Static::Folder
+			params = {base[:id] => params}
+			params[:conds] = {:id => base[:id]} if base[:parent].is_a? Sofa::Set::Dynamic
+			base = base[:parent]
+		end if base.is_a? Sofa::Set::Dynamic
+
+		base.get params
 	end
 
 	def params_from_request(req)

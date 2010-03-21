@@ -42,7 +42,7 @@ class Sofa::Workflow
 
 	def permit?(roles,action)
 		case action
-			when :login,:done
+			when :login,:done,:message
 				true
 			else
 				(roles & self.class.const_get(:PERM)[action].to_i) > 0

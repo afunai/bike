@@ -83,7 +83,11 @@ base[:tid] = tid
 				params[:dest_action] = (method == 'post') ? :index : params[:action]
 				params[:action] = :login
 			end
-			response_forbidden :body => (_get(base,params) rescue nil)
+			begin
+				response_unprocessable_entity :body => _get(base,params)
+			rescue Sofa::Error::Forbidden
+				response_forbidden
+			end
 		end
 	end
 

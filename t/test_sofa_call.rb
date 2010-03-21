@@ -240,7 +240,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			}
 		)
 		assert_equal(
-			403,
+			422,
 			res.status,
 			'post with an action other than :update should be regarded as :update'
 		)
@@ -298,14 +298,9 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'Sofa#call with :login action should not set Sofa.client upon failure'
 		)
 		assert_equal(
-			303,
+			422,
 			res.status,
-			'Sofa#call with :login action should return status 303'
-		)
-		assert_match(
-			%r{/foo/20100222/1/update.html},
-			res.headers['Location'],
-			'Sofa#call with :login action should return a proper location'
+			'Sofa#call with :login action should return status 422 upon failure'
 		)
 	end
 

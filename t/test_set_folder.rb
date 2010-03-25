@@ -87,4 +87,94 @@ class TC_Set_Folder < Test::Unit::TestCase
 		)
 	end
 
+	def test_merge_meta
+		folder = Sofa::Set::Static::Folder.root
+
+		index = {
+			:item => {
+				'main' => {
+					:item => {
+						'default' => {
+							:tmpl => '<li><ul>$(files)</ul></li>',
+							:item => {
+								'files' => {
+									:tmpl => '<ol>$()</ol>',
+									:item => {
+										'default' => {
+											:tmpl => '<li>$(file)</li>',
+											:item => {'file' => {:klass => 'text'}},
+										},
+									},
+								},
+							},
+						},
+					},
+					:tmpl => '<ul>$()</ul>',
+				},
+			},
+			:tmpl => '<html>$(main)</html>',
+		}
+		summary = {
+			:item => {
+				'main' => {
+					:foo  => 'this should not be merged.',
+					:item => {
+						'default' => {
+							:bar  => 'this should not be merged.',
+							:tmpl => '<li class ="s"><ul>$(files)</ul></li>',
+							:item => {
+								'files' => {
+									:baz  => 'this should not be merged.',
+									:tmpl => '<ol class ="s">$()</ol>',
+									:item => {
+										'default' => {
+											:qux  => 'this should not be merged.',
+											:tmpl => '<li class ="s">$(file)</li>',
+										},
+									},
+								},
+							},
+						},
+					},
+					:tmpl => '<ul class ="s">$()</ul>',
+				},
+			},
+			:tmpl => '<html class ="s">$(main)</html>',
+		}
+
+		assert_equal(
+			{
+				:item => {
+					'main' => {
+						:item => {
+							'default' => {
+								:tmpl => '<li><ul>$(files)</ul></li>',
+								:tmpl_summary => '<li class ="s"><ul>$(files)</ul></li>',
+								:item => {
+									'files' => {
+										:tmpl => '<ol>$()</ol>',
+										:tmpl_summary => '<ol class ="s">$()</ol>',
+										:item => {
+											'default' => {
+												:tmpl => '<li>$(file)</li>',
+												:tmpl_summary => '<li class ="s">$(file)</li>',
+												:item => {'file' => {:klass => 'text'}},
+											},
+										},
+									},
+								},
+							},
+						},
+						:tmpl => '<ul>$()</ul>',
+						:tmpl_summary => '<ul class ="s">$()</ul>',
+					},
+				},
+				:tmpl => '<html>$(main)</html>',
+				:tmpl_summary => '<html class ="s">$(main)</html>',
+			},
+			folder.send(:merge_meta,index,summary),
+			'Folder#merge_meta should merge parsed metas'
+		)
+	end
+
 end

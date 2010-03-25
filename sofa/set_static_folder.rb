@@ -52,5 +52,13 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		}.merge(v) : v
 	end
 
+	def merge_meta(index,summary)
+		index[:tmpl_summary] = summary[:tmpl]
+		index[:item].each {|id,val|
+			merge_meta(val,summary[:item][id]) if val[:item] && summary[:item][id]
+		} if summary[:item]
+		index
+	end
+
 end
 

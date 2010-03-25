@@ -35,25 +35,27 @@ $(.message)	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_arg => {
-						:tmpl => <<'_tmpl',
+					:item     => {
+						'default' => {
+							:tmpl => <<'_tmpl',
 		<li>
 			$(subject)$(.action_update)
 			$(body)
 			<ul><li>qux</li></ul>
 		</li>
 _tmpl
-						:item => {
-							'body'    => {
-								:width  => 72,
-								:height => 10,
-								:klass  => 'textarea',
+							:item => {
+								'body'    => {
+									:width  => 72,
+									:height => 10,
+									:klass  => 'textarea',
+								},
+								'subject' => {
+									:klass  => 'text',
+									:tokens => ['64'],
+								},
 							},
-							'subject' => {
-								:klass  => 'text',
-								:tokens => ['64'],
-							},
-						}
+						},
 					},
 				},
 			},
@@ -126,10 +128,12 @@ _html
 		)
 		assert_equal(
 			{
-				:tmpl => "\t\t<li>hi</li>\n",
-				:item => {},
+				'default' => {
+					:tmpl => "\t\t<li>hi</li>\n",
+					:item => {},
+				},
 			},
-			main[:item_arg],
+			main[:item],
 			'Set::Static#item() should load the metas of child items'
 		)
 

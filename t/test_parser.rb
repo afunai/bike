@@ -326,9 +326,11 @@ _html
 $(.message)<ul class="sofa-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_arg => {
-						:tmpl => '<li>hello</li>',
-						:item => {},
+					:item     => {
+						'default' => {
+							:tmpl => '<li>hello</li>',
+							:item => {},
+						},
 					},
 				},
 			},
@@ -356,10 +358,12 @@ $(.message)<ul class="sofa-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_arg => {
-						:tmpl => "\t<li>hello</li>\n",
-						:item => {},
-					},
+					:item     => {
+						'default' => {
+							:tmpl => "\t<li>hello</li>\n",
+							:item => {},
+						},
+					}
 				},
 			},
 			result[:item],
@@ -382,9 +386,11 @@ _html
 					:tmpl     => <<'_tmpl'.chomp,
 $(.message) <ul class="sofa-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_arg => {
-						:tmpl => '<li>hello</li>',
-						:item => {},
+					:item     => {
+						'default' => {
+							:tmpl => '<li>hello</li>',
+							:item => {},
+						},
 					},
 				},
 			},
@@ -436,13 +442,15 @@ $(.message)	<table class="sofa-blog" id="@(name)">
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_arg => {
-						:tmpl => <<'_tmpl',
+					:item     => {
+						'default' => {
+							:tmpl => <<'_tmpl',
 		<tbody class="body"><!-- qux --><tr><th>$(bar)$(.action_update)</th><th>$(baz)</th></tr></tbody>
 _tmpl
-						:item => {
-							'bar' => {:klass => 'text'},
-							'baz' => {:klass => 'text'},
+							:item => {
+								'bar' => {:klass => 'text'},
+								'baz' => {:klass => 'text'},
+							},
 						},
 					},
 				},
@@ -472,13 +480,15 @@ $(.message)	<table class="sofa-blog" id="@(name)">
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_arg => {
-						:tmpl => <<'_tmpl',
+					:item     => {
+						'default' => {
+							:tmpl => <<'_tmpl',
 		<tbody class="body"><tr><th>$(bar)$(.action_update)</th><th>$(baz)</th></tr></tbody>
 _tmpl
-						:item => {
-							'bar' => {:klass => 'text'},
-							'baz' => {:klass => 'text'},
+							:item => {
+								'bar' => {:klass => 'text'},
+								'baz' => {:klass => 'text'},
+							},
 						},
 					},
 				},
@@ -516,13 +526,15 @@ $(.message)	<table class="sofa-blog" id="@(name)">
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_arg => {
-						:tmpl => <<'_tmpl',
+					:item     => {
+						'default' => {
+							:tmpl => <<'_tmpl',
 		<tbody class="body"><tbody><tr><th>$(bar)$(.action_update)</th><th>$(baz)</th></tr></tbody></tbody>
 _tmpl
-						:item => {
-							'bar' => {:klass => 'text'},
-							'baz' => {:klass => 'text'},
+							:item => {
+								'bar' => {:klass => 'text'},
+								'baz' => {:klass => 'text'},
+							},
 						},
 					},
 				},
@@ -550,22 +562,26 @@ $(.message)<ul class="sofa-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_arg => {
-						:tmpl => <<'_tmpl',
+					:item     => {
+						'default' => {
+							:tmpl => <<'_tmpl',
 	<li>
 $(bar)$(.action_update)	</li>
 _tmpl
-						:item => {
-							'bar' => {
-								:klass    => 'set-dynamic',
-								:workflow => 'blog',
-								:tmpl     => <<'_tmpl'.chomp,
+							:item => {
+								'bar' => {
+									:klass    => 'set-dynamic',
+									:workflow => 'blog',
+									:tmpl     => <<'_tmpl'.chomp,
 $(.message)		<ul class="sofa-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-								:item_arg => {
-									:tmpl => '<li>baz</li>',
-									:item => {},
+									:item     => {
+										'default' => {
+											:tmpl => '<li>baz</li>',
+											:item => {},
+										},
+									},
 								},
 							},
 						},
@@ -606,23 +622,25 @@ $(.message)	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item_arg => {
-						:tmpl => <<'_tmpl',
+					:item     => {
+						'default' => {
+							:tmpl => <<'_tmpl',
 		<li>
 			$(subject)$(.action_update)
 			$(body)
 			<ul><li>qux</li></ul>
 		</li>
 _tmpl
-						:item => {
-							'body' => {
-								:width  => 72,
-								:height => 10,
-								:klass  => 'textarea',
-							},
-							'subject' => {
-								:tokens => ['64'],
-								:klass  => 'text',
+							:item => {
+								'body' => {
+									:width  => 72,
+									:height => 10,
+									:klass  => 'textarea',
+								},
+								'subject' => {
+									:tokens => ['64'],
+									:klass  => 'text',
+								},
 							},
 						},
 					},

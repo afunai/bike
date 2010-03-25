@@ -16,9 +16,12 @@ class Sofa::Set::Dynamic < Sofa::Field
 		@meta        = @workflow.class.const_get(:DEFAULT_META).merge @meta
 		@item_object = {}
 
-		my[:item_arg] ||= {}
-		my[:item_arg][:item] ||= {}
-		my[:item_arg][:item].merge! @workflow.default_sub_items
+		my[:item] ||= {
+			'default' => {:item => {}}
+		}
+		my[:item].each {|type,meta|
+			meta[:item].merge! @workflow.default_sub_items
+		}
 
 		my[:p_size] = meta[:max] if meta[:max]
 	end
@@ -311,14 +314,15 @@ end
 		}
 	end
 
-	def item_instance(id)
+	def item_instance(id,type = 'default')
 		unless @item_object[id]
+			item_meta = my[:item][type] || my[:item]['default']
 			@item_object[id] = Sofa::Field.instance(
 				:id     => id,
 				:parent => self,
 				:klass  => 'set-static',
-				:tmpl   => my[:item_arg][:tmpl],
-				:item   => my[:item_arg][:item]
+				:tmpl   => item_meta[:tmpl],
+				:item   => item_meta[:item]
 			)
 			if id[Sofa::REX::ID_NEW]
 				@item_object[id].load_default

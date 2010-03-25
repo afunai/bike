@@ -7,18 +7,20 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 
 	def setup
 		@sd = Sofa::Set::Dynamic.new(
-			:id        => 'foo',
-			:klass     => 'set-dynamic',
-			:workflow  => 'blog',
-			:group     => ['roy','don'],
-			:tmpl      => <<'_tmpl'.chomp,
+			:id       => 'foo',
+			:klass    => 'set-dynamic',
+			:workflow => 'blog',
+			:group    => ['roy','don'],
+			:tmpl     => <<'_tmpl'.chomp,
 <ul id="foo" class="sofa-blog">
 $()</ul>
 $(.submit)
 _tmpl
-			:item_arg  => Sofa::Parser.parse_html(<<'_html')
+			:item     => {
+				'default' => Sofa::Parser.parse_html(<<'_html')
 	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
 _html
+			}
 		)
 		@sd[:conds] = {}
 		@sd[:tmpl_action_create] = ''

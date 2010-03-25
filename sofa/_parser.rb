@@ -116,17 +116,19 @@ module Sofa::Parser
 			"$(.#{action})"
 		}
 
-		item_arg = Sofa::Parser.parse_html item_html
-		item_arg[:tmpl].sub!(
+		item_meta = Sofa::Parser.parse_html item_html
+		item_meta[:tmpl].sub!(
 			/\$\(.*?\)/m,
 			'\&$(.action_update)'
-		) unless workflow.downcase == 'attachment' || item_arg[:tmpl].include?('$(.action_update)')
+		) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.action_update)')
 
 		sd = {
-			:klass     => 'set-dynamic',
-			:workflow  => workflow,
-			:tmpl      => "#{open_tag}#{sd_tmpl}#{close_tag}",
-			:item_arg  => item_arg,
+			:klass    => 'set-dynamic',
+			:workflow => workflow,
+			:tmpl     => "#{open_tag}#{sd_tmpl}#{close_tag}",
+			:item     => {
+				'default' => item_meta,
+			},
 		}
 		sd.merge! action_tmpl
 		(inner_html =~ /\A\s*<!--(.+?)-->/m) ? sd.merge(scan_tokens StringScanner.new($1)) : sd

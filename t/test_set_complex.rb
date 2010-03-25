@@ -36,16 +36,17 @@ class TC_Set_Complex < Test::Unit::TestCase
 	def setup
 		# Set::Dynamic of Set::Static of (Scalar and (Set::Dynamic of Set::Static of Scalar))
 		@sd = Sofa::Set::Dynamic.new(
-			:id        => 'main',
-			:klass     => 'set-dynamic',
-			:workflow  => 'pipco',
-			:group     => ['roy','don'],
-			:tmpl      => <<'_tmpl'.chomp,
+			:id       => 'main',
+			:klass    => 'set-dynamic',
+			:workflow => 'pipco',
+			:group    => ['roy','don'],
+			:tmpl     => <<'_tmpl'.chomp,
 <ul id="@(name)" class="sofa-pipco">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-			:item_arg => Sofa::Parser.parse_html(<<'_html')
+			:item     => {
+				'default' => Sofa::Parser.parse_html(<<'_html')
 	<li id="@(name)">
 		name:(tomago 32 :'nobody'): comment:(tomago 64 :'hello.')
 		<ul id="files" class="sofa-attachment">
@@ -57,6 +58,7 @@ _tmpl
 		$(replies.vegetable)
 	</li>
 _html
+			}
 		)
 		@sd.load(
 			'20091123_0001' => {

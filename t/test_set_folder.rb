@@ -177,4 +177,58 @@ class TC_Set_Folder < Test::Unit::TestCase
 		)
 	end
 
+	def test_tmpl_summary
+		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+		assert_equal(
+			<<'_html',
+<h1>index</h1>
+$(main)
+_html
+			folder[:tmpl],
+			'Folder#initialize should load [:tmpl] from [:dir]/index.html'
+		)
+		assert_equal(
+			<<'_html',
+<h1>summary</h1>
+$(main)
+_html
+			folder[:tmpl_summary],
+			'Folder#initialize should load [:tmpl_summary] from [:dir]/summary.html'
+		)
+
+		assert_equal(
+			<<'_html'.chomp,
+$(.message)<ul id="@(name)" class="sofa-blog">
+$()</ul>
+$(.navi)$(.submit)$(.action_create)
+_html
+			folder[:item]['main'][:tmpl],
+			'Folder#initialize should load [:tmpl] of the child items'
+		)
+		assert_equal(
+			<<'_html'.chomp,
+$(.message)<table id="@(name)" class="sofa-blog">
+$()</table>
+$(.navi)$(.submit)$(.action_create)
+_html
+			folder[:item]['main'][:tmpl_summary],
+			'Folder#initialize should load [:tmpl_summary] of the child items'
+		)
+
+		assert_equal(
+			<<'_html',
+	<li>$(name)$(.action_update): $(comment)</li>
+_html
+			folder[:item]['main'][:item]['default'][:tmpl],
+			'Folder#initialize should load [:tmpl] of all the decendant items'
+		)
+		assert_equal(
+			<<'_html',
+	<tr><td>$(name)$(.action_update)</td><td>$(comment)</td></tr>
+_html
+			folder[:item]['main'][:item]['default'][:tmpl_summary],
+			'Folder#initialize should load [:tmpl_summary] of all the decendant items'
+		)
+	end
+
 end

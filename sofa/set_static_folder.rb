@@ -13,6 +13,10 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		meta[:dir]  = meta[:parent] ? ::File.join(meta[:parent][:dir],meta[:id]) : meta[:id]
 		meta[:html] = load_html(meta[:dir],meta[:parent])
 		super
+
+		html_summary = load_html(meta[:dir],meta[:parent],'summary')
+		merge_meta(@meta,Sofa::Parser.parse_html(html_summary)) if html_summary
+
 		my[:item]['_label'] = {:klass => 'text'}
 		my[:item]['_owner'] = {:klass => 'meta-owner'}
 		my[:item]['_group'] = {:klass => 'meta-group'}
@@ -33,8 +37,8 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		super
 	end
 
-	def load_html(dir,parent)
-		html_file = ::File.join Sofa['ROOT_DIR'],dir,'index.html'
+	def load_html(dir,parent,action = 'index')
+		html_file = ::File.join Sofa['ROOT_DIR'],dir,"#{action}.html"
 		if ::File.exists? html_file
 			::File.open(html_file) {|f| f.read }
 		elsif parent

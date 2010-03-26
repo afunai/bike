@@ -318,11 +318,11 @@ end
 		unless @item_object[id]
 			item_meta = my[:item][type] || my[:item]['default']
 			@item_object[id] = Sofa::Field.instance(
-				:id     => id,
-				:parent => self,
-				:klass  => 'set-static',
-				:tmpl   => item_meta[:tmpl],
-				:item   => item_meta[:item]
+				item_meta.merge(
+					:id     => id,
+					:parent => self,
+					:klass  => 'set-static'
+				)
 			)
 			if id[Sofa::REX::ID_NEW]
 				@item_object[id].load_default

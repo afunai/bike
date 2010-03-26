@@ -180,7 +180,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 	def test_tmpl_summary
 		folder = Sofa::Set::Static::Folder.root.item('t_summary')
 		assert_equal(
-			<<'_html',
+			<<'_html'.chomp,
 <h1>index</h1>
 $(main)
 _html
@@ -188,7 +188,7 @@ _html
 			'Folder#initialize should load [:tmpl] from [:dir]/index.html'
 		)
 		assert_equal(
-			<<'_html',
+			<<'_html'.chomp,
 <h1>summary</h1>
 $(main)
 _html

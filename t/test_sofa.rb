@@ -446,7 +446,7 @@ class TC_Sofa < Test::Unit::TestCase
 		sofa = Sofa.new
 
 		env = Rack::MockRequest.env_for(
-			'http://example.com/foo/bar/main/qux=456/wink.html?acorn=round',
+			'http://example.com/foo/bar/main/qux=456/read_detail.html?acorn=round',
 			{
 				:script_name => '',
 				:input       => 'coax=true&some-doors=open',
@@ -458,11 +458,12 @@ class TC_Sofa < Test::Unit::TestCase
 		}
 		assert_equal(
 			{
-				:conds  => {:qux => '456'},
-				:action => :wink,
-				'acorn' => 'round',
-				'coax'  => 'true',
-				'some'  => {'doors' => 'open'},
+				:conds      => {:qux => '456'},
+				:action     => :read,
+				:sub_action => :detail,
+				'acorn'     => 'round',
+				'coax'      => 'true',
+				'some'      => {'doors' => 'open'},
 			},
 			params,
 			'Sofa#params_from_request should build params from req.path_info and req.params'
@@ -481,11 +482,12 @@ class TC_Sofa < Test::Unit::TestCase
 		}
 		assert_equal(
 			{
-				:conds  => {:qux => '456'},
-				:action => nil,
-				'acorn' => 'round',
-				'coax'  => 'true',
-				'some'  => {'doors' => 'open'},
+				:conds      => {:qux => '456'},
+				:action     => nil,
+				:sub_action => nil,
+				'acorn'     => 'round',
+				'coax'      => 'true',
+				'some'      => {'doors' => 'open'},
 			},
 			params,
 			'Sofa#params_from_request should build params from req.path_info and req.params'
@@ -504,11 +506,12 @@ class TC_Sofa < Test::Unit::TestCase
 		}
 		assert_equal(
 			{
-				:conds  => {:qux => '456'}, 
-				:action => nil,
-				'acorn' => 'round',
-				'coax'  => 'true',
-				'some'  => {'doors' => 'open'},
+				:conds      => {:qux => '456'},
+				:action     => nil,
+				:sub_action => nil,
+				'acorn'     => 'round',
+				'coax'      => 'true',
+				'some'      => {'doors' => 'open'},
 			},
 			params,
 			'Sofa#params_from_request should attach the params from path_info to the base SD'
@@ -527,10 +530,11 @@ class TC_Sofa < Test::Unit::TestCase
 		}
 		assert_equal(
 			{
-				:conds  => {:qux => '456'},
-				:action => nil,
-				'acorn' => 'round',
-				'some'  => {'doors' => 'open',:action => :open},
+				:conds      => {:qux => '456'},
+				:action     => nil,
+				:sub_action => nil,
+				'acorn'     => 'round',
+				'some'      => {'doors' => 'open',:action => :open},
 			},
 			params,
 			'Sofa#params_from_request should build params from req.path_info and req.params'

@@ -305,6 +305,22 @@ class TC_Sofa < Test::Unit::TestCase
 			Sofa::Path.action_of('/foo/bar/'),
 			'Sofa::Path.action_of should return nil if no pseudo-filename is given'
 		)
+		assert_nil(
+			Sofa::Path.action_of('/foo/bar/_detail.html'),
+			"Sofa::Path.action_of should return nil if the pseudo-filename begins with '_'"
+		)
+	end
+
+	def test_sub_action_of
+		assert_equal(
+			:detail,
+			Sofa::Path.sub_action_of('/foo/bar/read_detail.html'),
+			'Sofa::Path.sub_action_of should extract the sub_action from path_info'
+		)
+		assert_nil(
+			Sofa::Path.sub_action_of('/foo/bar/read.html'),
+			"Sofa::Path.sub_action_of should return nil if the pseudo-filename does not include '_'"
+		)
 	end
 
 	def test_base_of

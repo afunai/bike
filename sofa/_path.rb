@@ -42,8 +42,13 @@ module Sofa::Path
 	end
 
 	def action_of(path)
-		basename = _basename path
-		basename && basename !~ /^index/ ? basename.split('.').first.intern : nil
+		a = _basename(path).to_s[/^[a-z]+/]
+		a.intern if a && a != 'index'
+	end
+
+	def sub_action_of(path)
+		a = _basename(path).to_s[/_([a-z]+)/,1]
+		a.intern if a
 	end
 
 	def path_of(conds)

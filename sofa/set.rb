@@ -96,14 +96,8 @@ end
 	end
 
 	def _get_by_action_tmpl(arg)
-		if !arg[:recur] && action_tmpl = my["tmpl_#{arg[:action]}".intern]
-			action_tmpl.gsub(/\$\((?:\.([\w\-]+))?\)/) {
-				self_arg = arg.dup
-				self_arg[:action] = $1.intern if $1
-				self_arg[:recur] = true
-				_get_by_method self_arg
-			}
-		end
+		return nil unless !arg[:recur] && action_tmpl = my["tmpl_#{arg[:action]}".intern]
+		_get_by_tmpl(arg.merge(:action => nil,:sub_action => nil,:recur => true),action_tmpl)
 	end
 
 	def _g_default(arg,&block)

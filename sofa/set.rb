@@ -121,7 +121,10 @@ end
 		steps.to_a.inject(arg) {|a,s|
 			i = a[s] || {}
 			i[:p_action] = a[:action]
-			i[:action] ||= a[:action]
+			unless i[:action]
+				i[:action]     = a[:action]
+				i[:sub_action] = a[:sub_action] if a[:sub_action]
+			end
 			i
 		}
 	end

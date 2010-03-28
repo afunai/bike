@@ -45,6 +45,10 @@ _html
 		"#{my[:parent][:path]}/#{Sofa::Path::path_of :id => my[:id]}update.html"
 	end
 
+	def _g_uri_detail(arg)
+		"#{my[:parent][:path]}/#{Sofa::Path::path_of :id => my[:id]}read_detail.html"
+	end
+
 	def _post(action,v = {})
 		each {|item|
 			id = item[:id]

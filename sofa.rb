@@ -158,7 +158,11 @@ Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 
 	def _get(f,params)
 		until f.is_a? Sofa::Set::Static::Folder
-			params = {f[:id] => params}
+			params = {
+				:action     => :read,
+				:sub_action => f.send(:summary?,params) ? nil : :detail,
+				f[:id]      => params,
+			}
 			params[:conds] = {:id => f[:id]} if f[:parent].is_a? Sofa::Set::Dynamic
 			f = f[:parent]
 		end if f.is_a? Sofa::Set::Dynamic

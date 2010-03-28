@@ -7,11 +7,11 @@ module Sofa::Parser
 
 	module_function
 
-	def parse_html(html)
+	def parse_html(html,action = 'index')
 		item = {}
 		html = gsub_block(html,'sofa-\w+') {|open,inner,close|
 			id = open[/id="(.+?)"/i,1] || 'main'
-			item[id] = parse_block(open,inner,close)
+			item[id] = parse_block(open,inner,close,action)
 			"$(#{id})"
 		}
 		html = gsub_action_tmpl(html) {|id,action,open,inner,close|
@@ -91,7 +91,7 @@ module Sofa::Parser
 		out
 	end
 
-	def parse_block(open_tag,inner_html,close_tag)
+	def parse_block(open_tag,inner_html,close_tag,action = 'index')
 		open_tag.sub!(/id=".*?"/i,'id="@(name)"')
 		workflow = open_tag[/class=(?:"|".*?\s)sofa-(\w+)/,1]
 
@@ -117,10 +117,17 @@ module Sofa::Parser
 		}
 
 		item_meta = Sofa::Parser.parse_html item_html
-		item_meta[:tmpl].sub!(
-			/\$\(.*?\)/m,
-			'\&$(.action_update)'
-		) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.action_update)')
+		if action == 'summary'
+			item_meta[:tmpl].sub!(
+				/\$\(.*?\)/m,
+				'<a href="$(.uri_detail)">\&</a>'
+			) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.uri_detail)')
+		else
+			item_meta[:tmpl].sub!(
+				/\$\(.*?\)/m,
+				'\&$(.action_update)'
+			) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.action_update)')
+		end
 
 		sd = {
 			:klass    => 'set-dynamic',

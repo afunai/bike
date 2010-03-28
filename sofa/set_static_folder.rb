@@ -15,7 +15,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		super
 
 		html_summary = load_html(meta[:dir],meta[:parent],'summary')
-		merge_meta(@meta,Sofa::Parser.parse_html(html_summary)) if html_summary
+		merge_meta(@meta,Sofa::Parser.parse_html(html_summary,'summary')) if html_summary
 
 		my[:item]['_label'] = {:klass => 'text'}
 		my[:item]['_owner'] = {:klass => 'meta-owner'}

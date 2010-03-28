@@ -77,6 +77,54 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_get_summary
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_summary/p=1/'
+		)
+		assert_equal(
+			<<'_html',
+<h1>summary</h1>
+<table id="main" class="sofa-blog">
+	<tr><td>frank</td><td>hi.</td></tr>
+</table>
+_html
+			res.body,
+			'Sofa#call() should use [:tmpl_summary] when available and appropriate'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_summary/p=1/read_detail.html'
+		)
+		assert_equal(
+			<<'_html',
+<h1>index</h1>
+<ul id="main" class="sofa-blog">
+	<li>frank: hi.</li>
+</ul>
+_html
+			res.body,
+			'Sofa#call() should use [:tmpl] when the action is :read -> :detail'
+		)
+
+		Sofa.client = 'root'
+		tid = '1234567890.01234'
+		res = Rack::MockRequest.new(@sofa).get(
+			"http://example.com/t_summary/#{tid}/p=1/update.html"
+		)
+		assert_equal(
+			<<"_html",
+<h1>index</h1>
+<form id="main" method="post" action="/#{tid}/t_summary/update.html">
+<ul id="main" class="sofa-blog">
+	<li><input type="text" name="20100326_0001-name" value="frank" />: <input type="text" name="20100326_0001-comment" value="hi." /></li>
+</ul>
+<input name=".status-public" type="submit" value="update" /></form>
+_html
+			res.body,
+			'Sofa#call() should use [:tmpl] unless the action is :read'
+		)
+	end
+
 	def test_post_simple_create
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear

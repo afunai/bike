@@ -85,7 +85,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			<<'_html',
 <h1>summary</h1>
 <table id="main" class="sofa-blog">
-	<tr><td>frank</td><td>hi.</td></tr>
+	<tr><td><a href="/t_summary/20100326/1/read_detail.html">frank</a></td><td>hi.</td></tr>
 </table>
 _html
 			res.body,

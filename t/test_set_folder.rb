@@ -224,7 +224,7 @@ _html
 		)
 		assert_equal(
 			<<'_html',
-	<tr><td>$(name)$(.action_update)</td><td>$(comment)</td></tr>
+	<tr><td><a href="$(.uri_detail)">$(name)</a></td><td>$(comment)</td></tr>
 _html
 			folder[:item]['main'][:item]['default'][:tmpl_summary],
 			'Folder#initialize should load [:tmpl_summary] of all the decendant items'
@@ -238,7 +238,7 @@ _html
 			<<'_html',
 <h1>summary</h1>
 <table id="main" class="sofa-blog">
-	<tr><td>frank</td><td>hi.</td></tr>
+	<tr><td><a href="/t_summary/20100326/1/read_detail.html">frank</a></td><td>hi.</td></tr>
 </table>
 _html
 			folder.get(

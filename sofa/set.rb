@@ -52,6 +52,8 @@ end
 	def _get(arg)
 		if respond_to?("_g_#{arg[:action]}",true)
 			_get_by_method arg
+		elsif my[:tmpl_summary] && summary?(arg)
+			_get_by_tmpl(arg,my[:tmpl_summary])
 		else
 			_get_by_tmpl(arg,my[:tmpl])
 		end
@@ -122,6 +124,10 @@ end
 			i[:action] ||= a[:action]
 			i
 		}
+	end
+
+	def summary?(arg)
+		[:read,nil].include?(arg[:action]) && !arg[:sub_action]
 	end
 
 	def permit_get?(arg)

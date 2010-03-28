@@ -231,4 +231,55 @@ _html
 		)
 	end
 
+	def test_get_summary
+		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+
+		assert_equal(
+			<<'_html',
+<h1>summary</h1>
+<table id="main" class="sofa-blog">
+	<tr><td>frank</td><td>hi.</td></tr>
+</table>
+_html
+			folder.get(
+				'main' => {:conds => {:p => 1}}
+			),
+			'Set#get should use [:tmpl_summary] when available and appropriate'
+		)
+		assert_equal(
+			<<'_html',
+<h1>index</h1>
+<ul id="main" class="sofa-blog">
+	<li>frank: hi.</li>
+</ul>
+_html
+			folder.get(
+				:action => :read,
+				:sub_action => :detail,
+				'main' => {:action => :read,:sub_action => :detail,:conds => {:p => 1}}
+			),
+			'Set#get should not use [:tmpl_summary] for :read -> :detail'
+		)
+
+		Sofa.client = 'root'
+		Sofa.current[:base] = folder.item('main')
+		folder.item('main')[:tid] = '12345.012'
+		assert_equal(
+			<<'_html',
+<h1>index</h1>
+<form id="main" method="post" action="/12345.012/t_summary/update.html">
+<ul id="main" class="sofa-blog">
+	<li><input type="text" name="20100326_0001-name" value="frank" />: <input type="text" name="20100326_0001-comment" value="hi." /></li>
+</ul>
+<input name=".status-public" type="submit" value="update" /></form>
+_html
+			folder.get(
+				:action => :read,
+				:sub_action => :detail,
+				'main' => {:action => :update,:sub_action => nil,:conds => {:p => 1}}
+			),
+			'Set#get should not use [:tmpl_summary] for :update'
+		)
+	end
+
 end

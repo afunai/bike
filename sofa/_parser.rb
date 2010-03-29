@@ -82,10 +82,10 @@ module Sofa::Parser
 		out = ''
 		s = StringScanner.new html
 		until s.eos?
-			if s.scan /(\w+):\(([\w\-]+)\s*/m
+			if s.scan /\$\((\w+)(?:\s+|\s*=\s*)([\w\-]+)\s*/m
 				out << block.call(s[1],{:klass => s[2]}.merge(scan_tokens s))
 			else
-				out << s.scan(/.+?(?=\w|<|\z)/m)
+				out << s.scan(/.+?(?=\$|\w|<|\z)/m)
 			end
 		end
 		out

@@ -125,7 +125,7 @@ module Sofa::Parser
 		else
 			item_meta[:tmpl].sub!(
 				/\$\(.*?\)/m,
-				'\&$(.action_update)'
+				'$(.a_update)\&</a>'
 			) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.action_update)')
 		end
 

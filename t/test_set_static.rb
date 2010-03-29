@@ -39,7 +39,7 @@ _tmpl
 						'default' => {
 							:tmpl => <<'_tmpl',
 		<li>
-			$(subject)$(.action_update)
+			$(.a_update)$(subject)</a>
 			$(body)
 			<ul><li>qux</li></ul>
 		</li>

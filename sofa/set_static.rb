@@ -41,6 +41,14 @@ class Sofa::Set::Static < Sofa::Field
 _html
 	end
 
+	def _g_a_update(arg)
+		if permit_get?(:action => :update) && arg[:orig_action] == :read
+			"<a href=\"#{_g_uri_update arg}\">"
+		else
+			'<a>'
+		end
+	end
+
 	def _g_uri_update(arg)
 		"#{my[:parent][:path]}/#{Sofa::Path::path_of :id => my[:id]}update.html"
 	end

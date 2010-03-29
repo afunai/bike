@@ -53,7 +53,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'http://example.com/foo/'
 		)
 		assert_match(
-			%r{<li>qux</li>},
+			%r{<li><a>qux</a></li>},
 			res.body,
 			"Sofa#call() should return sets other than 'main' as well"
 		)
@@ -62,7 +62,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'http://example.com/foo/sub/d=2010/'
 		)
 		assert_match(
-			%r{<li>qux</li>},
+			%r{<li><a>qux</a></li>},
 			res.body,
 			"Sofa#call() should pass args for a sd other than 'main' as well"
 		)
@@ -71,7 +71,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'http://example.com/foo/sub/d=2009/'
 		)
 		assert_no_match(
-			%r{<li>qux</li>},
+			%r{<li><a>qux</a></li>},
 			res.body,
 			"Sofa#call() should pass args for a sd other than 'main' as well"
 		)
@@ -99,7 +99,7 @@ _html
 			<<'_html',
 <h1>index</h1>
 <ul id="main" class="sofa-blog">
-	<li>frank: hi.</li>
+	<li><a>frank</a>: hi.</li>
 </ul>
 _html
 			res.body,
@@ -116,7 +116,7 @@ _html
 <h1>index</h1>
 <form id="main" method="post" action="/#{tid}/t_summary/update.html">
 <ul id="main" class="sofa-blog">
-	<li><input type="text" name="20100326_0001-name" value="frank" />: <input type="text" name="20100326_0001-comment" value="hi." /></li>
+	<li><a><input type="text" name="20100326_0001-name" value="frank" /></a>: <input type="text" name="20100326_0001-comment" value="hi." /></li>
 </ul>
 <input name=".status-public" type="submit" value="update" /></form>
 _html

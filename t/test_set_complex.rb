@@ -131,7 +131,7 @@ _html
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read,p_action=read)</li>
 		</ul>
 		<ul id="main-20091123_0001-replies" class="sofa-pipco">
-			<li id="main-20091123_0001-replies-20091125_0001">'howdy.'(action=read,p_action=read)</li>
+			<li id="main-20091123_0001-replies-20091125_0001"><a href="/20091123_0001/replies/20091125/1/update.html">'howdy.'(action=read,p_action=read)</a></li>
 		</ul>
 		'potato'
 	</li>
@@ -141,8 +141,8 @@ _html
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
-			<li id="main-20091123_0002-replies-20091125_0001">'ho ho.'(action=read,p_action=read)</li>
-			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=read,p_action=read)</li>
+			<li id="main-20091123_0002-replies-20091125_0001"><a href="/20091123_0002/replies/20091125/1/update.html">'ho ho.'(action=read,p_action=read)</a></li>
+			<li id="main-20091123_0002-replies-20091125_0002"><a href="/20091123_0002/replies/20091125/2/update.html">'oops.'(action=read,p_action=read)</a></li>
 		</ul>
 		'potato'
 	</li>
@@ -223,8 +223,8 @@ _html
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
-			<li id="main-20091123_0002-replies-20091125_0001">'ho ho.'(action=read,p_action=read)</li>
-			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=read,p_action=read)</li>
+			<li id="main-20091123_0002-replies-20091125_0001"><a>'ho ho.'(action=read,p_action=read)</a></li>
+			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=read,p_action=read)</a></li>
 		</ul>
 		'potato'
 	</li>
@@ -285,7 +285,7 @@ _html
 			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read,p_action=read)</li>
 		</ul>
 		<ul id="main-20091123_0001-replies" class="sofa-pipco">
-			<li id="main-20091123_0001-replies-20091125_0001">'howdy.'(action=read,p_action=read)</li>
+			<li id="main-20091123_0001-replies-20091125_0001"><a href="/20091123_0001/replies/20091125/1/update.html">'howdy.'(action=read,p_action=read)</a></li>
 		</ul>
 		'potato'
 	</li>
@@ -296,7 +296,7 @@ _html
 		</ul>
 <form id="main-20091123_0002-replies" method="post" action="/123.45/20091123_0002/replies/update.html">
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
-			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
+			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update,p_action=update)</a></li>
 		</ul>
 [replies-update]
 </form>
@@ -327,7 +327,7 @@ _html
 		</ul>
 <form id="main-20091123_0002-replies" method="post" action="/123.45/20091123_0002/replies/update.html">
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
-			<li id="main-20091123_0002-replies-20091125_0002">'oops.'(action=update,p_action=update)</li>
+			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update,p_action=update)</a></li>
 		</ul>
 [replies-update]
 </form>

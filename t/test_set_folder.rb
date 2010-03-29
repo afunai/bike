@@ -217,7 +217,7 @@ _html
 
 		assert_equal(
 			<<'_html',
-	<li>$(name)$(.action_update): $(comment)</li>
+	<li>$(.a_update)$(name)</a>: $(comment)</li>
 _html
 			folder[:item]['main'][:item]['default'][:tmpl],
 			'Folder#initialize should load [:tmpl] of all the decendant items'
@@ -250,7 +250,7 @@ _html
 			<<'_html',
 <h1>index</h1>
 <ul id="main" class="sofa-blog">
-	<li>frank: hi.</li>
+	<li><a>frank</a>: hi.</li>
 </ul>
 _html
 			folder.get(
@@ -269,7 +269,7 @@ _html
 <h1>index</h1>
 <form id="main" method="post" action="/12345.012/t_summary/update.html">
 <ul id="main" class="sofa-blog">
-	<li><input type="text" name="20100326_0001-name" value="frank" />: <input type="text" name="20100326_0001-comment" value="hi." /></li>
+	<li><a><input type="text" name="20100326_0001-name" value="frank" /></a>: <input type="text" name="20100326_0001-comment" value="hi." /></li>
 </ul>
 <input name=".status-public" type="submit" value="update" /></form>
 _html

@@ -41,7 +41,7 @@ class TC_Parser < Test::Unit::TestCase
 	end
 
 	def test_parse_empty_tag
-		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz") world')
+		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz") world')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz baz']}},
 			result[:item],
@@ -54,8 +54,8 @@ class TC_Parser < Test::Unit::TestCase
 		)
 
 		result = Sofa::Parser.parse_html <<'_html'
-<h1>foo:(bar "baz baz")</h1>
-<p>bar:(a b c)</p>
+<h1>$(foo=bar "baz baz")</h1>
+<p>$(bar=a b c)</p>
 _html
 		assert_equal(
 			{
@@ -76,9 +76,9 @@ _html
 	end
 
 	def test_obscure_markup
-		result = Sofa::Parser.parse_html('hello foo:(bar baz:(1) baz) world')
+		result = Sofa::Parser.parse_html('hello $(foo = bar $(baz=1) baz) world')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:default => '(1',:tokens => ['baz']}},
+			{'foo' => {:klass => 'bar',:tokens => ['$(baz=1']}},
 			result[:item],
 			'Parser.parse_html should not parse nested empty tag'
 		)
@@ -88,7 +88,7 @@ _html
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 
-		result = Sofa::Parser.parse_html('hello foo:(bar baz world')
+		result = Sofa::Parser.parse_html('hello $(foo = bar baz world')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
@@ -100,7 +100,7 @@ _html
 			'Parser.parse_html should be able to parse a tag that is not closed'
 		)
 
-		result = Sofa::Parser.parse_html('hello foo:(bar "baz"world)')
+		result = Sofa::Parser.parse_html('hello $(foo = bar "baz"world)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
@@ -112,7 +112,7 @@ _html
 			'Parser.parse_html should be able to parse tokens without a delimiter'
 		)
 
-		result = Sofa::Parser.parse_html('hello foo:(bar,"baz")')
+		result = Sofa::Parser.parse_html('hello $(foo = bar,"baz")')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz']}},
 			result[:item],
@@ -171,13 +171,13 @@ _html
 	end
 
 	def test_parse_options
-		result = Sofa::Parser.parse_html('hello foo:(bar ,"baz baz","world",hi qux)')
+		result = Sofa::Parser.parse_html('hello $(foo = bar ,"baz baz","world",hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should be able to parse a sequence of CSV'
 		)
-		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz","world",hi qux)')
+		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz","world",hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
@@ -186,19 +186,19 @@ _html
 	end
 
 	def test_parse_options_with_spaces
-		result = Sofa::Parser.parse_html('hello foo:(bar world, qux)')
+		result = Sofa::Parser.parse_html('hello $(foo = bar world, qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['world','qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the comma'
 		)
-		result = Sofa::Parser.parse_html('hello foo:(bar world ,qux)')
+		result = Sofa::Parser.parse_html('hello $(foo = bar world ,qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['qux'],:tokens => ['world']}},
 			result[:item],
 			'Parser.parse_html should not allow spaces before the comma'
 		)
-		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz", "world", hi qux)')
+		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
@@ -206,7 +206,8 @@ _html
 		)
 
 		result = Sofa::Parser.parse_html(<<'_eos')
-hello foo:(bar
+hello $(foo =
+	bar
 	"baz baz",
 	"world",
 	hi
@@ -220,13 +221,13 @@ _eos
 	end
 
 	def test_parse_defaults
-		result = Sofa::Parser.parse_html('hello foo:(bar ;"baz baz";"world";hi qux)')
+		result = Sofa::Parser.parse_html('hello $(foo = bar ;"baz baz";"world";hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
-		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz";"world";hi qux)')
+		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz";"world";hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
@@ -235,19 +236,19 @@ _eos
 	end
 
 	def test_parse_defaults_with_spaces
-		result = Sofa::Parser.parse_html('hello foo:(bar world; qux)')
+		result = Sofa::Parser.parse_html('hello $(foo=bar world; qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['world','qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the semicolon'
 		)
-		result = Sofa::Parser.parse_html('hello foo:(bar world ;qux)')
+		result = Sofa::Parser.parse_html('hello $(foo=bar world ;qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['qux'],:tokens => ['world']}},
 			result[:item],
 			'Parser.parse_html should not allow spaces before the semicolon'
 		)
-		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz"; "world"; hi qux)')
+		result = Sofa::Parser.parse_html('hello $(foo=bar "baz baz"; "world"; hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
@@ -255,7 +256,8 @@ _eos
 		)
 
 		result = Sofa::Parser.parse_html(<<'_eos')
-hello foo:(bar
+hello $(foo =
+	bar
 	"baz baz";
 	"world";
 	hi
@@ -269,7 +271,7 @@ _eos
 	end
 
 	def test_parse_duplicate_tag
-		result = Sofa::Parser.parse_html('hello foo:(bar "baz baz") world foo:(boo) $(foo)!')
+		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz") world $(foo=boo) $(foo)!')
 		assert_equal(
 			{'foo' => {:klass => 'boo'}},
 			result[:item],
@@ -424,7 +426,7 @@ _tmpl
 hello
 	<table class="sofa-blog" id="foo">
 		<!-- 1..20 barbaz -->
-		<tbody class="body"><!-- qux --><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+		<tbody class="body"><!-- qux --><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
 	</table>
 world
 _html
@@ -465,7 +467,7 @@ _tmpl
 hello
 	<table class="sofa-blog" id="foo">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-		<tbody class="body"><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody>
+		<tbody class="body"><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
 	</table>
 world
 _html
@@ -511,7 +513,7 @@ _tmpl
 hello
 	<table class="sofa-blog" id="foo">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-		<tbody class="body"><tbody><tr><th>bar:(text)</th><th>baz:(text)</th></tr></tbody></tbody>
+		<tbody class="body"><tbody><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody></tbody>
 	</table>
 world
 _html
@@ -601,11 +603,11 @@ _tmpl
 	def test_combination
 		result = Sofa::Parser.parse_html <<'_html'
 <html>
-	<h1>title:(text 32)</h1>
+	<h1>$(title=text 32)</h1>
 	<ul id="foo" class="sofa-blog">
 		<li>
-			subject:(text 64)
-			body:(textarea 72*10)
+			$(subject=text 64)
+			$(body=textarea 72*10)
 			<ul><li>qux</li></ul>
 		</li>
 	</ul>
@@ -818,7 +820,7 @@ _tmpl
 		result = Sofa::Parser.parse_html <<'_html'
 <html>
 	<ul id="foo" class="sofa-blog">
-		<li>subject:(text)</li>
+		<li>$(subject=text)</li>
 	</ul>
 	<div class="foo-navi">bar</div>
 </html>
@@ -844,7 +846,7 @@ _tmpl
 		result = Sofa::Parser.parse_html <<'_html'
 <html>
 	<ul id="main" class="sofa-blog">
-		<li>subject:(text)</li>
+		<li>$(subject=text)</li>
 	</ul>
 	<div class="navi">bar</div>
 </html>
@@ -870,7 +872,7 @@ _tmpl
 		result = Sofa::Parser.parse_html <<'_html'
 <html>
 	<ul id="main" class="sofa-blog">
-		<li>subject:(text)</li>
+		<li>$(subject=text)</li>
 	</ul>
 	<div class="non_existent-navi">bar</div>
 </html>
@@ -894,7 +896,7 @@ _tmpl
 		result = Sofa::Parser.parse_html <<'_html'
 <html>
 	<ul id="foo" class="sofa-blog">
-		<li>subject:(text)</li>
+		<li>$(subject=text)</li>
 	</ul>
 	<div class="foo-navi"><span class="navi_prev">prev</span></div>
 </html>
@@ -915,7 +917,7 @@ _html
 		result = Sofa::Parser.parse_html <<'_html'
 <html>
 	<ul id="foo" class="sofa-blog">
-		<li>subject:(text)</li>
+		<li>$(subject=text)</li>
 	</ul>
 	<div class="foo-navi"><span class="bar-navi_prev">prev</span></div>
 </html>

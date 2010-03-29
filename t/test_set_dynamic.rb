@@ -18,7 +18,7 @@ $(.submit)
 _tmpl
 			:item     => {
 				'default' => Sofa::Parser.parse_html(<<'_html')
-	<li>name:(text 32 :'nobody'): comment:(text 64 :'hi.')</li>
+	<li>$(name = text 32 :'nobody'): $(comment = text 64 :'hi.')</li>
 _html
 			}
 		)
@@ -277,7 +277,7 @@ _html
 
 	def test_get_by_self_reference_multiple_vars
 		ss = Sofa::Set::Static.new(
-			:html => '<ul class="sofa-attachment">$(.pipco)<li class="body">foo:(text)</li></ul>'
+			:html => '<ul class="sofa-attachment">$(.pipco)<li class="body">$(foo=text)</li></ul>'
 		)
 		sd = ss.item('main')
 		def sd._g_pipco(arg)

@@ -48,12 +48,12 @@ _tmpl
 			:item     => {
 				'default' => Sofa::Parser.parse_html(<<'_html')
 	<li id="@(name)">
-		name:(tomago 32 :'nobody'): comment:(tomago 64 :'hello.')
+		$(name = tomago 32 :'nobody'): $(comment = tomago 64 :'hello.')
 		<ul id="files" class="sofa-attachment">
-			<li id="@(name)">file:(tomago :'foo.jpg')</li>
+			<li id="@(name)">$(file = tomago :'foo.jpg')</li>
 		</ul>
 		<ul id="replies" class="sofa-pipco">
-			<li id="@(name)">reply:(tomago :'hi.')</li>
+			<li id="@(name)">$(reply = tomago :'hi.')</li>
 		</ul>
 		$(replies.vegetable)
 	</li>

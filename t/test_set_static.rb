@@ -14,11 +14,11 @@ class TC_Set_Static < Test::Unit::TestCase
 	def test_initialize
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <html>
-	<h1>title:(text 32)</h1>
+	<h1>$(title text 32)</h1>
 	<ul id="foo" class="sofa-blog">
 		<li>
-			subject:(text 64)
-			body:(textarea 72*10)
+			$(subject text 64)
+			$(body textarea 72*10)
 			<ul><li>qux</li></ul>
 		</li>
 	</ul>
@@ -67,7 +67,7 @@ _tmpl
 	def test_empty?
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <html>
-	<h1>title:(text 32)</h1>
+	<h1>$(title = text 32)</h1>
 </html>
 _html
 		ss.load 'title' => 'foo'
@@ -92,7 +92,7 @@ _html
 	def test_item
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <html>
-	<h1>title:(text 32)</h1>
+	<h1>$(title = text 32)</h1>
 	<ul id="main" class="sofa-attachment">
 		<li>hi</li>
 	</ul>
@@ -150,7 +150,7 @@ _html
 	def test_val
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
-	name:(text): comment:(text)
+	$(name text): $(comment text)
 </li>
 _html
 		ss.item('name').load 'foo'
@@ -170,7 +170,7 @@ _html
 	def test_get
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
-	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
 _html
 		ss.load_default
@@ -201,7 +201,7 @@ _html
 	end
 
 	def test_get_by_tmpl
-		ss = Sofa::Set::Static.new(:html => 'foo:(text)')
+		ss = Sofa::Set::Static.new(:html => '$(foo text)')
 		ss.item('foo').load 'hello'
 		assert_equal(
 			'foo hello foo',
@@ -231,7 +231,7 @@ _html
 	def test_load_default
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
-	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
 _html
 		ss.load_default
@@ -250,7 +250,7 @@ _html
 	def test_load
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
-	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
 _html
 		ss.load('name' => 'carl')
@@ -276,7 +276,7 @@ _html
 	def test_create
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
-	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
 _html
 		ss.create('name' => 'carl')
@@ -290,7 +290,7 @@ _html
 	def test_update
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
-	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
 _html
 		ss.update('name' => 'carl')
@@ -330,7 +330,7 @@ _html
 	def test_delete
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>
-	name:(text 32 :'nobody'): comment:(text 128 :'peek a boo')
+	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
 _html
 		ss.item('name').load 'foo'

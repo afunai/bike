@@ -79,6 +79,8 @@ class Sofa::Workflow
 	def _g_submit(arg)
 		if @sd.send(:collect_item,arg[:conds]).all? {|i| i[:id] =~ Sofa::REX::ID_NEW }
 			action = :create
+		elsif arg[:orig_action] == :confirm
+			action = arg[:sub_action]
 		else
 			action = arg[:orig_action]
 		end

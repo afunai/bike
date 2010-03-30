@@ -57,6 +57,12 @@ _html
 		"#{my[:parent][:path]}/#{Sofa::Path::path_of :id => my[:id]}read_detail.html"
 	end
 
+	def _g_hidden(arg)
+		<<_html.chomp if arg[:orig_action] == :confirm
+<input type="hidden" name="#{my[:name]}" value="true" />
+_html
+	end
+
 	def _post(action,v = {})
 		each {|item|
 			id = item[:id]

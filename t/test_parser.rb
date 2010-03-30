@@ -447,7 +447,7 @@ _tmpl
 					:item     => {
 						'default' => {
 							:tmpl => <<'_tmpl',
-		<tbody class="body"><!-- qux --><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)</th></tr></tbody>
+		<tbody class="body"><!-- qux --><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
 							:item => {
 								'bar' => {:klass => 'text'},
@@ -485,7 +485,7 @@ _tmpl
 					:item     => {
 						'default' => {
 							:tmpl => <<'_tmpl',
-		<tbody class="body"><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)</th></tr></tbody>
+		<tbody class="body"><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
 							:item => {
 								'bar' => {:klass => 'text'},
@@ -531,7 +531,7 @@ _tmpl
 					:item     => {
 						'default' => {
 							:tmpl => <<'_tmpl',
-		<tbody class="body"><tbody><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)</th></tr></tbody></tbody>
+		<tbody class="body"><tbody><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody></tbody>
 _tmpl
 							:item => {
 								'bar' => {:klass => 'text'},
@@ -568,7 +568,7 @@ _tmpl
 						'default' => {
 							:tmpl => <<'_tmpl',
 	<li>
-$(.a_update)$(bar)</a>	</li>
+$(.a_update)$(bar)$(.hidden)</a>	</li>
 _tmpl
 							:item => {
 								'bar' => {
@@ -629,7 +629,7 @@ _tmpl
 							:tmpl => <<'_tmpl',
 		<li>
 			$(.a_update)$(subject)</a>
-			$(body)
+			$(body)$(.hidden)
 			<ul><li>qux</li></ul>
 		</li>
 _tmpl

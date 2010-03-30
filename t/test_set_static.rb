@@ -40,7 +40,7 @@ _tmpl
 							:tmpl => <<'_tmpl',
 		<li>
 			$(.a_update)$(subject)</a>
-			$(body)
+			$(body)$(.hidden)
 			<ul><li>qux</li></ul>
 		</li>
 _tmpl

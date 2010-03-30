@@ -217,7 +217,7 @@ _html
 
 		assert_equal(
 			<<'_html',
-	<li>$(.a_update)$(name)</a>: $(comment)</li>
+	<li>$(.a_update)$(name)</a>: $(comment)$(.hidden)</li>
 _html
 			folder[:item]['main'][:item]['default'][:tmpl],
 			'Folder#initialize should load [:tmpl] of all the decendant items'

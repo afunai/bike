@@ -25,7 +25,7 @@ _html
 		@sd[:conds] = {}
 		@sd[:tmpl_action_create] = ''
 		def @sd._g_submit(arg)
-			"[#{my[:id]}-#{arg[:orig_action]}]\n"
+			"[#{my[:id]}-#{arg[:orig_action]}#{arg[:sub_action] && ('.' + arg[:sub_action].to_s)}]\n"
 		end
 		Sofa.client = 'root'
 	end

@@ -59,7 +59,7 @@ _html
 
 	def _g_hidden(arg)
 		<<_html.chomp if arg[:orig_action] == :confirm
-<input type="hidden" name="#{my[:name]}" value="true" />
+<input type="hidden" name="#{my[:name]}.action" value="#{arg[:sub_action]}" />
 _html
 	end
 

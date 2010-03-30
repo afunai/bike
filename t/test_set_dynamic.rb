@@ -227,11 +227,11 @@ _html
 		assert_equal(
 			<<'_html',
 <ul id="foo" class="sofa-blog">
-	<li>frank: bar<input type="hidden" name="foo-20100330_1234" value="true" /></li>
+	<li>frank: bar<input type="hidden" name="foo-20100330_1234.action" value="howdy" /></li>
 </ul>
-[foo-confirm.update]
+[foo-confirm.howdy]
 _html
-			@sd.get(:action => :confirm,:sub_action => :update,:conds => {:id => '20100330_1234'}),
+			@sd.get(:action => :confirm,:sub_action => :howdy,:conds => {:id => '20100330_1234'}),
 			'Set::Dynamic#_g_confirm should return _g_read + _g_submit'
 		)
 	end

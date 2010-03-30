@@ -219,6 +219,23 @@ _html
 		)
 	end
 
+	def test_get_confirm
+		@sd.load(
+			'20100330_1234' => {'name' => 'frank','comment' => 'bar'},
+			'20100330_1235' => {'name' => 'carl', 'comment' => 'baz'}
+		)
+		assert_equal(
+			<<'_html',
+<ul id="foo" class="sofa-blog">
+	<li>frank: bar<input type="hidden" name="foo-20100330_1234" value="true" /></li>
+</ul>
+[foo-confirm.update]
+_html
+			@sd.get(:action => :confirm,:sub_action => :update,:conds => {:id => '20100330_1234'}),
+			'Set::Dynamic#_g_confirm should return _g_read + _g_submit'
+		)
+	end
+
 	def test_get_by_self_reference
 		ss = Sofa::Set::Static.new(
 			:html => '<ul class="sofa-attachment"><li class="body"></li>$(.pipco)</ul>'

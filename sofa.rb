@@ -142,14 +142,8 @@ Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 			end
 		else
 			Sofa.transaction[base[:tid]] ||= base
-			items = base.instance_eval {
-				@item_object.values.select {|item| item.pending? }
-			}
+			id_step = Sofa::Path.path_of(:id => base.send(:pending_items).keys)
 			base.commit :temp
-
-			id_step = Sofa::Path.path_of(
-				:id => items.collect {|item| item[:id] }
-			)
 			response_see_other(
 				:location => base[:path] + "/#{base[:tid]}/#{id_step}update.html"
 			)

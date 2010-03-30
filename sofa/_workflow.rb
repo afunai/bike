@@ -44,6 +44,9 @@ class Sofa::Workflow
 		case action
 			when :login,:done,:message
 				true
+			when :confirm
+				# TODO: permit?(roles,action,sub_action = nil)
+				(roles & self.class.const_get(:PERM)[:read].to_i) > 0
 			else
 				(roles & self.class.const_get(:PERM)[action].to_i) > 0
 		end

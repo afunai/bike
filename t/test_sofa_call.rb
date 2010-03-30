@@ -77,6 +77,37 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
+	def test_get_enquete
+		Sofa.client = nil
+		Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.clear
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/1234567890.0123/t_enquete/'
+		)
+		assert_equal(
+			200,
+			res.status,
+			'Sofa#call to enquete by nobody should return status 200'
+		)
+		assert_equal(
+			<<'_html',
+<html>
+	<head><title>Root Folder</title></head>
+	<body>
+		<h1>Root Folder</h1>
+<form id="main" method="post" action="/1234567890.0123/t_enquete/update.html">
+		<ul id="main" class="sofa-enquete">
+			<li><a><input type="text" name="_001-name" value="foo" /></a>: <input type="text" name="_001-comment" value="bar!" /></li>
+		</ul>
+<input name=".status-public" type="submit" value="create" /></form>
+	</body>
+</html>
+_html
+			res.body,
+			'Sofa#call to enquete by nobody should return :create'
+		)
+	end
+
 	def test_get_summary
 		res = Rack::MockRequest.new(@sofa).get(
 			'http://example.com/t_summary/p=1/'

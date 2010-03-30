@@ -159,7 +159,7 @@ Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 	def _get(f,params)
 		until f.is_a? Sofa::Set::Static::Folder
 			params = {
-				:action     => :read,
+				:action     => (f.default_action == :read) ? :read : nil,
 				:sub_action => f.send(:summary?,params) ? nil : :detail,
 				f[:id]      => params,
 			}

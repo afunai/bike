@@ -127,6 +127,10 @@ module Sofa::Parser
 				/\$\(.*?\)/m,
 				'$(.a_update)\&</a>'
 			) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.action_update)')
+			item_meta[:tmpl].sub!(
+				/.*\$\(.*?\)/m,
+				'\&$(.hidden)'
+			) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.hidden)')
 		end
 
 		sd = {

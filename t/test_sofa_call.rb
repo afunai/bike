@@ -323,6 +323,33 @@ _html
 			'Sofa#call with :confirm action should set a proper transaction upon success'
 		)
 
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/1234567890.0123/t_store/update.html',
+			{
+				:input => "_1.action=create&.status-public=create"
+			}
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#call with post method should return status 303'
+		)
+		assert_match(
+			Sofa::REX::PATH_ID,
+			res.headers['Location'],
+			'Sofa#call with post method should return a proper location'
+		)
+
+		res.headers['Location'] =~ Sofa::REX::PATH_ID
+		new_id = sprintf('%.8d_%.4d',$1,$2)
+
+		assert_equal(
+			{'_owner' => 'root','name' => 'fz','comment' => 'howdy.'},
+			Sofa::Set::Static::Folder.root.item('t_store','main',new_id).val,
+			'Sofa#call with post method should store the item in the storage'
+		)
+	end
+
 	def test_post_confirm_invalid
 		Sofa.client = 'root'
 

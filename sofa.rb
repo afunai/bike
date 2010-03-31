@@ -192,7 +192,9 @@ Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 			val  = src[key]
 
 			if special_id == 'action'
-				hash[:action] = (special_val || val).intern
+				action,sub_action = (special_val || val).split('_',2)
+				hash[:action] = action.intern
+				hash[:sub_action] = sub_action.intern if sub_action
 			elsif special_id == 'status'
 				hash[:status] = (special_val || val).intern
 			elsif special_id == 'conds'

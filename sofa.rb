@@ -165,12 +165,14 @@ Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 	end
 
 	def params_from_request(req)
-		params = rebuild_params req.params
+		params = {
+			:action     => Sofa::Path.action_of(req.path_info),
+			:sub_action => Sofa::Path.sub_action_of(req.path_info),
+		}
+		params.merge!(rebuild_params req.params)
 
 		params[:conds] ||= {}
 		params[:conds].merge!(Sofa::Path.conds_of req.path_info)
-		params[:action] = Sofa::Path.action_of req.path_info
-		params[:sub_action] = Sofa::Path.sub_action_of req.path_info
 
 		params
 	end

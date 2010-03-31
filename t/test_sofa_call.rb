@@ -313,7 +313,7 @@ _html
 		<li>please confirm.</li>
 </ul>
 		<ul id="main" class="sofa-blog">
-			<li><a>fz</a>: howdy.<input type="hidden" name="main-_1.action" value="update" /></li>
+			<li><a>fz</a>: howdy.<input type="hidden" name="_1.action" value="create" /></li>
 		</ul>
 <input name=".status-public" type="submit" value="create" /></form>
 	</body>

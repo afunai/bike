@@ -99,7 +99,8 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		<ul id="main" class="sofa-enquete">
 			<li><a><input type="text" name="_001-name" value="foo" /></a>: <input type="text" name="_001-comment" value="bar!" /></li>
 		</ul>
-<input name=".status-public" type="submit" value="create" /></form>
+<input name=".status-public" type="submit" value="create" />
+</form>
 	</body>
 </html>
 _html
@@ -149,7 +150,8 @@ _html
 <ul id="main" class="sofa-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" /></a>: <input type="text" name="20100326_0001-comment" value="hi." /></li>
 </ul>
-<input name=".status-public" type="submit" value="update" /></form>
+<input name=".status-public" type="submit" value="update" />
+</form>
 _html
 			res.body,
 			'Sofa#call() should use [:tmpl] unless the action is :read'
@@ -315,7 +317,8 @@ _html
 		<ul id="main" class="sofa-blog">
 			<li><a>fz</a>: howdy.<input type="hidden" name="_1.action" value="create" /></li>
 		</ul>
-<input name=".status-public" type="submit" value="create" /></form>
+<input name=".status-public" type="submit" value="create" />
+</form>
 	</body>
 </html>
 _html

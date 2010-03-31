@@ -88,7 +88,7 @@ class Sofa::Workflow
 		else
 			action = arg[:orig_action]
 		end
-		<<_html.chomp
+		<<_html
 <input name="#{@sd[:short_name]}.status-public" type="submit" value="#{action}" />
 _html
 	end

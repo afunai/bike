@@ -271,7 +271,8 @@ _html
 <ul id="main" class="sofa-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" /></a>: <input type="text" name="20100326_0001-comment" value="hi." /></li>
 </ul>
-<input name=".status-public" type="submit" value="update" /></form>
+<input name=".status-public" type="submit" value="update" />
+</form>
 _html
 			folder.get(
 				:action => :read,

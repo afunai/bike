@@ -74,6 +74,8 @@ base[:tid] = tid
 				get(base,params)
 			elsif params[:action] == :login
 				login(base,params)
+			elsif params[:action] == :confirm
+				confirm(base,params)
 			else
 				post(base,params)
 			end
@@ -118,6 +120,28 @@ base[:tid] = tid
 
 	def get(base,params)
 		response_ok :body => _get(base,params)
+	end
+
+	def confirm(base,params)
+		Sofa.transaction[base[:tid]] ||= base
+
+		base.update params
+		base.commit :temp
+		if base.result
+			action = "confirm_#{params[:sub_action]}"
+			id_step = Sofa::Path.path_of(
+				:id => base.result.values.collect {|item| item[:id] }
+			) if base[:parent] == base[:folder]
+			Sofa.message[base[:tid]] = {:notice => ['please confirm.']}
+			response_see_other(
+				:location => base[:path] + "/#{base[:tid]}/#{id_step}#{action}.html"
+			)
+		else
+			params = {:action => :update}
+			params[:conds] = {:id => base.send(:pending_items).keys}
+			Sofa.message[base[:tid]] = {:error => ['malformed input.']}
+			return response_unprocessable_entity(:body => _get(base,params))
+		end
 	end
 
 	def post(base,params)

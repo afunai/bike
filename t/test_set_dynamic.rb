@@ -220,6 +220,7 @@ _html
 	end
 
 	def test_get_confirm
+		Sofa.current[:base] = nil
 		@sd.load(
 			'20100330_1234' => {'name' => 'frank','comment' => 'bar'},
 			'20100330_1235' => {'name' => 'carl', 'comment' => 'baz'}
@@ -227,7 +228,7 @@ _html
 		assert_equal(
 			<<'_html',
 <ul id="foo" class="sofa-blog">
-	<li>frank: bar<input type="hidden" name="foo-20100330_1234.action" value="howdy" /></li>
+	<li>frank: bar<input type="hidden" name="20100330_1234.action" value="howdy" /></li>
 </ul>
 [foo-confirm.howdy]
 _html

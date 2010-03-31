@@ -280,23 +280,7 @@ _html
 
 	def test_post_confirm_update
 		Sofa.client = 'root'
-
-		res = Rack::MockRequest.new(@sofa).post(
-			'http://example.com/t_store/1234567890.0123/main/update.html',
-			{
-				:input => ".action-confirm_update=submit&_1-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylong&_1-comment=howdy.&.status-public=create"
-			}
-		)
-		assert_equal(
-			422,
-			res.status,
-			'Sofa#call with :confirm action & malformed input should return status 422'
-		)
-		assert_match(
-			/malformed input\./,
-			res.body,
-			'Sofa#call with :confirm action & malformed input should return :update'
-		)
+		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
 
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/1234567890.0123/main/update.html',
@@ -337,6 +321,26 @@ _html
 _html
 			res.body,
 			'Sofa#call with :confirm action should set a proper transaction upon success'
+		)
+
+	def test_post_confirm_invalid
+		Sofa.client = 'root'
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/1234567890.0123/main/update.html',
+			{
+				:input => ".action-confirm_update=submit&_1-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylong&_1-comment=howdy.&.status-public=create"
+			}
+		)
+		assert_equal(
+			422,
+			res.status,
+			'Sofa#call with :confirm action & malformed input should return status 422'
+		)
+		assert_match(
+			/malformed input\./,
+			res.body,
+			'Sofa#call with :confirm action & malformed input should return :update'
 		)
 	end
 

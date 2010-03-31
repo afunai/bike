@@ -539,6 +539,48 @@ class TC_Sofa < Test::Unit::TestCase
 			params,
 			'Sofa#params_from_request should build params from req.path_info and req.params'
 		)
+
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/update.html',
+			{
+				:script_name => '',
+				:input       => '.action=open_sesami',
+			}
+		)
+		req = Rack::Request.new env
+		params = sofa.instance_eval {
+			params_from_request req
+		}
+		assert_equal(
+			{
+				:conds      => {},
+				:action     => :open,
+				:sub_action => :sesami,
+			},
+			params,
+			'Sofa#params_from_request should override path_info by :input'
+		)
+
+		env = Rack::MockRequest.env_for(
+			'http://example.com/foo/bar/update.html',
+			{
+				:script_name => '',
+				:input       => '.action-open_sesami=submit',
+			}
+		)
+		req = Rack::Request.new env
+		params = sofa.instance_eval {
+			params_from_request req
+		}
+		assert_equal(
+			{
+				:conds      => {},
+				:action     => :open,
+				:sub_action => :sesami,
+			},
+			params,
+			'Sofa#params_from_request should override path_info by :input'
+		)
 	end
 
 	def test_current

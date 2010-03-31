@@ -58,9 +58,12 @@ _html
 	end
 
 	def _g_hidden(arg)
-		<<_html.chomp if arg[:orig_action] == :confirm
-<input type="hidden" name="#{my[:name]}.action" value="#{arg[:sub_action]}" />
+		if arg[:orig_action] == :confirm
+			action = my[:id][Sofa::REX::ID_NEW] ? :create : arg[:sub_action]
+			<<_html.chomp
+<input type="hidden" name="#{my[:short_name]}.action" value="#{action}" />
 _html
+		end
 	end
 
 	def _post(action,v = {})

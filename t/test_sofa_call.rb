@@ -278,6 +278,68 @@ _html
 		)
 	end
 
+	def test_post_confirm_update
+		Sofa.client = 'root'
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/1234567890.0123/main/update.html',
+			{
+				:input => ".action-confirm_update=submit&_1-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylong&_1-comment=howdy.&.status-public=create"
+			}
+		)
+		assert_equal(
+			422,
+			res.status,
+			'Sofa#call with :confirm action & malformed input should return status 422'
+		)
+		assert_match(
+			/malformed input\./,
+			res.body,
+			'Sofa#call with :confirm action & malformed input should return :update'
+		)
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/1234567890.0123/main/update.html',
+			{
+				:input => ".action-confirm_update=submit&_1-name=fz&_1-comment=howdy.&.status-public=create"
+			}
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#call with :confirm action should return status 303 upon success'
+		)
+		assert_equal(
+			'http://localhost:9292/t_store/1234567890.0123/id=_1/confirm_update.html',
+			res.headers['Location'],
+			'Sofa#call with :confirm action should return a proper location'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://localhost:9292/t_store/1234567890.0123/id=_1/confirm_update.html'
+		)
+		assert_equal(
+			<<'_html',
+<html>
+	<head><title>Root Folder</title></head>
+	<body>
+		<h1>Root Folder</h1>
+<form id="main" method="post" action="/1234567890.0123/t_store/update.html">
+	<ul class="message notice">
+		<li>please confirm.</li>
+</ul>
+		<ul id="main" class="sofa-blog">
+			<li><a>fz</a>: howdy.<input type="hidden" name="main-_1.action" value="update" /></li>
+		</ul>
+<input name=".status-public" type="submit" value="create" /></form>
+	</body>
+</html>
+_html
+			res.body,
+			'Sofa#call with :confirm action should set a proper transaction upon success'
+		)
+	end
+
 	def test_post_enquete
 		Sofa.client = nil
 		Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.clear

@@ -77,6 +77,10 @@ class Sofa::Workflow
 	end
 
 	def _g_submit(arg)
+		"#{_g_submit_commit arg}#{_g_submit_confirm arg}#{_g_submit_delete arg}"
+	end
+
+	def _g_submit_commit(arg)
 		if @sd.send(:collect_item,arg[:conds]).all? {|i| i[:id] =~ Sofa::REX::ID_NEW }
 			action = :create
 		elsif arg[:orig_action] == :confirm
@@ -87,6 +91,12 @@ class Sofa::Workflow
 		<<_html.chomp
 <input name="#{@sd[:short_name]}.status-public" type="submit" value="#{action}" />
 _html
+	end
+
+	def _g_submit_confirm(arg)
+	end
+
+	def _g_submit_delete(arg)
 	end
 
 end

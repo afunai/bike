@@ -219,6 +219,32 @@ _html
 		)
 	end
 
+	def test_get_empty_item
+		@sd.load(
+			'1234' => {}
+		)
+
+		assert_equal(
+			<<'_html',
+<ul id="foo" class="sofa-blog">
+</ul>
+_html
+			@sd.get(:action => :read),
+			'Set#_g_default should skip empty items'
+		)
+
+		assert_equal(
+			<<'_html',
+<ul id="foo" class="sofa-blog">
+	<li><input type="text" name="name" value="" />: <input type="text" name="comment" value="" /></li>
+</ul>
+[foo-update]
+_html
+			@sd.get(:action => :update),
+			'Set#_g_default should not skip empty items when the action is :create or :update'
+		)
+	end
+
 	def test_get_confirm
 		Sofa.current[:base] = nil
 		@sd.load(

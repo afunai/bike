@@ -31,13 +31,13 @@ module Sofa::Set
 		!pending_items.empty? || action
 	end
 
-def errors
-	errors = {}
-	@item_object.each_pair {|id,item|
-		errors[id] = item.errors if item.errors
-	}
-	errors unless errors.empty?
-end
+	def errors
+		errors = {}
+		@item_object.each_pair {|id,item|
+			errors[id] = item.errors unless item.valid?
+		}
+		errors
+	end
 
 	def collect(&block)
 		collect_item({},&block)

@@ -94,6 +94,9 @@ _html
 	end
 
 	def _g_submit_confirm(arg)
+		<<_html if @sd[:confirm] && arg[:orig_action] != :confirm
+<input name="#{@sd[:short_name]}.action-confirm_#{arg[:orig_action]}" type="submit" value="confirm" />
+_html
 	end
 
 	def _g_submit_confirm_delete(arg)

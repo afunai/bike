@@ -632,6 +632,112 @@ _html
 		)
 	end
 
+	def test_g_submit
+		Sofa.client = nil
+		@sd = Sofa::Set::Dynamic.new(
+			:klass    => 'set-dynamic',
+			:workflow => 'blog',
+			:tmpl     => '$(.submit)'
+		).load(
+			'1234' => {}
+		)
+		wf = @sd.workflow
+
+		def wf.permit?(roles,action)
+			true
+		end
+		@sd[:confirm] = nil
+		assert_equal(
+			<<'_html',
+<input name=".status-public" type="submit" value="update" />
+<input name=".action-confirm_delete" type="submit" value="delete..." />
+_html
+			@sd.get(:action => :update),
+			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
+		)
+		@sd[:confirm] = :optional
+		assert_equal(
+			<<'_html',
+<input name=".status-public" type="submit" value="update" />
+<input name=".action-confirm_update" type="submit" value="confirm" />
+<input name=".action-confirm_delete" type="submit" value="delete..." />
+_html
+			@sd.get(:action => :update),
+			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
+		)
+		@sd[:confirm] = :mandatory
+		assert_equal(
+			<<'_html',
+<input name=".action-confirm_update" type="submit" value="confirm" />
+<input name=".action-confirm_delete" type="submit" value="delete..." />
+_html
+			@sd.get(:action => :update),
+			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
+		)
+		assert_equal(
+			<<'_html',
+<input name=".status-public" type="submit" value="update" />
+_html
+			@sd.get(:action => :confirm,:sub_action => :update),
+			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
+		)
+		assert_equal(
+			<<'_html',
+<input name=".status-public" type="submit" value="delete" />
+_html
+			@sd.get(:action => :confirm,:sub_action => :delete),
+			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
+		)
+
+		def wf.permit?(roles,action)
+			true unless action == :delete
+		end
+		@sd[:confirm] = nil
+		assert_equal(
+			<<'_html',
+<input name=".status-public" type="submit" value="update" />
+_html
+			@sd.get(:action => :update),
+			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
+		)
+		@sd[:confirm] = :optional
+		assert_equal(
+			<<'_html',
+<input name=".status-public" type="submit" value="update" />
+<input name=".action-confirm_update" type="submit" value="confirm" />
+_html
+			@sd.get(:action => :update),
+			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
+		)
+		@sd[:confirm] = :mandatory
+		assert_equal(
+			<<'_html',
+<input name=".action-confirm_update" type="submit" value="confirm" />
+_html
+			@sd.get(:action => :update),
+			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
+		)
+		assert_equal(
+			<<'_html',
+<input name=".status-public" type="submit" value="update" />
+_html
+			@sd.get(:action => :confirm,:sub_action => :update),
+			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
+		)
+
+		def wf.permit?(roles,action)
+			true unless action == :update
+		end
+		@sd[:confirm] = nil
+		assert_equal(
+			<<'_html',
+<input name=".status-public" type="submit" value="delete" />
+_html
+			@sd.get(:action => :confirm,:sub_action => :delete),
+			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
+		)
+	end
+
 	def test_load_default
 	end
 

@@ -77,7 +77,7 @@ class Sofa::Workflow
 	end
 
 	def _g_submit(arg)
-		"#{_g_submit_commit arg}#{_g_submit_confirm arg}#{_g_submit_delete arg}"
+		"#{_g_submit_commit arg}#{_g_submit_confirm arg}#{_g_submit_confirm_delete arg}"
 	end
 
 	def _g_submit_commit(arg)
@@ -96,7 +96,10 @@ _html
 	def _g_submit_confirm(arg)
 	end
 
-	def _g_submit_delete(arg)
+	def _g_submit_confirm_delete(arg)
+		<<_html if @sd.send(:permit_get?,arg.merge(:action => :delete)) && arg[:orig_action] != :confirm
+<input name="#{@sd[:short_name]}.action-confirm_delete" type="submit" value="delete..." />
+_html
 	end
 
 end

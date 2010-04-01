@@ -100,6 +100,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			<li><a><input type="text" name="_001-name" value="foo" /></a>: <input type="text" name="_001-comment" value="bar!" /></li>
 		</ul>
 <input name=".status-public" type="submit" value="create" />
+<input name=".action-confirm_delete" type="submit" value="delete..." />
 </form>
 	</body>
 </html>
@@ -151,6 +152,7 @@ _html
 	<li><a><input type="text" name="20100326_0001-name" value="frank" /></a>: <input type="text" name="20100326_0001-comment" value="hi." /></li>
 </ul>
 <input name=".status-public" type="submit" value="update" />
+<input name=".action-confirm_delete" type="submit" value="delete..." />
 </form>
 _html
 			res.body,

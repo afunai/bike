@@ -68,10 +68,10 @@ module Sofa::Path
 				end
 			elsif cid == :d
 				conds[:id] ? '' : "#{conds[:d]}/"
-			elsif cid != :p || conds[:p].to_i > 1
+			else
 				"#{cid}=#{Array(conds[cid]).join ','}/"
 			end
-		}.join
+		}.join.sub(%r{/p=1/$},'/')
 	end
 
 	def _dirname(path) # returns '/foo/bar/' for '/foo/bar/'

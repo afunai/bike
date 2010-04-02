@@ -434,6 +434,11 @@ class TC_Sofa < Test::Unit::TestCase
 			Sofa::Path.path_of(:p => 1,:foo => 'bar'),
 			'Sofa::Path.path_of should omit the step for conds[:p] when conds[:p] == 1'
 		)
+		assert_equal(
+			'p=1/',
+			Sofa::Path.path_of(:p => 1),
+			'Sofa::Path.path_of should not omit the step for conds[:p] when there is no other conds'
+		)
 
 		assert_equal(
 			'foo=1,2,3/',

@@ -228,6 +228,48 @@ _html
 		}
 	end
 
+	def test_g_a_update
+		ss = Sofa::Set::Static.new(:html => '$(.a_update)',:parent => Sofa::Set::Static.new)
+
+		def ss.permit_get?(arg)
+			true
+		end
+		assert_equal(
+			'<a href="/update.html">',
+			ss.get(:action => :read),
+			'Set#_g_a_update should return href if the orig_action is :read and :update is permmited'
+		)
+		assert_equal(
+			'<a>',
+			ss.get(:action => :update),
+			'Set#_g_a_update should omit href if the orig_action is not :read'
+		)
+
+		def ss.permit_get?(arg)
+			true if arg[:action] == :read
+		end
+		def ss.permit?(action)
+			true if action == :read
+		end
+		assert_equal(
+			'<a>',
+			ss.get(:action => :read),
+			'Set#_g_a_update should omit href unless :update is permmited'
+		)
+
+		def ss.permit_get?(arg)
+			true unless arg[:action] == :update
+		end
+		def ss.permit?(action)
+			true unless action == :update
+		end
+		assert_equal(
+			'<a href="/confirm_delete.html">',
+			ss.get(:action => :read),
+			'Set#_g_a_update should return href to :confirm_delete if only :delete is permmited'
+		)
+	end
+
 	def test_load_default
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>

@@ -100,7 +100,6 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			<li><a><input type="text" name="_001-name" value="foo" /></a>: <input type="text" name="_001-comment" value="bar!" /></li>
 		</ul>
 <input name=".status-public" type="submit" value="create" />
-<input name=".action-confirm_delete" type="submit" value="delete..." />
 </form>
 	</body>
 </html>

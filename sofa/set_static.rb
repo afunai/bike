@@ -42,8 +42,12 @@ _html
 	end
 
 	def _g_a_update(arg)
-		if permit_get?(:action => :update) && arg[:orig_action] == :read
+		if arg[:orig_action] != :read
+			'<a>'
+		elsif permit_get?(:action => :update)
 			"<a href=\"#{_g_uri_update arg}\">"
+		elsif permit? :delete
+			"<a href=\"#{_g_uri_delete arg}\">"
 		else
 			'<a>'
 		end
@@ -51,6 +55,10 @@ _html
 
 	def _g_uri_update(arg)
 		"#{my[:parent][:path]}/#{Sofa::Path::path_of :id => my[:id]}update.html"
+	end
+
+	def _g_uri_delete(arg)
+		"#{my[:parent][:path]}/#{Sofa::Path::path_of :id => my[:id]}confirm_delete.html"
 	end
 
 	def _g_uri_detail(arg)

@@ -100,9 +100,15 @@ _html
 	end
 
 	def _g_submit_confirm_delete(arg)
-		<<_html if @sd.send(:permit_get?,arg.merge(:action => :delete)) && arg[:orig_action] != :confirm
+		if (
+			@sd.send(:permit_get?,arg.merge(:action => :delete)) &&
+			!@sd.send(:collect_item,arg[:conds]).all? {|item| item[:id][Sofa::REX::ID_NEW] } &&
+			arg[:orig_action] != :confirm
+		)
+			<<_html
 <input name="#{@sd[:short_name]}.action-confirm_delete" type="submit" value="delete..." />
 _html
+		end
 	end
 
 end

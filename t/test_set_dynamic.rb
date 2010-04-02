@@ -637,9 +637,15 @@ _html
 		@sd = Sofa::Set::Dynamic.new(
 			:klass    => 'set-dynamic',
 			:workflow => 'blog',
-			:tmpl     => '$(.submit)'
+			:tmpl     => '$(.submit)',
+			:item     => {
+				'default' => Sofa::Parser.parse_html(<<'_html')
+	<li>$(name = text 32 :'nobody'): $(comment = text 64 :'hi.')$(.hidden)</li>
+_html
+			}
 		).load(
-			'1234' => {}
+			'_001'          => {'name' => 'frank','comment' => 'bar'},
+			'20100401_0001' => {'name' => 'frank','comment' => 'bar'}
 		)
 		wf = @sd.workflow
 
@@ -652,7 +658,7 @@ _html
 <input name=".status-public" type="submit" value="update" />
 <input name=".action-confirm_delete" type="submit" value="delete..." />
 _html
-			@sd.get(:action => :update),
+			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		@sd[:confirm] = :optional
@@ -662,7 +668,7 @@ _html
 <input name=".action-confirm_update" type="submit" value="confirm" />
 <input name=".action-confirm_delete" type="submit" value="delete..." />
 _html
-			@sd.get(:action => :update),
+			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		@sd[:confirm] = :mandatory
@@ -671,7 +677,7 @@ _html
 <input name=".action-confirm_update" type="submit" value="confirm" />
 <input name=".action-confirm_delete" type="submit" value="delete..." />
 _html
-			@sd.get(:action => :update),
+			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		assert_equal(
@@ -697,7 +703,7 @@ _html
 			<<'_html',
 <input name=".status-public" type="submit" value="update" />
 _html
-			@sd.get(:action => :update),
+			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		@sd[:confirm] = :optional
@@ -706,7 +712,7 @@ _html
 <input name=".status-public" type="submit" value="update" />
 <input name=".action-confirm_update" type="submit" value="confirm" />
 _html
-			@sd.get(:action => :update),
+			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		@sd[:confirm] = :mandatory
@@ -714,7 +720,7 @@ _html
 			<<'_html',
 <input name=".action-confirm_update" type="submit" value="confirm" />
 _html
-			@sd.get(:action => :update),
+			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		assert_equal(

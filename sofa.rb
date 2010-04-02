@@ -131,7 +131,7 @@ base[:tid] = tid
 			action = "confirm_#{params[:sub_action]}"
 			id_step = Sofa::Path.path_of(
 				:id => base.result.values.collect {|item| item[:id] }
-			) if base[:parent] == base[:folder]
+			)
 			Sofa.message[base[:tid]] = {:notice => ['please confirm.']}
 			response_see_other(
 				:location => base[:path] + "/#{base[:tid]}/#{id_step}#{action}.html"

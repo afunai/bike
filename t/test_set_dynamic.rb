@@ -653,6 +653,15 @@ _html
 			true
 		end
 		@sd[:confirm] = nil
+
+		assert_equal(
+			<<'_html',
+<input name=".status-public" type="submit" value="create" />
+_html
+			@sd.get(:action => :update,:conds => {:id => '_001'}),
+			'Set#_g_submit should not return confirm_delete when there is only new items'
+		)
+		@sd[:confirm] = nil
 		assert_equal(
 			<<'_html',
 <input name=".status-public" type="submit" value="update" />

@@ -312,8 +312,8 @@ _html
 	<body>
 		<h1>Root Folder</h1>
 <form id="main" method="post" action="/1234567890.0123/t_store/update.html">
-	<ul class="message notice">
-		<li>please confirm.</li>
+<ul class="message notice">
+	<li>please confirm.</li>
 </ul>
 		<ul id="main" class="sofa-blog">
 			<li><a>fz</a>: howdy.<input type="hidden" name="_1.action" value="create" /></li>

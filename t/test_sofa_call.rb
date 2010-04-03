@@ -270,7 +270,7 @@ _html
 		)
 		assert_equal(303,res.status)
 		assert_match(
-			%r{/#{new_id}/replies/1234567890.123456/index.html},
+			%r{/#{new_id}/replies/1234567890.123456/read_detail.html},
 			res.headers['Location'],
 			'Sofa#call with a sub-app status should commit the root item'
 		)

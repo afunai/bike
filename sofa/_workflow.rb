@@ -59,7 +59,7 @@ class Sofa::Workflow
 	end
 
 	def next_action(params)
-		(@sd.default_action == :read) ? :index : :done
+		(@sd.default_action == :read) ? :read_detail : :done
 	end
 
 	def _get(arg)

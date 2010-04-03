@@ -64,7 +64,7 @@ class Sofa
 		base = Sofa.transaction[tid] || Sofa::Path.base_of(path)
 		return response_not_found unless base
 
-base[:tid] = tid
+		base[:tid] = tid
 		Sofa.current[:base] = base
 
 		begin

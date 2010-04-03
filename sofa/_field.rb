@@ -207,6 +207,10 @@ class Sofa::Field
 		Rack::Utils.escape_html val.to_s
 	end
 
+	def _g_valid?(arg)
+		valid? || arg[:action] == :create
+	end
+
 	def _post(action,v)
 		case action
 			when :load_default

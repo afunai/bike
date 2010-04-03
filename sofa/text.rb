@@ -13,6 +13,10 @@ class Sofa::Text < Sofa::Field
 	def errors
 		if (my[:max].to_i > 0) && (val.to_s.size > my[:max])
 			['too long']
+		elsif (my[:min].to_i == 1) && (val.to_s.size == 0)
+			['mandatory']
+		elsif (my[:min].to_i > 0) && (val.to_s.size < my[:min])
+			['too short']
 		else
 			[]
 		end

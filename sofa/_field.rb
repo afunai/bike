@@ -207,9 +207,9 @@ class Sofa::Field
 		Rack::Utils.escape_html val.to_s
 	end
 
-	def _g_errors(arg = {})
+	def _g_errors(arg)
 		<<_html unless _g_valid? arg
-<div class="error">#{errors.first}</div>
+<div class="error">#{errors.join "<br/>\n"}</div>
 _html
 	end
 

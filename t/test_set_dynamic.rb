@@ -236,7 +236,7 @@ _html
 		assert_equal(
 			<<'_html',
 <ul id="foo" class="sofa-blog">
-	<li><input type="text" name="name" value="" />: <input type="text" name="comment" value="" /></li>
+	<li><input type="text" name="name" value="" class="" />: <input type="text" name="comment" value="" class="" /></li>
 </ul>
 [foo-update]
 _html

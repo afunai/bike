@@ -535,12 +535,6 @@ _html
 		tid    = res.headers['Location'][%r{/(\d+.\d+)/},1]
 		new_id = res.headers['Location'][Sofa::REX::PATH_ID]
 
-		assert_equal(
-			{:notice => ['item updated.']},
-			Sofa.message[tid],
-			'Sofa#call with post method should set proper Sofa.message'
-		)
-
 		res = Rack::MockRequest.new(@sofa).get(
 			"http://example.com/t_store/#{tid}/#{new_id}index.html"
 		)
@@ -586,15 +580,10 @@ _html
 				:input => "_2-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylongname&.status-public=create"
 			}
 		)
-
 		assert_match(
 			/malformed input\./,
 			res.body,
 			'Sofa#call should include the current Sofa.message'
-		)
-		assert_nil(
-			Sofa.message[tid],
-			'Sofa#call should have used up the Sofa.message'
 		)
 	end
 

@@ -34,10 +34,6 @@ class Sofa
 		self.session[:transaction] ||= {}
 	end
 
-	def self.message
-		self.session[:message] ||= {}
-	end
-
 	def self.client
 		self.session[:client] ||= 'nobody'
 	end
@@ -81,7 +77,6 @@ class Sofa
 			end
 		rescue Sofa::Error::Forbidden
 			if params[:action] && Sofa.client == 'nobody'
-				Sofa.message[base[:tid]] = {:alert => ['please login.']}
 				params[:dest_action] = (method == 'post') ? :index : params[:action]
 				params[:action] = :login
 			end
@@ -132,14 +127,12 @@ class Sofa
 			id_step = Sofa::Path.path_of(
 				:id => base.result.values.collect {|item| item[:id] }
 			)
-			Sofa.message[base[:tid]] = {:notice => ['please confirm.']}
 			response_see_other(
 				:location => base[:path] + "/#{base[:tid]}/#{id_step}#{action}.html"
 			)
 		else
 			params = {:action => :update}
 			params[:conds] = {:id => base.send(:pending_items).keys}
-			Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 			return response_unprocessable_entity(:body => _get(base,params))
 		end
 	end
@@ -154,14 +147,12 @@ class Sofa
 				id_step = Sofa::Path.path_of(
 					:id => base.result.values.collect {|item| item[:id] }
 				) if base[:parent] == base[:folder] && action != :done
-Sofa.message[base[:tid]] = {:notice => ['item updated.']}
 				response_see_other(
 					:location => base[:path] + "/#{base[:tid]}/#{id_step}#{action}.html"
 				)
 			else
 				params = {:action => :update}
 				params[:conds] = {:id => base.send(:pending_items).keys}
-Sofa.message[base[:tid]] = {:error => ['malformed input.']}
 				response_unprocessable_entity :body => _get(base,params)
 			end
 		else

@@ -57,7 +57,8 @@ class Sofa
 		Sofa.current[:req]     = req
 		Sofa.current[:session] = env['rack.session']
 
-		base = Sofa.transaction[tid] || Sofa::Path.base_of(path)
+		base = Sofa.transaction[tid]
+		base = Sofa::Path.base_of(path) unless base.is_a? Sofa::Field # could be a message.
 		return response_not_found unless base
 
 		base[:tid] = tid

@@ -117,7 +117,9 @@ _html
 	end
 
 	def _g_message(arg)
-		if !self.valid? #&& arg[:orig_action] != :create
+		return unless self == Sofa.base
+
+		if !self.valid? && arg[:orig_action] != :create
 			message = {:error => 'malformed input.'}
 		elsif arg[:orig_action] == :confirm
 			message = {:notice => 'please confirm.'}

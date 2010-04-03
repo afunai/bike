@@ -27,10 +27,4 @@ _html
 	end
 	alias :_g_create :_g_update
 
-	def _g_errors(arg = {})
-		<<_html unless valid?
-<span class="error">#{errors.first}</span>
-_html
-	end
-
 end

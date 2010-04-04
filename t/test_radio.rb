@@ -59,20 +59,18 @@ class TC_Radio < Test::Unit::TestCase
 		)
 		assert_equal(
 			<<_html.chomp,
-<div id="" class="">
-	<span class="checkbox">
-		<input type="radio" id="-bar" name="" value="bar" />
-		<label for="-bar">bar</label>
-	</span>
-	<span class="checkbox">
-		<input type="radio" id="-baz" name="" value="baz" />
-		<label for="-baz">baz</label>
-	</span>
-	<span class="checkbox">
-		<input type="radio" id="-qux" name="" value="qux" />
-		<label for="-qux">qux</label>
-	</span>
-</div>
+<span class="radio">
+	<input type="radio" id="-bar" name="" value="bar" />
+	<label for="-bar">bar</label>
+</span>
+<span class="radio">
+	<input type="radio" id="-baz" name="" value="baz" />
+	<label for="-baz">baz</label>
+</span>
+<span class="radio">
+	<input type="radio" id="-qux" name="" value="qux" />
+	<label for="-qux">qux</label>
+</span>
 _html
 			@f.get(:action => :create),
 			'Radio#get should return proper string'
@@ -86,20 +84,39 @@ _html
 		)
 		assert_equal(
 			<<_html.chomp,
-<div id="" class="">
-	<span class="checkbox">
-		<input type="radio" id="-bar" name="" value="bar" />
-		<label for="-bar">bar</label>
-	</span>
-	<span class="checkbox">
-		<input type="radio" id="-baz" name="" value="baz" />
-		<label for="-baz">baz</label>
-	</span>
-	<span class="checkbox">
-		<input type="radio" id="-qux" name="" value="qux" checked />
-		<label for="-qux">qux</label>
-	</span>
-</div>
+<span class="radio">
+	<input type="radio" id="-bar" name="" value="bar" />
+	<label for="-bar">bar</label>
+</span>
+<span class="radio">
+	<input type="radio" id="-baz" name="" value="baz" />
+	<label for="-baz">baz</label>
+</span>
+<span class="radio">
+	<input type="radio" id="-qux" name="" value="qux" checked />
+	<label for="-qux">qux</label>
+</span>
+_html
+			@f.get(:action => :update),
+			'Radio#get should return proper string'
+		)
+
+		@f.load 'non-exist'
+		assert_equal(
+			<<_html.chomp,
+<span class="radio error">
+	<input type="radio" id="-bar" name="" value="bar" />
+	<label for="-bar">bar</label>
+</span>
+<span class="radio error">
+	<input type="radio" id="-baz" name="" value="baz" />
+	<label for="-baz">baz</label>
+</span>
+<span class="radio error">
+	<input type="radio" id="-qux" name="" value="qux" />
+	<label for="-qux">qux</label>
+</span>
+<div class=\"error\">no such option</div>
 _html
 			@f.get(:action => :update),
 			'Radio#get should return proper string'
@@ -121,7 +138,7 @@ _html
 			'Radio#errors should return the errors of the current val'
 		)
 
-		@f.load 'boo'
+		@f.load 'non-exist'
 		@f[:mandatory] = nil
 		assert_equal(
 			['no such option'],

@@ -26,18 +26,20 @@ class Sofa::Radio < Sofa::Field
 		options = my[:options].collect {|opt|
 			checked = (opt == val) ? ' checked' : ''
 			<<_html
-	<span class="checkbox">
-		<input type="radio" id="#{my[:short_name]}-#{opt}" name="#{my[:short_name]}" value="#{opt}"#{checked} />
-		<label for="#{my[:short_name]}-#{opt}">#{opt}</label>
-	</span>
+<span class="#{_g_class arg}">
+	<input type="radio" id="#{my[:short_name]}-#{opt}" name="#{my[:short_name]}" value="#{opt}"#{checked} />
+	<label for="#{my[:short_name]}-#{opt}">#{opt}</label>
+</span>
 _html
 		}.join
-		<<_html.chomp
-<div id="#{my[:short_name]}" class="#{_g_class arg}">
-#{options}</div>#{_g_errors arg}
-_html
+		"#{options}#{_g_errors arg}".chomp
 	end
 	alias :_g_create :_g_update
+
+	def _g_class(arg)
+		out = super
+		out ? "radio #{out}" : 'radio'
+	end
 
 	def val_cast(v)
 		v.to_s

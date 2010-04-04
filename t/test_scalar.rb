@@ -46,6 +46,28 @@ class TC_Scalar < Test::Unit::TestCase
 		)
 	end
 
+	def test_text_get
+		f = field '$(foo text 3 1..5)'
+		f.load 'bar'
+		assert_equal(
+			'bar',
+			f.get,
+			'Text#get should return proper string'
+		)
+		assert_equal(
+			'<input type="text" name="" value="bar" class="" />',
+			f.get(:action => :update),
+			'Text#get should return proper string'
+		)
+
+		f.load '<bar>'
+		assert_equal(
+			'&lt;bar&gt;',
+			f.get,
+			'Text#get should escape the special characters'
+		)
+	end
+
 	private
 
 	def field(html)

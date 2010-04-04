@@ -11,11 +11,11 @@ class Sofa::Text < Sofa::Field
 	end
 
 	def errors
-		if (my[:max].to_i > 0) && (val.to_s.size > my[:max])
+		if (my[:max].to_i > 0) && (val.size > my[:max])
 			['too long']
-		elsif (my[:min].to_i == 1) && (val.to_s.size == 0)
+		elsif (my[:min].to_i == 1) && val.empty?
 			['mandatory']
-		elsif (my[:min].to_i > 0) && (val.to_s.size < my[:min])
+		elsif (my[:min].to_i > 0) && (val.size < my[:min])
 			['too short']
 		else
 			[]

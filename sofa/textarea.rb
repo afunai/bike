@@ -14,6 +14,10 @@ _html
 	end
 	alias :_g_update :_g_create
 
+	def val_cast(v)
+		v.to_s
+	end
+
 end
 
 

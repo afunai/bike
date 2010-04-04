@@ -32,11 +32,17 @@ class TC_Scalar < Test::Unit::TestCase
 
 	def test_text_val_cast
 		f = field '$(foo text 3 1..5)'
+		assert_equal(
+			'',
+			f.val,
+			'Text#val_cast should cast the given val to String'
+		)
+
 		f.load 123
 		assert_equal(
 			'123',
 			f.val,
-			'Text# should cast the given val to String'
+			'Text#val_cast should cast the given val to String'
 		)
 	end
 

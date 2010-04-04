@@ -7,7 +7,7 @@ class TC_Select < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Sofa::Parser.gsub_scalar("$(foo select bar,baz,qux :'please select')") {|id,m|
+		Sofa::Parser.gsub_scalar("$(foo select bar,baz,qux :'baz' mandatory)") {|id,m|
 			meta = m
 			''
 		}
@@ -24,7 +24,7 @@ class TC_Select < Test::Unit::TestCase
 			'Select#initialize should set :options from the csv token'
 		)
 		assert_equal(
-			'please select',
+			'baz',
 			@f[:default],
 			'Select#initialize should set :default from the token'
 		)
@@ -74,7 +74,6 @@ _html
 		assert_equal(
 			<<_html.chomp,
 <select name="" class="">
-	<option value="">please select</option>
 	<option>bar</option>
 	<option>baz</option>
 	<option selected>qux</option>

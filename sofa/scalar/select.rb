@@ -25,8 +25,8 @@ class Sofa::Select < Sofa::Field
 			selected = (opt == val) ? ' selected' : ''
 			"\t<option#{selected}>#{opt}</option>\n"
 		}.join
-		unless my[:options].include? my[:default]
-			options = "\t<option value=\"\">#{my[:default]}</option>\n#{options}"
+		unless my[:mandatory] && my[:options].include?(val)
+			options = "\t<option value=\"\">please select</option>\n#{options}"
 		end
 		<<_html.chomp
 <select name="#{my[:short_name]}" class="#{_g_class arg}">

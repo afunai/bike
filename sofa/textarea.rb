@@ -8,8 +8,8 @@ class Sofa::Textarea < Sofa::Field
 	private
 
 	def _g_create(arg)
-		<<_html
-<textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}">#{val}</textarea>
+		<<_html.chomp
+<textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}" class="#{_g_class arg}">#{val}</textarea>
 _html
 	end
 	alias :_g_update :_g_create

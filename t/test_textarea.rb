@@ -76,4 +76,48 @@ class TC_Textarea < Test::Unit::TestCase
 		)
 	end
 
+	def test_errors
+		@f.load ''
+		@f[:min] = 0
+		assert_equal(
+			[],
+			@f.errors,
+			'Text#errors should return the errors of the current val'
+		)
+		@f[:min] = 1
+		assert_equal(
+			['mandatory'],
+			@f.errors,
+			'Text#errors should return the errors of the current val'
+		)
+
+		@f.load 'a'
+		@f[:min] = 1
+		assert_equal(
+			[],
+			@f.errors,
+			'Text#errors should return the errors of the current val'
+		)
+		@f[:min] = 2
+		assert_equal(
+			['too short'],
+			@f.errors,
+			'Text#errors should return the errors of the current val'
+		)
+
+		@f.load 'abcde'
+		@f[:max] = 5
+		assert_equal(
+			[],
+			@f.errors,
+			'Text#errors should return the errors of the current val'
+		)
+		@f[:max] = 4
+		assert_equal(
+			['too long'],
+			@f.errors,
+			'Text#errors should return the errors of the current val'
+		)
+	end
+
 end

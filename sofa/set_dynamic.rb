@@ -222,6 +222,8 @@ _html
 	end
 
 	def _g_view_ym(arg)
+		return unless permit? :read
+
 		uris = _uri_ym arg
 		return unless uris && uris.size > 1
 

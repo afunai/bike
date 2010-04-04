@@ -6,6 +6,7 @@
 class Sofa
 
 	Dir['./sofa/*.rb'].sort.each {|file| require file }
+	Dir['./sofa/*/*.rb'].sort.each {|file| require file }
 
 	module REX
 		ID_SHORT = /[a-z][a-z0-9\_\-]*/

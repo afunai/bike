@@ -5,6 +5,18 @@
 
 class Sofa::Textarea < Sofa::Field
 
+	def errors
+		if (my[:max].to_i > 0) && (val.size > my[:max])
+			['too long']
+		elsif (my[:min].to_i == 1) && val.empty?
+			['mandatory']
+		elsif (my[:min].to_i > 0) && (val.size < my[:min])
+			['too short']
+		else
+			[]
+		end
+	end
+
 	private
 
 	def _g_create(arg)

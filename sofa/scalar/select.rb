@@ -6,15 +6,17 @@
 class Sofa::Select < Sofa::Field
 
 	def initialize(meta = {})
-		meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
+		meta[:mandatory] = (meta[:tokens] && meta[:tokens].include?('mandatory'))
 		super
 	end
 
 	def errors
-		if false
-			['no such option.']
-		else
+		if my[:mandatory] && val.empty?
+			['mandatory']
+		elsif my[:options].include?(val) || val.empty?
 			[]
+		else
+			['no such option']
 		end
 	end
 

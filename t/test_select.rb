@@ -24,6 +24,11 @@ class TC_Select < Test::Unit::TestCase
 			'Select#initialize should set :options from the csv token'
 		)
 		assert_equal(
+			true,
+			@f[:mandatory],
+			'Select#initialize should set :default from the token'
+		)
+		assert_equal(
 			'baz',
 			@f[:default],
 			'Select#initialize should set :default from the token'
@@ -61,7 +66,7 @@ class TC_Select < Test::Unit::TestCase
 	<option>qux</option>
 </select>
 _html
-			@f.get(:action => :update),
+			@f.get(:action => :create),
 			'Select#get should return proper string'
 		)
 
@@ -81,6 +86,30 @@ _html
 _html
 			@f.get(:action => :update),
 			'Select#get should return proper string'
+		)
+	end
+
+	def test_errors
+		@f.load ''
+		@f[:mandatory] = nil
+		assert_equal(
+			[],
+			@f.errors,
+			'Select#errors should return the errors of the current val'
+		)
+		@f[:mandatory] = true
+		assert_equal(
+			['mandatory'],
+			@f.errors,
+			'Select#errors should return the errors of the current val'
+		)
+
+		@f.load 'boo'
+		@f[:mandatory] = nil
+		assert_equal(
+			['no such option'],
+			@f.errors,
+			'Select#errors should return the errors of the current val'
 		)
 	end
 

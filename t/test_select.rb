@@ -26,7 +26,7 @@ class TC_Select < Test::Unit::TestCase
 		assert_equal(
 			true,
 			@f[:mandatory],
-			'Select#initialize should set :default from the token'
+			'Select#initialize should set :mandatory from the misc token'
 		)
 		assert_equal(
 			'baz',

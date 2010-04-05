@@ -26,7 +26,7 @@ class TC_Radio < Test::Unit::TestCase
 		assert_equal(
 			true,
 			@f[:mandatory],
-			'Radio#initialize should set :default from the token'
+			'Radio#initialize should set :mandatory from the misc token'
 		)
 		assert_equal(
 			'baz',

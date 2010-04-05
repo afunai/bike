@@ -26,7 +26,7 @@ class TC_Checkbox < Test::Unit::TestCase
 		assert_equal(
 			true,
 			@f[:mandatory],
-			'Checkbox#initialize should set :default from the token'
+			'Checkbox#initialize should set :mandatory from the misc token'
 		)
 		assert_equal(
 			'baz',

@@ -32,19 +32,28 @@ class Sofa::Checkbox < Sofa::Field
 	end
 
 	def _g_update(arg)
-		options = my[:options].collect {|opt|
-			checked = (val.include? opt) ? ' checked' : ''
-			<<_html
+		if my[:options] == ['_on']
+			checked = (val.include? '_on') ? ' checked' : ''
+			<<_html.rstrip
+<input type="hidden" name="#{my[:short_name]}[]" value="" />
+<input type="checkbox" name="#{my[:short_name]}[]" value="_on" #{checked}/>
+#{_g_errors arg}
+_html
+		else
+			options = my[:options].collect {|opt|
+				checked = (val.include? opt) ? ' checked' : ''
+				<<_html
 <span class="#{_g_class arg}">
 	<input type="checkbox" id="#{my[:short_name]}-#{opt}" name="#{my[:short_name]}[]" value="#{opt}"#{checked} />
 	<label for="#{my[:short_name]}-#{opt}">#{opt}</label>
 </span>
 _html
-		}.join
-		<<_html.rstrip
+			}.join
+			<<_html.rstrip
 <input type="hidden" name="#{my[:short_name]}[]" value="" />
 #{options}#{_g_errors arg}
 _html
+		end
 	end
 	alias :_g_create :_g_update
 

@@ -35,7 +35,7 @@ class TC_Checkbox < Test::Unit::TestCase
 		)
 	end
 
-	def test_meta_single_options
+	def test_meta_single_option
 		meta = nil
 		Sofa::Parser.gsub_scalar("$(foo checkbox baz :on mandatory)") {|id,m|
 			meta = m

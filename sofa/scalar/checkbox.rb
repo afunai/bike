@@ -11,6 +11,9 @@ class Sofa::Checkbox < Sofa::Field
 			meta[:options] = ['_on'] if meta[:options].empty?
 			meta[:mandatory] = meta[:tokens].include?('mandatory') && Array(meta[:options]).size > 1
 		end
+		if meta[:options].size == 1 && meta[:default] =~ /^(on|true|yes)$/i
+			meta[:default] = meta[:options].first
+		end
 		super
 	end
 

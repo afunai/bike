@@ -79,7 +79,7 @@ class TC_Checkbox < Test::Unit::TestCase
 			'Checkbox#initialize should not set :mandatory if there is only one option'
 		)
 		assert_equal(
-			'on',
+			'_on',
 			f[:default],
 			'Checkbox#initialize should set :default to the first option if the token is provided'
 		)

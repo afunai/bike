@@ -11,12 +11,10 @@ class Sofa::Radio < Sofa::Field
 	end
 
 	def errors
-		if my[:mandatory] && val.empty?
-			['mandatory']
-		elsif my[:options].include?(val) || val.empty?
-			[]
+		if val.empty?
+			my[:mandatory] ? ['mandatory'] : []
 		else
-			['no such option']
+			my[:options].include?(val) ? [] : ['no such option']
 		end
 	end
 

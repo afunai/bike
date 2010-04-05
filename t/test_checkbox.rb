@@ -62,14 +62,14 @@ class TC_Checkbox < Test::Unit::TestCase
 
 	def test_meta_no_options
 		meta = nil
-		Sofa::Parser.gsub_scalar("$(foo checkbox :on mandatory)") {|id,m|
+		Sofa::Parser.gsub_scalar("$(foo checkbox :yes mandatory)") {|id,m|
 			meta = m
 			''
 		}
 		f = Sofa::Field.instance meta
 
 		assert_equal(
-			[],
+			['_on'],
 			f[:options],
 			'Checkbox#initialize should set :options from the misc token if csv is not provided'
 		)

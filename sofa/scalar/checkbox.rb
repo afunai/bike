@@ -6,7 +6,10 @@
 class Sofa::Checkbox < Sofa::Field
 
 	def initialize(meta = {})
-		meta[:mandatory] = (meta[:tokens] && meta[:tokens].include?('mandatory'))
+		if meta[:tokens]
+			meta[:options] ||= meta[:tokens] - ['mandatory']
+			meta[:mandatory] = meta[:tokens].include?('mandatory') && Array(meta[:options]).size > 1
+		end
 		super
 	end
 

@@ -59,6 +59,7 @@ class TC_Radio < Test::Unit::TestCase
 		)
 		assert_equal(
 			<<_html.chomp,
+<input type="hidden" name="" value="" />
 <span class="radio">
 	<input type="radio" id="-bar" name="" value="bar" />
 	<label for="-bar">bar</label>
@@ -84,6 +85,7 @@ _html
 		)
 		assert_equal(
 			<<_html.chomp,
+<input type="hidden" name="" value="" />
 <span class="radio">
 	<input type="radio" id="-bar" name="" value="bar" />
 	<label for="-bar">bar</label>
@@ -104,6 +106,7 @@ _html
 		@f.load 'non-exist'
 		assert_equal(
 			<<_html.chomp,
+<input type="hidden" name="" value="" />
 <span class="radio error">
 	<input type="radio" id="-bar" name="" value="bar" />
 	<label for="-bar">bar</label>

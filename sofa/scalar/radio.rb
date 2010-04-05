@@ -30,7 +30,10 @@ class Sofa::Radio < Sofa::Field
 </span>
 _html
 		}.join
-		"#{options}#{_g_errors arg}".chomp
+		<<_html.rstrip
+<input type="hidden" name="#{my[:short_name]}" value="" />
+#{options}#{_g_errors arg}
+_html
 	end
 	alias :_g_create :_g_update
 

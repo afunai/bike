@@ -183,6 +183,33 @@ _html
 		)
 	end
 
+	def test_get_single_option
+		meta = nil
+		Sofa::Parser.gsub_scalar("$(foo checkbox 'ok?' mandatory)") {|id,m|
+			meta = m
+			''
+		}
+		f = Sofa::Field.instance meta
+
+		f.load ''
+		assert_equal(
+			'',
+			f.get,
+			'Checkbox#get should return proper string'
+		)
+		assert_equal(
+			<<_html.chomp,
+<input type="hidden" name="[]" value="" />
+<span class="checkbox">
+	<input type="checkbox" id="-ok?" name="[]" value="ok?" />
+	<label for="-ok?">ok?</label>
+</span>
+_html
+			f.get(:action => :create),
+			'Checkbox#get should not include the label if no options is defined'
+		)
+	end
+
 	def test_errors
 		@f.load ''
 		@f[:mandatory] = nil

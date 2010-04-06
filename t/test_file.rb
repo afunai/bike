@@ -15,7 +15,7 @@ class TC_File < Test::Unit::TestCase
 			meta = m
 			''
 		}
-		@f = Sofa::Field.instance meta
+		@f = Sofa::Field.instance meta.merge(:id => 'foo')
 	end
 
 	def test_meta

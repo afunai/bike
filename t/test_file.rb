@@ -50,12 +50,38 @@ _eos
 				'size'     => @file.read.size,
 			},
 			@f.val,
-			'File#val_cast should re-map the input from Rack'
+			'File#val_cast should re-map a hash from Rack'
 		)
 		assert_equal(
 			@file.read,
 			@f.body,
 			'File#val_cast should store the file body in @body'
+		)
+	end
+
+	def test_val_cast_load
+		@f.load(
+			'basename' => 'baz.jpg',
+			'type'     => 'image/jpeg',
+			'size'     => 123
+		)
+		assert_equal(
+			{
+				'basename' => 'baz.jpg',
+				'type'     => 'image/jpeg',
+				'size'     => 123,
+			},
+			@f.val,
+			'File#val_cast should load() a hash without :tempfile like Set#load'
+		)
+
+		@f.load(
+			{}
+		)
+		assert_equal(
+			{},
+			@f.val,
+			'File#val_cast should load() a hash without :tempfile like Set#load'
 		)
 	end
 

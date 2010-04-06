@@ -990,6 +990,39 @@ _html
 		)
 	end
 
+	def test_delete_invalid_item
+		@sd.load(
+			'20091122_1234' => {'name' => 'frank','comment' => 'bar'}
+		)
+
+		# update with invalid value
+		@sd.update(
+			'20091122_1234' => {'name' => 'too looooooooooooooooooooong'}
+		)
+		assert(!@sd.valid?)
+
+		# delete the invalid item
+		@sd.update(
+			'20091122_1234' => {:action => :delete}
+		)
+		assert_equal(
+			{},
+			@sd.errors,
+			'Set::Dynamic#errors should ignore items with :delete action'
+		)
+
+		@sd.commit
+		assert(
+			!@sd.pending?,
+			'Set::Dynamic#commit should be able to delete an invalid item'
+		)
+		assert_equal(
+			{},
+			@sd.val,
+			'Set::Dynamic#commit should be able to delete an invalid item'
+		)
+	end
+
 	def test_get_by_nobody
 		@sd.load(
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},

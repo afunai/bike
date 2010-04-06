@@ -22,6 +22,17 @@ def perrors
 		f
 	end
 
+	def meta_persistent_name
+		f    = my[:parent]
+		ps   = my[:persistent_sd]
+		name = my[:id]
+		until f == ps
+			name = "#{f[:id]}-#{name}"
+			f = f[:parent]
+		end
+		name
+	end
+
 	if (my[:max].to_i > 0) && (val.size > my[:max])
 		['too large']
 	elsif (my[:min].to_i == 1) && val.empty?

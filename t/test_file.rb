@@ -51,6 +51,17 @@ class TC_File < Test::Unit::TestCase
 		)
 	end
 
+	def test_meta_persistent_name
+		root = Sofa::Set::Static::Folder.root.item('t_file','main')
+		parent = Sofa::Set::Dynamic.new(:id => 'boo',:parent => root)
+		@f[:parent] = parent
+		assert_equal(
+			'boo-foo',
+			@f[:persistent_name],
+			'File#persistent_name should return the path to [:persistent_sd]'
+		)
+	end
+
 	def test_val_cast_from_rack
 		@f.create(
 			:type     => 'image/jpeg',

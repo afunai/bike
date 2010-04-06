@@ -9,6 +9,10 @@ class Sofa::Storage::Temp < Sofa::Storage
 		true
 	end
 
+	def persistent?
+		false
+	end
+
 	def val(id = nil)
 		id ? @val[id] : (@val || {})
 	end

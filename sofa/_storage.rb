@@ -28,6 +28,10 @@ class Sofa::Storage
 		@sd = sd
 	end
 
+	def persistent?
+		true
+	end
+
 	def select(conds = {})
 		_cast conds
 		item_ids = _select(conds)

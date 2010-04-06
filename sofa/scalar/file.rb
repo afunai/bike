@@ -16,6 +16,12 @@ def perrors
 		my[:full_name].gsub('-','/')
 	end
 
+	def meta_persistent_sd
+		f = self
+		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Dynamic) && f.storage.persistent?
+		f
+	end
+
 	if (my[:max].to_i > 0) && (val.size > my[:max])
 		['too large']
 	elsif (my[:min].to_i == 1) && val.empty?

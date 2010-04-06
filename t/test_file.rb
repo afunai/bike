@@ -40,6 +40,17 @@ class TC_File < Test::Unit::TestCase
 		)
 	end
 
+	def test_meta_persistent_sd
+		root = Sofa::Set::Static::Folder.root.item('t_file','main')
+		parent = Sofa::Set::Dynamic.new(:id => 'boo',:parent => root)
+		@f[:parent] = parent
+		assert_equal(
+			root,
+			@f[:persistent_sd],
+			'File#persistent_sd should return the nearest persient sd'
+		)
+	end
+
 	def test_val_cast_from_rack
 		@f.create(
 			:type     => 'image/jpeg',

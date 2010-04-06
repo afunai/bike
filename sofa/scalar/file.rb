@@ -11,7 +11,6 @@ class Sofa::File < Sofa::Field
 		super
 	end
 
-def perrors
 	def meta_path
 		my[:full_name].gsub('-','/')
 	end
@@ -32,6 +31,9 @@ def perrors
 		end
 		name
 	end
+
+def errors
+return []
 
 	if (my[:max].to_i > 0) && (val.size > my[:max])
 		['too large']

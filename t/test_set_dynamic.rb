@@ -18,7 +18,7 @@ $(.submit)
 _tmpl
 			:item     => {
 				'default' => Sofa::Parser.parse_html(<<'_html')
-	<li>$(name = text 32 :'nobody'): $(comment = text 64 :'hi.')$(.hidden)</li>
+	<li>$(name = text 16 0..16 :'nobody'): $(comment = text 64 :'hi.')$(.hidden)</li>
 _html
 			}
 		)

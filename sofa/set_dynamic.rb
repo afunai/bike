@@ -56,10 +56,15 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 	def _get_by_tmpl(arg,tmpl = '')
-		(arg[:action] == :read || self != Sofa.base) ? super : <<_html
-<form id="#{my[:name]}" method="post" action="/#{my[:tid]}#{my[:base_path]}/update.html">
+		if arg[:action] == :read || self != Sofa.base
+			super
+		else
+			action = "/#{my[:tid]}#{my[:base_path]}/update.html"
+			<<_html
+<form id="#{my[:name]}" method="post" enctype="multipart/form-data" action="#{action}">
 #{super}</form>
 _html
+		end
 	end
 
 	def commit(type = :temp)

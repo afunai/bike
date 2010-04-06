@@ -294,7 +294,16 @@ end
 				v.each_key.sort_by {|id| id.to_s }.each {|id|
 					next unless id.is_a? ::String
 					v[id][:action] ||= id[Sofa::REX::ID_NEW] ? :create : :update
-					item_instance(id).post(v[id][:action],v[id])
+
+					item = item_instance id
+					item_val = item.val
+					item.post(v[id][:action],v[id])
+
+					@item_object.delete id if (
+						id[Sofa::REX::ID_NEW] &&
+						(item.val == item_val) &&
+						@workflow.is_a?(Sofa::Workflow::Attachment)
+					)
 				}
 			when :load,:load_default
 				@storage.build v

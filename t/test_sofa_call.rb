@@ -190,6 +190,23 @@ _html
 		)
 	end
 
+	def test_post_empty_create
+		Sofa.client = 'root'
+		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input => "_1-name=&_1-comment=&.status-public=create"
+			}
+		)
+		assert_equal(
+			422,
+			res.status,
+			'Sofa#post with an empty new item should be an error'
+		)
+	end
+
 	def test_post_with_attachment
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_attachment','main').storage.clear

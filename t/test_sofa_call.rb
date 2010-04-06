@@ -198,7 +198,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_attachment/main/update.html',
 			{
-				:input => "_012-files-_1-file=wow.jpg&_012-files.status-public=create"
+				:input => "_012-files-_1-file=wow.jpg&_012-files-_1.action-create=create"
 			}
 		)
 		assert_match(

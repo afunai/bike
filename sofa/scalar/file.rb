@@ -57,7 +57,7 @@ _html
 				'type'     => v[:type],
 				'size'     => @body.size,
 			}
-		elsif v = ::Hash
+		elsif v.is_a? ::Hash
 			v
 		else
 			{}

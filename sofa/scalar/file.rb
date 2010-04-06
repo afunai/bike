@@ -63,8 +63,8 @@ _html
 	alias :_g_create :_g_update
 
 	def _g_fileinfo(arg = {})
-		<<_html.chomp
-	<a href="#{my[:path]}">#{my[:filename]} (#{my[:size]})</a>
+		<<_html.chomp unless val.empty?
+	<a href="#{my[:path]}">#{val['basename']} (#{val['size']} bytes)</a>
 _html
 	end
 

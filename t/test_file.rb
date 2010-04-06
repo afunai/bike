@@ -31,6 +31,15 @@ class TC_File < Test::Unit::TestCase
 		)
 	end
 
+	def test_meta_path
+		@f[:parent] = Sofa::Set::Static::Folder.root.item('t_file','main')
+		assert_equal(
+			'/t_file/main/foo',
+			@f[:path],
+			'File#meta_path should return the full path to the field'
+		)
+	end
+
 	def test_val_cast_from_rack
 		@f.create(
 			:type     => 'image/jpeg',

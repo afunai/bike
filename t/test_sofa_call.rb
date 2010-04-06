@@ -281,6 +281,60 @@ _html
 		)
 	end
 
+	def test_post_with_invalid_attachment
+		Sofa.client = 'root'
+		Sofa::Set::Static::Folder.root.item('t_attachment','main').storage.clear
+
+		# post an invalid empty attachment
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_attachment/main/update.html',
+			{
+				:input => "_012-files-_1-file=&_012-files-_1.action-create=create"
+			}
+		)
+		tid = res.headers['Location'][Sofa::REX::TID]
+
+		# post the root item
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/#{tid}/t_attachment/update.html",
+			{
+				:input => "_012-comment=hello.&.status-public=create"
+			}
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#call with the root status should ignore the invalid empty attachment'
+		)
+		assert_not_equal(
+			{},
+			Sofa::Set::Static::Folder.root.item('t_attachment','main').val,
+			'Sofa#call with the root status should ignore the invalid empty attachment'
+		)
+
+		# post an invalid non-empty attachment
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_attachment/main/update.html',
+			{
+				:input => "_012-files-_1-file=tooloooooooooooong&_012-files-_1.action-create=create"
+			}
+		)
+		tid = res.headers['Location'][Sofa::REX::TID]
+
+		# post the root item
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/#{tid}/t_attachment/update.html",
+			{
+				:input => "_012-comment=hello.&.status-public=create"
+			}
+		)
+		assert_equal(
+			422,
+			res.status,
+			'Sofa#call with the root status should not ignore the invalid non-empty attachment'
+		)
+	end
+
 	def test_post_confirm_update
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear

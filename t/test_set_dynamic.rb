@@ -925,8 +925,8 @@ _html
 
 		# after the commit
 		assert(
-			!@sd.pending?,
-			'Set::Dynamic#commit should clear the pending status of the items'
+			@sd.pending?,
+			'Set::Dynamic#commit(:temp) should keep the pending status of the items'
 		)
 		assert_equal(
 			{
@@ -1013,7 +1013,7 @@ _html
 
 		@sd.commit
 		assert(
-			!@sd.pending?,
+			@sd.valid?,
 			'Set::Dynamic#commit should be able to delete an invalid item'
 		)
 		assert_equal(

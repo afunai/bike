@@ -235,11 +235,6 @@ _html
 			Sofa.transaction[tid],
 			'the suspended SD should be kept in Sofa.transaction'
 		)
-		assert_equal(
-			{},
-			Sofa.transaction[tid].send(:pending_items),
-			'the suspended SD should be committed :temp'
-		)
 
 		# post the item
 		res = Rack::MockRequest.new(@sofa).post(

@@ -84,13 +84,13 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def load_yaml(id)
 		v = nil
-		file = glob(id.to_a).first
+		file = glob(id.to_a).sort.first
 		::File.open(::File.join(@dir,file),'r') {|f|
 			f.flock ::File::LOCK_SH
 			v = f.read
 			f.flock ::File::LOCK_UN
 		} if file
-		YAML.load(v) if v
+		(file[/\.yaml$/] ? YAML.load(v) : v) if v
 	end
 
 	def save_yaml(id,v)

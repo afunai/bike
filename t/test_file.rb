@@ -147,6 +147,11 @@ _eos
 			item,
 			'File#commit should commit the file item'
 		)
+		assert_equal(
+			@file.read,
+			item.body,
+			'File#commit should store the body of the file item'
+		)
 	end
 
 end

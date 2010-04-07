@@ -121,16 +121,17 @@ _eos
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
 
+		# create a new set with file items
 		sd.update(
 			'_1' => {
 				'foo' => {
 					:type     => 'image/jpeg',
 					:tempfile => @file,
 					:head     => <<'_eos',
-Content-Disposition: form-data; name="t_file"; filename="baz.jpg"
+Content-Disposition: form-data; name="t_file"; filename="foo.jpg"
 Content-Type: image/jpeg
 _eos
-					:filename => 'baz.jpg',
+					:filename => 'foo.jpg',
 					:name     => 't_file'
 				},
 			}
@@ -140,8 +141,9 @@ _eos
 		) {
 			sd.commit :persistent
 		}
+		id = sd.result.values.first[:id]
 
-		item = Sofa::Set::Static::Folder.root.item('t_file','main',sd.result.values.first[:id],'foo')
+		item = Sofa::Set::Static::Folder.root.item('t_file','main',id,'foo')
 		assert_instance_of(
 			Sofa::File,
 			item,
@@ -151,6 +153,34 @@ _eos
 			@file.read,
 			item.body,
 			'File#commit should store the body of the file item'
+		)
+
+		# update the sibling file item
+		sd.update(
+			id => {
+				'bar' => {
+					:type     => 'image/jpeg',
+					:tempfile => @file,
+					:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="bar.png"
+Content-Type: image/jpeg
+_eos
+					:filename => 'bar.png',
+					:name     => 't_file'
+				},
+			}
+		)
+		sd.commit :persistent
+
+		assert_equal(
+			@file.read,
+			Sofa::Set::Static::Folder.root.item('t_file','main',id,'bar').body,
+			'File#commit should store the body of the file item'
+		)
+		assert_equal(
+			@file.read,
+			Sofa::Set::Static::Folder.root.item('t_file','main',id,'foo').body,
+			'File#commit should keep the body of the untouched file item'
 		)
 	end
 
@@ -165,10 +195,20 @@ _eos
 					:type     => 'image/jpeg',
 					:tempfile => @file,
 					:head     => <<'_eos',
-Content-Disposition: form-data; name="t_file"; filename="baz.jpg"
+Content-Disposition: form-data; name="t_file"; filename="foo.jpg"
 Content-Type: image/jpeg
 _eos
 					:filename => 'baz.jpg',
+					:name     => 't_file'
+				},
+				'bar' => {
+					:type     => 'image/jpeg',
+					:tempfile => @file,
+					:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="bar.jpg"
+Content-Type: image/jpeg
+_eos
+					:filename => 'bar.jpg',
 					:name     => 't_file'
 				},
 			}

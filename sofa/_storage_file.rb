@@ -64,7 +64,7 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def glob(id = :all)
-		glob_pattern = "#{file_prefix}#{pattern_for id}.yaml"
+		glob_pattern = "#{file_prefix}#{pattern_for id}.[a-z]*"
 		::Dir.chdir(@dir) { ::Dir.glob glob_pattern }
 	end
 

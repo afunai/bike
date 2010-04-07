@@ -20,11 +20,11 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def val(id = nil)
 		if id
-			load_yaml id
+			load id
 		else
 			# this could be HUGE.
 			_select_all({}).inject({}) {|v,id|
-				v[id] = load_yaml id
+				v[id] = load id
 				v
 			}
 		end
@@ -42,7 +42,7 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def store(id,v,ext = nil)
-		save_yaml(id,v,ext)
+		save(id,v,ext)
 	end
 
 	def delete(id)
@@ -82,7 +82,7 @@ class Sofa::Storage::File < Sofa::Storage
 		end
 	end
 
-	def load_yaml(id)
+	def load(id)
 		v = nil
 		file = glob(id.to_a).sort.first
 		::File.open(::File.join(@dir,file),'r') {|f|
@@ -93,7 +93,7 @@ class Sofa::Storage::File < Sofa::Storage
 		(file[/\.yaml$/] ? YAML.load(v) : v) if v
 	end
 
-	def save_yaml(id,v,ext)
+	def save(id,v,ext)
 		if id == :new_id
 			id = new_id(v)
 			new_id = true

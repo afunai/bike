@@ -89,9 +89,6 @@ _html
 		if v && v[:tempfile]
 			v[:tempfile].rewind
 			@body = v[:tempfile].read
-		end
-
-		if @body
 			{
 				'basename' => File.basename(v[:filename]),
 				'type'     => v[:type],

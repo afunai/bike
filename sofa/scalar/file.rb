@@ -5,8 +5,6 @@
 
 class Sofa::File < Sofa::Field
 
-	attr_reader :body
-
 	def initialize(meta = {})
 		super
 	end
@@ -30,6 +28,13 @@ class Sofa::File < Sofa::Field
 			f = f[:parent]
 		end
 		name
+	end
+
+	def body
+		if ps = my[:persistent_sd]
+			@body ||= ps.storage.val my[:persistent_name]
+		end
+		@body
 	end
 
 def errors

@@ -154,4 +154,40 @@ _eos
 		)
 	end
 
+	def test_delete_file
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.storage.clear
+
+		sd.update(
+			'_1' => {
+				'foo' => {
+					:type     => 'image/jpeg',
+					:tempfile => @file,
+					:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="baz.jpg"
+Content-Type: image/jpeg
+_eos
+					:filename => 'baz.jpg',
+					:name     => 't_file'
+				},
+			}
+		)
+		sd.commit :persistent
+
+		id = sd.result.values.first[:id]
+
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.update(
+			id => {:action => :delete}
+		)
+		sd.commit :persistent
+
+		assert_equal(
+			{},
+			sd.val,
+			''
+		)
+	end
+
 end

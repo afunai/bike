@@ -41,8 +41,8 @@ class Sofa::Storage::File < Sofa::Storage
 		self
 	end
 
-	def store(id,v)
-		save_yaml(id,v)
+	def store(id,v,ext = nil)
+		save_yaml(id,v,ext)
 	end
 
 	def delete(id)

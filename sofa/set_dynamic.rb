@@ -71,15 +71,14 @@ _html
 		items = pending_items
 		if @storage.is_a? Sofa::Storage::Temp
 			items.each {|id,item|
-				action = item.action
-				item.commit(type) && _commit(action,id,item)
+				item.commit(type) && _commit(id,item)
 			}
 		else
 			items.each {|id,item|
-				action = item.action || :update
 				result = item.commit(:temp)
 				if result && type == :persistent
-					_commit(action,id,item) && item.commit(:persistent)
+					_commit(id,item)
+					item.commit(:persistent)
 				end
 			}
 		end
@@ -316,14 +315,14 @@ end
 		@workflow.after_post
 	end
 
-	def _commit(action,id,item)
-		case action
+	def _commit(id,item)
+		case item.action
 			when :create
 				return if item.empty?
 				new_id = @storage.store(:new_id,item.val)
 				item[:id] = new_id
 				@item_object.delete id
-			when :update
+			when :update,nil
 				@storage.store(item[:id],item.val)
 				if item[:id] != id || item.empty?
 					@storage.delete(id)

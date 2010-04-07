@@ -165,7 +165,7 @@ class Sofa::Field
 	def commit(type = :temp)
 		if valid?
 			@result = @action
-			@action = nil
+			@action = nil if type == :persistent
 			self
 		end
 	end

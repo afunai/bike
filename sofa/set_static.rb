@@ -19,9 +19,9 @@ class Sofa::Set::Static < Sofa::Field
 	def commit(type = :temp)
 		items = (type == :persistent) ? @item_object : pending_items
 		items.each {|id,item| item.commit type }
-		if pending_items.empty? || @action == :delete
+		if valid?
 			@result = (@action == :update) ? items : @action
-			@action = nil
+			@action = nil if type == :persistent
 			self
 		end
 	end

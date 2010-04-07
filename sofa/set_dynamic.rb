@@ -83,9 +83,9 @@ _html
 				end
 			}
 		end
-		if pending_items.empty?
+		if valid?
 			@result = (@action == :update) ? items : @action
-			@action = nil
+			@action = nil if type == :persistent
 			self
 		end
 	end

@@ -116,4 +116,37 @@ _eos
 		)
 	end
 
+	def test_save_file
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.storage.clear
+
+		sd.update(
+			'_1' => {
+				'foo' => {
+					:type     => 'image/jpeg',
+					:tempfile => @file,
+					:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="baz.jpg"
+Content-Type: image/jpeg
+_eos
+					:filename => 'baz.jpg',
+					:name     => 't_file'
+				},
+			}
+		)
+		assert_nothing_raised(
+			'File#commit should commit files nicely'
+		) {
+			sd.commit :persistent
+		}
+
+		item = Sofa::Set::Static::Folder.root.item('t_file','main',sd.result.values.first[:id],'foo')
+		assert_instance_of(
+			Sofa::File,
+			item,
+			'File#commit should commit the file item'
+		)
+	end
+
 end

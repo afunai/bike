@@ -399,6 +399,8 @@ class TC_Storage < Test::Unit::TestCase
 
 			_test_new_id(storage)
 			_test_clear(storage)
+
+			id = _test_add_raw(storage)
 		}
 	end
 
@@ -501,6 +503,21 @@ class TC_Storage < Test::Unit::TestCase
 			storage.val(id2),
 			"#{storage.class}#clear should delete all elements"
 		)
+	end
+
+	def _test_add_raw(storage)
+		id = nil
+		assert_nothing_raised(
+			"#{storage.class}#store should store raw value nicely"
+		) {
+			id = storage.store(:new_id,"\x01\x02\x03",'jpg')
+		}
+		assert_equal(
+			"\x01\x02\x03",
+			storage.val(id),
+			"#{storage.class}#store should store the raw file with the given id"
+		)
+		id # for other tests
 	end
 
 	def test_cast_d

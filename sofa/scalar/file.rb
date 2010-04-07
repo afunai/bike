@@ -64,21 +64,21 @@ end
 
 	private
 
+	def _g_default(arg = {})
+		<<_html.chomp unless val.empty?
+<span class="file"><a href="#{my[:path]}">#{val['basename']} (#{val['size']} bytes)</a></span>
+_html
+	end
+
 	def _g_update(arg)
 		<<_html.chomp
+#{_g_default arg}
 <span class="file">
-#{_g_fileinfo arg}
 	<input type="file" name="#{my[:short_name]}" class="#{_g_class arg}" />#{_g_errors arg}
 </span>
 _html
 	end
 	alias :_g_create :_g_update
-
-	def _g_fileinfo(arg = {})
-		<<_html.chomp unless val.empty?
-	<a href="#{my[:path]}">#{val['basename']} (#{val['size']} bytes)</a>
-_html
-	end
 
 	def val_cast(v)
 		if v && v[:tempfile]

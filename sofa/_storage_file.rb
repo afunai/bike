@@ -93,21 +93,29 @@ class Sofa::Storage::File < Sofa::Storage
 		(file[/\.yaml$/] ? YAML.load(v) : v) if v
 	end
 
-	def save_yaml(id,v)
-		new_id = false
+	def save_yaml(id,v,ext)
 		if id == :new_id
 			id = new_id(v)
 			new_id = true
 		end
 
-		file = "#{file_prefix}#{id}.yaml"
+		if ext
+			val = v
+			ext = 'y' if ext == 'yaml'
+			remove_file id
+		else
+			val = v.ya2yaml(:syck_compatible => true)
+			ext = 'yaml'
+		end
+
+		file = "#{file_prefix}#{id}.#{ext}"
 		::File.open(::File.join(@dir,file),'a') {|f|
 			break if new_id && f.pos != 0 # duplicate id
 
 			f.flock ::File::LOCK_EX
 			f.seek 0
 			f.truncate 0
-			f << v.ya2yaml(:syck_compatible => true)
+			f << val
 			f.flock ::File::LOCK_UN
 			f.chmod 0664
 		} && id

@@ -403,6 +403,7 @@ class TC_Storage < Test::Unit::TestCase
 			id = _test_add_raw(storage)
 			_test_update_raw(storage,id)
 			_test_delete_raw(storage,id)
+			_test_clear_raw(storage)
 		}
 	end
 
@@ -550,6 +551,22 @@ class TC_Storage < Test::Unit::TestCase
 		assert_nil(
 			storage.val(id),
 			"#{storage.class}#delete should delete the element with the given id"
+		)
+	end
+
+	def _test_clear_raw(storage)
+		id1 = storage.store(:new_id,"\x03\x02\x01",'jpg')
+		id2 = storage.store(:new_id,"\x03\x02\x01",'png')
+
+		storage.clear
+
+		assert_nil(
+			storage.val(id1),
+			"#{storage.class}#clear should delete all elements"
+		)
+		assert_nil(
+			storage.val(id2),
+			"#{storage.class}#clear should delete all elements"
 		)
 	end
 

@@ -53,14 +53,15 @@ end
 
 	def commit(type = :temp)
 		if type == :persistent && ps = my[:persistent_sd]
-			if @result == :create || @result == :update # result of previous commit(:temp)
-				ps.storage.store(
-					my[:persistent_name],
-					@body,
-					val['basename'][/\.([\w\.]+)$/,1] || 'bin'
-				)
-			else
-				ps.storage.delete my[:persistent_name]
+			case @action
+				when :create,:update,nil
+					ps.storage.store(
+						my[:persistent_name],
+						@body,
+						val['basename'][/\.([\w\.]+)$/,1] || 'bin'
+					) if @body
+				when :delete
+					ps.storage.delete my[:persistent_name]
 			end
 		end
 		super

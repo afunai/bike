@@ -401,6 +401,7 @@ class TC_Storage < Test::Unit::TestCase
 			_test_clear(storage)
 
 			id = _test_add_raw(storage)
+			_test_update_raw(storage,id)
 		}
 	end
 
@@ -518,6 +519,20 @@ class TC_Storage < Test::Unit::TestCase
 			"#{storage.class}#store should store the raw file with the given id"
 		)
 		id # for other tests
+	end
+
+	def _test_update_raw(storage,id)
+		storage.store(id,"\x04\x05\x06",'png')
+		assert_equal(
+			{id => "\x04\x05\x06"},
+			storage.val,
+			"#{storage.class}#store should overwrite a file with the same id"
+		)
+		assert_equal(
+			"\x04\x05\x06",
+			storage.val(id),
+			"#{storage.class}#store should overwrite a file with the same id"
+		)
 	end
 
 	def test_cast_d

@@ -71,6 +71,10 @@ class TC_Storage < Test::Unit::TestCase
 			)
 			_test_fetch_special_id(storage)
 
+			storage.clear # so far, storage with raw values can not be built at once.
+			storage.store('20100406_0001',"\x01\x02\x03",'jpg')
+			_test_val_raw(storage)
+
 			storage.clear
 		}
 	end
@@ -160,6 +164,14 @@ class TC_Storage < Test::Unit::TestCase
 		assert_nil(
 			storage.val(''),
 			"#{storage.class}#val should return nil when there is no item"
+		)
+	end
+
+	def _test_val_raw(storage)
+		assert_equal(
+			"\x01\x02\x03",
+			storage.val('20100406_0001'),
+			"#{storage.class}#val should return the raw value unless the value is not a hash"
 		)
 	end
 

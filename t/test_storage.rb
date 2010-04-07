@@ -402,6 +402,7 @@ class TC_Storage < Test::Unit::TestCase
 
 			id = _test_add_raw(storage)
 			_test_update_raw(storage,id)
+			_test_delete_raw(storage,id)
 		}
 	end
 
@@ -532,6 +533,23 @@ class TC_Storage < Test::Unit::TestCase
 			"\x04\x05\x06",
 			storage.val(id),
 			"#{storage.class}#store should overwrite a file with the same id"
+		)
+	end
+
+	def _test_delete_raw(storage,id)
+		assert_nothing_raised(
+			"#{storage.class}#delete should work nicely on raw files"
+		) {
+			id = storage.delete(id)
+		}
+		assert_match(
+			Sofa::REX::ID,
+			id,
+			"#{storage.class}#delete should return the id of the deleted item"
+		)
+		assert_nil(
+			storage.val(id),
+			"#{storage.class}#delete should delete the element with the given id"
 		)
 	end
 

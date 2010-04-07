@@ -77,7 +77,7 @@ _html
 	def _post(action,v = {})
 		each {|item|
 			id = item[:id]
-			if action == :load_default || v.has_key?(id) || item(id).is_a?(Sofa::Meta)
+			if [:load_default,:delete].include?(action) || v.has_key?(id) || item(id).is_a?(Sofa::Meta)
 				item.post(action,v[id])
 			end
 		}

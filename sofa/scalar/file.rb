@@ -46,9 +46,16 @@ return []
 	end
 end
 
-def commit(type = :temp)
-	super
-end
+	def commit(type = :temp)
+		if type == :persistent && @body && ps = my[:persistent_sd]
+			ps.storage.store(
+				my[:persistent_name],
+				@body,
+				val['basename'][/\.([\w\.]+)$/,1] || 'bin'
+			)
+		end
+		super
+	end
 
 	private
 

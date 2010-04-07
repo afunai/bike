@@ -32,6 +32,7 @@ module Sofa::Set
 	end
 
 	def errors
+		return {} if action == :delete
 		errors = {}
 		@item_object.each_pair {|id,item|
 			errors[id] = item.errors unless item.valid? || (item.action == :delete)

@@ -290,7 +290,10 @@ end
 		@workflow.before_post(action,v)
 		case action
 			when :create,:update
-				@storage.build({}) if action == :create
+				if action == :create
+					@storage.build({})
+					@item_object.clear
+				end
 
 				v.each_key.sort_by {|id| id.to_s }.each {|id|
 					next unless id.is_a? ::String

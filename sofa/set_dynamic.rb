@@ -315,7 +315,7 @@ end
 		@workflow.after_post
 	end
 
-	def _commit(id,item)
+	def store(id,item)
 		case item.action
 			when :create
 				return if item.empty?

@@ -158,6 +158,7 @@ class Sofa::Field
 		raise Sofa::Error::Forbidden unless permit_post?(action,v)
 
 		_post action,val_cast(v)
+		@result = nil
 		@action = action unless action == :load || action == :load_default
 		self
 	end

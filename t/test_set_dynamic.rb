@@ -753,6 +753,28 @@ _html
 		)
 	end
 
+	def test_post
+		@sd.post(:create,'1234' => {'name' => 'carl'})
+		assert_equal(
+			:create,
+			@sd.action,
+			'Set::Dynamic#post should set @action'
+		)
+
+		@sd.commit
+		assert_equal(
+			:create,
+			@sd.result,
+			'Set::Dynamic#commit should set @result'
+		)
+
+		@sd.post(:update,'1234' => {'name' => 'frank'})
+		assert_nil(
+			@sd.result,
+			'Set::Dynamic#post should reset @result'
+		)
+	end
+
 	def test_load_default
 	end
 

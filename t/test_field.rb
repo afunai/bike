@@ -233,7 +233,18 @@ class TC_Field < Test::Unit::TestCase
 			'Field#post should set @action'
 		)
 
+		@f.commit
+		assert_equal(
+			:create,
+			@f.result,
+			'Field#commit should set @result'
+		)
+
 		@f.post(:update,111)
+		assert_nil(
+			@f.result,
+			'Field#post should reset @result'
+		)
 		assert_equal(
 			111,
 			@f.val,

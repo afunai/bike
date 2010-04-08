@@ -270,6 +270,33 @@ _html
 		)
 	end
 
+	def test_post
+		ss = Sofa::Set::Static.new(:html => <<'_html')
+<li>
+	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
+</li>
+_html
+		ss.post(:create,'name' => 'carl')
+		assert_equal(
+			:create,
+			ss.action,
+			'Set::Static#post should set @action'
+		)
+
+		ss.commit
+		assert_equal(
+			:create,
+			ss.result,
+			'Set::Static#commit should set @result'
+		)
+
+		ss.post(:update,'name' => 'carl')
+		assert_nil(
+			ss.result,
+			'Set::Static#post should reset @result'
+		)
+	end
+
 	def test_load_default
 		ss = Sofa::Set::Static.new(:html => <<'_html')
 <li>

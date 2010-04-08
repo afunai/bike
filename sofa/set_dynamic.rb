@@ -69,19 +69,16 @@ _html
 
 	def commit(type = :temp)
 		items = pending_items
-		if @storage.is_a? Sofa::Storage::Temp
-			items.each {|id,item|
-				item.commit(type) && _commit(id,item)
-			}
-		else
-			items.each {|id,item|
-				result = item.commit(:temp)
-				if result && type == :persistent
-					_commit(id,item)
-					item.commit(:persistent)
-				end
-			}
-		end
+		items.each {|id,item|
+			item.commit(:temp) || next
+			case type
+				when :temp
+					store(id,item) if @storage.is_a? Sofa::Storage::Temp
+				when :persistent
+					store(id,item)
+					item.commit :persistent
+			end
+		}
 		if valid?
 			@result = (@action == :update) ? items : @action
 			@action = nil if type == :persistent

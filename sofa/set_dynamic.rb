@@ -319,14 +319,16 @@ end
 				new_id = @storage.store(:new_id,item.val)
 				item[:id] = new_id
 				@item_object.delete id
+				@item_object[item[:id]] = item
 			when :update,nil
 				@storage.store(item[:id],item.val)
 				if item[:id] != id || item.empty?
-					@storage.delete(id)
+					@storage.delete id
 					@item_object.delete id
+					@item_object[item[:id]] = item
 				end
 			when :delete
-				@storage.delete(id)
+				@storage.delete id
 				@item_object.delete id
 		end
 	end

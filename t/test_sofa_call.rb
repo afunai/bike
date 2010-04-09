@@ -373,9 +373,10 @@ _html
 	def test_post_confirm_update
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
+		tid = '1234567890.0123'
 
 		res = Rack::MockRequest.new(@sofa).post(
-			'http://example.com/t_store/1234567890.0123/main/update.html',
+			"http://example.com/t_store/#{tid}/main/update.html",
 			{
 				:input => ".action-confirm_update=submit&_1-name=fz&_1-comment=howdy.&.status-public=create"
 			}
@@ -390,9 +391,14 @@ _html
 			res.headers['Location'],
 			'Sofa#call with :confirm action should return a proper location'
 		)
+		assert_instance_of(
+			Sofa::Set::Dynamic,
+			Sofa.transaction[tid],
+			'the suspended SD should be kept in Sofa.transaction'
+		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://localhost:9292/t_store/1234567890.0123/id=_1/confirm_update.html'
+			"http://localhost:9292/t_store/#{tid}/id=_1/confirm_update.html"
 		)
 		assert_equal(
 			<<'_html',
@@ -417,7 +423,7 @@ _html
 		)
 
 		res = Rack::MockRequest.new(@sofa).post(
-			'http://example.com/1234567890.0123/t_store/update.html',
+			"http://example.com/#{tid}/t_store/update.html",
 			{
 				:input => "_1.action=create&.status-public=create"
 			}
@@ -445,9 +451,10 @@ _html
 
 	def test_post_confirm_invalid
 		Sofa.client = 'root'
+		tid = '1234567890.0124'
 
 		res = Rack::MockRequest.new(@sofa).post(
-			'http://example.com/t_store/1234567890.0123/main/update.html',
+			"http://example.com/t_store/#{tid}/main/update.html",
 			{
 				:input => ".action-confirm_update=submit&_1-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylong&_1-comment=howdy.&.status-public=create"
 			}
@@ -461,6 +468,11 @@ _html
 			/malformed input\./,
 			res.body,
 			'Sofa#call with :confirm action & malformed input should return :update'
+		)
+		assert_instance_of(
+			Sofa::Set::Dynamic,
+			Sofa.transaction[tid],
+			'the suspended SD should be kept in Sofa.transaction'
 		)
 	end
 

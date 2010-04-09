@@ -159,11 +159,11 @@ _eos
 		sd.update(
 			id => {
 				'bar' => {
-					:type     => 'image/jpeg',
+					:type     => 'image/png',
 					:tempfile => @file,
 					:head     => <<'_eos',
 Content-Disposition: form-data; name="t_file"; filename="bar.png"
-Content-Type: image/jpeg
+Content-Type: image/png
 _eos
 					:filename => 'bar.png',
 					:name     => 't_file'

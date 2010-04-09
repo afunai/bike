@@ -288,13 +288,14 @@ end
 
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)
+
+		if action == :create
+			@storage.build({})
+			@item_object.clear
+		end
+
 		case action
 			when :create,:update
-				if action == :create
-					@storage.build({})
-					@item_object.clear
-				end
-
 				v.each_key.sort_by {|id| id.to_s }.each {|id|
 					next unless id.is_a? ::String
 					v[id][:action] ||= id[Sofa::REX::ID_NEW] ? :create : :update

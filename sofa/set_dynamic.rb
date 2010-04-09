@@ -318,7 +318,7 @@ end
 	def store(id,item)
 		case item.action
 			when :create
-				return if item.empty?
+				return if id[Sofa::REX::ID] || item.empty?
 				new_id = @storage.store(:new_id,item.val)
 				item[:id] = new_id
 				@item_object.delete id

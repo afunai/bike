@@ -775,6 +775,68 @@ _html
 		)
 	end
 
+	def test_post_multiple_attachments
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_attachment','main')
+		sd.storage.clear
+
+		# create an attachment item
+		sd.update(
+			'_1' => {
+				'files' => {'_1' => {:action => :create,'file' => 'foo'}},
+			}
+		)
+		sd.commit :temp
+		first_id = sd.result.values.first.item('files').val.keys.first
+		assert_equal(
+			{
+				first_id => {'file' => 'foo'},
+			},
+			sd.result.values.first.item('files').val,
+			'Workflow::Attachment should keep the first item'
+		)
+
+		# create the second attachment
+		sd.update(
+			'_1' => {
+				'files' => {'_1' => {:action => :create,'file' => 'bar'}},
+			}
+		)
+		sd.commit :temp
+		second_id = sd.result.values.first.item('files').val.keys.last
+
+		assert_equal(
+			first_id.succ,
+			second_id,
+			'Workflow::Attachment should not overwrite the first file item'
+		)
+		assert_equal(
+			{
+				first_id  => {'file' => 'foo'},
+				second_id => {'file' => 'bar'},
+			},
+			sd.result.values.first.item('files').val,
+			'Workflow::Attachment should keep both the first item and the second item'
+		)
+
+		sd.commit :persistent
+		baz_id = sd.result.values.first[:id]
+
+		item = Sofa::Set::Static::Folder.root.item('t_attachment','main',baz_id,'files',first_id,'file')
+		assert_equal(
+			'foo',
+			item.val,
+			'Workflow::Attachment should store the body of the first file item'
+		)
+
+		item = Sofa::Set::Static::Folder.root.item('t_attachment','main',baz_id,'files',second_id,'file')
+		assert_equal(
+			'bar',
+			item.val,
+			'Workflow::Attachment should store the body of the second file item'
+		)
+	end
+
 	def test_load_default
 	end
 

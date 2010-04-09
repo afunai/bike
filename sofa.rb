@@ -140,6 +140,8 @@ class Sofa
 	end
 
 	def post(base,params)
+		Sofa.transaction[base[:tid]] ||= base
+
 		base.update params
 		if params[:status]
 			if base.valid?
@@ -158,7 +160,6 @@ class Sofa
 				response_unprocessable_entity :body => _get(base,params)
 			end
 		else
-			Sofa.transaction[base[:tid]] ||= base
 			id_step = Sofa::Path.path_of(:id => base.send(:pending_items).keys)
 			base.commit :temp
 			response_see_other(

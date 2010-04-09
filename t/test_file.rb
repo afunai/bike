@@ -263,15 +263,15 @@ _eos
 		assert_instance_of(
 			Sofa::File,
 			item,
-			'File#commit should commit the grandchild file item'
+			'File#commit should commit the attachment file item'
 		)
 		assert_equal(
 			@file.read,
 			item.body,
-			'File#commit should store the body of the grandchild file item'
+			'File#commit should store the body of the attachment file item'
 		)
 
-		# delete the grandchild
+		# delete the attachment
 		sd.update(
 			baz_id => {
 				'baz' => {
@@ -284,7 +284,7 @@ _eos
 		assert_equal(
 			{},
 			Sofa::Set::Static::Folder.root.item('t_file','main',baz_id,'baz').storage.val,
-			'File#commit should delete the body of the grandchild file item'
+			'File#commit should delete the body of the attachment file item'
 		)
 	end
 

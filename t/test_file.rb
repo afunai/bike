@@ -230,4 +230,62 @@ _eos
 		)
 	end
 
+	def test_save_file_attachment
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.storage.clear
+
+		# create an attachment file item
+		sd.update(
+			'_1' => {
+				'baz' => {
+					'_1' => {
+						'qux' => {
+							:type     => 'image/gif',
+							:tempfile => @file,
+							:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="qux.gif"
+Content-Type: image/gif
+_eos
+							:filename => 'qux.gif',
+							:name     => 't_file'
+						},
+					},
+				}
+			}
+		)
+
+		sd.commit :persistent
+		baz_id = sd.result.values.first[:id]
+		qux_id = sd.result.values.first.item('baz').val.keys.first
+
+		item = Sofa::Set::Static::Folder.root.item('t_file','main',baz_id,'baz',qux_id,'qux')
+		assert_instance_of(
+			Sofa::File,
+			item,
+			'File#commit should commit the grandchild file item'
+		)
+		assert_equal(
+			@file.read,
+			item.body,
+			'File#commit should store the body of the grandchild file item'
+		)
+
+		# delete the grandchild
+		sd.update(
+			baz_id => {
+				'baz' => {
+					qux_id => {:action => :delete},
+				}
+			}
+		)
+		sd.commit :persistent
+
+		assert_equal(
+			{},
+			Sofa::Set::Static::Folder.root.item('t_file','main',baz_id,'baz').storage.val,
+			'File#commit should delete the body of the grandchild file item'
+		)
+	end
+
 end

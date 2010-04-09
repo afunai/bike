@@ -190,6 +190,29 @@ _html
 		)
 	end
 
+	def test_post_invalid_create
+		Sofa.client = 'root'
+		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
+		tid = '1234567890.3210'
+
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/t_store/#{tid}/main/update.html",
+			{
+				:input => "_1-name=tooooooooooooloooooooooooooooooooooooooooong&_1-comment=hi.&.status-public=create"
+			}
+		)
+		assert_equal(
+			422,
+			res.status,
+			'Sofa#post with an invalid new item should be an error'
+		)
+		assert_instance_of(
+			Sofa::Set::Dynamic,
+			Sofa.transaction[tid],
+			'the suspended SD should be kept in Sofa.transaction'
+		)
+	end
+
 	def test_post_empty_create
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear

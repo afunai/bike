@@ -116,6 +116,46 @@ _eos
 		)
 	end
 
+	def test_get
+		@f.load({})
+		assert_nil(
+			@f.get,
+			'File#get should return nil when the val is empty'
+		)
+
+		@f.load(
+			'basename' => 'baz.jpg',
+			'type'     => 'image/jpeg',
+			'size'     => 123
+		)
+		assert_equal(
+			'<span class="file"><a href="foo/baz.jpg">baz.jpg (123 bytes)</a></span>',
+			@f.get,
+			'File#get should return proper string'
+		)
+		assert_equal(
+			<<'_html'.chomp,
+<span class="file"><a href="foo/baz.jpg">baz.jpg (123 bytes)</a></span>
+<span class="file">
+	<input type="file" name="foo" class="" />
+</span>
+_html
+			@f.get(:action => :create),
+			'File#get should return proper string'
+		)
+
+		@f.load(
+			'basename' => '<baz>.jpg',
+			'type'     => 'image/<jpeg>',
+			'size'     => 123
+		)
+		assert_equal(
+			'<span class="file"><a href="foo/&lt;baz&gt;.jpg">&lt;baz&gt;.jpg (123 bytes)</a></span>',
+			@f.get,
+			'File#get should escape the special characters in file information'
+		)
+	end
+
 	def test_save_file
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')

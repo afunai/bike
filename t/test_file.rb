@@ -156,6 +156,48 @@ _html
 		)
 	end
 
+	def test_call_body
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.storage.clear
+
+		sd.update(
+			'_1' => {
+				'foo' => {
+					:type     => 'image/jpeg',
+					:tempfile => @file,
+					:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="foo.jpg"
+Content-Type: image/jpeg
+_eos
+					:filename => 'foo.jpg',
+					:name     => 't_file'
+				},
+			}
+		).commit :persistent
+		id = sd.result.values.first[:id]
+
+		res = Rack::MockRequest.new(Sofa.new).get(
+			"http://example.com/t_file/#{id}/foo/foo.jpg"
+		)
+
+		assert_equal(
+			'image/jpeg',
+			res.headers['Content-Type'],
+			'Sofa#call to a file item should return the mime type of the file'
+		)
+		assert_equal(
+			@file.read.size.to_s,
+			res.headers['Content-Length'],
+			'Sofa#call to a file item should return the content length of the file'
+		)
+		assert_equal(
+			@file.read,
+			res.body,
+			'Sofa#call to a file item should return the binary body of the file'
+		)
+	end
+
 	def test_save_file
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')

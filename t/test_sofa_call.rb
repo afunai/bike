@@ -139,10 +139,10 @@ _html
 		)
 
 		Sofa.client = 'root'
-		tid = '1234567890.01234'
 		res = Rack::MockRequest.new(@sofa).get(
-			"http://example.com/t_summary/#{tid}/p=1/update.html"
+			"http://example.com/t_summary/p=1/update.html"
 		)
+		tid = res.body[%r{/(#{Sofa::REX::TID})/},1]
 		assert_equal(
 			<<"_html",
 <h1>index</h1>
@@ -193,14 +193,15 @@ _html
 	def test_post_invalid_create
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
-		tid = '1234567890.3210'
 
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/t_store/#{tid}/main/update.html",
+			"http://example.com/t_store/main/update.html",
 			{
 				:input => "_1-name=tooooooooooooloooooooooooooooooooooooooooong&_1-comment=hi.&.status-public=create"
 			}
 		)
+		tid = res.body[%r{/(#{Sofa::REX::TID})/},1]
+
 		assert_equal(
 			422,
 			res.status,
@@ -298,14 +299,14 @@ _html
 
 		# post a reply
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/1234567890.123456/t_attachment/main/#{new_id}/replies/update.html",
+			"http://example.com/t_attachment/main/#{new_id}/replies/update.html",
 			{
 				:input => "_001-reply=wow.&.status-public=create"
 			}
 		)
 		assert_equal(303,res.status)
 		assert_match(
-			%r{/#{new_id}/replies/1234567890.123456/read_detail.html},
+			%r{/#{Sofa::REX::TID}/t_attachment/#{new_id}/replies/read_detail.html},
 			res.headers['Location'],
 			'Sofa#call with a sub-app status should commit the root item'
 		)
@@ -331,7 +332,7 @@ _html
 
 		# post the root item
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/#{tid}/t_attachment/update.html",
+			"http://example.com/#{tid}/update.html",
 			{
 				:input => "_012-comment=hello.&.status-public=create"
 			}
@@ -358,7 +359,7 @@ _html
 
 		# post the root item
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/#{tid}/t_attachment/update.html",
+			"http://example.com/#{tid}/update.html",
 			{
 				:input => "_012-comment=hello.&.status-public=create"
 			}
@@ -373,21 +374,22 @@ _html
 	def test_post_confirm_update
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
-		tid = '1234567890.0123'
 
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/t_store/#{tid}/main/update.html",
+			"http://example.com/t_store/main/update.html",
 			{
 				:input => ".action-confirm_update=submit&_1-name=fz&_1-comment=howdy.&.status-public=create"
 			}
 		)
+		tid = res.headers['Location'][Sofa::REX::TID]
+
 		assert_equal(
 			303,
 			res.status,
 			'Sofa#call with :confirm action should return status 303 upon success'
 		)
 		assert_equal(
-			'http://localhost:9292/t_store/1234567890.0123/id=_1/confirm_update.html',
+			"http://localhost:9292/#{tid}/id=_1/confirm_update.html",
 			res.headers['Location'],
 			'Sofa#call with :confirm action should return a proper location'
 		)
@@ -398,15 +400,15 @@ _html
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			"http://localhost:9292/t_store/#{tid}/id=_1/confirm_update.html"
+			"http://localhost:9292/#{tid}/id=_1/confirm_update.html"
 		)
 		assert_equal(
-			<<'_html',
+			<<"_html",
 <html>
 	<head><title>Root Folder</title></head>
 	<body>
 		<h1>Root Folder</h1>
-<form id="main" method="post" enctype="multipart/form-data" action="/1234567890.0123/t_store/update.html">
+<form id="main" method="post" enctype="multipart/form-data" action="/#{tid}/t_store/update.html">
 <ul class="message notice">
 	<li>please confirm.</li>
 </ul>
@@ -423,7 +425,7 @@ _html
 		)
 
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/#{tid}/t_store/update.html",
+			"http://example.com/#{tid}/update.html",
 			{
 				:input => "_1.action=create&.status-public=create"
 			}
@@ -451,10 +453,9 @@ _html
 
 	def test_post_confirm_invalid
 		Sofa.client = 'root'
-		tid = '1234567890.0124'
 
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/t_store/#{tid}/main/update.html",
+			'http://example.com/t_store/main/update.html',
 			{
 				:input => ".action-confirm_update=submit&_1-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylong&_1-comment=howdy.&.status-public=create"
 			}
@@ -469,6 +470,8 @@ _html
 			res.body,
 			'Sofa#call with :confirm action & malformed input should return :update'
 		)
+
+		tid = res.body[%r{/(#{Sofa::REX::TID})/},1]
 		assert_instance_of(
 			Sofa::Set::Dynamic,
 			Sofa.transaction[tid],
@@ -632,12 +635,17 @@ _html
 				:input => "_2-name=fz&_2-comment=hi.&.status-public=create"
 			}
 		)
+		assert_match(
+			%r{#{Sofa::REX::TID}/t_store/},
+			res.headers['Location'],
+			'Sofa#call should return both the base path and tid at :done'
+		)
 
-		tid    = res.headers['Location'][%r{/(\d+.\d+)/},1]
+		tid    = res.headers['Location'][Sofa::REX::TID]
 		new_id = res.headers['Location'][Sofa::REX::PATH_ID]
 
 		res = Rack::MockRequest.new(@sofa).get(
-			"http://example.com/t_store/#{tid}/#{new_id}index.html"
+			res.headers['Location']
 		)
 		assert_match(
 			/item updated\./,
@@ -673,10 +681,8 @@ _html
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
 
-		tid = '1234567890.01234'
-
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/t_store/#{tid}/main/update.html",
+			'http://example.com/t_store/main/update.html',
 			{
 				:input => "_2-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylongname&.status-public=create"
 			}

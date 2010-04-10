@@ -93,7 +93,7 @@ _html
 			@body = v[:tempfile].read
 			{
 				'basename' => File.basename(v[:filename]),
-				'type'     => v[:type],
+				'type'     => v[:type] || 'application/octet-stream',
 				'size'     => @body.size,
 			}
 		elsif v.is_a? ::Hash

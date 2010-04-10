@@ -408,7 +408,7 @@ _html
 	<head><title>Root Folder</title></head>
 	<body>
 		<h1>Root Folder</h1>
-<form id="main" method="post" enctype="multipart/form-data" action="/#{tid}/t_store/update.html">
+<form id="main" method="post" enctype="multipart/form-data" action="/#{tid}/update.html">
 <ul class="message notice">
 	<li>please confirm.</li>
 </ul>

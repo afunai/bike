@@ -41,19 +41,24 @@ class Sofa::File < Sofa::Field
 		@body
 	end
 
-def errors
-return []
-
-	if (my[:max].to_i > 0) && (val.size > my[:max])
-		['too large']
-	elsif (my[:min].to_i == 1) && val.empty?
-		['mandatory']
-	elsif (my[:min].to_i > 0) && (val.size < my[:min])
-		['too small']
-	else
-		[]
+	def errors
+		if (
+			body &&
+			my[:options].is_a?(::Array) &&
+			!my[:options].empty? &&
+			!my[:options].include?(val['basename'].to_s[/\.([\w\.]+)$/,1])
+		)
+			['wrong file type']
+		elsif (my[:max].to_i > 0) && (body && body.size > my[:max])
+			['too large']
+		elsif (my[:min].to_i == 1) && body.nil?
+			['mandatory']
+		elsif (my[:min].to_i > 0) && (body.nil? || body.size < my[:min])
+			['too small']
+		else
+			[]
+		end
 	end
-end
 
 	def commit(type = :temp)
 		if type == :persistent && ps = my[:persistent_sd]

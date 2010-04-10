@@ -135,6 +135,10 @@ _eos
 	end
 
 	def test_get
+		@f[:parent] = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Sofa.current[:base] = @f[:parent]
+		tid = @f[:parent][:tid]
+
 		@f.load({})
 		assert_nil(
 			@f.get,
@@ -147,13 +151,13 @@ _eos
 			'size'     => 123
 		)
 		assert_equal(
-			'<span class="file"><a href="foo/baz.jpg">baz.jpg (123 bytes)</a></span>',
+			'<span class="file"><a href="/t_file/main/foo/baz.jpg">baz.jpg (123 bytes)</a></span>',
 			@f.get,
 			'File#get should return proper string'
 		)
 		assert_equal(
-			<<'_html'.chomp,
-<span class="file"><a href="foo/baz.jpg">baz.jpg (123 bytes)</a></span>
+			<<"_html".chomp,
+<span class="file"><a href="/#{tid}/foo/baz.jpg">baz.jpg (123 bytes)</a></span>
 <span class="file">
 	<input type="file" name="foo" class="" />
 </span>
@@ -168,7 +172,7 @@ _html
 			'size'     => 123
 		)
 		assert_equal(
-			'<span class="file"><a href="foo/&lt;baz&gt;.jpg">&lt;baz&gt;.jpg (123 bytes)</a></span>',
+			'<span class="file"><a href="/t_file/main/foo/&lt;baz&gt;.jpg">&lt;baz&gt;.jpg (123 bytes)</a></span>',
 			@f.get,
 			'File#get should escape the special characters in file information'
 		)

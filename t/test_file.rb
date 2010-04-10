@@ -253,6 +253,65 @@ _eos
 		)
 	end
 
+	def test_errors
+		@f.create({})
+		@f[:min] = 0
+		assert_equal(
+			[],
+			@f.errors,
+			'File#errors should return the errors of the current body'
+		)
+		@f[:min] = 1
+		assert_equal(
+			['mandatory'],
+			@f.errors,
+			'File#errors should return the errors of the current body'
+		)
+
+		@f.update(
+			:type     => 'image/jpeg',
+			:tempfile => @file,
+			:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="baz.jpg"
+Content-Type: image/jpeg
+_eos
+			:filename => 'baz.jpg',
+			:name     => 't_file'
+		)
+
+		@f[:min] = 0
+		assert_equal(
+			[],
+			@f.errors,
+			'File#errors should return the errors of the current body'
+		)
+
+		@f[:min] = @file.read.size + 1
+		@f[:max] = nil
+		assert_equal(
+			['too small'],
+			@f.errors,
+			'File#errors should return the errors of the current body'
+		)
+
+		@f[:min] = nil
+		@f[:max] = @file.read.size - 1
+		assert_equal(
+			['too large'],
+			@f.errors,
+			'File#errors should return the errors of the current body'
+		)
+
+		@f[:min] = nil
+		@f[:max] = nil
+		@f[:options] = ['txt']
+		assert_equal(
+			['wrong file type'],
+			@f.errors,
+			'File#errors should return the errors of the current body'
+		)
+	end
+
 	def test_save_file
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')

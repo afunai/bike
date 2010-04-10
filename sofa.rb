@@ -116,7 +116,17 @@ class Sofa
 	end
 
 	def get(base,params)
-		response_ok :body => _get(base,params)
+		if base.is_a? Sofa::File
+			response_ok(
+				:headers => {
+					'Content-Type'   => base.val['type'],
+					'Content-Length' => base.body.size.to_s,
+				},
+				:body    => base.body
+			)
+		else
+			response_ok :body => _get(base,params)
+		end
 	end
 
 	def confirm(base,params)

@@ -642,7 +642,7 @@ _html
 		assert_match(
 			/item updated\./,
 			res.body,
-			'Sofa#call should include the current Sofa.message'
+			'Sofa#call should include the current message'
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
@@ -651,7 +651,7 @@ _html
 		assert_no_match(
 			/item updated\./,
 			res.body,
-			'Sofa#call should not include the used Sofa.message again'
+			'Sofa#call should not include the message twice'
 		)
 	end
 
@@ -665,7 +665,7 @@ _html
 		assert_match(
 			/please login\./,
 			res.body,
-			'Sofa#call should include the current Sofa.message'
+			'Sofa#call should include the current message'
 		)
 	end
 
@@ -684,7 +684,7 @@ _html
 		assert_match(
 			/malformed input\./,
 			res.body,
-			'Sofa#call should include the current Sofa.message'
+			'Sofa#call should include the current message'
 		)
 	end
 

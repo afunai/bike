@@ -74,10 +74,11 @@ end
 	private
 
 	def _g_default(arg = {})
+		path     = [:read,nil].include?(arg[:action]) ? my[:path] : my[:tmp_path]
 		basename = Rack::Utils.escape_html val['basename'].to_s
 		type     = Rack::Utils.escape_html val['type'].to_s
 		<<_html.chomp unless val.empty?
-<span class="file"><a href="#{my[:path]}/#{basename}">#{basename} (#{val['size']} bytes)</a></span>
+<span class="file"><a href="#{path}/#{basename}">#{basename} (#{val['size']} bytes)</a></span>
 _html
 	end
 

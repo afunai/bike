@@ -453,6 +453,7 @@ class TC_Sofa < Test::Unit::TestCase
 		env = Rack::MockRequest.env_for(
 			'http://example.com/foo/bar/main/qux=456/read_detail.html?acorn=round',
 			{
+				:method      => 'post',
 				:script_name => '',
 				:input       => 'coax=true&some-doors=open',
 			}
@@ -477,6 +478,7 @@ class TC_Sofa < Test::Unit::TestCase
 		env = Rack::MockRequest.env_for(
 			'http://example.com/foo/bar/qux=456/index.html?acorn=round',
 			{
+				:method      => 'post',
 				:script_name => '',
 				:input       => 'coax=true&some-doors=open',
 			}
@@ -501,6 +503,7 @@ class TC_Sofa < Test::Unit::TestCase
 		env = Rack::MockRequest.env_for(
 			'http://example.com/foo/bar/20091120_0001/files/qux=456/index.html?acorn=round',
 			{
+				:method      => 'post',
 				:script_name => '',
 				:input       => 'coax=true&some-doors=open',
 			}
@@ -525,6 +528,7 @@ class TC_Sofa < Test::Unit::TestCase
 		env = Rack::MockRequest.env_for(
 			'http://example.com/foo/bar/qux=456/index.html?acorn=round',
 			{
+				:method      => 'post',
 				:script_name => '',
 				:input       => 'some-doors=open&some.action-open=submit',
 			}
@@ -548,6 +552,7 @@ class TC_Sofa < Test::Unit::TestCase
 		env = Rack::MockRequest.env_for(
 			'http://example.com/foo/bar/update.html',
 			{
+				:method      => 'post',
 				:script_name => '',
 				:input       => '.action=open_sesami',
 			}
@@ -569,6 +574,7 @@ class TC_Sofa < Test::Unit::TestCase
 		env = Rack::MockRequest.env_for(
 			'http://example.com/foo/bar/update.html',
 			{
+				:method      => 'post',
 				:script_name => '',
 				:input       => '.action-open_sesami=submit',
 			}

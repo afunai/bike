@@ -11,7 +11,7 @@ class TC_File < Test::Unit::TestCase
 		@file.stubs(:read).returns('this is file body')
 
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo file 1..50)') {|id,m|
+		Sofa::Parser.gsub_scalar('$(foo file 1..50 jpg,gif,png)') {|id,m|
 			meta = m
 			''
 		}
@@ -28,6 +28,11 @@ class TC_File < Test::Unit::TestCase
 			50,
 			@f[:max],
 			'File#initialize should set :max from the range token'
+		)
+		assert_equal(
+			['jpg','gif','png'],
+			@f[:options],
+			'File#initialize should set :options from the csv token'
 		)
 	end
 

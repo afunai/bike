@@ -106,8 +106,12 @@ _html
 				'type'     => v[:type] || 'application/octet-stream',
 				'size'     => @body.size,
 			}
-		elsif v.is_a? ::Hash
-			v
+		elsif v.is_a?(::Hash) && v['basename']
+			{
+				'basename' => v['basename'].to_s,
+				'type'     => v['type'].to_s,
+				'size'     => v['size'].to_i,
+			}
 		else
 			{}
 		end

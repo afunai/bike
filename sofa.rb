@@ -140,7 +140,7 @@ class Sofa
 				:id => base.result.values.collect {|item| item[:id] }
 			)
 			response_see_other(
-				:location => base[:path] + "/#{base[:tid]}/#{id_step}#{action}.html"
+				:location => "/#{base[:tid]}/#{id_step}#{action}.html"
 			)
 		else
 			params = {:action => :update}
@@ -162,7 +162,7 @@ class Sofa
 					:id => base.result.values.collect {|item| item[:id] }
 				) if base[:parent] == base[:folder] && action != :done
 				response_see_other(
-					:location => base[:path] + "/#{base[:tid]}/#{id_step}#{action}.html"
+					:location => "/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
 				)
 			else
 				params = {:action => :update}
@@ -173,7 +173,7 @@ class Sofa
 			id_step = Sofa::Path.path_of(:id => base.send(:pending_items).keys)
 			base.commit :temp
 			response_see_other(
-				:location => base[:path] + "/#{base[:tid]}/#{id_step}update.html"
+				:location => "/#{base[:tid]}/#{id_step}update.html"
 			)
 		end
 	end

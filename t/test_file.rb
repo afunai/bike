@@ -40,6 +40,24 @@ class TC_File < Test::Unit::TestCase
 		)
 	end
 
+	def test_meta_tmp_path
+		@f[:parent] = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Sofa.current[:base] = @f[:parent]
+		tid = @f[:parent][:tid]
+
+		assert_equal(
+			"/#{tid}/foo",
+			@f[:tmp_path],
+			'File#meta_tmp_path should return the short path from the tid'
+		)
+
+		Sofa.current[:base] = nil
+		assert_nil(
+			@f[:tmp_path],
+			'File#meta_tmp_path should return nil unless Sofa.base is set'
+		)
+	end
+
 	def test_meta_persistent_sd
 		root = Sofa::Set::Static::Folder.root.item('t_file','main')
 		parent = Sofa::Set::Dynamic.new(:id => 'boo',:parent => root)

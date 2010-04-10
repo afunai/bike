@@ -13,6 +13,10 @@ class Sofa::File < Sofa::Field
 		my[:full_name].gsub('-','/')
 	end
 
+	def meta_tmp_path
+		"/#{Sofa.base[:tid]}/#{my[:short_name].gsub('-','/')}" if Sofa.base
+	end
+
 	def meta_persistent_sd
 		f = self
 		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Dynamic) && f.storage.persistent?

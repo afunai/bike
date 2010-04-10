@@ -183,26 +183,54 @@ _html
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
 
-		sd.update(
-			'_1' => {
-				'foo' => {
-					:type     => 'image/jpeg',
-					:tempfile => @file,
-					:head     => <<'_eos',
-Content-Disposition: form-data; name="t_file"; filename="foo.jpg"
+		# post a multipart request
+		input = <<"_eos".gsub(/\r?\n/,"\r\n")
+---foobarbaz
+Content-Disposition: form-data; name="_1-foo"; filename="foo.jpg"
 Content-Type: image/jpeg
-_eos
-					:filename => 'foo.jpg',
-					:name     => 't_file'
-				},
-			}
-		).commit :persistent
-		id = sd.result.values.first[:id]
 
-		res = Rack::MockRequest.new(Sofa.new).get(
-			"http://example.com/t_file/#{id}/foo/foo.jpg"
+#{@file.read}
+---foobarbaz--
+_eos
+		res = Rack::MockRequest.new(Sofa.new).post(
+			'http://example.com/t_file/main/update.html',
+			{
+				:input           => input,
+				'CONTENT_TYPE'   => 'multipart/form-data; boundary=-foobarbaz',
+				'CONTENT_LENGTH' => input.length,
+			}
+		)
+		tid = res.headers['Location'][Sofa::REX::TID]
+
+		assert_equal(
+			@file.read,
+			Sofa.transaction[tid].item('_1','foo').body,
+			'Sofa#call should keep suspended field in Sofa.transaction'
 		)
 
+		res = Rack::MockRequest.new(Sofa.new).get(
+			"http://example.com/#{tid}/_1/foo/foo.jpg"
+		)
+		assert_equal(
+			@file.read,
+			res.body,
+			'Sofa#call should be able to access suspended file bodies'
+		)
+
+		# commit the base
+		res = Rack::MockRequest.new(Sofa.new).post(
+			"http://example.com/#{tid}/update.html",
+			{
+				:input => '.status-public=create',
+			}
+		)
+
+		res.headers['Location'] =~ Sofa::REX::PATH_ID
+		new_id = sprintf('%.8d_%.4d',$1,$2)
+
+		res = Rack::MockRequest.new(Sofa.new).get(
+			"http://example.com/t_file/#{new_id}/foo/foo.jpg"
+		)
 		assert_equal(
 			'image/jpeg',
 			res.headers['Content-Type'],

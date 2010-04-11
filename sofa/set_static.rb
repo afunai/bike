@@ -74,6 +74,12 @@ _html
 		end
 	end
 
+	def permit_get?(arg)
+		permit?(arg[:action]) || collect_item(arg[:conds] || {}).any? {|item|
+			item.permit? arg[:action]
+		}
+	end
+
 	def _post(action,v = {})
 		each {|item|
 			item_action = (item.action == :create) ? :update : action

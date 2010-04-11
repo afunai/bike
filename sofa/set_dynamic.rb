@@ -287,6 +287,14 @@ def _label_m(m)
 	m
 end
 
+	def permit_get?(arg)
+		permit?(arg[:action]) || collect_item(arg[:conds] || {}).all? {|item|
+			item[:id][Sofa::REX::ID_NEW] ?
+				item.permit?(:create) :
+				item.send(:permit_get?,:action => arg[:action])
+		}
+	end
+
 	def _post(action,v = nil)
 		@workflow.before_post(action,v)
 

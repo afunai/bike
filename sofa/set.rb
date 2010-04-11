@@ -129,12 +129,6 @@ module Sofa::Set
 		[:read,nil].include?(arg[:action]) && !arg[:sub_action]
 	end
 
-	def permit_get?(arg)
-		super || collect_item(arg[:conds] || {}).any? {|item|
-			item.permit? arg[:action]
-		}
-	end
-
 	def permit_post?(action,val)
 		super || val.all? {|id,v|
 			if id.is_a? ::Symbol

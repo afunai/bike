@@ -49,11 +49,11 @@ class Sofa::File < Sofa::Field
 			!my[:options].include?(val['basename'].to_s[/\.([\w\.]+)$/,1])
 		)
 			['wrong file type']
-		elsif (my[:max].to_i > 0) && (body && body.size > my[:max])
+		elsif (my[:max].to_i > 0) && (val['size'].to_i > my[:max])
 			['too large']
-		elsif (my[:min].to_i == 1) && body.nil?
+		elsif (my[:min].to_i == 1) && val['size'].to_i < 1
 			['mandatory']
-		elsif (my[:min].to_i > 0) && (body.nil? || body.size < my[:min])
+		elsif (my[:min].to_i > 0) && (val['size'].to_i < my[:min])
 			['too small']
 		else
 			[]

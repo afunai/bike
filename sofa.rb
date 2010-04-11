@@ -138,10 +138,8 @@ class Sofa
 		base.update params
 		if base.valid?
 			base.commit :temp
+			id_step = result_step(base,params)
 			action = "confirm_#{params[:sub_action]}"
-			id_step = Sofa::Path.path_of(
-				:id => base.result.values.collect {|item| item[:id] }
-			)
 			response_see_other(
 				:location => "/#{base[:tid]}/#{id_step}#{action}.html"
 			)
@@ -161,9 +159,7 @@ class Sofa
 				base[:folder].commit :persistent
 				Sofa.transaction[base[:tid]] = :updated
 				action = base.workflow.next_action params
-				id_step = Sofa::Path.path_of(
-					:id => base.result.values.collect {|item| item[:id] }
-				) if base[:parent] == base[:folder] && action != :done
+				id_step = result_step(base,params) if base[:parent] == base[:folder] && action != :done
 				response_see_other(
 					:location => "/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
 				)
@@ -179,6 +175,17 @@ class Sofa
 				:location => "/#{base[:tid]}/#{id_step}update.html"
 			)
 		end
+	end
+
+	def result_step(base,params)
+		if base.result
+			id = base.result.values.collect {|item| item[:id] }
+		else
+			id = params.keys.select {|id|
+				id.is_a?(::String) && (id[Sofa::REX::ID] || id[Sofa::REX::ID_NEW])
+			}
+		end
+		Sofa::Path.path_of(:id => id)
 	end
 
 	def _get(f,params)

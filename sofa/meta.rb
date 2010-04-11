@@ -30,7 +30,8 @@ class Sofa::Meta::Owner < Sofa::Field
 			@val = val_cast(v)
 		elsif action == :create
 			@val = Sofa.client
-			@action = action
+# don't be pending
+#			@action = action
 		end
 		my[:parent][:owner] = val if my[:parent] && !empty?
 

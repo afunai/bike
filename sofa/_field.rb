@@ -220,7 +220,7 @@ _html
 	end
 
 	def _g_valid?(arg)
-		valid? || arg[:action] == :create
+		valid? || (arg[:action] == :create && !item.pending?)
 	end
 
 	def _post(action,v)

@@ -182,6 +182,7 @@ class Sofa
 	end
 
 	def _get(f,params)
+		params[:action] ||= f.default_action
 		until f.is_a? Sofa::Set::Static::Folder
 			params = {
 				:action     => (f.default_action == :read) ? :read : nil,

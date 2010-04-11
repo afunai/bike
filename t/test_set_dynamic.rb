@@ -1168,9 +1168,9 @@ _html
 		arg = {:action => :update,:conds => {:d => '2009'}}
 		@sd.get arg
 		assert_equal(
-			:update,
+			:read,
 			arg[:action],
-			'Set::Dynamic#get should keep the partially-permitted action'
+			'Set::Dynamic#get should not keep the partially-permitted action'
 		)
 
 		arg = {:action => :update,:conds => {:id => '20091122_0002'}}

@@ -209,14 +209,6 @@ _html
 		assert_equal(
 			<<'_html',
 <ul id="main" class="sofa-pipco">
-	<li id="main-20091123_0001">
-		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
-		<ul id="main-20091123_0001-files" class="sofa-attachment">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)[d]</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)[d]</li>
-			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
-		</ul>
-	</li>
 	<li id="main-20091123_0002">
 		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
@@ -229,24 +221,16 @@ _html
 		'potato'
 	</li>
 </ul>
-[main-update]
 _html
-			@sd.get(:action => :update),
+			@sd.get(:action => :update,:conds => {:id => '20091123_0002'}),
 			'Field#get should fall back to a possible action if the given action is not permitted'
 		)
 
 		@sd.item('20091123_0002','comment')[:owner] = 'carl' # enclave in roy's item
+
 		assert_equal(
 			<<'_html',
 <ul id="main" class="sofa-pipco">
-	<li id="main-20091123_0001">
-		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
-		<ul id="main-20091123_0001-files" class="sofa-attachment">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)[d]</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)[d]</li>
-			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
-		</ul>
-	</li>
 	<li id="main-20091123_0002">
 		'RE'(action=read,p_action=update): 'wee'(action=update,p_action=update)
 		<ul id="main-20091123_0002-files" class="sofa-attachment">
@@ -256,7 +240,7 @@ _html
 </ul>
 [main-update]
 _html
-			@sd.get(:action => :update),
+			@sd.get(:action => :update,:conds => {:id => '20091123_0002'}),
 			'Field#get should preserve the given action wherever possible'
 		)
 	end

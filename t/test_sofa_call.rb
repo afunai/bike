@@ -665,10 +665,9 @@ _html
 
 	def test_message_alert
 		Sofa.client = 'nobody'
-		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
 
 		res = Rack::MockRequest.new(@sofa).get(
-			"http://example.com/t_store/main/20100321/1/update.html"
+			"http://example.com/foo/20091120/1/update.html"
 		)
 		assert_match(
 			/please login\./,

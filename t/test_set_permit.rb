@@ -113,6 +113,7 @@ class TC_Set_Permit < Test::Unit::TestCase
 				:'permit_get?',
 				{
 					:action => :update,
+					:conds  => {:id => '20100228_0002'},
 				}
 			),
 			'Set#permit_get? should allow carl to get an update form of his own item'

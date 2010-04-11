@@ -136,8 +136,8 @@ class Sofa
 		Sofa.transaction[base[:tid]] ||= base
 
 		base.update params
-		base.commit :temp
-		if base.result
+		if base.valid?
+			base.commit :temp
 			action = "confirm_#{params[:sub_action]}"
 			id_step = Sofa::Path.path_of(
 				:id => base.result.values.collect {|item| item[:id] }

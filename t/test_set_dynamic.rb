@@ -787,7 +787,7 @@ _html
 			}
 		)
 		sd.commit :temp
-		first_id = sd.result.values.first.item('files').val.keys.first
+		first_id = sd.result.values.first.item('files').val.keys.sort.first
 		assert_equal(
 			{
 				first_id => {'file' => 'foo'},
@@ -803,7 +803,7 @@ _html
 			}
 		)
 		sd.commit :temp
-		second_id = sd.result.values.first.item('files').val.keys.last
+		second_id = sd.result.values.first.item('files').val.keys.sort.last
 
 		assert_equal(
 			first_id.succ,

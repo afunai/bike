@@ -147,7 +147,7 @@ class Sofa
 			)
 		else
 			params = {:action => :update}
-			params[:conds] = {:id => base.send(:pending_items).keys}
+			params[:conds] = {:id => base.errors.keys}
 			return response_unprocessable_entity(:body => _get(base,params))
 		end
 	end
@@ -169,7 +169,7 @@ class Sofa
 				)
 			else
 				params = {:action => :update}
-				params[:conds] = {:id => base.send(:pending_items).keys}
+				params[:conds] = {:id => base.errors.keys}
 				response_unprocessable_entity :body => _get(base,params)
 			end
 		else

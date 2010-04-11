@@ -157,9 +157,10 @@ class Sofa::Field
 	def post(action,v = nil)
 		raise Sofa::Error::Forbidden unless permit_post?(action,v)
 
-		_post action,val_cast(v)
-		@result = nil
-		@action = action unless action == :load || action == :load_default
+		if _post action,val_cast(v)
+			@result = nil
+			@action = action unless action == :load || action == :load_default
+		end
 		self
 	end
 
@@ -227,7 +228,9 @@ _html
 			when :load_default
 				@val = val_cast(my[:defaults] || my[:default])
 			when :load,:create,:update
-				@val = v
+				@val = v if @val != v
+			when :delete
+				true
 		end
 	end
 

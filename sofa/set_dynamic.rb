@@ -322,7 +322,9 @@ end
 			when :load,:load_default
 				@storage.build v
 		end
+
 		@workflow.after_post
+		!pending_items.empty? || action == :delete
 	end
 
 	def store(id,item)

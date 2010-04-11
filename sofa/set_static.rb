@@ -88,6 +88,7 @@ _html
 				item.post(item_action,v[id])
 			end
 		}
+		!pending_items.empty? || action == :delete
 	end
 
 	def collect_item(conds = {},&block)

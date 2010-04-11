@@ -35,7 +35,10 @@ module Sofa::Set
 		return {} if action == :delete
 		errors = {}
 		@item_object.each_pair {|id,item|
-			errors[id] = item.errors unless item.valid? || (item.action == :delete)
+			errors[id] = item.errors unless
+				item.valid? ||
+				(item.action == :delete) ||
+				(@workflow.is_a?(Sofa::Workflow::Attachment) && id[Sofa::REX::ID_NEW] && !item.pending?)
 		}
 		errors
 	end

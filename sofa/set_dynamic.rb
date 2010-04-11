@@ -55,19 +55,6 @@ class Sofa::Set::Dynamic < Sofa::Field
 		super
 	end
 
-	def _get_by_tmpl(arg,tmpl = '')
-		if arg[:action] == :read || self != Sofa.base
-			super
-		else
-			base_path = Sofa.transaction[my[:tid]].is_a?(Sofa::Field) ? nil : my[:base_path]
-			action = "/#{my[:tid]}#{base_path}/update.html"
-			<<_html
-<form id="#{my[:name]}" method="post" enctype="multipart/form-data" action="#{action}">
-#{super}</form>
-_html
-		end
-	end
-
 	def commit(type = :temp)
 		items = pending_items
 		items.each {|id,item|
@@ -95,6 +82,19 @@ _html
 
 	def _get(arg)
 		(@workflow._get(arg) || super) unless @workflow._hide? arg
+	end
+
+	def _get_by_tmpl(arg,tmpl = '')
+		if arg[:action] == :read || self != Sofa.base
+			super
+		else
+			base_path = Sofa.transaction[my[:tid]].is_a?(Sofa::Field) ? nil : my[:base_path]
+			action = "/#{my[:tid]}#{base_path}/update.html"
+			<<_html
+<form id="#{my[:name]}" method="post" enctype="multipart/form-data" action="#{action}">
+#{super}</form>
+_html
+		end
 	end
 
 	def _get_by_self_reference(arg)

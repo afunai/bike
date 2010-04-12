@@ -286,18 +286,26 @@ _html
 	end
 
 	def response_forbidden(result = {})
+		body = result[:body] || 'Forbidden'
 		[
 			403,
-			{},
-			result[:body] || 'Forbidden'
+			{
+				'Content-Type'   => 'text/html',
+				'Content-Length' => body.size.to_s,
+			},
+			body,
 		]
 	end
 
 	def response_not_found(result = {})
+		body = result[:body] || 'Not Found'
 		[
 			404,
-			{},
-			'Not Found'
+			{
+				'Content-Type'   => 'text/html',
+				'Content-Length' => body.size.to_s,
+			},
+			body
 		]
 	end
 

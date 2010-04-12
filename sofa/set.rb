@@ -32,13 +32,14 @@ module Sofa::Set
 	end
 
 	def errors
-		return {} if action == :delete
+		return {} if
+			my[:id] =~ Sofa::REX::ID_NEW &&
+			my[:parent].is_a?(Sofa::Set::Dynamic) &&
+			my[:parent].workflow.is_a?(Sofa::Workflow::Attachment)
+
 		errors = {}
 		@item_object.each_pair {|id,item|
-			errors[id] = item.errors unless
-				item.valid? ||
-				(item.action == :delete) ||
-				(@workflow.is_a?(Sofa::Workflow::Attachment) && id[Sofa::REX::ID_NEW] && !item.pending?)
+			errors[id] = item.errors unless item.valid? || item.action == :delete
 		}
 		errors
 	end

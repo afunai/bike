@@ -9,6 +9,7 @@ class TC_File < Test::Unit::TestCase
 		@file = Class.new
 		@file.stubs(:rewind).returns(nil)
 		@file.stubs(:read).returns('this is file body')
+		@file.stubs(:length).returns(@file.read.length)
 
 		meta = nil
 		Sofa::Parser.gsub_scalar('$(foo file 1..50 jpg,gif,png)') {|id,m|
@@ -101,7 +102,7 @@ _eos
 			{
 				'basename' => 'baz.jpg',
 				'type'     => 'image/jpeg',
-				'size'     => @file.read.size,
+				'size'     => @file.length,
 			},
 			@f.val,
 			'File#val_cast should re-map a hash from Rack'
@@ -242,7 +243,7 @@ _eos
 			'Sofa#call to a file item should return the mime type of the file'
 		)
 		assert_equal(
-			@file.read.size.to_s,
+			@file.length.to_s,
 			res.headers['Content-Length'],
 			'Sofa#call to a file item should return the content length of the file'
 		)
@@ -286,7 +287,7 @@ _eos
 			'File#errors should return the errors of the current body'
 		)
 
-		@f[:min] = @file.read.size + 1
+		@f[:min] = @file.length + 1
 		@f[:max] = nil
 		assert_equal(
 			['too small'],
@@ -295,7 +296,7 @@ _eos
 		)
 
 		@f[:min] = nil
-		@f[:max] = @file.read.size - 1
+		@f[:max] = @file.length - 1
 		assert_equal(
 			['too large'],
 			@f.errors,

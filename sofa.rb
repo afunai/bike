@@ -136,7 +136,7 @@ class Sofa
 		Sofa.transaction[base[:tid]] ||= base
 
 		base.update params
-		if base.commit :temp
+		if base.commit(:temp) || params[:sub_action] == :delete
 			id_step = result_step(base,params)
 			action = "confirm_#{params[:sub_action]}"
 			response_see_other(

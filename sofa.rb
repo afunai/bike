@@ -167,8 +167,8 @@ class Sofa
 				response_unprocessable_entity :body => _get(base,params)
 			end
 		else
-			id_step = Sofa::Path.path_of(:id => base.send(:pending_items).keys)
 			base.commit :temp
+			id_step = result_step(base,params)
 			response_see_other(
 				:location => "/#{base[:tid]}/#{id_step}update.html"
 			)

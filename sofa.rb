@@ -120,13 +120,15 @@ class Sofa
 
 	def get(base,params)
 		if base.is_a? Sofa::File
-			response_ok(
-				:headers => {
-					'Content-Type'   => base.val['type'],
-					'Content-Length' => base.body.size.to_s,
-				},
-				:body    => base.body
-			)
+			base.body ?
+				response_ok(
+					:headers => {
+						'Content-Type'   => base.val['type'],
+						'Content-Length' => base.body.size.to_s,
+					},
+					:body    => base.body
+				) :
+				response_not_found
 		else
 			response_ok :body => _get(base,params)
 		end

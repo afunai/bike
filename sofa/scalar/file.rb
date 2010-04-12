@@ -61,7 +61,7 @@ class Sofa::File < Sofa::Field
 	end
 
 	def commit(type = :temp)
-		if type == :persistent && ps = my[:persistent_sd]
+		if valid? && type == :persistent && ps = my[:persistent_sd]
 			case @action
 				when :create,:update,nil
 					ps.storage.store(

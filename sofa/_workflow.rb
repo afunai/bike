@@ -185,7 +185,7 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 _html
 					button = item.send(:_get_by_tmpl,{},button_tmpl)
 					item_arg[:action] = :create if action == :create
-					item_tmpl = item[:tmpl].sub(/.*\$\(.*?\)/,"\\&#{button}")
+					item_tmpl = item[:tmpl].sub(/[\w\W]*\$\(.*?\)/,"\\&#{button}")
 					item.send(:_get_by_tmpl,item_arg,item_tmpl)
 				}
 				tmpl = my[:tmpl].gsub('$()',item_outs.join)

@@ -136,8 +136,7 @@ class Sofa
 		Sofa.transaction[base[:tid]] ||= base
 
 		base.update params
-		if base.valid?
-			base.commit :temp
+		if base.commit :temp
 			id_step = result_step(base,params)
 			action = "confirm_#{params[:sub_action]}"
 			response_see_other(
@@ -155,8 +154,7 @@ class Sofa
 
 		base.update params
 		if params[:status]
-			if base.valid?
-				base[:folder].commit :persistent
+			if base[:folder].commit :persistent
 				Sofa.transaction[base[:tid]] = :updated
 				action = base.workflow.next_action params
 				id_step = result_step(base,params) if base[:parent] == base[:folder] && action != :done

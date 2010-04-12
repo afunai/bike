@@ -88,10 +88,13 @@ _html
 	end
 
 	def _g_update(arg)
+		hidden = <<_html if my[:min].to_i > 0 && val.empty?
+	<input type="hidden" name="#{my[:short_name]}" value="" />
+_html
 		<<_html.chomp
 #{_g_default arg}
 <span class="file">
-	<input type="file" name="#{my[:short_name]}" class="#{_g_class arg}" />#{_g_errors arg}
+#{hidden}	<input type="file" name="#{my[:short_name]}" class="#{_g_class arg}" />#{_g_errors arg}
 </span>
 _html
 	end

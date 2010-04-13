@@ -43,7 +43,7 @@ class Sofa::File < Sofa::Field
 
 	def errors
 		if (
-			body &&
+			val['basename'] &&
 			my[:options].is_a?(::Array) &&
 			!my[:options].empty? &&
 			!my[:options].include?(val['basename'].to_s[/\.([\w\.]+)$/,1])

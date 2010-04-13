@@ -249,6 +249,57 @@ _html
 		)
 	end
 
+	def test_get_delete
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.update(
+			'_1' => {
+				'baz' => {
+					'_1' => {},
+				},
+			}
+		)
+		Sofa.current[:base] = sd
+		sd[:tid] = '1234.567'
+
+		assert_equal(
+			<<'_html'.chomp,
+
+<span class="file">
+	<input type="file" name="_1-foo" class="" />
+</span>
+_html
+			sd.item('_1','foo').get(:action => :create),
+			'File#get should not include a delete submit if the field is empty'
+		)
+
+		sd.update(
+			'_1' => {
+				'foo' => {
+					:type     => 'image/jpeg',
+					:tempfile => @file,
+					:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="foo.jpg"
+Content-Type: image/jpeg
+_eos
+					:filename => 'foo.jpg',
+					:name     => 't_file'
+				},
+			}
+		)
+		assert_equal(
+			<<"_html".chomp,
+<span class="file"><a href="/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
+<span class="file">
+	<input type="submit" name="_1-foo.action-delete" value="x">
+	<input type="file" name="_1-foo" class="" />
+</span>
+_html
+			sd.item('_1','foo').get(:action => :update),
+			'File#get should include a delete submit if the field is not empty'
+		)
+	end
+
 	def test_call_body
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')

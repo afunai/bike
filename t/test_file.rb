@@ -409,23 +409,37 @@ _eos
 			id => {'foo' => {:action => :delete}}
 		)
 		assert_equal(:delete,sd.item(id,'foo').action)
-		sd.commit :persistent
+		sd.commit :temp
 
 		assert_equal(
 			{},
 			sd.item(id,'foo').val,
 			'File#delete should clear the val of the field'
 		)
-		assert_nil(
-			sd.item(id,'foo').body,
-			'File#delete should delete body of the field'
+
+		another_sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		assert_not_equal(
+			{},
+			another_sd.item(id,'foo').val,
+			'File#delete should not clear the persistent val before commit(:persistent)'
+		)
+		assert_equal(
+			@file.read,
+			another_sd.item(id,'foo').body,
+			'File#delete should not delete the persistent body before commit(:persistent)'
 		)
 
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.commit :persistent
+
+		another_sd = Sofa::Set::Static::Folder.root.item('t_file','main')
 		assert_equal(
 			{},
-			sd.item(id,'foo').val,
-			'the val of the field should be deleted from the parent, too'
+			another_sd.item(id,'foo').val,
+			'File#delete should clear the persistent val after commit(:persistent)'
+		)
+		assert_nil(
+			another_sd.item(id,'foo').body,
+			'File#delete should clear the persistent body after commit(:persistent)'
 		)
 	end
 

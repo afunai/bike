@@ -381,7 +381,7 @@ _eos
 		)
 	end
 
-	def test_delete_file
+	def test_delete_parent_set
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
@@ -423,7 +423,7 @@ _eos
 		assert_equal(
 			{},
 			sd.val,
-			''
+			'Set#delete should delete body of the file items'
 		)
 	end
 

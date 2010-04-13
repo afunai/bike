@@ -94,11 +94,22 @@ _html
 		hidden = <<_html if my[:min].to_i > 0 && val.empty?
 	<input type="hidden" name="#{my[:short_name]}" value="" />
 _html
+		if (
+			!val.empty? &&
+			my[:parent].is_a?(Sofa::Set::Static) &&
+			my[:parent][:item].find {|id,meta| id != my[:id] && meta[:klass] !~ /^meta-/ }
+		)
+			delete = <<_html
+	<input type="submit" name="#{my[:short_name]}.action-delete" value="x">
+_html
+		end
+		update = <<_html
+	<input type="file" name="#{my[:short_name]}" class="#{_g_class arg}" />
+_html
 		<<_html.chomp
 #{_g_default arg}
 <span class="file">
-#{hidden}	<input type="file" name="#{my[:short_name]}" class="#{_g_class arg}" />#{_g_errors arg}
-</span>
+#{hidden}#{delete}#{update}#{_g_errors arg}</span>
 _html
 	end
 	alias :_g_create :_g_update

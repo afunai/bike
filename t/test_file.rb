@@ -381,6 +381,54 @@ _eos
 		)
 	end
 
+	def test_delete_file
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.storage.clear
+
+		sd.update(
+			'_1' => {
+				'foo' => {
+					:type     => 'image/jpeg',
+					:tempfile => @file,
+					:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="foo.jpg"
+Content-Type: image/jpeg
+_eos
+					:filename => 'baz.jpg',
+					:name     => 't_file'
+				},
+			}
+		)
+		sd.commit :persistent
+
+		id = sd.result.values.first[:id]
+
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.update(
+			id => {'foo' => {:action => :delete}}
+		)
+		assert_equal(:delete,sd.item(id,'foo').action)
+		sd.commit :persistent
+
+		assert_equal(
+			{},
+			sd.item(id,'foo').val,
+			'File#delete should clear the val of the field'
+		)
+		assert_nil(
+			sd.item(id,'foo').body,
+			'File#delete should delete body of the field'
+		)
+
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		assert_equal(
+			{},
+			sd.item(id,'foo').val,
+			'the val of the field should be deleted from the parent, too'
+		)
+	end
+
 	def test_delete_parent_set
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')

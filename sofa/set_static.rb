@@ -82,8 +82,9 @@ _html
 
 	def _post(action,v = {})
 		each {|item|
-			item_action = (item.is_a?(Sofa::Set) && action == :create) ? :update : action
 			id = item[:id]
+			item_action = (item.is_a?(Sofa::Set) && action == :create) ? :update : action
+			item_action = v[id][:action] if v[id].is_a?(::Hash) && v[id][:action]
 			if [:load_default,:delete].include?(item_action) || v.key?(id) || item(id).is_a?(Sofa::Meta)
 				item.post(item_action,v[id])
 			end

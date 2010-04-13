@@ -184,6 +184,71 @@ _html
 		)
 	end
 
+	def test_get_hidden
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.update(
+			'_1' => {
+				'baz' => {
+					'_1' => {},
+				},
+			}
+		)
+		Sofa.current[:base] = sd
+		sd[:tid] = '1234.567'
+
+		assert_equal(
+			<<'_html'.chomp,
+
+<span class="file">
+	<input type="file" name="_1-foo" class="" />
+</span>
+_html
+			sd.item('_1','foo').get(:action => :create),
+			'File#get should not include a hidden input if the field is not required'
+		)
+		assert_equal(
+			<<'_html'.chomp,
+
+<span class="file">
+	<input type="hidden" name="_1-baz-_1-qux" value="" />
+	<input type="file" name="_1-baz-_1-qux" class="" />
+</span>
+_html
+			sd.item('_1','baz','_1','qux').get(:action => :create),
+			'File#get should include a hidden input to supplement an empty field'
+		)
+
+		sd.update(
+			'_1' => {
+				'baz' => {
+					'_1' => {
+						'qux' => {
+							:type     => 'image/jpeg',
+							:tempfile => @file,
+							:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="qux.jpg"
+Content-Type: image/jpeg
+_eos
+							:filename => 'qux.jpg',
+							:name     => 't_file'
+						},
+					},
+				},
+			}
+		)
+		assert_equal(
+			<<"_html".chomp,
+<span class="file"><a href="/1234.567/_1/baz/_1/qux/qux.jpg">qux.jpg (#{@file.length} bytes)</a></span>
+<span class="file">
+	<input type="file" name="_1-baz-_1-qux" class="" />
+</span>
+_html
+			sd.item('_1','baz','_1','qux').get(:action => :update),
+			'File#get should not include a hidden if the field is not empty'
+		)
+	end
+
 	def test_call_body
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')

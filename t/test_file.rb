@@ -378,7 +378,19 @@ _eos
 			@f.errors,
 			'File#errors should return the errors of the current body'
 		)
+
 		@f[:min] = 1
+		@f.create({})
+		assert_equal(
+			['mandatory'],
+			@f.errors,
+			'File#errors should return the errors of the current body'
+		)
+
+		@f[:min] = 1
+		@f.delete
+		@f.commit :temp
+		@f.commit :persistent
 		assert_equal(
 			['mandatory'],
 			@f.errors,
@@ -511,7 +523,7 @@ _eos
 Content-Disposition: form-data; name="t_file"; filename="foo.jpg"
 Content-Type: image/jpeg
 _eos
-					:filename => 'baz.jpg',
+					:filename => 'foo.jpg',
 					:name     => 't_file'
 				},
 			}
@@ -531,6 +543,11 @@ _eos
 			{},
 			sd.item(id,'foo').val,
 			'File#delete should clear the val of the field'
+		)
+		assert_equal(
+			:delete,
+			sd.item(id,'foo').action,
+			'File#delete should set @action'
 		)
 
 		another_sd = Sofa::Set::Static::Folder.root.item('t_file','main')
@@ -647,6 +664,7 @@ _eos
 		)
 
 		# delete the attachment
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
 		sd.update(
 			baz_id => {
 				'baz' => {

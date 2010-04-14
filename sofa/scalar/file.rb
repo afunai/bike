@@ -96,6 +96,7 @@ _html
 _html
 		if (
 			!val.empty? &&
+			my[:min].to_i == 0 &&
 			my[:parent].is_a?(Sofa::Set::Static) &&
 			my[:parent][:item].find {|id,meta| id != my[:id] && meta[:klass] !~ /^meta-/ }
 		)

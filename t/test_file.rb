@@ -298,6 +298,18 @@ _html
 			sd.item('_1','foo').get(:action => :update),
 			'File#get should include a delete submit if the field is not empty'
 		)
+
+		sd.item('_1','foo')[:min] = 1
+		assert_equal(
+			<<"_html".chomp,
+<span class="file"><a href="/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
+<span class="file">
+	<input type="file" name="_1-foo" class="" />
+</span>
+_html
+			sd.item('_1','foo').get(:action => :update),
+			'File#get should not include a delete submit if the field is mandatory'
+		)
 	end
 
 	def test_call_body

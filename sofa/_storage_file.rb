@@ -122,8 +122,10 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def remove_file(id)
-		glob(id.to_a).each {|file|
-			::File.unlink ::File.join(@dir,file) # may include child files
+		glob_pattern = "#{file_prefix}#{pattern_for id.to_a}*"
+		files = ::Dir.chdir(@dir) { ::Dir.glob glob_pattern } # may include child files
+		files.each {|file|
+			::File.unlink ::File.join(@dir,file)
 		}
 	end
 

@@ -52,6 +52,27 @@ module Sofa::Set
 		collect_item.each &block
 	end
 
+	def inspect_items(indent = 0)
+		my_action = action.inspect
+		my_result = result.is_a?(::Hash) ?
+			result.keys.sort.inspect.sub(/\A\[([\w\W]*)\]\z/,'{\1}') :
+			result.inspect
+
+		"\t" * indent +
+		"<\"#{my[:id]}\" @action=#{my_action} @result=#{my_result}>\n" +
+		@item_object.keys.sort.collect {|id|
+			item = @item_object[id]
+			if item.respond_to? :inspect_items
+				item.inspect_items(indent + 1)
+			else
+				action = item.action.inspect
+				result = item.result.inspect
+				val    = item.val.inspect
+				"\t" * (indent + 1) + "<\"#{id}\" @action=#{action} @result=#{result} @val=#{val}>\n"
+			end
+		}.join
+	end
+
 	private
 
 	def _get(arg)

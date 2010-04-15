@@ -64,14 +64,14 @@ class Sofa::File < Sofa::Field
 		if type == :temp && @action == :delete
 			@val = {}
 			@body = nil
-		elsif type == :persistent && valid? && ps = my[:persistent_sd]
+		elsif type == :persistent && ps = my[:persistent_sd]
 			case @action
 				when :create,:update,nil
 					ps.storage.store(
 						my[:persistent_name],
 						@body,
 						val['basename'][/\.([\w\.]+)$/,1] || 'bin'
-					) if @body
+					) if @body && valid?
 				when :delete
 					ps.storage.delete my[:persistent_name]
 			end

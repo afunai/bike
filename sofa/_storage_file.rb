@@ -122,7 +122,7 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def remove_file(id)
-		glob(id.to_a) .each {|file|
+		glob(id.to_a).each {|file|
 			::File.unlink ::File.join(@dir,file) # may include child files
 		}
 	end

@@ -693,4 +693,79 @@ _eos
 		)
 	end
 
+	def test_delete_attachment_parent
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.storage.clear
+
+		# create an attachment file item
+		sd.update(
+			'_1' => {
+				'baz' => {
+					'_1' => {
+						'qux' => {
+							:type     => 'image/gif',
+							:tempfile => @file,
+							:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="qux.gif"
+Content-Type: image/gif
+_eos
+							:filename => 'qux.gif',
+							:name     => 't_file'
+						},
+					},
+				}
+			}
+		)
+
+		sd.commit :persistent
+		assert_not_equal({},sd.val)
+
+		baz_id = sd.result.values.first[:id]
+		qux_id = sd.result.values.first.item('baz').val.keys.first
+
+		item = Sofa::Set::Static::Folder.root.item('t_file','main',baz_id,'baz',qux_id,'qux')
+		item_persistent_name = item[:persistent_name]
+		assert_equal(
+			@file.read,
+			Sofa::Set::Static::Folder.root.item('t_file','main').storage.val(item_persistent_name),
+			'the body of the file should be stored in the storage'
+		)
+
+		# delete the parent set
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.update(
+			baz_id => {:action => :delete}
+		)
+
+		sd.commit :temp
+		assert_equal(
+			<<"_eos",
+<"main" @action=:update @result={"#{baz_id}"}>
+	<"#{baz_id}" @action=:delete @result=:delete>
+		<"_group" @action=nil @result=nil @val=nil>
+		<"_owner" @action=nil @result=nil @val="root">
+		<"bar" @action=:delete @result=:delete @val={}>
+		<"baz" @action=:delete @result=:delete>
+		<"foo" @action=:delete @result=:delete @val={}>
+_eos
+			sd.inspect_items
+		)
+
+		sd.commit :persistent
+		assert_equal(
+			<<"_eos",
+<"main" @action=nil @result={"#{baz_id}"}>
+_eos
+			sd.inspect_items
+		)
+
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		assert_equal({},sd.val)
+		assert_nil(
+			Sofa::Set::Static::Folder.root.item('t_file','main').storage.val(item_persistent_name),
+			'the body of the file should be deleted from the storage'
+		)
+	end
+
 end

@@ -325,7 +325,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-$(.message)<ul class="sofa-blog" id="@(name)">$()</ul>
+<ul class="sofa-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
@@ -340,7 +340,7 @@ _tmpl
 			'Parser.parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
-			'$(foo)',
+			'$(foo.message)$(foo)',
 			result[:tmpl],
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
@@ -356,7 +356,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-$(.message)<ul class="sofa-blog" id="@(name)">
+<ul class="sofa-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -372,7 +372,7 @@ _tmpl
 			'Parser.parse_html should be able to parse block sofa tags'
 		)
 		assert_equal(
-			'$(foo)',
+			'$(foo.message)$(foo)',
 			result[:tmpl],
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
@@ -386,7 +386,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-$(.message) <ul class="sofa-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
+ <ul class="sofa-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
@@ -401,7 +401,7 @@ _tmpl
 		)
 		assert_equal(
 			<<'_html',
-hello$(foo) world
+hello$(foo.message)$(foo) world
 _html
 			result[:tmpl],
 			'Parser.parse_html[:tmpl] should be a proper template'
@@ -439,7 +439,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-$(.message)	<table class="sofa-blog" id="@(name)">
+	<table class="sofa-blog" id="@(name)">
 		<!-- 1..20 barbaz -->
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
@@ -477,7 +477,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-$(.message)	<table class="sofa-blog" id="@(name)">
+	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
@@ -501,7 +501,7 @@ _tmpl
 		assert_equal(
 			<<'_tmpl',
 hello
-$(foo)world
+$(foo.message)$(foo)world
 _tmpl
 			result[:tmpl],
 			'Parser.parse_html[:tmpl] should be a proper template'
@@ -523,7 +523,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-$(.message)	<table class="sofa-blog" id="@(name)">
+	<table class="sofa-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
@@ -560,7 +560,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-$(.message)<ul class="sofa-blog" id="@(name)">
+<ul class="sofa-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -568,14 +568,14 @@ _tmpl
 						'default' => {
 							:tmpl => <<'_tmpl',
 	<li>
-$(.a_update)$(bar)$(.hidden)</a>	</li>
+$(bar.message)$(.a_update)$(bar)$(.hidden)</a>	</li>
 _tmpl
 							:item => {
 								'bar' => {
 									:klass    => 'set-dynamic',
 									:workflow => 'blog',
 									:tmpl     => <<'_tmpl'.chomp,
-$(.message)		<ul class="sofa-blog" id="@(name)">$()</ul>
+		<ul class="sofa-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
 									:item     => {
@@ -594,7 +594,7 @@ _tmpl
 			'Parser.parse_html should be able to parse nested block sofa tags'
 		)
 		assert_equal(
-			'$(foo)',
+			'$(foo.message)$(foo)',
 			result[:tmpl],
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
@@ -620,7 +620,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-$(.message)	<ul id="@(name)" class="sofa-blog">
+	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -655,7 +655,7 @@ _tmpl
 			<<'_tmpl',
 <html>
 	<h1>$(title)</h1>
-$(foo)</html>
+$(foo.message)$(foo)</html>
 _tmpl
 			result[:tmpl],
 			'Parser.parse_html[:tmpl] should be a proper template'
@@ -835,7 +835,7 @@ _tmpl
 		assert_equal(
 			<<'_tmpl',
 <html>
-$(foo)$(foo.navi)</html>
+$(foo.message)$(foo)$(foo.navi)</html>
 _tmpl
 			result[:tmpl],
 			'Parser.parse_html should replace action templates with proper tags'
@@ -861,7 +861,7 @@ _tmpl
 		assert_equal(
 			<<'_tmpl',
 <html>
-$(main)$(main.navi)</html>
+$(main.message)$(main)$(main.navi)</html>
 _tmpl
 			result[:tmpl],
 			"Parser.parse_html should set action templates to item['main'] by default"
@@ -884,7 +884,7 @@ _html
 		assert_equal(
 			<<'_tmpl',
 <html>
-$(main)	<div class="non_existent-navi">bar</div>
+$(main.message)$(main)	<div class="non_existent-navi">bar</div>
 </html>
 _tmpl
 			result[:tmpl],

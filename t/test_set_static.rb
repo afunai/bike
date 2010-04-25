@@ -31,7 +31,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-$(.message)	<ul id="@(name)" class="sofa-blog">
+	<ul id="@(name)" class="sofa-blog">
 $()	</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl

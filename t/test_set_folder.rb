@@ -182,7 +182,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 		assert_equal(
 			<<'_html'.chomp,
 <h1>index</h1>
-$(main)
+$(main.message)$(main)
 _html
 			folder[:tmpl],
 			'Folder#initialize should load [:tmpl] from [:dir]/index.html'
@@ -190,7 +190,7 @@ _html
 		assert_equal(
 			<<'_html'.chomp,
 <h1>summary</h1>
-$(main)
+$(main.message)$(main)
 _html
 			folder[:tmpl_summary],
 			'Folder#initialize should load [:tmpl_summary] from [:dir]/summary.html'
@@ -198,7 +198,7 @@ _html
 
 		assert_equal(
 			<<'_html'.chomp,
-$(.message)<ul id="@(name)" class="sofa-blog">
+<ul id="@(name)" class="sofa-blog">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _html
@@ -207,7 +207,7 @@ _html
 		)
 		assert_equal(
 			<<'_html'.chomp,
-$(.message)<table id="@(name)" class="sofa-blog">
+<table id="@(name)" class="sofa-blog">
 $()</table>
 $(.navi)$(.submit)$(.action_create)
 _html

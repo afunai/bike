@@ -47,12 +47,19 @@ class Sofa
 		self.current[:base]
 	end
 
+	def self.static(env)
+		@static ||= Rack::Directory.new Sofa['ROOT_DIR']
+		@static.call env
+	end
+
 	def call(env)
 		req    = Rack::Request.new env
 		method = req.request_method.downcase
 		params = params_from_request req
 		path   = req.path_info
 		tid    = Sofa::Path.tid_of path
+
+		return Sofa.static(env) if ::File.expand_path(path) =~ %r{/(css|js|img|imgs|image|images)/}
 
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req

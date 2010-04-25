@@ -257,16 +257,17 @@ class Sofa
 	end
 
 	def response_ok(result = {})
+		body = result[:body].to_s
 		[
 			200,
 			(
 				result[:headers] ||
 				{
 					'Content-Type'   => 'text/html',
-					'Content-Length' => result[:body].size.to_s,
+					'Content-Length' => body.size.to_s,
 				}
 			),
-			result[:body],
+			body,
 		]
 	end
 
@@ -319,16 +320,17 @@ _html
 	end
 
 	def response_unprocessable_entity(result = {})
+		body = result[:body].to_s
 		[
 			422,
 			(
 				result[:headers] ||
 				{
 					'Content-Type'   => 'text/html',
-					'Content-Length' => result[:body].size.to_s,
+					'Content-Length' => body.size.to_s,
 				}
 			),
-			result[:body],
+			body,
 		]
 	end
 

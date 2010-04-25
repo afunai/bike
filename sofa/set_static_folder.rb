@@ -47,8 +47,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	end
 
 	def load_val(dir,parent)
-		val_file = ::File.join Sofa['ROOT_DIR'],"#{dir}.yaml"
-		val_file = Sofa['ROOT_DIR'].sub(/\/?$/,'.yaml') if dir == ''
+		val_file = ::File.join(Sofa['ROOT_DIR'],dir,'index.yaml')
 		v = ::File.exists?(val_file) ? ::File.open(val_file) {|f| YAML.load f.read } : {}
 		parent ? {
 			'_label' => parent.val('_label'),

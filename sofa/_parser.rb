@@ -124,7 +124,7 @@ module Sofa::Parser
 			) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.uri_detail)')
 		else
 			item_meta[:tmpl].sub!(
-				/\$\(.*?\)/m,
+				/\$\([^\.]*?\)/m,
 				'$(.a_update)\&</a>'
 			) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.action_update)')
 			item_meta[:tmpl].sub!(

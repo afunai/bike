@@ -121,12 +121,12 @@ _html
 	def _g_message(arg)
 		return unless self == Sofa.base
 
-		if !self.valid? && arg[:orig_action] != :create
+		if arg[:dest_action]
+			message = {:alert => 'please login.'}
+		elsif !self.valid? && arg[:orig_action] != :create
 			message = {:error => 'malformed input.'}
 		elsif arg[:orig_action] == :confirm
 			message = {:notice => 'please confirm.'}
-		elsif arg[:dest_action]
-			message = {:alert => 'please login.'}
 		elsif Sofa.transaction[my[:tid]].is_a? ::Symbol
 			message = {:notice => "item #{Sofa.transaction[my[:tid]]}."}
 			Sofa.transaction.delete my[:tid]

@@ -732,7 +732,7 @@ _html
 			}
 		)
 		assert_equal(
-			422,
+			403,
 			res.status,
 			'post with an action other than :update should be regarded as :update'
 		)

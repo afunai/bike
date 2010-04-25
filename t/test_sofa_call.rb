@@ -164,6 +164,73 @@ _html
 		)
 	end
 
+	def test_get_static
+		Sofa.client = 'root'
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/css/foo.css'
+		)
+		assert_equal(
+			200,
+			res.status,
+			'Sofa#call should return a static file if the given path is under css/, js/, etc.'
+		)
+		assert_equal(
+			'text/css',
+			res.headers['Content-Type'],
+			'Sofa#call should return a static file if the given path is under css/, js/, etc.'
+		)
+		assert_equal(
+			"#foo {bar: baz;}\n",
+			res.body,
+			'Sofa#call should return a static file if the given path is under css/, js/, etc.'
+		)
+	end
+
+	def test_get_static_not_css
+		Sofa.client = 'root'
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/not_css/foo.css'
+		)
+		assert_not_equal(
+			"#foo {bar: baz;}\n",
+			res.body,
+			'Sofa#call should not return a static file if the step is not exactly css/, js/, etc.'
+		)
+	end
+
+	def test_get_static_non_exist
+		Sofa.client = 'root'
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/css/non-exist.css'
+		)
+		assert_equal(
+			404,
+			res.status,
+			'Sofa#call should return 404 if the static file is not found'
+		)
+	end
+
+	def test_get_static_forbidden
+		Sofa.client = 'root'
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/_users/00000000_test.yaml'
+		)
+		assert_no_match(
+			/password/,
+			res.body,
+			'Sofa#call should not return meta files nor raw data'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/_users/css/../00000000_test.yaml'
+		)
+		assert_no_match(
+			/password/,
+			res.body,
+			'Sofa#call should not allow bad paths'
+		)
+	end
+
 	def test_post_simple_create
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear

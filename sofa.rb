@@ -127,15 +127,13 @@ class Sofa
 
 	def get(base,params)
 		if base.is_a? Sofa::File
-			base.body ?
-				response_ok(
-					:headers => {
-						'Content-Type'   => base.val['type'],
-						'Content-Length' => base.body.size.to_s,
-					},
-					:body    => base.body
-				) :
-				response_not_found
+			response_ok(
+				:headers => {
+					'Content-Type'   => base.val['type'],
+					'Content-Length' => base.body.to_s.size.to_s,
+				},
+				:body    => base.body
+			)
 		else
 			response_ok :body => _get(base,params)
 		end
@@ -258,6 +256,7 @@ class Sofa
 
 	def response_ok(result = {})
 		body = result[:body].to_s
+		return response_not_found(result) if body.empty?
 		[
 			200,
 			(
@@ -321,6 +320,7 @@ _html
 
 	def response_unprocessable_entity(result = {})
 		body = result[:body].to_s
+		return response_not_found(result) if body.empty?
 		[
 			422,
 			(

@@ -105,6 +105,7 @@ class Sofa::Field
 	end
 
 	def permit?(action)
+		return false if action == :create && @result == :load
 		return true unless my[:sd]
 		return true if my[:sd].workflow.permit?(my[:roles],action)
 

@@ -85,18 +85,19 @@ class Sofa
 			elsif params[:action] == :confirm
 				confirm(base,params)
 			else
-				post(base,params)
+				begin
+					post(base,params)
+				rescue Sofa::Error::Forbidden
+					response_forbidden
+				end
 			end
 		rescue Sofa::Error::Forbidden
 			if params[:action] && Sofa.client == 'nobody'
 				params[:dest_action] = (method == 'post') ? :index : params[:action]
 				params[:action] = :login
 			end
-			begin
-				response_unprocessable_entity :body => _get(base,params)
-			rescue Sofa::Error::Forbidden
-				response_forbidden
-			end
+			response_unprocessable_entity(:body => _get(base,params)) rescue response_forbidden
+# TODO: rescue Error::System etc.
 		end
 	end
 

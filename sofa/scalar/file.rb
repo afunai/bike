@@ -35,6 +35,8 @@ class Sofa::File < Sofa::Field
 	end
 
 	def body
+		raise Sofa::Error::Forbidden unless permit? :read
+
 		if ps = my[:persistent_sd]
 			@body ||= ps.storage.val my[:persistent_name]
 		end

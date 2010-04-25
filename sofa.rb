@@ -141,7 +141,7 @@ class Sofa
 	end
 
 	def confirm(base,params)
-		Sofa.transaction[base[:tid]] ||= base
+		Sofa.transaction[base[:tid]] ||= base if base[:tid] =~ Sofa::REX::TID
 
 		base.update params
 		if base.commit(:temp) || params[:sub_action] == :delete
@@ -158,7 +158,7 @@ class Sofa
 	end
 
 	def post(base,params)
-		Sofa.transaction[base[:tid]] ||= base
+		Sofa.transaction[base[:tid]] ||= base if base[:tid] =~ Sofa::REX::TID
 
 		base.update params
 		if params[:status]

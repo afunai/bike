@@ -16,6 +16,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 	end
 
 	def test_get
+		Sofa.client = nil
 		res = Rack::MockRequest.new(@sofa).get(
 			'http://example.com/foo/'
 		)
@@ -27,6 +28,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 	end
 
 	def test_get_non_exist
+		Sofa.client = nil
 		res = Rack::MockRequest.new(@sofa).get(
 			'http://example.com/foo/non/exist/'
 		)
@@ -38,6 +40,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 	end
 
 	def test_get_partial
+		Sofa.client = nil
 		res = Rack::MockRequest.new(@sofa).get(
 			'http://example.com/foo/20091120_0001/name/'
 		)
@@ -49,6 +52,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 	end
 
 	def test_get_sub
+		Sofa.client = nil
 		res = Rack::MockRequest.new(@sofa).get(
 			'http://example.com/foo/'
 		)
@@ -110,6 +114,7 @@ _html
 	end
 
 	def test_get_summary
+		Sofa.client = nil
 		res = Rack::MockRequest.new(@sofa).get(
 			'http://example.com/t_summary/p=1/'
 		)

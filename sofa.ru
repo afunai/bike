@@ -8,6 +8,5 @@ require 'sofa'
 
 use Rack::ShowExceptions
 use Rack::Session::Pool #Cookie
-use Rack::Static,:urls => ['/css','/js'],:root => './data/_static'
 
 run Sofa.new

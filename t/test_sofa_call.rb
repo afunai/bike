@@ -665,6 +665,64 @@ _html
 		)
 	end
 
+	def test_post_enquete_forbidden
+		Sofa.client = nil
+		Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.build(
+			'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}
+		)
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_enquete/main/update.html',
+			{
+				:input => "20100425_1234-comment=modified&20100425_1234.action=create&.status-public=create"
+			}
+		)
+		assert_equal(
+			403,
+			res.status,
+			'Sofa#call should not allow nobody to update an existing enquete'
+		)
+		assert_equal(
+			{'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}},
+			Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.val,
+			'Sofa#call should not allow nobody to update an existing enquete'
+		)
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_enquete/main/create.html',
+			{
+				:input => "20100425_1234-comment=modified&20100425_1234.action=create&.status-public=create"
+			}
+		)
+		assert_equal(
+			403,
+			res.status,
+			'Sofa#call should not allow nobody to update an existing enquete'
+		)
+		assert_equal(
+			{'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}},
+			Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.val,
+			'Sofa#call should not allow nobody to update an existing enquete'
+		)
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_enquete/main/20100425_1234/create.html',
+			{
+				:input => "comment=modified&.action=create&.status-public=create"
+			}
+		)
+		assert_equal(
+			403,
+			res.status,
+			'Sofa#call should not allow nobody to update an existing enquete'
+		)
+		assert_equal(
+			{'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}},
+			Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.val,
+			'Sofa#call should not allow nobody to update an existing enquete'
+		)
+	end
+
 	def test_post_wrong_action
 		Sofa.client = nil
 		res = Rack::MockRequest.new(@sofa).post(

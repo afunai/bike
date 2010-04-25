@@ -113,6 +113,88 @@ _html
 		)
 	end
 
+	def test_get_enquete_forbidden
+		Sofa.client = nil
+		Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.build(
+			'20100425_1234' => {'name' => 'cz','comment' => 'howdy.'}
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/20100425/1234/index.html'
+		)
+		assert_no_match(
+			/howdy/,
+			res.body,
+			'getting an enquete by nobody should not return any contents'
+		)
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/20100425_1234/'
+		)
+		assert_no_match(
+			/howdy/,
+			res.body,
+			'peeking an enquete by nobody should not return any contents'
+		)
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/20100425_1234/comment/'
+		)
+		assert_no_match(
+			/howdy/,
+			res.body,
+			'peeking an enquete by nobody should not return any contents'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/20100425/1234/done.html'
+		)
+		assert_no_match(
+			/howdy/,
+			res.body,
+			'getting an enquete by nobody should not return any contents'
+		)
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/20100425_1234/done.html'
+		)
+		assert_no_match(
+			/howdy/,
+			res.body,
+			'peeking an enquete by nobody should not return any contents'
+		)
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/20100425_1234/comment/done.html'
+		)
+		assert_no_match(
+			/howdy/,
+			res.body,
+			'peeking an enquete by nobody should not return any contents'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/20100425/1234/confirm_create.html'
+		)
+		assert_no_match(
+			/howdy/,
+			res.body,
+			'getting an enquete by nobody should not return any contents'
+		)
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/20100425_1234/confirm_create.html'
+		)
+		assert_no_match(
+			/howdy/,
+			res.body,
+			'peeking an enquete by nobody should not return any contents'
+		)
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/t_enquete/20100425_1234/comment/confirm_create.html'
+		)
+		assert_no_match(
+			/howdy/,
+			res.body,
+			'peeking an enquete by nobody should not return any contents'
+		)
+	end
+
 	def test_get_summary
 		Sofa.client = nil
 		res = Rack::MockRequest.new(@sofa).get(

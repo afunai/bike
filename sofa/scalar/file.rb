@@ -18,9 +18,7 @@ class Sofa::File < Sofa::Field
 	end
 
 	def meta_persistent_sd
-		f = self
-		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Dynamic) && f.storage.persistent?
-		f
+		find_ancestor {|f| f.is_a?(Sofa::Set::Dynamic) && f.storage.persistent? }
 	end
 
 	def meta_persistent_name

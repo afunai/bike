@@ -48,6 +48,11 @@ class Sofa::Field
 		item_steps.empty? ? self : nil # scalar has no item
 	end
 
+	def find_ancestor(&block)
+		f = self
+		block.call(f) ? (return f) : (f = f[:parent]) until f.nil?
+	end
+
 	def meta_name
 		my[:parent] && !my[:parent].is_a?(Sofa::Set::Static::Folder) ?
 			"#{my[:parent][:name]}-#{my[:id]}" : my[:id]
@@ -64,15 +69,11 @@ class Sofa::Field
 	end
 
 	def meta_folder
-		f = self
-		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Static::Folder)
-		f
+		find_ancestor {|f| f.is_a? Sofa::Set::Static::Folder }
 	end
 
 	def meta_sd
-		f = self
-		f = f[:parent] until f.nil? || f.is_a?(Sofa::Set::Dynamic)
-		f
+		find_ancestor {|f| f.is_a? Sofa::Set::Dynamic }
 	end
 
 	def meta_client
@@ -108,12 +109,7 @@ class Sofa::Field
 		return false if action == :create && @result == :load
 		return true unless my[:sd]
 		return true if my[:sd].workflow.permit?(my[:roles],action)
-
-		i = self
-		until i.nil?
-			return true if i[:id] =~ Sofa::REX::ID_NEW # descendant of a new item
-			i = i[:parent]
-		end
+		return true if find_ancestor {|f| f[:id] =~ Sofa::REX::ID_NEW } # descendant of a new item
 	end
 
 	def default_action

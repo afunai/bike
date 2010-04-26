@@ -6,13 +6,8 @@
 module Sofa::Meta
 
 	def post(action,v = nil)
-		raise Sofa::Error::Forbidden unless permit_post?(action,v)
-
-		_post(action,val_cast(v))
+		super
 		my[:parent][klass_id] = val if my[:parent]
-
-		@result = nil
-		@action = nil
 		self
 	end
 

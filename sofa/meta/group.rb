@@ -13,6 +13,7 @@ class Sofa::Meta::Group < Sofa::Field
 		if action == :load
 			@val = val_cast v
 		end
+		nil
 	end
 
 end

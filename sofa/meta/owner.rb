@@ -15,6 +15,7 @@ class Sofa::Meta::Owner < Sofa::Field
 		elsif action == :create
 			@val = Sofa.client
 		end
+		nil
 	end
 
 end

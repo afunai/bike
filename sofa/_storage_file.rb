@@ -56,11 +56,11 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def _select_by_d(conds)
-		glob(conds[:d].to_s).collect {|f| f[/\d.*/][Sofa::REX::ID] }.compact
+		glob(conds[:d].to_s).collect {|f| f[/\.yaml$/] && f[/\d.*/][Sofa::REX::ID] }.compact
 	end
 
 	def _select_all(conds)
-		glob.collect {|f| f[/\d.*/][Sofa::REX::ID] }.compact
+		glob.collect {|f| f[/\.yaml$/] && f[/\d.*/][Sofa::REX::ID] }.compact
 	end
 
 	def glob(id = :all)

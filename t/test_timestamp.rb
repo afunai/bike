@@ -17,11 +17,29 @@ class TC_Timestamp < Test::Unit::TestCase
 	def teardown
 	end
 
-	def ptest_meta
+	def test_meta
+		meta = nil
+		Sofa::Parser.gsub_scalar('$(foo meta-timestamp can_edit)') {|id,m|
+			meta = m
+			''
+		}
+		f = Sofa::Field.instance meta
 		assert_equal(
-			3,
-			@f[:size],
-			'Timestamp#initialize should set :size from the token'
+			true,
+			f[:can_edit],
+			'Timestamp#initialize should set :can_edit from the tokens'
+		)
+
+		meta = nil
+		Sofa::Parser.gsub_scalar('$(foo meta-timestamp can_update)') {|id,m|
+			meta = m
+			''
+		}
+		f = Sofa::Field.instance meta
+		assert_equal(
+			true,
+			f[:can_update],
+			'Timestamp#initialize should set :can_update from the tokens'
 		)
 	end
 

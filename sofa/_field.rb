@@ -157,6 +157,8 @@ class Sofa::Field
 		if _post action,val_cast(v)
 			@result = (action == :load || action == :load_default) ? action : nil
 			@action = (action == :load || action == :load_default) ? nil : action
+		else
+			@result = @action = nil
 		end
 		self
 	end

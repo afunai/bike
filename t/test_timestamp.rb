@@ -287,6 +287,26 @@ class TC_Timestamp < Test::Unit::TestCase
 		)
 	end
 
+	def test_update_can_not_edit
+		@f[:can_edit] = false
+		@f.load(
+			'create'  => Time.local(2010,4,1),
+			'update'  => Time.local(2010,4,3),
+			'publish' => Time.local(2010,4,2)
+		)
+
+		@f.update '2010/4/26'
+		assert_equal(
+			Time.local(2010,4,2),
+			@f.val['publish'],
+			"Timestamp#update should not set @val['publish'] unless my[:can_edit]"
+		)
+		assert_nil(
+			@f.action,
+			"Timestamp#update should not set @action unless my[:can_edit]"
+		)
+	end
+
 	def test_update_with_check
 		@f[:can_update] = true
 		@f.load(

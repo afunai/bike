@@ -7,4 +7,12 @@ class Sofa::Meta::Group < Sofa::Field
 
 	include Sofa::Meta
 
+	private
+
+	def _post(action,v)
+		if action == :load
+			@val = val_cast v
+		end
+	end
+
 end

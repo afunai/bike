@@ -181,6 +181,7 @@ class TC_Timestamp < Test::Unit::TestCase
 	end
 
 	def test_create_with_date
+		@f[:can_edit] = true
 		@f.create '2010/4/26'
 		assert_equal(
 			@f.val['update'],
@@ -200,6 +201,7 @@ class TC_Timestamp < Test::Unit::TestCase
 	end
 
 	def test_create_with_check
+		@f[:can_update] = true
 		@f.create 'true'
 		assert_equal(
 			@f.val['update'],
@@ -251,6 +253,7 @@ class TC_Timestamp < Test::Unit::TestCase
 	end
 
 	def test_update_with_date
+		@f[:can_edit] = true
 		@f.load(
 			'create'  => Time.local(2010,4,1),
 			'update'  => Time.local(2010,4,3),
@@ -285,6 +288,7 @@ class TC_Timestamp < Test::Unit::TestCase
 	end
 
 	def test_update_with_check
+		@f[:can_update] = true
 		@f.load(
 			'create'  => Time.local(2010,4,1),
 			'update'  => Time.local(2010,4,3),

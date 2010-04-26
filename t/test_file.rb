@@ -312,6 +312,50 @@ _html
 		)
 	end
 
+# TODO: test on all available storages.
+	def test_select
+		Sofa.client = 'root'
+		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd.storage.clear
+		sd.update(
+			'20100425_1234' => {
+				'foo' => {
+					:type     => 'image/jpeg',
+					:tempfile => @file,
+					:filename => 'foo.jpg',
+					:name     => 't_file'
+				},
+			}
+		).commit :persistent
+
+		assert_equal(
+			['20100425_1234'],
+			sd.collect {|item| item[:id] },
+			'storages should distinguish between data and files'
+		)
+		assert_equal(
+			['20100425_1234'],
+			sd.instance_eval {
+				collect_item(:id => '20100425_1234') {|item| item[:id] }
+			},
+			'storages should distinguish between data and files'
+		)
+		assert_equal(
+			['20100425_1234'],
+			sd.instance_eval {
+				collect_item(:d => '201004') {|item| item[:id] }
+			},
+			'storages should distinguish between data and files'
+		)
+		assert_equal(
+			['20100425_1234'],
+			sd.instance_eval {
+				collect_item({}) {|item| item[:id] }
+			},
+			'storages should distinguish between data and files'
+		)
+	end
+
 	def test_call_body
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')

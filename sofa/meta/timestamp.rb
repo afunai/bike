@@ -36,16 +36,16 @@ class Sofa::Meta::Timestamp < Sofa::Field
 					'update'  => now,
 					'publish' => now,
 				}
-				if v['publish'].is_a? ::Time
+				if my[:can_edit] && v['publish'].is_a?(::Time)
 					@val['publish'] = v['publish']
 				else
 					nil # do not set @action
 				end
 			when :update
 				@val['update'] = Time.now
-				if v['publish'].is_a? ::Time
+				if my[:can_edit] && v['publish'].is_a?(::Time)
 					@val['publish'] = v['publish']
-				elsif v['publish'] == :same_as_update
+				elsif my[:can_update] && v['publish'] == :same_as_update
 					@val['publish'] = @val['update']
 				else
 					nil # do not set @action

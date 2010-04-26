@@ -9,6 +9,12 @@ class Sofa::Meta::Timestamp < Sofa::Field
 
 	REX_DATE = /\A(\d+).(\d+).(\d+)(?:\s+(\d+):(\d+)(?::(\d+))?)?\z/
 
+	def initialize(meta = {})
+		meta[:can_edit]   = true if meta[:tokens].to_a.include? 'can_edit'
+		meta[:can_update] = true if meta[:tokens].to_a.include? 'can_update'
+		super
+	end
+
 	def errors
 		if @date_str && @date_str !~ REX_DATE
 			['wrong format']

@@ -5,49 +5,21 @@
 
 module Sofa::Meta
 
-	private
+	def post(action,v = nil)
+		raise Sofa::Error::Forbidden unless permit_post?(action,v)
 
-	def _post(action,v)
-		super
-		my[:parent][klass_id] = val if my[:parent] && !empty?
+		_post(action,val_cast(v))
+		my[:parent][klass_id] = val if my[:parent]
+
+		@result = nil
+		@action = nil
+		self
 	end
+
+	private
 
 	def klass_id
 		self.class.to_s[/\w+$/].downcase.intern
 	end
-
-end
-
-
-class Sofa::Meta::Owner < Sofa::Field
-
-	include Sofa::Meta
-
-	def post(action,v = nil)
-		raise Sofa::Error::Forbidden unless permit_post?(action,v)
-
-		if action == :load
-			@val = val_cast(v)
-		elsif action == :create
-			@val = Sofa.client
-# don't be pending
-#			@action = action
-		end
-		my[:parent][:owner] = val if my[:parent] && !empty?
-
-		self
-	end
-
-end
-
-
-class Sofa::Meta::Group < Sofa::Field
-
-	include Sofa::Meta
-
-# TODO: remove?
-def post(action,v)
-	super if action == :load || action == :create
-end
 
 end

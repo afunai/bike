@@ -398,6 +398,7 @@ class TC_Storage < Test::Unit::TestCase
 			_test_delete(storage,id)
 
 			_test_new_id(storage)
+			_test_rename(storage)
 			_test_clear(storage)
 
 			id = _test_add_raw(storage)
@@ -504,6 +505,36 @@ class TC_Storage < Test::Unit::TestCase
 			'19810426_0001',
 			id5,
 			"#{storage.class}#new_id should refer to val['_timestamp'] if available"
+		)
+	end
+
+	def _test_rename(storage)
+		orig_id = storage.store(:new_id,{'foo' => 'bar'})
+		file_id = storage.store("#{orig_id}-file",'i am file.','bin')
+		new_id  = storage.store(orig_id,{'_id' => 'renamed'})
+
+		assert_not_equal(
+			orig_id,
+			new_id,
+			"#{storage.class}#store should rename the element given a different id / timestamp"
+		)
+		assert_equal(
+			{'_id' => 'renamed'},
+			storage.val(new_id),
+			"#{storage.class}#store should rename the element given a different id / timestamp"
+		)
+		assert_equal(
+			'i am file.',
+			storage.val("#{new_id}-file"),
+			"#{storage.class}#store should rename the descendant elements"
+		)
+		assert_nil(
+			storage.val(orig_id),
+			"#{storage.class}#store should rename the element given a different id / timestamp"
+		)
+		assert_nil(
+			storage.val(file_id),
+			"#{storage.class}#store should rename the descendant elements"
 		)
 	end
 

@@ -93,6 +93,13 @@ class TC_Timestamp < Test::Unit::TestCase
 			@f.send(:val_cast,v),
 			"Timestamp#val_cast should cast the val to v['published'] if the val represents a date"
 		)
+
+		v = '2010-4-89'
+		assert_equal(
+			{},
+			@f.send(:val_cast,v),
+			'Timestamp#val_cast should return an empty hash if the given date is out of range'
+		)
 	end
 
 	def ptest_get
@@ -127,6 +134,12 @@ class TC_Timestamp < Test::Unit::TestCase
 		@f.load 'someday'
 		assert_equal(
 			['wrong format'],
+			@f.errors,
+			'Timestamp#errors should return the errors of the current val'
+		)
+		@f.load '2010-4-89'
+		assert_equal(
+			['out of range'],
 			@f.errors,
 			'Timestamp#errors should return the errors of the current val'
 		)

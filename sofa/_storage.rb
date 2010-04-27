@@ -183,7 +183,11 @@ class Sofa::Storage
 	def new_id(v = {})
 		return "00000000_#{v['_id']}" if v['_id'] =~ /\A#{Sofa::REX::ID_SHORT}\z/
 
-		d = Time.now.strftime '%Y%m%d'
+		if v['_timestamp'] && v['_timestamp']['published'].is_a?(::Time)
+			d = v['_timestamp']['published'].strftime '%Y%m%d'
+		else
+			d = Time.now.strftime '%Y%m%d'
+		end
 		if max_in_d = select(:d => d,:order => 'id').last
 			d + '_%.4d' % (max_in_d[/\d{4}$/].to_i + 1)
 		else

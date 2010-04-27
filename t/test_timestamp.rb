@@ -102,16 +102,25 @@ class TC_Timestamp < Test::Unit::TestCase
 		)
 	end
 
-	def ptest_get
-		@f.load 'bar'
+	def test_get
+		@f.load(
+			'created'   => Time.local(2010,4,25),
+			'updated'   => Time.local(2010,4,27),
+			'published' => Time.local(2010,4,26,20,14,45)
+		)
 		assert_equal(
-			'bar',
+			'2010-04-26T20:14:45',
 			@f.get,
 			'Timestamp#get should return proper string'
 		)
 		assert_equal(
-			'<input type="timestamp" name="" value="bar" class="" />',
-			@f.get(:action => :update),
+			'2010-04-25T00:00:00',
+			@f.get(:action => :created),
+			'Timestamp#get should return proper string'
+		)
+		assert_equal(
+			'2010-04-27T00:00:00',
+			@f.get(:action => :updated),
 			'Timestamp#get should return proper string'
 		)
 	end

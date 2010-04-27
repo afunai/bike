@@ -52,9 +52,9 @@ class TC_Timestamp < Test::Unit::TestCase
 		)
 
 		v = {
-			'create'  => Time.local(2010,4,1),
-			'update'  => Time.local(2010,4,3),
-			'publish' => Time.local(2010,4,2),
+			'created'   => Time.local(2010,4,1),
+			'updated'   => Time.local(2010,4,3),
+			'published' => Time.local(2010,4,2),
 		}
 		assert_equal(
 			v,
@@ -64,34 +64,34 @@ class TC_Timestamp < Test::Unit::TestCase
 
 		v = 'true'
 		assert_equal(
-			{'publish' => :same_as_update},
+			{'published' => :same_as_updated},
 			@f.send(:val_cast,v),
-			"Timestamp#val_cast should set v['publish'] to :same_as_update if the val is 'true'"
+			"Timestamp#val_cast should set v['published'] to :same_as_updated if the val is 'true'"
 		)
 
 		v = '2010/4/26'
 		assert_equal(
-			{'publish' => Time.local(2010,4,26)},
+			{'published' => Time.local(2010,4,26)},
 			@f.send(:val_cast,v),
-			"Timestamp#val_cast should cast the val to v['publish'] if the val represents a date"
+			"Timestamp#val_cast should cast the val to v['published'] if the val represents a date"
 		)
 		v = '2010-4-26'
 		assert_equal(
-			{'publish' => Time.local(2010,4,26)},
+			{'published' => Time.local(2010,4,26)},
 			@f.send(:val_cast,v),
-			"Timestamp#val_cast should cast the val to v['publish'] if the val represents a date"
+			"Timestamp#val_cast should cast the val to v['published'] if the val represents a date"
 		)
 		v = '2010-4-26 20:14'
 		assert_equal(
-			{'publish' => Time.local(2010,4,26,20,14)},
+			{'published' => Time.local(2010,4,26,20,14)},
 			@f.send(:val_cast,v),
-			"Timestamp#val_cast should cast the val to v['publish'] if the val represents a date"
+			"Timestamp#val_cast should cast the val to v['published'] if the val represents a date"
 		)
 		v = '2010-4-26 20:14:45'
 		assert_equal(
-			{'publish' => Time.local(2010,4,26,20,14,45)},
+			{'published' => Time.local(2010,4,26,20,14,45)},
 			@f.send(:val_cast,v),
-			"Timestamp#val_cast should cast the val to v['publish'] if the val represents a date"
+			"Timestamp#val_cast should cast the val to v['published'] if the val represents a date"
 		)
 	end
 
@@ -134,15 +134,15 @@ class TC_Timestamp < Test::Unit::TestCase
 
 	def test_load
 		@f.load(
-			'create'  => Time.local(2010,4,1),
-			'update'  => Time.local(2010,4,3),
-			'publish' => Time.local(2010,4,2)
+			'created'   => Time.local(2010,4,1),
+			'updated'   => Time.local(2010,4,3),
+			'published' => Time.local(2010,4,2)
 		)
 		assert_equal(
 			{
-				'create'  => Time.local(2010,4,1),
-				'update'  => Time.local(2010,4,3),
-				'publish' => Time.local(2010,4,2)
+				'created'   => Time.local(2010,4,1),
+				'updated'   => Time.local(2010,4,3),
+				'published' => Time.local(2010,4,2)
 			},
 			@f.val,
 			'Timestamp#load should load the given val like a normal field'
@@ -161,18 +161,18 @@ class TC_Timestamp < Test::Unit::TestCase
 	def test_create
 		@f.create nil
 		assert_equal(
-			@f.val['update'],
-			@f.val['create'],
+			@f.val['updated'],
+			@f.val['created'],
 			'Timestamp#create should set the default vals'
 		)
 		assert_equal(
-			@f.val['publish'],
-			@f.val['create'],
+			@f.val['published'],
+			@f.val['created'],
 			'Timestamp#create should set the default vals'
 		)
 		assert_nil(
 			@f.action,
-			"Timestamp#create should not set @action without v['publish']"
+			"Timestamp#create should not set @action without v['published']"
 		)
 		assert_nil(
 			@f.result,
@@ -184,19 +184,19 @@ class TC_Timestamp < Test::Unit::TestCase
 		@f[:can_edit] = true
 		@f.create '2010/4/26'
 		assert_equal(
-			@f.val['update'],
-			@f.val['create'],
+			@f.val['updated'],
+			@f.val['created'],
 			'Timestamp#create should set the default vals'
 		)
 		assert_equal(
 			Time.local(2010,4,26),
-			@f.val['publish'],
-			"Timestamp#create should set @val['publish'] if v['publish'] is a date"
+			@f.val['published'],
+			"Timestamp#create should set @val['published'] if v['published'] is a date"
 		)
 		assert_equal(
 			:create,
 			@f.action,
-			"Timestamp#create should set @action if v['publish'] is a date"
+			"Timestamp#create should set @action if v['published'] is a date"
 		)
 	end
 
@@ -204,47 +204,47 @@ class TC_Timestamp < Test::Unit::TestCase
 		@f[:can_update] = true
 		@f.create 'true'
 		assert_equal(
-			@f.val['update'],
-			@f.val['create'],
+			@f.val['updated'],
+			@f.val['created'],
 			'Timestamp#create should set the default vals'
 		)
 		assert_equal(
-			@f.val['publish'],
-			@f.val['create'],
+			@f.val['published'],
+			@f.val['created'],
 			'Timestamp#create should set the default vals'
 		)
 		assert_nil(
 			@f.action,
-			"Timestamp#create should not set @action if v['publish'] is not a date"
+			"Timestamp#create should not set @action if v['published'] is not a date"
 		)
 	end
 
 	def test_update
 		@f.load(
-			'create'  => Time.local(2010,4,1),
-			'update'  => Time.local(2010,4,3),
-			'publish' => Time.local(2010,4,2)
+			'created'   => Time.local(2010,4,1),
+			'updated'   => Time.local(2010,4,3),
+			'published' => Time.local(2010,4,2)
 		)
 
 		@f.update nil
 		assert_equal(
 			Time.local(2010,4,1),
-			@f.val['create'],
-			"Timestamp#update should keep @val['create']"
+			@f.val['created'],
+			"Timestamp#update should keep @val['created']"
 		)
 		assert_not_equal(
 			Time.local(2010,4,3),
-			@f.val['update'],
-			"Timestamp#update should update @val['update']"
+			@f.val['updated'],
+			"Timestamp#update should updated @val['updated']"
 		)
 		assert_equal(
 			Time.local(2010,4,2),
-			@f.val['publish'],
-			"Timestamp#update should keep @val['publish']"
+			@f.val['published'],
+			"Timestamp#update should keep @val['published']"
 		)
 		assert_nil(
 			@f.action,
-			"Timestamp#update should not set @action without v['publish']"
+			"Timestamp#update should not set @action without v['published']"
 		)
 		assert_nil(
 			@f.result,
@@ -255,31 +255,31 @@ class TC_Timestamp < Test::Unit::TestCase
 	def test_update_with_date
 		@f[:can_edit] = true
 		@f.load(
-			'create'  => Time.local(2010,4,1),
-			'update'  => Time.local(2010,4,3),
-			'publish' => Time.local(2010,4,2)
+			'created'   => Time.local(2010,4,1),
+			'updated'   => Time.local(2010,4,3),
+			'published' => Time.local(2010,4,2)
 		)
 
 		@f.update '2010/4/26'
 		assert_equal(
 			Time.local(2010,4,1),
-			@f.val['create'],
-			"Timestamp#update should keep @val['create']"
+			@f.val['created'],
+			"Timestamp#update should keep @val['created']"
 		)
 		assert_not_equal(
 			Time.local(2010,4,3),
-			@f.val['update'],
-			"Timestamp#update should update @val['update']"
+			@f.val['updated'],
+			"Timestamp#update should updated @val['updated']"
 		)
 		assert_equal(
 			Time.local(2010,4,26),
-			@f.val['publish'],
-			"Timestamp#update should set @val['publish'] if v['publish'] is a date"
+			@f.val['published'],
+			"Timestamp#update should set @val['published'] if v['published'] is a date"
 		)
 		assert_equal(
 			:update,
 			@f.action,
-			"Timestamp#update should set @action if v['publish'] is a date"
+			"Timestamp#update should set @action if v['published'] is a date"
 		)
 		assert_nil(
 			@f.result,
@@ -290,16 +290,16 @@ class TC_Timestamp < Test::Unit::TestCase
 	def test_update_can_not_edit
 		@f[:can_edit] = false
 		@f.load(
-			'create'  => Time.local(2010,4,1),
-			'update'  => Time.local(2010,4,3),
-			'publish' => Time.local(2010,4,2)
+			'created'   => Time.local(2010,4,1),
+			'updated'   => Time.local(2010,4,3),
+			'published' => Time.local(2010,4,2)
 		)
 
 		@f.update '2010/4/26'
 		assert_equal(
 			Time.local(2010,4,2),
-			@f.val['publish'],
-			"Timestamp#update should not set @val['publish'] unless my[:can_edit]"
+			@f.val['published'],
+			"Timestamp#update should not set @val['published'] unless my[:can_edit]"
 		)
 		assert_nil(
 			@f.action,
@@ -310,31 +310,31 @@ class TC_Timestamp < Test::Unit::TestCase
 	def test_update_with_check
 		@f[:can_update] = true
 		@f.load(
-			'create'  => Time.local(2010,4,1),
-			'update'  => Time.local(2010,4,3),
-			'publish' => Time.local(2010,4,2)
+			'created'   => Time.local(2010,4,1),
+			'updated'   => Time.local(2010,4,3),
+			'published' => Time.local(2010,4,2)
 		)
 
 		@f.update 'true'
 		assert_equal(
 			Time.local(2010,4,1),
-			@f.val['create'],
-			"Timestamp#update should keep @val['create']"
+			@f.val['created'],
+			"Timestamp#update should keep @val['created']"
 		)
 		assert_not_equal(
 			Time.local(2010,4,3),
-			@f.val['update'],
-			"Timestamp#update should update @val['update']"
+			@f.val['updated'],
+			"Timestamp#update should updated @val['updated']"
 		)
 		assert_equal(
-			@f.val['update'],
-			@f.val['publish'],
-			"Timestamp#update should update @val['publish'] if v['publish'] is :same_as_update"
+			@f.val['updated'],
+			@f.val['published'],
+			"Timestamp#update should updated @val['published'] if v['published'] is :same_as_updated"
 		)
 		assert_equal(
 			:update,
 			@f.action,
-			"Timestamp#update should set @action if v['publish'] is :same_as_update"
+			"Timestamp#update should set @action if v['published'] is :same_as_updated"
 		)
 		assert_nil(
 			@f.result,

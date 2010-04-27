@@ -125,6 +125,32 @@ class TC_Timestamp < Test::Unit::TestCase
 		)
 	end
 
+	def test_get_create
+		@f.load_default
+
+		@f[:can_edit]   = nil
+		@f[:can_update] = nil
+		assert_nil(
+			@f.get(:action => :create),
+			'Timestamp#_g_create should return nil unless [:can_edit]'
+		)
+
+		@f[:can_edit]   = true
+		@f[:can_update] = nil
+		assert_equal(
+			'<input type="text" name="" value="" class="" />',
+			@f.get(:action => :create),
+			'Timestamp#_g_create should return proper string'
+		)
+
+		@f[:can_edit]   = nil
+		@f[:can_update] = true
+		assert_nil(
+			@f.get(:action => :create),
+			'Timestamp#_g_create should return nil if [:can_update]'
+		)
+	end
+
 	def test_errors
 		@f.load nil
 		assert_equal(

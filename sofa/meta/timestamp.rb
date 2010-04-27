@@ -50,6 +50,22 @@ class Sofa::Meta::Timestamp < Sofa::Field
 _html
 	end
 
+	def _g_update(arg)
+		if my[:can_edit]
+			v = @date_str
+			v ||= val['published'].is_a?(::Time) ? val['published'].strftime('%Y-%m-%d %H:%M:%S') : ''
+			<<_html.chomp
+<input type="text" name="#{my[:short_name]}" value="#{v}" class="#{_g_class arg}" />#{_g_errors arg}
+_html
+		elsif my[:can_update]
+			label = 'update the timestamp'
+			<<_html.chomp
+<input type="checkbox" id="#{my[:short_name]}" name="#{my[:short_name]}" value="true" />
+<label for="#{my[:short_name]}">#{label}</label>
+_html
+		end
+	end
+
 	def _post(action,v)
 		case action
 			when :load

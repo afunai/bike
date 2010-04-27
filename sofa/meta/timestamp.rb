@@ -34,21 +34,21 @@ class Sofa::Meta::Timestamp < Sofa::Field
 			when :create
 				now = Time.now
 				@val = {
-					'create'  => now,
-					'update'  => now,
-					'publish' => now,
+					'created'   => now,
+					'updated'   => now,
+					'published' => now,
 				}
-				if my[:can_edit] && v['publish'].is_a?(::Time)
-					@val['publish'] = v['publish']
+				if my[:can_edit] && v['published'].is_a?(::Time)
+					@val['published'] = v['published']
 				else
 					nil # do not set @action
 				end
 			when :update
-				@val['update'] = Time.now
-				if my[:can_edit] && v['publish'].is_a?(::Time)
-					@val['publish'] = v['publish']
-				elsif my[:can_update] && v['publish'] == :same_as_update
-					@val['publish'] = @val['update']
+				@val['updated'] = Time.now
+				if my[:can_edit] && v['published'].is_a?(::Time)
+					@val['published'] = v['published']
+				elsif my[:can_update] && v['published'] == :same_as_updated
+					@val['published'] = @val['updated']
 				else
 					nil # do not set @action
 				end
@@ -59,7 +59,7 @@ class Sofa::Meta::Timestamp < Sofa::Field
 		if v.is_a? ::Hash
 			v
 		elsif v == 'true'
-			{'publish' => :same_as_update}
+			{'published' => :same_as_updated}
 		elsif v.is_a? ::String
 			@date_str = v
 			(v =~ REX_DATE) ? {'publish' => Time.local($1,$2,$3,$4,$5,$6)} : {}

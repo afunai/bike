@@ -7,7 +7,7 @@ class Sofa::Meta::Timestamp < Sofa::Field
 
 	include Sofa::Meta
 
-	REX_DATE = /\A(\d+).(\d+).(\d+)(?:\s+(\d+):(\d+)(?::(\d+))?)?\z/
+	REX_DATE = /\A(\d+).(\d+).(\d+)(?:[T\s](\d+):(\d+)(?::(\d+))?)?\z/
 
 	def initialize(meta = {})
 		meta[:can_edit]   = true if meta[:tokens].to_a.include? 'can_edit'

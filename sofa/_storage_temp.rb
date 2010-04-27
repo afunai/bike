@@ -14,7 +14,8 @@ class Sofa::Storage::Temp < Sofa::Storage
 	end
 
 	def val(id = nil)
-		id ? @val[id] : (@val || {})
+		@val ||= {}
+		id ? @val[id] : @val
 	end
 
 	def build(v)

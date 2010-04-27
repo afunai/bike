@@ -34,8 +34,7 @@ class Sofa::Storage::Temp < Sofa::Storage
 			id = new_id v
 			return nil if @val && @val[id]
 		end
-		@val = {} unless @val.is_a? ::Hash
-		@val[id] = v
+		val[id] = v
 		id
 	end
 

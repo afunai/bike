@@ -151,6 +151,53 @@ class TC_Timestamp < Test::Unit::TestCase
 		)
 	end
 
+	def test_get_update
+		@f.load_default
+
+		@f[:can_edit]   = nil
+		@f[:can_update] = nil
+		assert_nil(
+			@f.get(:action => :update),
+			'Timestamp#_g_update should return nil unless [:can_edit] or [:can_update]'
+		)
+
+		@f[:can_edit]   = true
+		@f[:can_update] = nil
+		assert_equal(
+			'<input type="text" name="" value="" class="" />',
+			@f.get(:action => :update),
+			'Timestamp#_g_update should return proper string'
+		)
+
+		@f[:can_edit]   = nil
+		@f[:can_update] = true
+		assert_equal(
+			<<'_html'.chomp,
+<input type="checkbox" id="" name="" value="true" />
+<label for="">update the timestamp</label>
+_html
+			@f.get(:action => :update),
+			'Timestamp#_g_update should return proper string'
+		)
+
+		@f[:can_edit]   = true
+		@f[:can_update] = nil
+		@f.load('published' => Time.local(2010,4,25))
+		assert_equal(
+			'<input type="text" name="" value="2010-04-25 00:00:00" class="" />',
+			@f.get(:action => :update),
+			'Timestamp#_g_update should return proper string'
+		)
+		@f.update '2010-4-89'
+		assert_equal(
+			<<'_html',
+<input type="text" name="" value="2010-4-89" class="error" /><div class="error">out of range</div>
+_html
+			@f.get(:action => :update),
+			'Timestamp#_g_update should return proper string'
+		)
+	end
+
 	def test_errors
 		@f.load nil
 		assert_equal(

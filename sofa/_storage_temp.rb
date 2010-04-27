@@ -43,6 +43,17 @@ class Sofa::Storage::Temp < Sofa::Storage
 		id
 	end
 
+	def move(old_id,new_id)
+		rex = /\A#{old_id}/
+		val.keys.each {|id|
+			if id =~ rex
+				to_id = id.sub(rex,new_id)
+				@val[to_id] = @val.delete id
+			end
+		}
+		new_id
+	end
+
 	private
 
 	def _select_by_id(conds)

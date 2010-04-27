@@ -195,4 +195,11 @@ class Sofa::Storage
 		end
 	end
 
+	def new_id?(id,v)
+		return true if id == :new_id
+		return false unless v.is_a? ::Hash
+
+		(v['_id'] =~ /\A#{Sofa::REX::ID_SHORT}\z/ && id != new_id(v))
+	end
+
 end

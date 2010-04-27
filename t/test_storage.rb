@@ -490,6 +490,21 @@ class TC_Storage < Test::Unit::TestCase
 			id4,
 			"#{storage.class}#store should not create an item with a duplicate id"
 		)
+
+		id5 = storage.store(
+			:new_id,
+			{'_timestamp' => {'published' => Time.local(1981,4,26)}}
+		)
+		assert_match(
+			Sofa::REX::ID,
+			id5,
+			"#{storage.class}#new_id should return a valid id for the element"
+		)
+		assert_equal(
+			'19810426_0001',
+			id5,
+			"#{storage.class}#new_id should refer to val['_timestamp'] if available"
+		)
 	end
 
 	def _test_clear(storage)

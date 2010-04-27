@@ -49,6 +49,10 @@ class Sofa::Storage::File < Sofa::Storage
 		remove_file(id) && id
 	end
 
+	def move(old_id,new_id)
+		rename_file(old_id,new_id) && new_id
+	end
+
 	private
 
 	def _select_by_id(conds)
@@ -126,6 +130,16 @@ class Sofa::Storage::File < Sofa::Storage
 		files = ::Dir.chdir(@dir) { ::Dir.glob glob_pattern } # may include child files
 		files.each {|file|
 			::File.unlink ::File.join(@dir,file)
+		}
+	end
+
+	def rename_file(old_id,new_id)
+		glob_pattern = "#{file_prefix}#{pattern_for old_id.to_a}*"
+		files = ::Dir.chdir(@dir) { ::Dir.glob glob_pattern } # may include child files
+		rex = /^\A#{file_prefix}#{old_id}/
+		files.each {|file|
+			to_file = file.sub(rex,"#{file_prefix}#{new_id}")
+			::File.rename(::File.join(@dir,file),::File.join(@dir,to_file))
 		}
 	end
 

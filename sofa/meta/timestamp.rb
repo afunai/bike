@@ -16,10 +16,12 @@ class Sofa::Meta::Timestamp < Sofa::Field
 	end
 
 	def errors
-		if @date_str && @date_str !~ REX_DATE
-			['wrong format']
-		else
+		if @date_str.nil?
 			[]
+		elsif @date_str =~ REX_DATE
+			(Time.local($1,$2,$3,$4,$5,$6) rescue nil) ? [] : ['out of range']
+		else
+			['wrong format']
 		end
 	end
 

@@ -113,9 +113,11 @@ class Sofa::Storage::File < Sofa::Storage
 		end
 
 		file = "#{file_prefix}#{id}.#{ext}"
+		if old_id && f = ::File.open(::File.join(@dir,file),'a')
+			return if f.pos != 0 # duplicate id
+			move(old_id,id) unless old_id == :new_id
+		end
 		::File.open(::File.join(@dir,file),'a') {|f|
-			break if new_id && f.pos != 0 # duplicate id
-
 			f.flock ::File::LOCK_EX
 			f.seek 0
 			f.truncate 0

@@ -32,7 +32,8 @@ class Sofa::Storage::Temp < Sofa::Storage
 		if new_id?(id,v)
 			old_id = id
 			id = new_id v
-			return nil if @val && @val[id]
+			return if val[id] # duplicate id
+			move(old_id,id) unless old_id == :new_id
 		end
 		val[id] = v
 		id

@@ -29,7 +29,8 @@ class Sofa::Storage::Temp < Sofa::Storage
 	end
 
 	def store(id,v,ext = :unused)
-		if id == :new_id
+		if new_id?(id,v)
+			old_id = id
 			id = new_id v
 			return nil if @val && @val[id]
 		end

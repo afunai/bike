@@ -98,9 +98,9 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def save(id,v,ext)
-		if id == :new_id
-			id = new_id(v)
-			new_id = true
+		if new_id?(id,v)
+			old_id = id
+			id = new_id v
 		end
 
 		if ext

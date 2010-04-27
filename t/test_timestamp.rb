@@ -132,7 +132,12 @@ class TC_Timestamp < Test::Unit::TestCase
 			@f.errors,
 			'Timestamp#errors should return the errors of the current val'
 		)
-
+		@f.load ''
+		assert_equal(
+			[],
+			@f.errors,
+			'Timestamp#errors should return the errors of the current val'
+		)
 		@f.load '2010-4-26 20:14:45'
 		assert_equal(
 			[],

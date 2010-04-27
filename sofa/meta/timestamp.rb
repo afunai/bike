@@ -44,6 +44,12 @@ class Sofa::Meta::Timestamp < Sofa::Field
 		time.is_a?(::Time) ? time.strftime('%Y-%m-%dT%H:%M:%S') : 'n/a'
 	end
 
+	def _g_create(arg)
+		<<_html.chomp if my[:can_edit]
+<input type="text" name="#{my[:short_name]}" value="" class="" />
+_html
+	end
+
 	def _post(action,v)
 		case action
 			when :load

@@ -62,7 +62,7 @@ class Sofa::Meta::Timestamp < Sofa::Field
 			{'published' => :same_as_updated}
 		elsif v.is_a? ::String
 			@date_str = v
-			(v =~ REX_DATE) ? {'publish' => Time.local($1,$2,$3,$4,$5,$6)} : {}
+			(v =~ REX_DATE && t = (Time.local($1,$2,$3,$4,$5,$6) rescue nil)) ? {'published' => t} : {}
 		else
 			{}
 		end

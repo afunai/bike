@@ -27,6 +27,19 @@ class Sofa::Meta::Timestamp < Sofa::Field
 
 	private
 
+	def _g_default(arg)
+		val['published'].strftime('%Y-%m-%dT%H:%M:%S')
+	end
+	alias :_g_published :_g_default
+
+	def _g_created(arg)
+		val['created'].strftime('%Y-%m-%dT%H:%M:%S')
+	end
+
+	def _g_updated(arg)
+		val['updated'].strftime('%Y-%m-%dT%H:%M:%S')
+	end
+
 	def _post(action,v)
 		case action
 			when :load

@@ -516,12 +516,12 @@ class TC_Storage < Test::Unit::TestCase
 		assert_not_equal(
 			orig_id,
 			new_id,
-			"#{storage.class}#store should rename the element given a different id / timestamp"
+			"#{storage.class}#store should rename the element given a different _id"
 		)
 		assert_equal(
 			{'_id' => 'renamed'},
 			storage.val(new_id),
-			"#{storage.class}#store should rename the element given a different id / timestamp"
+			"#{storage.class}#store should rename the element given a different _id"
 		)
 		assert_equal(
 			'i am file.',
@@ -530,7 +530,7 @@ class TC_Storage < Test::Unit::TestCase
 		)
 		assert_nil(
 			storage.val(orig_id),
-			"#{storage.class}#store should rename the element given a different id / timestamp"
+			"#{storage.class}#store should rename the element given a different _id"
 		)
 		assert_nil(
 			storage.val(file_id),

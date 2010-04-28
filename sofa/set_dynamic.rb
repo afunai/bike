@@ -328,11 +328,10 @@ end
 				@item_object.delete id
 				@item_object[item[:id]] = item
 			when :update,nil
-				@storage.store(item[:id],item.val)
-				if item[:id] != id || item.empty?
-					@storage.delete id
-					@item_object.delete id
-					@item_object[item[:id]] = item
+				new_id = @storage.store(item[:id],item.val)
+				if new_id != item[:id]
+					@item_object[new_id] = @item_object.delete item[:id]
+					item[:id] = new_id
 				end
 			when :delete
 				@storage.delete id

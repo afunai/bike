@@ -199,7 +199,12 @@ class Sofa::Storage
 		return true if id == :new_id
 		return false unless v.is_a? ::Hash
 
-		(v['_id'] =~ /\A#{Sofa::REX::ID_SHORT}\z/ && id != new_id(v))
+		return true if v['_id'] =~ /\A#{Sofa::REX::ID_SHORT}\z/ && id != new_id(v)
+		return true if (
+			v['_timestamp'] &&
+			v['_timestamp']['published'].is_a?(::Time) &&
+			id !~ /\A#{v['_timestamp']['published'].strftime('%Y%m%d')}/
+		)
 	end
 
 end

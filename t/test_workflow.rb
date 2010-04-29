@@ -303,4 +303,40 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
+	class Sofa::Workflow::Test_default_sub_items < Sofa::Workflow
+		DEFAULT_SUB_ITEMS = {
+			'_timestamp' => {:klass => 'meta-timestamp'},
+		}
+	end
+	def test_default_sub_items
+		sd = Sofa::Set::Dynamic.new(
+			:workflow => 'test_default_sub_items'
+		)
+		assert_equal(
+			{'_timestamp' => {:klass => 'meta-timestamp'}},
+			sd[:item]['default'][:item],
+			'Workflow#default_sub_items should supply DEFAULT_SUB_ITEMS to sd[:item][*]'
+		)
+
+		sd = Sofa::Set::Dynamic.new(
+			:workflow => 'test_default_sub_items',
+			:item     => {
+				'default' => {
+					:item => {
+						'_timestamp' => {:klass => 'meta-timestamp',:can_update => true},
+						'foo'        => {:klass => 'text'},
+					},
+				},
+			}
+		)
+		assert_equal(
+			{
+				'_timestamp' => {:klass => 'meta-timestamp',:can_update => true},
+				'foo'        => {:klass => 'text'},
+			},
+			sd[:item]['default'][:item],
+			'Workflow#default_sub_items should be overriden by sd[:item]'
+		)
+	end
+
 end

@@ -27,6 +27,7 @@ _html
 		def @sd._g_submit(arg)
 			"[#{my[:id]}-#{arg[:orig_action]}#{arg[:sub_action] && ('.' + arg[:sub_action].to_s)}]\n"
 		end
+		@sd[:item]['default'][:item].delete '_timestamp'
 		Sofa.client = 'root'
 	end
 

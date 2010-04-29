@@ -778,6 +778,7 @@ _eos
 
 		# delete the parent set
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd[:item]['default'][:item].delete '_timestamp'
 		sd.update(
 			baz_id => {:action => :delete}
 		)

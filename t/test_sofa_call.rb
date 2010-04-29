@@ -337,9 +337,16 @@ _html
 		res.headers['Location'] =~ Sofa::REX::PATH_ID
 		new_id = sprintf('%.8d_%.4d',$1,$2)
 
+		val = Sofa::Set::Static::Folder.root.item('t_store','main',new_id).val
+		assert_instance_of(
+			::Hash,
+			val,
+			'Sofa#call with post method should store the item in the storage'
+		)
+		val.delete '_timestamp'
 		assert_equal(
 			{'_owner' => 'root','name' => 'fz','comment' => 'hi.'},
-			Sofa::Set::Static::Folder.root.item('t_store','main',new_id).val,
+			val,
 			'Sofa#call with post method should store the item in the storage'
 		)
 	end
@@ -598,9 +605,16 @@ _html
 		res.headers['Location'] =~ Sofa::REX::PATH_ID
 		new_id = sprintf('%.8d_%.4d',$1,$2)
 
+		val = Sofa::Set::Static::Folder.root.item('t_store','main',new_id).val
+		assert_instance_of(
+			::Hash,
+			val,
+			'Sofa#call with post method should store the item in the storage'
+		)
+		val.delete '_timestamp'
 		assert_equal(
 			{'_owner' => 'root','name' => 'fz','comment' => 'howdy.'},
-			Sofa::Set::Static::Folder.root.item('t_store','main',new_id).val,
+			val,
 			'Sofa#call with post method should store the item in the storage'
 		)
 	end

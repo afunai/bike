@@ -20,7 +20,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 			'default' => {:item => {}}
 		}
 		my[:item].each {|type,item_meta|
-			item_meta[:item].merge! @workflow.default_sub_items
+			item_meta[:item] = @workflow.default_sub_items.merge item_meta[:item]
 		}
 
 		my[:p_size] = meta[:max] if meta[:max]

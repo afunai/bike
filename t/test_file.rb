@@ -424,6 +424,46 @@ _eos
 			res.body,
 			'Sofa#call to a file item should return the binary body of the file'
 		)
+
+		# move
+		Rack::MockRequest.new(Sofa.new).post(
+			'http://example.com/t_file/update.html',
+			{
+				:input => "#{new_id}-_timestamp=1981-12-02&.status-public=update",
+			}
+		)
+		res = Rack::MockRequest.new(Sofa.new).get(
+			"http://example.com/t_file/#{new_id}/foo/foo.jpg"
+		)
+		assert_equal(
+			404,
+			res.status,
+			'Sofa#call should move child files as well'
+		)
+		res = Rack::MockRequest.new(Sofa.new).get(
+			'http://example.com/t_file/19811202_0001/foo/foo.jpg'
+		)
+		assert_equal(
+			@file.read,
+			res.body,
+			'Sofa#call should move child files as well'
+		)
+
+		# delete
+		Rack::MockRequest.new(Sofa.new).post(
+			'http://example.com/t_file/update.html',
+			{
+				:input => '19811202_0001.action=delete&.status-public=delete',
+			}
+		)
+		res = Rack::MockRequest.new(Sofa.new).get(
+			'http://example.com/t_file/19811202_0001/foo/foo.jpg'
+		)
+		assert_equal(
+			404,
+			res.status,
+			'Sofa#call should delete child files as well'
+		)
 	end
 
 	def test_errors

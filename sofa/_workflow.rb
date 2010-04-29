@@ -122,8 +122,9 @@ class Sofa::Workflow::Blog < Sofa::Workflow
 	}
 
 	DEFAULT_SUB_ITEMS = {
-		'_owner'   => {:klass => 'meta-owner'},
-		'_group'   => {:klass => 'meta-group'},
+		'_owner'     => {:klass => 'meta-owner'},
+		'_group'     => {:klass => 'meta-group'},
+		'_timestamp' => {:klass => 'meta-timestamp'},
 	}
 
 	PERM = {

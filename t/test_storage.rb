@@ -614,8 +614,8 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def _test_clear_raw(storage)
-		id1 = storage.store(:new_id,"\x03\x02\x01",'jpg')
-		id2 = storage.store(:new_id,"\x03\x02\x01",'png')
+		id1 = storage.store('20100430_0001-file',"\x03\x02\x01",'jpg')
+		id2 = storage.store('20100430_0002-file',"\x03\x02\x01",'png')
 
 		storage.clear
 

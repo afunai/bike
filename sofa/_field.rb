@@ -158,7 +158,7 @@ class Sofa::Field
 			@result = (action == :load || action == :load_default) ? action : nil
 			@action = (action == :load || action == :load_default) ? nil : action
 		else
-			@result = @action = nil
+			@result = nil
 		end
 		self
 	end

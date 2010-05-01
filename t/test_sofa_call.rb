@@ -478,6 +478,42 @@ _html
 		)
 	end
 
+	def test_post_only_attachment
+		Sofa.client = 'root'
+		Sofa::Set::Static::Folder.root.item('t_attachment','main').storage.clear
+
+		# post an item
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/t_attachment/main/update.html",
+			{
+				:input => "_012-comment=abc&.status-public=create"
+			}
+		)
+		res.headers['Location'] =~ Sofa::REX::PATH_ID
+		new_id = sprintf('%.8d_%.4d',$1,$2)
+
+		# post an attachment
+		tid = '1234567890.1234'
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/#{tid}/t_attachment/update.html",
+			{
+				:input => "#{new_id}-files-_1-file=boo.jpg&#{new_id}-files-_1.action-create=create"
+			}
+		)
+		attachment_id = Sofa.transaction[tid].item(new_id,'files').val.keys.first
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/#{tid}/update.html",
+			{
+				:input => "#{new_id}-files-#{attachment_id}-file=boo.jpg&#{new_id}-files-_1-file=&.status-public=create"
+			}
+		)
+
+		assert_not_nil(
+			Sofa::Set::Static::Folder.root.item('t_attachment','main',new_id).val['files'],
+			'Sofa#call should treat the post with only an attachement nicely'
+		)
+	end
+
 	def test_post_with_invalid_attachment
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_attachment','main').storage.clear

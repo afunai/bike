@@ -1,5 +1,6 @@
 ---
 ROOT_DIR: './data'
+SKEL_DIR: './data'
 STORAGE:
   default: File
   File:

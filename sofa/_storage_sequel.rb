@@ -54,7 +54,7 @@ class Sofa::Storage::Sequel < Sofa::Storage
 	end
 
 	def clear
-		@dataset.delete
+		@dataset.grep(:full_name,_full_name('%')).delete
 		self
 	end
 

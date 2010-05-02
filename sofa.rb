@@ -9,13 +9,14 @@ class Sofa
 	Dir['./sofa/*/*.rb'].sort.each {|file| require file }
 
 	module REX
-		ID_SHORT = /[a-z][a-z0-9\_\-]*/
-		ID       = /^(\d{8})_(\d{4,}|#{ID_SHORT})/
-		ID_NEW   = /^_\d/
-		COND     = /^(.+?)=(.+)$/
-		COND_D   = /^(19\d\d|2\d\d\d|9999)\d{0,4}$/
-		PATH_ID  = /\/((?:19|2\d)\d{6})\/(\d+)/
-		TID      = /\d{10}\.\d+/
+		ID_SHORT   = /[a-z][a-z0-9\_\-]*/
+		ID         = /^(\d{8})_(\d{4,}|#{ID_SHORT})/
+		ID_NEW     = /^_\d/
+		COND       = /^(.+?)=(.+)$/
+		COND_D     = /^(19\d\d|2\d\d\d|9999)\d{0,4}$/
+		PATH_ID    = /\/((?:19|2\d)\d{6})\/(\d+)/
+		TID        = /\d{10}\.\d+/
+		DIR_STATIC = /css|js|img|imgs|image|images/
 	end
 
 	def self.[](name)
@@ -59,7 +60,7 @@ class Sofa
 		path   = req.path_info
 		tid    = Sofa::Path.tid_of path
 
-		return Sofa.static(env) if ::File.expand_path(path) =~ %r{/(css|js|img|imgs|image|images)/}
+		return Sofa.static(env) if ::File.expand_path(path) =~ %r{/#{Sofa::REX::DIR_STATIC}/}
 
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req

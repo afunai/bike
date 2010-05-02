@@ -94,7 +94,7 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def file_prefix
-		(@sd[:name] == 'main') ? '' : @sd[:name].sub(/^main-/,'') + '_'
+		(@sd[:name] == 'main') ? '' : @sd[:name].sub(/^main-/,'') + '-'
 	end
 
 	def pattern_for(id)

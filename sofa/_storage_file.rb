@@ -67,7 +67,7 @@ class Sofa::Storage::File < Sofa::Storage
 					val = f.read
 					f.flock ::File::LOCK_UN
 				}
-				block.call(full_name,ext,val)
+				block.call(full_name,ext,(ext == 'yaml' ? YAML.load(val) : val))
 			elsif ftype == 'directory' && basename !~ /\A#{Sofa::REX::DIR_STATIC}\z/
 				traverse(::File.join(dir,basename),root,&block)
 			end

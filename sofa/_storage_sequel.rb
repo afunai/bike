@@ -13,16 +13,28 @@ class Sofa::Storage::Sequel < Sofa::Storage
 	def self.db
 		if Sofa['STORAGE']['Sequel'] && Sofa['STORAGE']['Sequel']['uri']
 			@db ||= ::Sequel.connect Sofa['STORAGE']['Sequel']['uri']
-			@db.create_table?(:sofa_main) {
-				string :full_name
-				string :ext
-				string :owner
-				string :body
-				blob   :binary_body
-				primary_key :full_name
-			}
+			self.load_skel unless @db.table_exists? :sofa_main
 		end
 		@db
+	end
+
+	def self.load_skel
+		@db.create_table(:sofa_main) {
+			string :full_name
+			string :ext
+			string :owner
+			string :body
+			blob   :binary_body
+			primary_key :full_name
+		}
+		Sofa::Storage::File.new.traverse('/',Sofa['SKEL_DIR']) {|full_name,ext,val|
+			@db[:sofa_main].insert(
+				:full_name => full_name,
+				:ext       => ext,
+				:owner     => val['_owner'],
+				:body      => val.ya2yaml(:syck_compatible => true)
+			)
+		}
 	end
 
 	def self.available?

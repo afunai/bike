@@ -53,8 +53,8 @@ class Sofa::Storage::File < Sofa::Storage
 		rename_file(old_id,new_id) && new_id
 	end
 
-	def traverse(dir = '/',&block)
-		::Dir.glob(::File.join Sofa['STORAGE']['File']['data_dir'],dir,'*').sort.collect {|file|
+	def traverse(dir = '/',root = Sofa['STORAGE']['File']['data_dir'],&block)
+		::Dir.glob(::File.join root,dir,'*').sort.collect {|file|
 			ftype     = ::File.ftype file
 			basename  = ::File.basename file
 			id,ext    = basename.split('.',2)
@@ -69,7 +69,7 @@ class Sofa::Storage::File < Sofa::Storage
 				}
 				block.call(full_name,ext,val)
 			elsif ftype == 'directory' && basename !~ /\A#{Sofa::REX::DIR_STATIC}\z/
-				traverse(::File.join(dir,basename),&block)
+				traverse(::File.join(dir,basename),root,&block)
 			end
 		}.compact.flatten
 	end

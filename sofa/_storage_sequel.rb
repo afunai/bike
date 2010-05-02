@@ -29,10 +29,10 @@ class Sofa::Storage::Sequel < Sofa::Storage
 		self.db
 	end
 
-	def initialize(sd)
+	def initialize(sd = nil)
 		super
 		@dataset = Sofa::Storage::Sequel.db[:sofa_main]
-		@dirname = @sd[:folder][:full_name]
+		@dirname = @sd[:folder][:full_name] if @sd
 	end
 
 	def val(id = nil)

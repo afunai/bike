@@ -13,9 +13,9 @@ class Sofa::Storage::File < Sofa::Storage
 		Sofa['STORAGE']['File'] && Sofa['STORAGE']['File']['data_dir']
 	end
 
-	def initialize(sd)
+	def initialize(sd = nil)
 		super
-		@dir = Sofa['STORAGE']['File']['data_dir'] + @sd[:folder][:dir]
+		@dir = Sofa['STORAGE']['File']['data_dir'] + @sd[:folder][:dir] if @sd
 	end
 
 	def val(id = nil)

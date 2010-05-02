@@ -298,7 +298,7 @@ _html
 			'http://example.com/_users/00000000_test.yaml'
 		)
 		assert_no_match(
-			/password/,
+			/^password/,
 			res.body,
 			'Sofa#call should not return meta files nor raw data'
 		)

@@ -58,6 +58,7 @@ class Sofa::Storage::File < Sofa::Storage
 			ftype     = ::File.ftype file
 			basename  = ::File.basename file
 			id,ext    = basename.split('.',2)
+			id = "main-#{id}" if id =~ Sofa::REX::ID
 			full_name = ::File.join(dir,id).gsub(::File::SEPARATOR,'-')
 
 			if ftype == 'file' && id != 'index'

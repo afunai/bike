@@ -56,7 +56,7 @@ class Sofa::Storage::File < Sofa::Storage
 		Sofa['STORAGE']['File'] && Sofa['STORAGE']['File']['data_dir']
 	end
 
-	def initialize(sd = nil)
+	def initialize(sd)
 		super
 		unless @@loaded ||= false
 			entries = ::Dir.entries(Sofa['STORAGE']['File']['data_dir']) - ['.','..']

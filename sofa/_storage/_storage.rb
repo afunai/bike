@@ -24,7 +24,7 @@ class Sofa::Storage
 
 	attr_reader :sd
 
-	def initialize(sd = nil)
+	def initialize(sd)
 		@sd = sd
 	end
 

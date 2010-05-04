@@ -58,7 +58,13 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def initialize(sd = nil)
 		super
-		@dir = Sofa['STORAGE']['File']['data_dir'] + @sd[:folder][:dir] if @sd
+		unless @@loaded ||= false
+			entries = ::Dir.entries(Sofa['STORAGE']['File']['data_dir']) - ['.','..']
+			self.class.load_skel if entries.empty? || entries == ['_empty.txt']
+			@@loaded = true
+		end
+		@dir = ::File.join(Sofa['STORAGE']['File']['data_dir'],@sd[:folder][:dir])
+		::FileUtils.mkpath(@dir) unless ::File.directory? @dir
 	end
 
 	def val(id = nil)

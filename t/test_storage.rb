@@ -76,6 +76,8 @@ class TC_Storage < Test::Unit::TestCase
 			_test_val_raw(storage)
 
 			storage.clear
+
+			_test_traverse(storage) if storage.is_a? Sofa::Storage::File
 		}
 	end
 
@@ -172,6 +174,19 @@ class TC_Storage < Test::Unit::TestCase
 			"\x01\x02\x03",
 			storage.val('20100406_0001'),
 			"#{storage.class}#val should return the raw value unless the value is not a hash"
+		)
+	end
+
+	def _test_traverse(storage)
+		assert_equal(
+			[
+				'-foo-main-20091120_0001,yaml',
+				'-foo-bar-main-20091120_0001,yaml',
+				'-foo-not_css-foo,css',
+				'-foo-sub-20100306_0001,yaml',
+			],
+			storage.class.traverse('/foo') {|entry| "#{entry[:full_name]},#{entry[:ext]}" },
+			"#{storage.class}.traverse should traverse over the given dir"
 		)
 	end
 
@@ -745,19 +760,6 @@ class TC_Storage < Test::Unit::TestCase
 				{:p => 'last'}
 			),
 			"Storage#_cast should cast 'the last' conds"
-		)
-	end
-
-	def test_file_traverse
-		assert_equal(
-			[
-				'-foo-main-20091120_0001,yaml',
-				'-foo-bar-main-20091120_0001,yaml',
-				'-foo-not_css-foo,css',
-				'-foo-sub-20100306_0001,yaml',
-			],
-			Sofa::Storage::File.traverse('/foo') {|entry| "#{entry[:full_name]},#{entry[:ext]}" },
-			'Storage::File.traverse should traverse over the given dir'
 		)
 	end
 

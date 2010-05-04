@@ -19,7 +19,7 @@ class Sofa::Storage::Sequel < Sofa::Storage
 	end
 
 	def self.load_skel
-		@db.create_table(:sofa_main) {
+		@db.create_table?(:sofa_main) {
 			string :full_name
 			string :ext
 			string :owner

@@ -1,6 +1,5 @@
 ---
-ROOT_DIR: './t/data'
-SKEL_DIR: './t/skel'
+skin_dir: './t/data'
 STORAGE:
   default: File
   File:

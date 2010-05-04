@@ -30,7 +30,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 			return sd.instance_eval { collect_item(conds,&block) }
 		elsif (
 			conds[:id] =~ /\A\w+\z/ &&
-			::File.directory?(::File.join Sofa['ROOT_DIR'],my[:dir],conds[:id])
+			::File.directory?(::File.join Sofa['skin_dir'],my[:dir],conds[:id])
 		)
 			my[:item][conds[:id]] = {:klass  => 'set-static-folder'}
 		end
@@ -38,7 +38,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	end
 
 	def load_html(dir,parent,action = 'index')
-		html_file = ::File.join Sofa['ROOT_DIR'],dir,"#{action}.html"
+		html_file = ::File.join Sofa['skin_dir'],dir,"#{action}.html"
 		if ::File.exists? html_file
 			::File.open(html_file) {|f| f.read }
 		elsif parent
@@ -47,7 +47,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	end
 
 	def load_val(dir,parent)
-		val_file = ::File.join(Sofa['ROOT_DIR'],dir,'index.yaml')
+		val_file = ::File.join(Sofa['skin_dir'],dir,'index.yaml')
 		v = ::File.exists?(val_file) ? ::File.open(val_file) {|f| YAML.load f.read } : {}
 		parent ? {
 			'_label' => parent.val('_label'),

@@ -27,7 +27,7 @@ class Sofa::Storage::Sequel < Sofa::Storage
 			blob   :binary_body
 			primary_key :full_name
 		}
-		Sofa::Storage::File.new.traverse('/',Sofa['SKEL_DIR']) {|full_name,ext,val|
+		Sofa::Storage::File.new.traverse('/',Sofa['skin_dir']) {|full_name,ext,val|
 			@db[:sofa_main].insert(
 				:full_name => full_name,
 				:ext       => ext,

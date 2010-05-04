@@ -49,7 +49,7 @@ class Sofa
 	end
 
 	def self.static(env)
-		@static ||= Rack::Directory.new Sofa['ROOT_DIR']
+		@static ||= Rack::Directory.new Sofa['skin_dir']
 		@static.call env
 	end
 

@@ -9,6 +9,34 @@ require 'ya2yaml'
 
 class Sofa::Storage::File < Sofa::Storage
 
+	def self.traverse(dir = '/',root = Sofa['STORAGE']['File']['data_dir'],&block)
+		::Dir.glob(::File.join root,dir,'*').sort.collect {|file|
+			ftype     = ::File.ftype file
+			base_name = ::File.basename file
+			id,ext    = base_name.split('.',2)
+			id = "main-#{id}" if id =~ Sofa::REX::ID
+			full_name = ::File.join(dir,id).gsub(::File::SEPARATOR,'-')
+
+			if ftype == 'file' && id != 'index'
+				val = nil
+				::File.open(file,'r') {|f|
+					f.flock ::File::LOCK_SH
+					val = f.read
+					f.flock ::File::LOCK_UN
+				}
+				block.call(
+					:dir       => dir,
+					:base_name => base_name,
+					:full_name => full_name,
+					:ext       => ext,
+					:val       => (ext == 'yaml' ? YAML.load(val) : val)
+				)
+			elsif ftype == 'directory' && base_name !~ /\A#{Sofa::REX::DIR_STATIC}\z/
+				self.traverse(::File.join(dir,base_name),root,&block)
+			end
+		}.compact.flatten
+	end
+
 	def self.available?
 		Sofa['STORAGE']['File'] && Sofa['STORAGE']['File']['data_dir']
 	end
@@ -51,28 +79,6 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def move(old_id,new_id)
 		rename_file(old_id,new_id) && new_id
-	end
-
-	def traverse(dir = '/',root = Sofa['STORAGE']['File']['data_dir'],&block)
-		::Dir.glob(::File.join root,dir,'*').sort.collect {|file|
-			ftype     = ::File.ftype file
-			basename  = ::File.basename file
-			id,ext    = basename.split('.',2)
-			id = "main-#{id}" if id =~ Sofa::REX::ID
-			full_name = ::File.join(dir,id).gsub(::File::SEPARATOR,'-')
-
-			if ftype == 'file' && id != 'index'
-				val = nil
-				::File.open(file,'r') {|f|
-					f.flock ::File::LOCK_SH
-					val = f.read
-					f.flock ::File::LOCK_UN
-				}
-				block.call(full_name,ext,(ext == 'yaml' ? YAML.load(val) : val))
-			elsif ftype == 'directory' && basename !~ /\A#{Sofa::REX::DIR_STATIC}\z/
-				traverse(::File.join(dir,basename),root,&block)
-			end
-		}.compact.flatten
 	end
 
 	private

@@ -420,6 +420,12 @@ class TC_Storage < Test::Unit::TestCase
 			_test_update_raw(storage,id)
 			_test_delete_raw(storage,id)
 			_test_clear_raw(storage)
+
+			unless klass == Sofa::Storage::Temp
+				sd = Sofa::Set::Static::Folder.root.item('t_summary','main')
+				storage = klass.new sd
+				_test_load_skel(storage)
+			end
 		}
 	end
 
@@ -641,6 +647,18 @@ class TC_Storage < Test::Unit::TestCase
 		assert_nil(
 			storage.val(id2),
 			"#{storage.class}#clear should delete all elements"
+		)
+	end
+
+	def _test_load_skel(storage)
+		storage.delete '20100326_0001'
+		assert_nil(storage.val('20100326_0001'))
+
+		storage.class.load_skel
+		assert_equal(
+			{'name' => 'frank','comment' => 'hi.'},
+			storage.val('20100326_0001'),
+			"#{storage.class}.load_skel should load the default entries"
 		)
 	end
 

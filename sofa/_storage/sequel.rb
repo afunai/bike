@@ -27,13 +27,13 @@ class Sofa::Storage::Sequel < Sofa::Storage
 			blob   :binary_body
 			primary_key :full_name
 		}
-		Sofa::Storage::File.new.traverse('/',Sofa['skin_dir']) {|full_name,ext,val|
+		Sofa::Storage::File.traverse('/',Sofa['skin_dir']) {|entry|
 			@db[:sofa_main].insert(
-				:full_name => full_name,
-				:ext       => ext,
-				:owner     => val['_owner'],
-				:body      => val.ya2yaml(:syck_compatible => true)
-			)
+				:full_name => entry[:full_name],
+				:ext       => entry[:ext],
+				:owner     => entry[:val]['_owner'],
+				:body      => entry[:val].ya2yaml(:syck_compatible => true)
+			) unless @db[:sofa_main][:full_name => entry[:full_name]]
 		}
 	end
 

@@ -11,8 +11,8 @@ require 'ya2yaml'
 class Sofa::Storage::Sequel < Sofa::Storage
 
 	def self.db
-		if Sofa['STORAGE']['Sequel'] && Sofa['STORAGE']['Sequel']['uri']
-			@db ||= ::Sequel.connect Sofa['STORAGE']['Sequel']['uri']
+		if Sofa['storage']['Sequel'] && Sofa['storage']['Sequel']['uri']
+			@db ||= ::Sequel.connect Sofa['storage']['Sequel']['uri']
 			self.load_skel unless @db.table_exists? :sofa_main
 		end
 		@db

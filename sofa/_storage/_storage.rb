@@ -10,7 +10,7 @@ class Sofa::Storage
 			if folder != sd[:parent]
 				Temp.new sd
 			else
-				klass = Sofa['STORAGE']['default'].capitalize
+				klass = Sofa['storage']['default'].capitalize
 				self.const_get(klass).new sd
 			end
 		else

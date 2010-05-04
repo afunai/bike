@@ -10,7 +10,7 @@ require 'fileutils'
 
 class Sofa::Storage::File < Sofa::Storage
 
-	def self.traverse(dir = '/',root = Sofa['STORAGE']['File']['data_dir'],&block)
+	def self.traverse(dir = '/',root = Sofa['storage']['File']['data_dir'],&block)
 		::Dir.glob(::File.join root,dir,'*').sort.collect {|file|
 			ftype     = ::File.ftype file
 			base_name = ::File.basename file
@@ -40,7 +40,7 @@ class Sofa::Storage::File < Sofa::Storage
 
 	def self.load_skel
 		self.traverse('/',Sofa['skin_dir']) {|entry|
-			dir = ::File.join(Sofa['STORAGE']['File']['data_dir'],entry[:dir])
+			dir = ::File.join(Sofa['storage']['File']['data_dir'],entry[:dir])
 			unless ::File.exists? ::File.join(dir,entry[:base_name])
 				::FileUtils.mkpath(dir) unless ::File.directory? dir
 				::FileUtils.cp(
@@ -53,17 +53,17 @@ class Sofa::Storage::File < Sofa::Storage
 	end
 
 	def self.available?
-		Sofa['STORAGE']['File'] && Sofa['STORAGE']['File']['data_dir']
+		Sofa['storage']['File'] && Sofa['storage']['File']['data_dir']
 	end
 
 	def initialize(sd)
 		super
 		unless @@loaded ||= false
-			entries = ::Dir.entries(Sofa['STORAGE']['File']['data_dir']) - ['.','..']
+			entries = ::Dir.entries(Sofa['storage']['File']['data_dir']) - ['.','..']
 			self.class.load_skel if entries.empty? || entries == ['_empty.txt']
 			@@loaded = true
 		end
-		@dir = ::File.join(Sofa['STORAGE']['File']['data_dir'],@sd[:folder][:dir])
+		@dir = ::File.join(Sofa['storage']['File']['data_dir'],@sd[:folder][:dir])
 		::FileUtils.mkpath(@dir) unless ::File.directory? @dir
 	end
 

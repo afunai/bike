@@ -1,6 +1,6 @@
 ---
 skin_dir: './t/skin'
-STORAGE:
+storage:
   default: File
   File:
     data_dir: './t/data'

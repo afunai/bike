@@ -749,7 +749,6 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def test_file_traverse
-		s = Sofa::Storage::File.new
 		assert_equal(
 			[
 				'-foo-main-20091120_0001,yaml',
@@ -757,8 +756,8 @@ class TC_Storage < Test::Unit::TestCase
 				'-foo-not_css-foo,css',
 				'-foo-sub-20100306_0001,yaml',
 			],
-			s.traverse('/foo') {|full_name,ext,val| "#{full_name},#{ext}" },
-			'Storage::File#traverse should traverse over the given dir'
+			Sofa::Storage::File.traverse('/foo') {|entry| "#{entry[:full_name]},#{entry[:ext]}" },
+			'Storage::File.traverse should traverse over the given dir'
 		)
 	end
 

@@ -6,6 +6,7 @@
 require 'rubygems'
 require 'yaml'
 require 'ya2yaml'
+require 'fileutils'
 
 class Sofa::Storage::File < Sofa::Storage
 
@@ -35,6 +36,20 @@ class Sofa::Storage::File < Sofa::Storage
 				self.traverse(::File.join(dir,base_name),root,&block)
 			end
 		}.compact.flatten
+	end
+
+	def self.load_skel
+		self.traverse('/',Sofa['skin_dir']) {|entry|
+			dir = ::File.join(Sofa['STORAGE']['File']['data_dir'],entry[:dir])
+			unless ::File.exists? ::File.join(dir,entry[:base_name])
+				::FileUtils.mkpath(dir) unless ::File.directory? dir
+				::FileUtils.cp(
+					::File.join(Sofa['skin_dir'],entry[:dir],entry[:base_name]),
+					::File.join(dir,entry[:base_name]),
+					{:preserve => true}
+				)
+			end
+		}
 	end
 
 	def self.available?

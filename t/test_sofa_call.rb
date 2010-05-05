@@ -426,6 +426,31 @@ _html
 		)
 	end
 
+	def test_post_back_and_forth
+		Sofa.client = 'root'
+
+		# post from the first form
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/1234567890.9999/update.html',
+			{
+				:input => "_1-comment=brown."
+			}
+		)
+
+		# back to the first form, post again
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/1234567890.9999/update.html',
+			{
+				:input => "_1-name=don&_1-comment=brown.&.status-public=create"
+			}
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#post twice from the same first form should work properly'
+		)
+	end
+
 	def test_post_with_attachment
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_attachment','main').storage.clear

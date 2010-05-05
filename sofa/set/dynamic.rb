@@ -123,10 +123,10 @@ _html
 
 		if arg[:dest_action]
 			message = {:alert => 'please login.'}
-		elsif !self.valid? && arg[:orig_action] != :create
-			message = {:error => 'malformed input.'}
 		elsif arg[:orig_action] == :confirm
 			message = {:notice => 'please confirm.'}
+		elsif !self.valid? && arg[:orig_action] != :create
+			message = {:error => 'malformed input.'}
 		elsif Sofa.transaction[my[:tid]].is_a? ::Hash
 			message = {
 				:notice => Sofa.transaction[my[:tid]].keys.collect {|item_result|

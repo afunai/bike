@@ -99,7 +99,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 	<head><title>Root Folder</title></head>
 	<body>
 		<h1>Root Folder</h1>
-<form id="main" method="post" enctype="multipart/form-data" action="/1234567890.0123/t_enquete/update.html">
+<form id="main" method="post" enctype="multipart/form-data" action="/t_enquete/1234567890.0123/update.html">
 		<ul id="main" class="sofa-enquete">
 			<li><a><input type="text" name="_001-name" value="foo" class="" /></a>: <input type="text" name="_001-comment" value="bar!" class="" /></li>
 		</ul>
@@ -233,7 +233,7 @@ _html
 		assert_equal(
 			<<"_html",
 <h1>index</h1>
-<form id="main" method="post" enctype="multipart/form-data" action="/#{tid}/t_summary/update.html">
+<form id="main" method="post" enctype="multipart/form-data" action="/t_summary/#{tid}/update.html">
 <ul id="main" class="sofa-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" class="" /></a>: <input type="text" name="20100326_0001-comment" value="hi." class="" /></li>
 </ul>

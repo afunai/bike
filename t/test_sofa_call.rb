@@ -415,6 +415,15 @@ _html
 			res.status,
 			'Sofa#post without any update on the item should not raise an error'
 		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			res.headers['Location']
+		)
+		assert_no_match(
+			/message/,
+			res.body,
+			'Sofa#post without any update on the item should not set any messages'
+		)
 	end
 
 	def test_post_with_attachment

@@ -132,7 +132,7 @@ _html
 				:notice => Sofa.transaction[my[:tid]].keys.collect {|item_result|
 					"#{Sofa.transaction[my[:tid]][item_result]} item #{item_result}d."
 				}
-			}
+			} unless Sofa.transaction[my[:tid]].empty?
 			Sofa.transaction.delete my[:tid]
 		end
 

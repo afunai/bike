@@ -392,6 +392,31 @@ _html
 		)
 	end
 
+	def test_post_empty_update
+		Sofa.client = 'root'
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input => "_1-name=don&_1-comment=brown.&.status-public=create"
+			}
+		)
+		res.headers['Location'] =~ Sofa::REX::PATH_ID
+		new_id   = sprintf('%.8d_%.4d',$1,$2)
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input => "#{new_id}-name=don&.status-public=update"
+			}
+		)
+		assert_equal(
+			303,
+			res.status,
+			'Sofa#post without any update on the item should not raise an error'
+		)
+	end
+
 	def test_post_with_attachment
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_attachment','main').storage.clear

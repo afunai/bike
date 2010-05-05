@@ -910,18 +910,50 @@ _html
 			res.headers['Location']
 		)
 		assert_match(
-			/item updated\./,
+			/1 item created\./,
 			res.body,
 			'Sofa#call should include the current message'
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			"http://example.com/t_store/#{tid}/#{new_id}index.html"
+			"http://example.com/#{tid}/#{new_id}index.html"
 		)
 		assert_no_match(
-			/item updated\./,
+			/1 item created\./,
 			res.body,
 			'Sofa#call should not include the message twice'
+		)
+
+		res.headers['Location'] =~ Sofa::REX::PATH_ID
+		new_id = sprintf('%.8d_%.4d',$1,$2)
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input => "#{new_id}-comment=howdy.&.status-public=update"
+			}
+		)
+		res = Rack::MockRequest.new(@sofa).get(
+			res.headers['Location']
+		)
+		assert_match(
+			/1 item updated\./,
+			res.body,
+			'Sofa#call should include a message according to the action'
+		)
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input => "#{new_id}.action=delete&.status-public=delete"
+			}
+		)
+		res = Rack::MockRequest.new(@sofa).get(
+			res.headers['Location']
+		)
+		assert_match(
+			/1 item deleted\./,
+			res.body,
+			'Sofa#call should include a message according to the action'
 		)
 	end
 

@@ -184,6 +184,14 @@ class Sofa
 		end
 	end
 
+	def result_summary(base)
+		base.result.values.inject({}) {|summary,item|
+			item_result = item.result.is_a?(::Symbol) ? item.result : :update
+			summary[item_result] = summary[item_result].to_i + 1
+			summary
+		}
+	end
+
 	def result_step(base,params)
 		if base.result
 			id = base.result.values.collect {|item| item[:id] }

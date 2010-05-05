@@ -127,8 +127,12 @@ _html
 			message = {:error => 'malformed input.'}
 		elsif arg[:orig_action] == :confirm
 			message = {:notice => 'please confirm.'}
-		elsif Sofa.transaction[my[:tid]].is_a? ::Symbol
-			message = {:notice => "item #{Sofa.transaction[my[:tid]]}."}
+		elsif Sofa.transaction[my[:tid]].is_a? ::Hash
+			message = {
+				:notice => Sofa.transaction[my[:tid]].keys.collect {|item_result|
+					"#{Sofa.transaction[my[:tid]][item_result]} item #{item_result}d."
+				}
+			}
 			Sofa.transaction.delete my[:tid]
 		end
 

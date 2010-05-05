@@ -67,7 +67,7 @@ class Sofa
 		Sofa.current[:session] = env['rack.session']
 
 		if Sofa.transaction[tid].is_a? Sofa::Field
-			base = Sofa.transaction[tid].item(Sofa::Path.steps_of path)
+			base = Sofa.transaction[tid].item(Sofa::Path.steps_of path.sub(/\A.*#{Sofa::REX::TID}/,''))
 		else
 			base = Sofa::Path.base_of path
 		end

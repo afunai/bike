@@ -89,7 +89,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 			super
 		else
 			base_path = Sofa.transaction[my[:tid]].is_a?(Sofa::Field) ? nil : my[:base_path]
-			action = "/#{my[:tid]}#{base_path}/update.html"
+			action = "#{base_path}/#{my[:tid]}/update.html"
 			<<_html
 <form id="#{my[:name]}" method="post" enctype="multipart/form-data" action="#{action}">
 #{super}</form>

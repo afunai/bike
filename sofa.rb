@@ -164,7 +164,7 @@ class Sofa
 		base.update params
 		if params[:status]
 			if base[:folder].commit :persistent
-				Sofa.transaction[base[:tid]] = :updated
+				Sofa.transaction[base[:tid]] = result_summary base
 				action = base.workflow.next_action params
 				id_step = result_step(base,params) if base[:parent] == base[:folder] && action != :done
 				response_see_other(

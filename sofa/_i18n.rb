@@ -16,7 +16,7 @@ module Sofa::I18n
 	end
 
 	def self.lang
-		Thread.current[:lang] || [] # Array
+		Thread.current[:lang] || []
 	end
 
 	def self.lang=(http_accept_language)

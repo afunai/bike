@@ -60,4 +60,13 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 		)
 	end
 
+	def test_po_dir
+		Sofa::I18n.po_dir = 'foo/bar'
+		assert_equal(
+			'foo/bar',
+			Sofa::I18n.po_dir,
+			'Sofa::I18n.po_dir should be return the path to po files'
+		)
+	end
+
 end

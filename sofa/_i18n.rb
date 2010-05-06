@@ -20,7 +20,7 @@ module Sofa::I18n
 	end
 
 	def self.lang=(http_accept_language)
-		tokens  = http_accept_language.split(/,/)
+		tokens = http_accept_language.split(/,/)
 		Thread.current[:lang] = tokens.sort_by {|t| # rfc3282
 			[
 				(t =~ /q=([\d\.]+)/) ? $1.to_f : 1.0,
@@ -30,6 +30,14 @@ module Sofa::I18n
 			range = i[/[a-z]{1,8}(-[a-z]{1,8})?/i] # rfc2616
 			range ? range.downcase : nil
 		}
+	end
+
+	def self.po_dir
+		Thread.current[:po_dir] ||= './locale'
+	end
+
+	def self.po_dir=(po_dir)
+		Thread.current[:po_dir] = po_dir
 	end
 
 	def self.msg

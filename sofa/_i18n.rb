@@ -19,14 +19,17 @@ module Sofa::I18n
 		Thread.current[:lang] # Array
 	end
 
-	def self.lang=(http_accept_language) # RFC2616 & RFC3282
+	def self.lang=(http_accept_language)
 		tokens  = http_accept_language.split(/,/)
-		Thread.current[:lang] = tokens.sort_by {|t|
+		Thread.current[:lang] = tokens.sort_by {|t| # rfc3282
 			[
 				(t =~ /q=([\d\.]+)/) ? $1.to_f : 1.0,
 				-tokens.index(t)
 			]
-		}.reverse.collect {|i| i[/[a-z]{1,8}(-[a-z]{1,8})?/i] }
+		}.reverse.collect {|i|
+			range = i[/[a-z]{1,8}(-[a-z]{1,8})?/i] # rfc2616
+			range ? range.downcase : nil
+		}
 	end
 
 	def self.msg

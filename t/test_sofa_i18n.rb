@@ -27,6 +27,15 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 		)
 	end
 
+	def test_lang_downcase
+		Sofa::I18n.lang = 'ja-JP'
+		assert_equal(
+			['ja-jp'],
+			Sofa::I18n.lang,
+			'Sofa::I18n.lang should be downcased'
+		)
+	end
+
 	def test_multiple_lang
 		Sofa::I18n.lang = 'ja,de;q=0.5,en;q=0.8'
 		assert_equal(

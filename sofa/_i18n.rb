@@ -16,7 +16,8 @@ module Sofa::I18n
 	end
 
 	module REX
-		COMMENT           = %r{^.*\#}
+		COMMENT           = %r{^\s*\#}
+		COMMENT_FUZZY     = %r{^\s*\#\,\s*fuzzy}
 		MSGID             = %r{msgid\s*"(.*?[^\\])"}
 		MSGSTR            = %r{msgstr\s*"(.*?[^\\])"}
 		MSGSTR_PLURAL     = %r{msgstr\[(\d+)\]\s*"(.*?[^\\])"}
@@ -79,17 +80,21 @@ module Sofa::I18n
 		msgid = nil
 		f.each_line {|line|
 			case line
+				when REX::COMMENT_FUZZY
+					msgid = :skip_next
 				when REX::COMMENT
 					next
 				when REX::PLURAL_EXPRESSION
 					msg[:plural] = instance_eval "Proc.new {|n| #{$1} }"
 				when REX::MSGID
-					msgid = $1
+					msgid = (msgid == :skip_next) ? :skip : $1
 				when REX::MSGSTR_PLURAL
-					msg[msgid] = [] unless msg[msgid].is_a? ::Array
-					msg[msgid][$1.to_i] = $2
+					if msgid.is_a? ::String
+						msg[msgid] = [] unless msg[msgid].is_a? ::Array
+						msg[msgid][$1.to_i] = $2
+					end
 				when REX::MSGSTR
-					msg[msgid] = $1
+					msg[msgid] = $1 if msgid.is_a? ::String
 			end
 		}
 		msg

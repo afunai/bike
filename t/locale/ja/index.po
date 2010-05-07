@@ -19,6 +19,11 @@ msgid "color"
 msgstr "色"
 # msgstr "mmm"
 
+#: t.rb:2234
+#, fuzzy
+msgid "sound"
+msgstr "音"
+
 #: t.rb:2345
 msgid "one color"
 msgid_plural "%{n} colors"

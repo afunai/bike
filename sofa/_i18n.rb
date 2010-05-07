@@ -59,6 +59,24 @@ module Sofa::I18n
 		{}
 	end
 
+	def self.parse_msg(f)
+		msg   = {}
+		msgid = nil
+		f.each_line {|line|
+			if line =~ /^.*\#/
+				next
+			elsif line =~ %r{msgid\s*"(.*?[^\\])"}
+				msgid = $1
+			elsif line =~ %r{msgstr\[(\d+)\]\s*"(.*?[^\\])"}
+				msg[msgid] = [] unless msg[msgid].is_a? ::Array
+				msg[msgid][$1.to_i] = $2
+			elsif line =~ %r{msgstr\s*"(.*?[^\\])"}
+				msg[msgid] = $1
+			end
+		}
+		msg
+	end
+
 	def _(msgid)
 		if msg = Sofa::I18n.msg
 			msg[msgid] || msgid

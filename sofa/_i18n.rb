@@ -96,6 +96,7 @@ module Sofa::I18n
 	end
 
 	def self.merge_msg!(m)
+		m.delete :plural
 		Thread.current[:msg] = self.msg.merge m
 	end
 

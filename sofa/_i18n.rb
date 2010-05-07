@@ -5,12 +5,12 @@
 
 module Sofa::I18n
 
-	class Msg < String
+	class Msgstr < String
 		def %(*args)
 			if args.first.is_a? ::Hash
-				'boo'
+				self.gsub(/%\{(\w+)\}/) { args.first[$1.intern].to_s }
 			else
-				super
+				::String.new(self.gsub(/%\{(\w+)\}/,'%s')) % args
 			end
 		end
 	end

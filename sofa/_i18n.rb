@@ -46,6 +46,19 @@ module Sofa::I18n
 		Thread.current[:msg] ||= @@msg[self.lang]
 	end
 
+	def self.find_msg(lang = self.lang)
+		lang.each {|range|
+			[
+				range,
+				range.sub(/-.*/,''),
+			].uniq.each {|r|
+				msg_file = ::File.join(self.po_dir,r,'index.po')
+				return open(msg_file) {|f| self.parse_msg f } if ::File.readable? msg_file
+			}
+		}
+		{}
+	end
+
 	def _(msgid)
 		if msg = Sofa::I18n.msg
 			msg[msgid] || msgid

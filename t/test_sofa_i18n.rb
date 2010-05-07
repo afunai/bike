@@ -138,4 +138,42 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 		)
 	end
 
+	def test_n_
+		Sofa::I18n.lang = 'ja'
+		assert_equal(
+			'%{n}色',
+			n_('one color','%{n} colors',1),
+			'Sofa::I18n#n_() should return a string according to the msgid and the n'
+		)
+		assert_equal(
+			'%{n}色',
+			n_('one color','%{n} colors',2),
+			'Sofa::I18n#n_() should return a string according to the msgid and the n'
+		)
+
+		Sofa::I18n.lang = 'en-GB'
+		assert_equal(
+			'one colour',
+			n_('one color','%{n} colors',1),
+			'Sofa::I18n#n_() should return a string according to the msgid and the n'
+		)
+		assert_equal(
+			'%{n} colours',
+			n_('one color','%{n} colors',2),
+			'Sofa::I18n#n_() should return a string according to the msgid and the n'
+		)
+
+		Sofa::I18n.lang = 'no'
+		assert_equal(
+			'one color',
+			n_('one color','%{n} colors',1),
+			'Sofa::I18n#_() should return a msgid if the msgid is not existed in the msg'
+		)
+		assert_equal(
+			'%{n} colors',
+			n_('one color','%{n} colors',2),
+			'Sofa::I18n#_() should return a msgid if the msgid is not existed in the msg'
+		)
+	end
+
 end

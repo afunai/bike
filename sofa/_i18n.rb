@@ -15,6 +15,13 @@ module Sofa::I18n
 		end
 	end
 
+	module REX
+		COMMENT           = %r{^.*\#}
+		MSGID             = %r{msgid\s*"(.*?[^\\])"}
+		MSGSTR            = %r{msgstr\s*"(.*?[^\\])"}
+		MSGSTR_PLURAL     = %r{msgstr\[(\d+)\]\s*"(.*?[^\\])"}
+	end
+
 	def self.lang
 		Thread.current[:lang] || []
 	end
@@ -64,15 +71,16 @@ module Sofa::I18n
 		msg   = {}
 		msgid = nil
 		f.each_line {|line|
-			if line =~ /^.*\#/
-				next
-			elsif line =~ %r{msgid\s*"(.*?[^\\])"}
-				msgid = $1
-			elsif line =~ %r{msgstr\[(\d+)\]\s*"(.*?[^\\])"}
-				msg[msgid] = [] unless msg[msgid].is_a? ::Array
-				msg[msgid][$1.to_i] = $2
-			elsif line =~ %r{msgstr\s*"(.*?[^\\])"}
-				msg[msgid] = $1
+			case line
+				when REX::COMMENT
+					next
+				when REX::MSGID
+					msgid = $1
+				when REX::MSGSTR_PLURAL
+					msg[msgid] = [] unless msg[msgid].is_a? ::Array
+					msg[msgid][$1.to_i] = $2
+				when REX::MSGSTR
+					msg[msgid] = $1
 			end
 		}
 		msg

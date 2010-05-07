@@ -227,4 +227,48 @@ _eos
 		)
 	end
 
+	def test_msgstr
+		Sofa::I18n.lang = 'en-GB'
+
+		assert_instance_of(
+			Sofa::I18n::Msgstr,
+			_('color'),
+			'Sofa::I18n#_() should return a instance of Sofa::I18n::Msgstr'
+		)
+
+		s = n_('one color','%{n} colors',2)
+		assert_instance_of(
+			Sofa::I18n::Msgstr,
+			s,
+			'Sofa::I18n#n_() should return a instance of Sofa::I18n::Msgstr'
+		)
+		assert_equal(
+			'2 colours',
+			s % {:n => 2},
+			'Sofa::I18n::Msgstr#% should be able to proccess named variables'
+		)
+		assert_equal(
+			'2 colours',
+			s % [2],
+			"Sofa::I18n::Msgstr#% should regard %{...} as '%s' if given an array"
+		)
+		assert_equal(
+			'2 colours',
+			s % 2,
+			"Sofa::I18n::Msgstr#% should regard %{...} as '%s' if given a scalar"
+		)
+
+		s = n_('one color','%{n} colors',1)
+		assert_instance_of(
+			Sofa::I18n::Msgstr,
+			s,
+			'Sofa::I18n#n_() should return a instance of Sofa::I18n::Msgstr'
+		)
+		assert_equal(
+			'one colour',
+			s % {:n => 1},
+			'Sofa::I18n::Msgstr#% should work with msgstrs without a placeholder'
+		)
+	end
+
 end

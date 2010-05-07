@@ -8,6 +8,7 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 	include Sofa::I18n
 
 	def setup
+		Sofa::I18n.po_dir = './t/locale'
 	end
 
 	def teardown
@@ -70,7 +71,6 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 	end
 
 	def test_msg
-		Sofa::I18n.po_dir = './t/locale'
 		Sofa::I18n.lang = 'ja'
 		assert_instance_of(
 			::Hash,
@@ -92,7 +92,6 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 	end
 
 	def test_merge_msg!
-		Sofa::I18n.po_dir = './t/locale'
 		Sofa::I18n.lang = 'no'
 		assert_equal({},Sofa::I18n.msg)
 

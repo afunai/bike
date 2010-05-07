@@ -107,6 +107,13 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 			'Sofa::I18n.merge_msg! should dynamically merge a hash to the msg of the current thread'
 		)
 
+		Sofa::I18n.merge_msg!(:plural => Proc.new { 123 })
+		assert_equal(
+			{'color' => 'farge'},
+			Sofa::I18n.msg,
+			'Sofa::I18n.merge_msg! should not merge :plural'
+		)
+
 		Sofa::I18n.lang = 'no'
 		assert_equal(
 			{},

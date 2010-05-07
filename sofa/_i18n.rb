@@ -53,8 +53,8 @@ module Sofa::I18n
 				range,
 				range.sub(/-.*/,''),
 			].uniq.each {|r|
-				msg_file = ::File.join(self.po_dir,r,'index.po')
-				return open(msg_file) {|f| self.parse_msg f } if ::File.readable? msg_file
+				po_file = ::File.join(self.po_dir,r,'index.po')
+				return open(po_file) {|f| self.parse_msg f } if ::File.readable? po_file
 			}
 		}
 		{}

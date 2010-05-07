@@ -79,8 +79,13 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 		)
 		assert_equal(
 			{'color' => '色','one color' =>['%{n}色']},
-			Sofa::I18n.msg,
+			Sofa::I18n.msg.reject {|k,v| k == :plural },
 			'Sofa::I18n.msg should return a hash containing {msgid => msgstr}'
+		)
+		assert_instance_of(
+			::Proc,
+			Sofa::I18n.msg[:plural],
+			'Sofa::I18n.msg[:plural] should return a proc'
 		)
 
 		Sofa::I18n.lang = 'po'

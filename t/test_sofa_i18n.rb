@@ -145,6 +145,27 @@ _eos
 		}
 	end
 
+	def test_rex_plural_expression_ng
+		src = <<'_eos'.split "\n"
+"Plural-Forms: nplurals=1; plural=rm '.';"
+"Plural-Forms: nplurals=1; plural=Fileutils.rm_r('.');"
+"Plural-Forms: nplurals=1; plural=Fileutils.rm_r '.';"
+"Plural-Forms: nplurals=1; plural=Fileutils.rm_r ".";"
+"Plural-Forms: nplurals=2; plural=n;"
+"Plural-Forms: nplurals=2; plural=nn;"
+"Plural-Forms: nplurals=3; plural=n();"
+"Plural-Forms: nplurals=3; plural=n(123);"
+"Plural-Forms: nplurals=3; plural=n 123;"
+_eos
+		src.each {|s|
+			assert_no_match(
+				Sofa::I18n::REX::PLURAL_EXPRESSION,
+				s,
+				'Sofa::I18n::REX::PLURAL_EXPRESSION should not match malicious expressions'
+			)
+		}
+	end
+
 	def test__
 		Sofa::I18n.lang = 'ja'
 		assert_equal(

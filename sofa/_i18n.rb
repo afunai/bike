@@ -41,6 +41,9 @@ module Sofa::I18n
 	end
 
 	def self.msg
+		@@msg ||= {}
+		@@msg[self.lang] ||= self.find_msg
+		Thread.current[:msg] ||= @@msg[self.lang]
 	end
 
 	def _(msgid)

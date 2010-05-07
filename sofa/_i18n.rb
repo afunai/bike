@@ -20,6 +20,7 @@ module Sofa::I18n
 	end
 
 	def self.lang=(http_accept_language)
+		Thread.current[:msg] = nil
 		tokens = http_accept_language.split(/,/)
 		Thread.current[:lang] = tokens.sort_by {|t| # rfc3282
 			[

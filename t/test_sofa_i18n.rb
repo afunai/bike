@@ -122,6 +122,29 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 		)
 	end
 
+	def test_rex_plural_expression_ok
+		src = <<'_eos'.split "\n"
+"Plural-Forms: nplurals=1; plural=0;"
+"Plural-Forms: nplurals=2; plural=n != 1;"
+"Plural-Forms: nplurals=2; plural=n>1;"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n==2 ? 1 : 2;"
+"Plural-Forms: nplurals=3; Plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < 20)) ? 1 : 2;"
+"Plural-Forms: nplurals=3; Plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n%100<10 || n%100>=20) ? 1 : 2;"
+"Plural-Forms: nplurals=3; Plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;"
+"Plural-Forms: nplurals=3; Plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;"
+"Plural-Forms: nplurals=3; Plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;"
+"Plural-Forms: nplurals=4; Plural=n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3;"
+_eos
+		src.each {|s|
+			assert_match(
+				Sofa::I18n::REX::PLURAL_EXPRESSION,
+				s,
+				'Sofa::I18n::REX::PLURAL_EXPRESSION should match'
+			)
+		}
+	end
+
 	def test__
 		Sofa::I18n.lang = 'ja'
 		assert_equal(

@@ -83,11 +83,7 @@ module Sofa::I18n
 	end
 
 	def _(msgid)
-		if msg = Sofa::I18n.msg
-			msg[msgid] || msgid
-		else
-			msgid
-		end
+		Sofa::I18n.msg[msgid] || msgid
 	end
 
 	def n_(msgid,msgid_plural = nil,n = nil)

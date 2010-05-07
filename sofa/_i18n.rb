@@ -103,7 +103,16 @@ module Sofa::I18n
 		Sofa::I18n.msg[msgid] || msgid
 	end
 
-	def n_(msgid,msgid_plural = nil,n = nil)
+	def n_(msgid,msgid_plural,n)
+		msgstrs = Sofa::I18n.msg[msgid] || [msgid,msgid_plural]
+		case v = Sofa::I18n.msg[:plural] ? Sofa::I18n.msg[:plural].call(n) : (n != 1)
+			when true
+				msgstrs[1]
+			when false
+				msgstrs[0]
+			else
+				msgstrs[v.to_i]
+		end
 	end
 
 end

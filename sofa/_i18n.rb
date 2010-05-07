@@ -18,9 +18,9 @@ module Sofa::I18n
 	module REX
 		COMMENT           = %r{^\s*\#}
 		COMMENT_FUZZY     = %r{^\s*\#\,\s*fuzzy}
-		MSGID             = %r{msgid\s*"(.*?[^\\])"}
-		MSGSTR            = %r{msgstr\s*"(.*?[^\\])"}
-		MSGSTR_PLURAL     = %r{msgstr\[(\d+)\]\s*"(.*?[^\\])"}
+		MSGID             = %r{^\s*msgid\s*"(.*?[^\\])"}
+		MSGSTR            = %r{^\s*msgstr\s*"(.*?[^\\])"}
+		MSGSTR_PLURAL     = %r{^\s*msgstr\[(\d+)\]\s*"(.*?[^\\])"}
 		PLURAL_EXPRESSION = %r{
 			^"Plural-Forms:.*plural=
 			((?:

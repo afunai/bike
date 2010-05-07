@@ -78,6 +78,10 @@ module Sofa::I18n
 		msg
 	end
 
+	def self.merge_msg!(m)
+		Thread.current[:msg] = self.msg.merge m
+	end
+
 	def _(msgid)
 		if msg = Sofa::I18n.msg
 			msg[msgid] || msgid

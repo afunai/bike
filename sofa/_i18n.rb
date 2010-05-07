@@ -20,6 +20,13 @@ module Sofa::I18n
 		MSGID             = %r{msgid\s*"(.*?[^\\])"}
 		MSGSTR            = %r{msgstr\s*"(.*?[^\\])"}
 		MSGSTR_PLURAL     = %r{msgstr\[(\d+)\]\s*"(.*?[^\\])"}
+		PLURAL_EXPRESSION = %r{
+			^"Plural-Forms:.*plural=
+			((?:
+				n(?=\s*(?:[\+\-\*\/\%]|==|!=|>|<|>=|<=))|
+				[\d\s\+\-\*\/\%\(\)\?\:]+|
+				==|!=|>|<|>=|<=|&&|\|\|)+).*"
+		}x
 	end
 
 	def self.lang
@@ -74,6 +81,8 @@ module Sofa::I18n
 			case line
 				when REX::COMMENT
 					next
+				when REX::PLURAL_EXPRESSION
+					msg[:plural] = instance_eval "Proc.new {|n| #{$1} }"
 				when REX::MSGID
 					msgid = $1
 				when REX::MSGSTR_PLURAL

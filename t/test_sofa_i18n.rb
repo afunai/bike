@@ -69,4 +69,26 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 		)
 	end
 
+	def test_msg
+		Sofa::I18n.po_dir = './t/locale'
+		Sofa::I18n.lang = 'ja'
+		assert_instance_of(
+			::Hash,
+			Sofa::I18n.msg,
+			'Sofa::I18n.msg should return a hash'
+		)
+		assert_equal(
+			{'color' => '色','one color' =>['%{n}色']},
+			Sofa::I18n.msg,
+			'Sofa::I18n.msg should return a hash containing {msgid => msgstr}'
+		)
+
+		Sofa::I18n.lang = 'po'
+		assert_equal(
+			{},
+			Sofa::I18n.msg,
+			'Sofa::I18n.msg should be reset when the lang is updated'
+		)
+	end
+
 end

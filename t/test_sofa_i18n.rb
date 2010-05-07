@@ -91,4 +91,24 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 		)
 	end
 
+	def test_merge_msg!
+		Sofa::I18n.po_dir = './t/locale'
+		Sofa::I18n.lang = 'no'
+		assert_equal({},Sofa::I18n.msg)
+
+		Sofa::I18n.merge_msg!('color' => 'farge')
+		assert_equal(
+			{'color' => 'farge'},
+			Sofa::I18n.msg,
+			'Sofa::I18n.merge_msg! should dynamically merge a hash to the msg of the current thread'
+		)
+
+		Sofa::I18n.lang = 'no'
+		assert_equal(
+			{},
+			Sofa::I18n.msg,
+			'Sofa::I18n.merge_msg! should not affect anything other than the current thread'
+		)
+	end
+
 end

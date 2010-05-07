@@ -110,4 +110,27 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 		)
 	end
 
+	def test__
+		Sofa::I18n.lang = 'ja'
+		assert_equal(
+			'色',
+			_('color'),
+			'Sofa::I18n#_() should return the string according to the msgid'
+		)
+
+		Sofa::I18n.lang = 'en-GB'
+		assert_equal(
+			'colour',
+			_('color'),
+			'Sofa::I18n#_() should return the string according to the msgid'
+		)
+
+		Sofa::I18n.lang = 'no'
+		assert_equal(
+			'color',
+			_('color'),
+			'Sofa::I18n#_() should return msgid if the msgid is not existed in the msg'
+		)
+	end
+
 end

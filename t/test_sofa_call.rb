@@ -1046,4 +1046,48 @@ _html
 		)
 	end
 
+	def test_message_i18n
+		Sofa.client = 'root'
+		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input                 => "_3-name=&.status-public=create",
+				'HTTP_ACCEPT_LANGUAGE' => 'en,de',
+			}
+		)
+		assert_match(
+			/malformed input/,
+			res.body,
+			"Sofa::I18n.find_msg should return at least an empty hash for 'en' as HTTP_ACCEPT_LANGUAGE."
+		)
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input                 => "_3-name=&.status-public=create",
+				'HTTP_ACCEPT_LANGUAGE' => 'en-US,de',
+			}
+		)
+		assert_match(
+			/malformed input/,
+			res.body,
+			"Sofa::I18n.find_msg should return at least an empty hash for 'en' as HTTP_ACCEPT_LANGUAGE."
+		)
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input                 => "_3-name=&.status-public=create",
+				'HTTP_ACCEPT_LANGUAGE' => 'de,en',
+			}
+		)
+		assert_match(
+			/Fehlerhafte Eingabe/,
+			res.body,
+			'Set::Dynamic#_g_message should be i18nized according to HTTP_ACCEPT_LANGUAGE.'
+		)
+	end
+
 end

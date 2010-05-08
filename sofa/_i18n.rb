@@ -36,7 +36,7 @@ module Sofa::I18n
 
 	def self.lang=(http_accept_language)
 		Thread.current[:msg] = nil
-		tokens = http_accept_language.split(/,/)
+		tokens = http_accept_language.to_s.split(/,/)
 		Thread.current[:lang] = tokens.sort_by {|t| # rfc3282
 			[
 				(t =~ /q=([\d\.]+)/) ? $1.to_f : 1.0,

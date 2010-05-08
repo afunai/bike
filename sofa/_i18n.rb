@@ -65,6 +65,11 @@ module Sofa::I18n
 		Thread.current[:po_dir] = po_dir
 	end
 
+	def self.bindtextdomain(domain,po_dir)
+		self.domain = domain
+		self.po_dir = po_dir
+	end
+
 	def self.msg
 		@@msg ||= {}
 		@@msg[self.lang] ||= self.find_msg

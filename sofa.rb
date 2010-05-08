@@ -5,6 +5,9 @@
 
 class Sofa
 
+	require './sofa/_i18n.rb'
+	I18n.bindtextdomain('index','./locale')
+
 	Dir['./sofa/*.rb'].sort.each {|file| require file }
 	Dir['./sofa/*/*.rb'].sort.each {|file| require file }
 

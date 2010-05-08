@@ -10,6 +10,8 @@ $KCODE = 'UTF8'
 
 class Sofa::Field
 
+	include Sofa::I18n
+
 	DEFAULT_META = {}
 
 	def self.instance(meta = {})

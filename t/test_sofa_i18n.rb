@@ -8,6 +8,7 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 	include Sofa::I18n
 
 	def setup
+		Sofa::I18n.domain = 'index'
 		Sofa::I18n.po_dir = './t/locale'
 	end
 
@@ -67,6 +68,15 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 			'foo/bar',
 			Sofa::I18n.po_dir,
 			'Sofa::I18n.po_dir should be return the path to po files'
+		)
+	end
+
+	def test_domain
+		Sofa::I18n.domain = 'foo'
+		assert_equal(
+			'foo',
+			Sofa::I18n.domain,
+			'Sofa::I18n.domain should be return the current domain'
 		)
 	end
 

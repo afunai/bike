@@ -131,9 +131,13 @@ _html
 			message = {
 				:notice => Sofa.transaction[my[:tid]].keys.collect {|item_result|
 					n = Sofa.transaction[my[:tid]][item_result]
-					n_('%{n} item %{result}.','%{n} items %{result}.',n) % {
+					n_('%{result} %{n} item.','%{result} %{n} items.',n) % {
+						:result => {
+							:create => _('created'),
+							:update => _('updated'),
+							:delete => _('deleted'),
+						}[item_result],
 						:n      => n,
-						:result => _("#{item_result}d"),
 					}
 				}
 			} unless Sofa.transaction[my[:tid]].empty?

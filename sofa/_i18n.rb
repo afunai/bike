@@ -43,8 +43,9 @@ module Sofa::I18n
 				-tokens.index(t)
 			]
 		}.reverse.collect {|i|
-			range = i[/[a-z]{1,8}(-[a-z]{1,8})?/i] # rfc2616
-			range ? range.downcase : nil
+			if i =~ /([a-z]{1,8})(-[a-z]{1,8})?/i # rfc2616
+				$2 ? ($1.downcase + $2.upcase) : $1.downcase
+			end
 		}
 	end
 

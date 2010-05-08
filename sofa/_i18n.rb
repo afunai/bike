@@ -77,7 +77,7 @@ module Sofa::I18n
 				range,
 				range.sub(/-.*/,''),
 			].uniq.each {|r|
-				po_file = ::File.join(self.po_dir,r,'index.po')
+				po_file = ::File.join(self.po_dir,r,"#{self.domain}.po")
 				return open(po_file) {|f| self.parse_msg f } if ::File.readable? po_file
 			}
 		}

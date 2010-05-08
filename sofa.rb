@@ -65,6 +65,8 @@ class Sofa
 
 		return Sofa.static(env) if ::File.expand_path(path) =~ %r{/#{Sofa::REX::DIR_STATIC}/}
 
+		Sofa::I18n.lang = env['HTTP_ACCEPT_LANGUAGE']
+
 		Sofa.current[:env]     = env
 		Sofa.current[:req]     = req
 		Sofa.current[:session] = env['rack.session']

@@ -969,7 +969,7 @@ _html
 			res.headers['Location']
 		)
 		assert_match(
-			/1 item created\./,
+			/created 1 item\./,
 			res.body,
 			'Sofa#call should include the current message'
 		)
@@ -978,7 +978,7 @@ _html
 			"http://example.com/#{tid}/#{new_id}index.html"
 		)
 		assert_no_match(
-			/1 item created\./,
+			/created 1 item\./,
 			res.body,
 			'Sofa#call should not include the message twice'
 		)
@@ -995,7 +995,7 @@ _html
 			res.headers['Location']
 		)
 		assert_match(
-			/1 item updated\./,
+			/updated 1 item\./,
 			res.body,
 			'Sofa#call should include a message according to the action'
 		)
@@ -1010,7 +1010,7 @@ _html
 			res.headers['Location']
 		)
 		assert_match(
-			/1 item deleted\./,
+			/deleted 1 item\./,
 			res.body,
 			'Sofa#call should include a message according to the action'
 		)

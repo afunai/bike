@@ -80,6 +80,20 @@ class TC_Sofa_I18n < Test::Unit::TestCase
 		)
 	end
 
+	def test_bindtextdomain
+		Sofa::I18n.bindtextdomain('foo','bar/baz')
+		assert_equal(
+			'foo',
+			Sofa::I18n.domain,
+			'Sofa::I18n.bindtextdomain should set the current domain'
+		)
+		assert_equal(
+			'bar/baz',
+			Sofa::I18n.po_dir,
+			'Sofa::I18n.bindtextdomain should set the path to po files'
+		)
+	end
+
 	def test_msg
 		Sofa::I18n.lang = 'ja'
 		assert_instance_of(

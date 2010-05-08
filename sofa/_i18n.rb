@@ -84,6 +84,7 @@ module Sofa::I18n
 			].uniq.each {|r|
 				po_file = ::File.join(self.po_dir,r,"#{self.domain}.po")
 				return open(po_file) {|f| self.parse_msg f } if ::File.readable? po_file
+				return {} if r == 'en' # default
 			}
 		}
 		{}

@@ -49,6 +49,14 @@ module Sofa::I18n
 		}
 	end
 
+	def self.domain
+		Thread.current[:domain] ||= 'index'
+	end
+
+	def self.domain=(domain)
+		Thread.current[:domain] = domain
+	end
+
 	def self.po_dir
 		Thread.current[:po_dir] ||= './locale'
 	end

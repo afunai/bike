@@ -122,15 +122,19 @@ _html
 		return unless self == Sofa.base
 
 		if arg[:dest_action]
-			message = {:alert => 'please login.'}
+			message = {:alert => _('please login.')}
 		elsif arg[:orig_action] == :confirm
-			message = {:notice => 'please confirm.'}
+			message = {:notice => _('please confirm.')}
 		elsif !self.valid? && arg[:orig_action] != :create
-			message = {:error => 'malformed input.'}
+			message = {:error => _('malformed input.')}
 		elsif Sofa.transaction[my[:tid]].is_a? ::Hash
 			message = {
 				:notice => Sofa.transaction[my[:tid]].keys.collect {|item_result|
-					"#{Sofa.transaction[my[:tid]][item_result]} item #{item_result}d."
+					n = Sofa.transaction[my[:tid]][item_result]
+					n_('%{n} item %{result}.','%{n} items %{result}.',n) % {
+						:n      => n,
+						:result => _("#{item_result}d"),
+					}
 				}
 			} unless Sofa.transaction[my[:tid]].empty?
 			Sofa.transaction.delete my[:tid]

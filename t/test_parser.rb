@@ -330,8 +330,9 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
-							:tmpl => '<li>hello</li>',
-							:item => {},
+							:label => nil,
+							:tmpl  => '<li>hello</li>',
+							:item  => {},
 						},
 					},
 				},
@@ -362,8 +363,9 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
-							:tmpl => "\t<li>hello</li>\n",
-							:item => {},
+							:label => nil,
+							:tmpl  => "\t<li>hello</li>\n",
+							:item  => {},
 						},
 					}
 				},
@@ -390,8 +392,9 @@ _html
 _tmpl
 					:item     => {
 						'default' => {
-							:tmpl => '<li>hello</li>',
-							:item => {},
+							:label => nil,
+							:tmpl  => '<li>hello</li>',
+							:item  => {},
 						},
 					},
 				},
@@ -446,10 +449,11 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
-							:tmpl => <<'_tmpl',
+							:label => nil,
+							:tmpl  => <<'_tmpl',
 		<tbody class="body"><!-- qux --><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
-							:item => {
+							:item  => {
 								'bar' => {:klass => 'text'},
 								'baz' => {:klass => 'text'},
 							},
@@ -484,10 +488,11 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
-							:tmpl => <<'_tmpl',
+							:label => nil,
+							:tmpl  => <<'_tmpl',
 		<tbody class="body"><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
-							:item => {
+							:item  => {
 								'bar' => {:klass => 'text'},
 								'baz' => {:klass => 'text'},
 							},
@@ -530,10 +535,11 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
-							:tmpl => <<'_tmpl',
+							:label => nil,
+							:tmpl  => <<'_tmpl',
 		<tbody class="body"><tbody><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody></tbody>
 _tmpl
-							:item => {
+							:item  => {
 								'bar' => {:klass => 'text'},
 								'baz' => {:klass => 'text'},
 							},
@@ -566,11 +572,12 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
-							:tmpl => <<'_tmpl',
+							:label => nil,
+							:tmpl  => <<'_tmpl',
 	<li>
 $(bar.message)$(.a_update)$(bar)$(.hidden)</a>	</li>
 _tmpl
-							:item => {
+							:item  => {
 								'bar' => {
 									:klass    => 'set-dynamic',
 									:workflow => 'blog',
@@ -580,8 +587,9 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 									:item     => {
 										'default' => {
-											:tmpl => '<li>baz</li>',
-											:item => {},
+											:label => nil,
+											:tmpl  => '<li>baz</li>',
+											:item  => {},
 										},
 									},
 								},
@@ -626,14 +634,15 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
-							:tmpl => <<'_tmpl',
+							:label => nil,
+							:tmpl  => <<'_tmpl',
 		<li>
 			$(.a_update)$(subject)</a>
 			$(body)$(.hidden)
 			<ul><li>qux</li></ul>
 		</li>
 _tmpl
-							:item => {
+							:item  => {
 								'body' => {
 									:width  => 72,
 									:height => 10,

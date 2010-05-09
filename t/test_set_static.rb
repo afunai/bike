@@ -37,14 +37,15 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
-							:tmpl => <<'_tmpl',
+							:label => nil,
+							:tmpl  => <<'_tmpl',
 		<li>
 			$(.a_update)$(subject)</a>
 			$(body)$(.hidden)
 			<ul><li>qux</li></ul>
 		</li>
 _tmpl
-							:item => {
+							:item  => {
 								'body'    => {
 									:width  => 72,
 									:height => 10,
@@ -129,8 +130,9 @@ _html
 		assert_equal(
 			{
 				'default' => {
-					:tmpl => "\t\t<li>hi</li>\n",
-					:item => {},
+					:label => nil,
+					:tmpl  => "\t\t<li>hi</li>\n",
+					:item  => {},
 				},
 			},
 			main[:item],

@@ -298,7 +298,7 @@ _tmpl
 	end
 
 	def _label_m(m)
-		_ m
+		_ Date::ABBR_MONTHNAMES[m.to_i]
 	end
 
 	def permit_get?(arg)

@@ -121,7 +121,7 @@ module Sofa::I18n
 	end
 
 	def _(msgid)
-		Sofa::I18n::Msgstr.new(Sofa::I18n.msg[msgid] || msgid)
+		Sofa::I18n::Msgstr.new(Sofa::I18n.msg[msgid].to_a.first || msgid)
 	end
 
 	def n_(msgid,msgid_plural,n)

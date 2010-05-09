@@ -1016,6 +1016,25 @@ _html
 		)
 	end
 
+	def test_message_notice_plural
+		Sofa.client = 'root'
+
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_attachment/main/update.html',
+			{
+				:input => "_1-comment=foo&_2-comment=bar&.status-public=create"
+			}
+		)
+		res = Rack::MockRequest.new(@sofa).get(
+			res.headers['Location']
+		)
+		assert_match(
+			/created 2 articles\./,
+			res.body,
+			'the message should be plural if more than one item have results.'
+		)
+	end
+
 	def test_message_alert
 		Sofa.client = 'nobody'
 

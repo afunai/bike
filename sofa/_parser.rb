@@ -32,6 +32,8 @@ module Sofa::Parser
 			"$(#{id})"
 		}
 
+		label = nil
+
 		item.each {|id,meta|
 			next unless meta[:klass] == 'set-dynamic'
 			tmpl = meta[:tmpl]
@@ -43,8 +45,9 @@ module Sofa::Parser
 		}
 
 		{
-			:item => item,
-			:tmpl => html,
+			:label => label,
+			:item  => item,
+			:tmpl  => html,
 		}
 	end
 

@@ -251,6 +251,15 @@ _eos
 		)
 	end
 
+	def test__with_n_
+		Sofa::I18n.lang = 'en-GB'
+		assert_equal(
+			'one colour',
+			_('one color'),
+			'Sofa::I18n#_() should return msgstr[0] if the msgid refer to plural msgstrs'
+		)
+	end
+
 	def test_msgstr
 		Sofa::I18n.lang = 'en-GB'
 

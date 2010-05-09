@@ -109,13 +109,13 @@ _html
 	<input type="hidden" name="dest_action" value="#{action}" />
 	<label for="id">id</label><input type="text" id="id" name="id" size="10" value="" />
 	<label for="pw">pw</label><input type="password" id="pw" name="pw" size="10" value="" />
-	<input type="submit" value="login" />
+	<input type="submit" value="#{_ 'login'}" />
 </form>
 _html
 	end
 
 	def _g_done(arg)
-		'done.'
+		_ 'done.'
 	end
 
 	def _g_message(arg)
@@ -159,7 +159,7 @@ _html
 
 	def _g_action_create(arg)
 		(_get_by_action_tmpl(arg) || <<_html) if permit_get?(:action => :create)
-<div><a href="#{_g_uri_create arg}">create</a></div>
+<div><a href="#{_g_uri_create arg}">#{_ 'create'}</a></div>
 _html
 	end
 
@@ -178,12 +178,12 @@ _html
 	end
 
 	def _g_navi_prev(arg)
-		button = my[:tmpl_navi_prev] || 'prev'
+		button = my[:tmpl_navi_prev] || _('prev')
 		(uri = _g_uri_prev(arg)) ? "<a href=\"#{my[:path]}/#{uri}\">#{button}</a>" : button
 	end
 
 	def _g_navi_next(arg)
-		button = my[:tmpl_navi_next] || 'next'
+		button = my[:tmpl_navi_next] || _('next')
 		(uri = _g_uri_next(arg)) ? "<a href=\"#{my[:path]}/#{uri}\">#{button}</a>" : button
 	end
 
@@ -290,14 +290,16 @@ _tmpl
 		}
 	end
 
-# TODO: move to Sofa::I18n
-def _label_ym(y,m)
-	'%1$s/%2$s' % [y,_label_m(m)]
-end
+	def _label_ym(y,m)
+		_('%{year}/%{month}') % {
+			:year  => y,
+			:month => _label_m(m)
+		}
+	end
 
-def _label_m(m)
-	m
-end
+	def _label_m(m)
+		_ m
+	end
 
 	def permit_get?(arg)
 		permit?(arg[:action]) || collect_item(arg[:conds] || {}).all? {|item|

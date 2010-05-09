@@ -48,13 +48,13 @@ class Sofa::File < Sofa::Field
 			!my[:options].empty? &&
 			!my[:options].include?(val['basename'].to_s[/\.([\w\.]+)$/,1])
 		)
-			['wrong file type']
+			[_ 'wrong file type']
 		elsif (my[:max].to_i > 0) && (val['size'].to_i > my[:max])
-			['too large']
+			[_('too large') % {:min => my[:max]}]
 		elsif (my[:min].to_i == 1) && val['size'].to_i < 1
-			['mandatory']
+			[_ 'mandatory']
 		elsif (my[:min].to_i > 0) && (val['size'].to_i < my[:min])
-			['too small']
+			[_('too small') % {:min => my[:min]}]
 		else
 			[]
 		end

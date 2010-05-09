@@ -12,11 +12,11 @@ class Sofa::Select < Sofa::Field
 
 	def errors
 		if my[:mandatory] && val.empty?
-			['mandatory']
+			[_ 'mandatory']
 		elsif my[:options].include?(val) || val.empty?
 			[]
 		else
-			['no such option']
+			[_ 'no such option']
 		end
 	end
 
@@ -28,7 +28,7 @@ class Sofa::Select < Sofa::Field
 			"\t<option#{selected}>#{opt}</option>\n"
 		}.join
 		unless my[:mandatory] && my[:options].include?(val)
-			options = "\t<option value=\"\">please select</option>\n#{options}"
+			options = "\t<option value=\"\">#{_ 'please select'}</option>\n#{options}"
 		end
 		<<_html.chomp
 <select name="#{my[:short_name]}" class="#{_g_class arg}">

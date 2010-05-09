@@ -19,9 +19,9 @@ class Sofa::Checkbox < Sofa::Field
 
 	def errors
 		if val.empty?
-			my[:mandatory] ? ['mandatory'] : []
+			my[:mandatory] ? [_ 'mandatory'] : []
 		else
-			(val - my[:options]).empty? ? [] : ['no such option']
+			(val - my[:options]).empty? ? [] : [_ 'no such option']
 		end
 	end
 

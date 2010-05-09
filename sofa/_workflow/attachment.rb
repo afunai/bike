@@ -29,7 +29,7 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 				item_outs = _g_default(arg) {|item,item_arg|
 					action = item[:id][Sofa::REX::ID_NEW] ? :create : :delete
 					button_tmpl = my["tmpl_submit_#{action}".intern] || <<_html.chomp
-<input type="submit" name="@(short_name).action-#{action}" value="#{action}">
+<input type="submit" name="@(short_name).action-#{action}" value="#{_ action.to_s}">
 _html
 					button = item.send(:_get_by_tmpl,{},button_tmpl)
 					item_arg[:action] = :create if action == :create

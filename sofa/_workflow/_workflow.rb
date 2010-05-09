@@ -91,13 +91,14 @@ class Sofa::Workflow
 			action = arg[:orig_action]
 		end
 		<<_html unless @sd[:confirm] == :mandatory && arg[:orig_action] != :confirm
-<input name="#{@sd[:short_name]}.status-public" type="submit" value="#{action}" />
+<input name="#{@sd[:short_name]}.status-public" type="submit" value="#{_ action.to_s}" />
 _html
 	end
 
 	def _g_submit_confirm(arg)
+		label = _ 'confirm'
 		<<_html if @sd[:confirm] && arg[:orig_action] != :confirm
-<input name="#{@sd[:short_name]}.action-confirm_#{arg[:orig_action]}" type="submit" value="confirm" />
+<input name="#{@sd[:short_name]}.action-confirm_#{arg[:orig_action]}" type="submit" value="#{label}" />
 _html
 	end
 
@@ -108,7 +109,7 @@ _html
 			arg[:orig_action] != :confirm
 		)
 			<<_html
-<input name="#{@sd[:short_name]}.action-confirm_delete" type="submit" value="delete..." />
+<input name="#{@sd[:short_name]}.action-confirm_delete" type="submit" value="#{_ 'delete...'}" />
 _html
 		end
 	end

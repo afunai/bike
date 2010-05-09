@@ -7,11 +7,11 @@ class Sofa::Textarea < Sofa::Field
 
 	def errors
 		if (my[:max].to_i > 0) && (val.size > my[:max])
-			['too long']
+			[_('too long') % {:max => my[:max]}]
 		elsif (my[:min].to_i == 1) && val.empty?
-			['mandatory']
+			[_ 'mandatory']
 		elsif (my[:min].to_i > 0) && (val.size < my[:min])
-			['too short']
+			[_('too short') % {:min => my[:min]}]
 		else
 			[]
 		end

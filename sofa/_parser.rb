@@ -43,7 +43,7 @@ module Sofa::Parser
 		}
 
 		{
-			:label => html[/\A[^<]*<[^>]*title="([^"]+)/,1],
+			:label => html[/\A(?:[^<]*<!--)?[^<]*<[^>]*title="([^"]+)/,1],
 			:item  => item,
 			:tmpl  => html,
 		}

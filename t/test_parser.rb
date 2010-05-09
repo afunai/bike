@@ -541,6 +541,36 @@ _html
 		)
 	end
 
+	def test_parse_item_label_plural
+		result = Sofa::Parser.parse_html <<'_html'
+<ul class="sofa-blog" id="foo"><li title="tEntry, tEntries">hello</li></ul>
+_html
+		assert_equal(
+			'tEntry',
+			result[:item]['foo'][:item]['default'][:label],
+			'Parser.parse_html should split plural item labels'
+		)
+		assert_equal(
+			['tEntry','tEntries'],
+			Sofa::I18n.msg['tEntry'],
+			'Parser.parse_html should I18n.merge_msg! the plural item labels'
+		)
+
+		result = Sofa::Parser.parse_html <<'_html'
+<ul class="sofa-blog" id="foo"><li title="tFooFoo, BarBar, BazBaz">hello</li></ul>
+_html
+		assert_equal(
+			'tFooFoo',
+			result[:item]['foo'][:item]['default'][:label],
+			'Parser.parse_html should split plural item labels'
+		)
+		assert_equal(
+			['tFooFoo','BarBar','BazBaz'],
+			Sofa::I18n.msg['tFooFoo'],
+			'Parser.parse_html should I18n.merge_msg! the plural item labels'
+		)
+	end
+
 	def test_block_tags_with_nested_tbody
 		result = Sofa::Parser.parse_html <<'_html'
 hello

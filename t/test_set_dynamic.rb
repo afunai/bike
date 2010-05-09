@@ -591,13 +591,13 @@ _html
 <div class="view_ym">
 	<span class="y">
 		2009 |
-		<span class="m"><a href="/foo/200911/">11</a></span>
-		<span class="m"><a href="/foo/200912/">12</a></span>
+		<span class="m"><a href="/foo/200911/">Nov</a></span>
+		<span class="m"><a href="/foo/200912/">Dec</a></span>
 		<br/>
 	</span>
 	<span class="y">
 		2010 |
-		<span class="m"><a href="/foo/201001/">01</a></span>
+		<span class="m"><a href="/foo/201001/">Jan</a></span>
 		<br/>
 	</span>
 </div>
@@ -614,13 +614,13 @@ _html
 <div class="view_ym">
 	<span class="y">
 		2009 |
-		<span class="m"><a href="/foo/200911/">11</a></span>
-		<span class="m"><span class="current">12</span></span>
+		<span class="m"><a href="/foo/200911/">Nov</a></span>
+		<span class="m"><span class="current">Dec</span></span>
 		<br/>
 	</span>
 	<span class="y">
 		2010 |
-		<span class="m"><a href="/foo/201001/">01</a></span>
+		<span class="m"><a href="/foo/201001/">Jan</a></span>
 		<br/>
 	</span>
 </div>

@@ -5,6 +5,8 @@
 
 class Sofa::Workflow
 
+	include Sofa::I18n
+
 	DEFAULT_META = {}
 	DEFAULT_SUB_ITEMS = {}
 

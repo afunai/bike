@@ -46,7 +46,7 @@ class Sofa::File < Sofa::Field
 			val['basename'] &&
 			my[:options].is_a?(::Array) &&
 			!my[:options].empty? &&
-			!my[:options].include?(val['basename'].to_s[/\.([\w\.]+)$/,1])
+			!my[:options].include?(val['basename'].to_s[/\.([\w\.]+)$/i,1])
 		)
 			[_ 'wrong file type']
 		elsif (my[:max].to_i > 0) && (val['size'].to_i > my[:max])

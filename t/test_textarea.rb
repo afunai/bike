@@ -100,7 +100,7 @@ class TC_Textarea < Test::Unit::TestCase
 		)
 		@f[:min] = 2
 		assert_equal(
-			['too short'],
+			['too short: 2 characters minimum'],
 			@f.errors,
 			'Text#errors should return the errors of the current val'
 		)
@@ -114,7 +114,7 @@ class TC_Textarea < Test::Unit::TestCase
 		)
 		@f[:max] = 4
 		assert_equal(
-			['too long'],
+			['too long: 4 characters maximum'],
 			@f.errors,
 			'Text#errors should return the errors of the current val'
 		)

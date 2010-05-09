@@ -513,6 +513,17 @@ _tmpl
 		)
 	end
 
+	def test_parse_item_label
+		result = Sofa::Parser.parse_html <<'_html'
+<ul class="sofa-blog" id="foo"><li title="Greeting">hello</li></ul>
+_html
+		assert_equal(
+			'Greeting',
+			result[:item]['foo'][:item]['default'][:label],
+			'Parser.parse_html should pick up item labels from title attrs'
+		)
+	end
+
 	def test_block_tags_with_nested_tbody
 		result = Sofa::Parser.parse_html <<'_html'
 hello

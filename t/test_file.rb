@@ -514,7 +514,7 @@ _eos
 		@f[:min] = @file.length + 1
 		@f[:max] = nil
 		assert_equal(
-			['too small'],
+			["too small: #{@file.length + 1} bytes minimum"],
 			@f.errors,
 			'File#errors should return the errors of the current body'
 		)
@@ -522,16 +522,16 @@ _eos
 		@f[:min] = nil
 		@f[:max] = @file.length - 1
 		assert_equal(
-			['too large'],
+			["too large: #{@file.length - 1} bytes maximum"],
 			@f.errors,
 			'File#errors should return the errors of the current body'
 		)
 
 		@f[:min] = nil
 		@f[:max] = nil
-		@f[:options] = ['txt']
+		@f[:options] = ['txt','pdf','doc']
 		assert_equal(
-			['wrong file type'],
+			['wrong file type: should be txt/pdf/doc'],
 			@f.errors,
 			'File#errors should return the errors of the current body'
 		)

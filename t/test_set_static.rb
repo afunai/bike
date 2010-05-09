@@ -16,7 +16,7 @@ class TC_Set_Static < Test::Unit::TestCase
 <html>
 	<h1>$(title text 32)</h1>
 	<ul id="foo" class="sofa-blog">
-		<li>
+		<li title="Diary">
 			$(subject text 64)
 			$(body textarea 72*10)
 			<ul><li>qux</li></ul>
@@ -37,9 +37,9 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
-							:label => nil,
+							:label => 'Diary',
 							:tmpl  => <<'_tmpl',
-		<li>
+		<li title="Diary">
 			$(.a_update)$(subject)</a>
 			$(body)$(.hidden)
 			<ul><li>qux</li></ul>

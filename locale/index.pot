@@ -106,8 +106,12 @@ msgstr ""
 msgid "deleted"
 msgstr ""
 
-#: sofa/set/dynamic.rb:162
-msgid "create..."
+#: sofa/set/dynamic.rb:161
+msgid "create new %{item}..."
+msgstr ""
+
+#: sofa/set/dynamic.rb:161
+msgid "item"
 msgstr ""
 
 #: sofa/set/dynamic.rb:181

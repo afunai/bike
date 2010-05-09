@@ -105,9 +105,13 @@ msgstr "更新しました"
 msgid "deleted"
 msgstr "削除しました"
 
-#: sofa/set/dynamic.rb:162
-msgid "create..."
-msgstr "作成..."
+#: sofa/set/dynamic.rb:161
+msgid "create new %{item}..."
+msgstr "新規%{item}作成..."
+
+#: sofa/set/dynamic.rb:161
+msgid "item"
+msgstr "アイテム"
 
 #: sofa/set/dynamic.rb:181
 msgid "prev"

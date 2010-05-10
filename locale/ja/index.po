@@ -14,6 +14,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n!=1;\n"
 
+#: sofa/_workflow/_workflow.rb:11
+msgid "item"
+msgid_plural "items"
+msgstr[0] "アイテム"
+msgstr[1] "アイテム"
+
 #: sofa/_workflow/_workflow.rb:94 sofa/_workflow/attachment.rb:32
 msgid "create"
 msgstr "作成"
@@ -33,6 +39,24 @@ msgstr "確認"
 #: sofa/_workflow/_workflow.rb:112
 msgid "delete..."
 msgstr "削除..."
+
+#: sofa/_workflow/attachment.rb:10
+msgid "attachment"
+msgid_plural "attachments"
+msgstr[0] "添付アイテム"
+msgstr[1] "添付アイテム"
+
+#: sofa/_workflow/blog.rb:11
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] "記事"
+msgstr[1] "記事"
+
+#: sofa/_workflow/enquete.rb:11
+msgid "answer"
+msgid_plural "answers"
+msgstr[0] "回答"
+msgstr[1] "回答"
 
 #: sofa/meta/timestamp.rb:44
 msgid "%Y-%m-%dT%H:%M:%S"
@@ -88,14 +112,12 @@ msgid "malformed input."
 msgstr "入力に問題があります。"
 
 #: sofa/set/dynamic.rb:134
-msgid "%{result} %{n} item."
-msgid_plural "%{result} %{n} items."
-msgstr[0] "アイテムを%{result}。"
-msgstr[1] "%{n}件のアイテムを%{result}。"
+msgid "%{result} %{n} %{item}."
+msgstr "%{n}件の%{item}を%{result}。"
 
 #: sofa/set/dynamic.rb:136
 msgid "created"
-msgstr "作成しました"
+msgstr "追加しました"
 
 #: sofa/set/dynamic.rb:137
 msgid "updated"
@@ -107,11 +129,7 @@ msgstr "削除しました"
 
 #: sofa/set/dynamic.rb:161
 msgid "create new %{item}..."
-msgstr "新規%{item}作成..."
-
-#: sofa/set/dynamic.rb:161
-msgid "item"
-msgstr "アイテム"
+msgstr "新規%{item}..."
 
 #: sofa/set/dynamic.rb:181
 msgid "prev"

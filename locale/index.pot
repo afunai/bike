@@ -15,6 +15,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
+#: sofa/_workflow/_workflow.rb:11
+msgid "item"
+msgid_plural "items"
+msgstr[0] ""
+msgstr[1] ""
+
 #: sofa/_workflow/_workflow.rb:94 sofa/_workflow/attachment.rb:32
 msgid "create"
 msgstr ""
@@ -34,6 +40,24 @@ msgstr ""
 #: sofa/_workflow/_workflow.rb:112
 msgid "delete..."
 msgstr ""
+
+#: sofa/_workflow/attachment.rb:10
+msgid "attachment"
+msgid_plural "attachments"
+msgstr[0] ""
+msgstr[1] ""
+
+#: sofa/_workflow/blog.rb:11
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] ""
+msgstr[1] ""
+
+#: sofa/_workflow/enquete.rb:11
+msgid "answer"
+msgid_plural "answers"
+msgstr[0] ""
+msgstr[1] ""
 
 #: sofa/meta/timestamp.rb:44
 msgid "%Y-%m-%dT%H:%M:%S"
@@ -89,10 +113,8 @@ msgid "malformed input."
 msgstr ""
 
 #: sofa/set/dynamic.rb:134
-msgid "%{result} %{n} item."
-msgid_plural "%{result} %{n} items."
-msgstr[0] ""
-msgstr[1] ""
+msgid "%{result} %{n} %{item}."
+msgstr ""
 
 #: sofa/set/dynamic.rb:136
 msgid "created"
@@ -108,10 +130,6 @@ msgstr ""
 
 #: sofa/set/dynamic.rb:161
 msgid "create new %{item}..."
-msgstr ""
-
-#: sofa/set/dynamic.rb:161
-msgid "item"
 msgstr ""
 
 #: sofa/set/dynamic.rb:181

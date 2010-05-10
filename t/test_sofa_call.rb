@@ -1029,7 +1029,7 @@ _html
 			res.headers['Location']
 		)
 		assert_match(
-			/created 2 articles\./,
+			/created 2 tArticles\./,
 			res.body,
 			'the message should be plural if more than one item have results.'
 		)

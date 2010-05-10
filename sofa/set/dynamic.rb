@@ -139,8 +139,8 @@ _html
 						}[item_result],
 						:n      => n,
 						:item   => n_(
-							(my[:item].size == 1 && my[:item]['default'][:label]) || 'item',
-							'items',
+							(my[:item].size == 1 && my[:item]['default'][:label]) || my[:item_label],
+							'',
 							n
 						)
 					}
@@ -164,7 +164,7 @@ _html
 
 	def _g_action_create(arg)
 		label = _('create new %{item}...') % {
-			:item => _((my[:item].size == 1 && my[:item]['default'][:label]) || 'item')
+			:item => _((my[:item].size == 1 && my[:item]['default'][:label]) || my[:item_label])
 		}
 		(_get_by_action_tmpl(arg) || <<_html) if permit_get?(:action => :create)
 <div><a href="#{_g_uri_create arg}">#{label}</a></div>

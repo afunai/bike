@@ -7,7 +7,9 @@ class Sofa::Workflow
 
 	include Sofa::I18n
 
-	DEFAULT_META = {}
+	DEFAULT_META = {
+		:item_label => Sofa::I18n.n_('item','items',1),
+	}
 	DEFAULT_SUB_ITEMS = {}
 
 	ROLE_ADMIN = 0b1000

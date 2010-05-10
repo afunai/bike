@@ -6,8 +6,9 @@
 class Sofa::Workflow::Enquete < Sofa::Workflow
 
 	DEFAULT_META = {
-		:p_size => 10,
-		:conds  => {:p => 'last'},
+		:p_size     => 10,
+		:conds      => {:p => 'last'},
+		:item_label => Sofa::I18n.n_('answer','answers',1),
 	}
 
 	DEFAULT_SUB_ITEMS = {}

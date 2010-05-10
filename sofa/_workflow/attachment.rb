@@ -6,7 +6,8 @@
 class Sofa::Workflow::Attachment < Sofa::Workflow
 
 	DEFAULT_META = {
-		:p_size => 0,
+		:p_size     => 0,
+		:item_label => Sofa::I18n.n_('attachment','attachments',1),
 	}
 
 	PERM = {

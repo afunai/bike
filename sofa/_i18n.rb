@@ -120,6 +120,8 @@ module Sofa::I18n
 		Thread.current[:msg] = self.msg.merge m
 	end
 
+	module_function
+
 	def _(msgid)
 		Sofa::I18n::Msgstr.new(Sofa::I18n.msg[msgid].to_a.first || msgid)
 	end

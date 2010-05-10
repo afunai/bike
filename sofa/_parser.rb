@@ -44,6 +44,7 @@ module Sofa::Parser
 
 		html =~ /\A(?:[^<]*<!--)?[^<]*<[^>]*title="([^"]+)/
 		plural_msgs = $1.to_s.split(/,/).collect {|s| s.strip }
+		plural_msgs *= 4 if plural_msgs.size == 1
 		label = plural_msgs.first
 		Sofa::I18n.msg[label] ||= plural_msgs
 

@@ -188,7 +188,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 				:tmpl => '<html>$(main)</html>',
 				:tmpl_summary => '<html class ="s">$(main)</html>',
 			},
-			folder.send(:merge_meta,index,summary),
+			folder.send(:merge_meta,index,summary,:summary),
 			'Folder#merge_meta should merge parsed metas'
 		)
 	end

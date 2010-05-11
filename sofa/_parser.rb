@@ -7,7 +7,7 @@ module Sofa::Parser
 
 	module_function
 
-	def parse_html(html,action = 'index')
+	def parse_html(html,action = :index)
 		item = {}
 		html = gsub_block(html,'sofa-\w+') {|open,inner,close|
 			id = open[/id="(.+?)"/i,1] || 'main'
@@ -98,7 +98,7 @@ module Sofa::Parser
 		out
 	end
 
-	def parse_block(open_tag,inner_html,close_tag,action = 'index')
+	def parse_block(open_tag,inner_html,close_tag,action = :index)
 		open_tag.sub!(/id=".*?"/i,'id="@(name)"')
 		workflow = open_tag[/class=(?:"|".*?\s)sofa-(\w+)/,1]
 
@@ -124,7 +124,7 @@ module Sofa::Parser
 		}
 
 		item_meta = Sofa::Parser.parse_html item_html
-		if action == 'summary'
+		if action == :summary
 			item_meta[:tmpl].sub!(
 				/\$\(.*?\)/m,
 				'<a href="$(.uri_detail)">\&</a>'

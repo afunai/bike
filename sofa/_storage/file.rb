@@ -18,7 +18,7 @@ class Sofa::Storage::File < Sofa::Storage
 			id = "main-#{id}" if id =~ Sofa::REX::ID
 			full_name = ::File.join(dir,id).gsub(::File::SEPARATOR,'-')
 
-			if ftype == 'file' && id != 'index'
+			if ftype == 'file' && id.sub(/^([^\d\-]+-)+/,'') =~ Sofa::REX::ID
 				val = nil
 				::File.open(file,'r') {|f|
 					f.flock ::File::LOCK_SH

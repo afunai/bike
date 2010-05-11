@@ -34,6 +34,22 @@ class TC_Set_Folder < Test::Unit::TestCase
 		)
 	end
 
+	def test_meta_html_dir
+		folder = Sofa::Set::Static::Folder.root.item('foo')
+		assert_equal(
+			'/foo',
+			folder[:html_dir],
+			"Folder#meta_html_dir should return meta_dir if there is 'index.html'"
+		)
+
+		folder = Sofa::Set::Static::Folder.root.item('foo','bar')
+		assert_equal(
+			'/foo',
+			folder[:html_dir],
+			"Folder#meta_html_dir should return parent[:html_dir] if there is no 'index.html' in [:dir]"
+		)
+	end
+
 	def test_default_items
 		folder = Sofa::Set::Static::Folder.new(:id => 'foo',:parent => nil)
 		assert_instance_of(

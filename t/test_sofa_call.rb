@@ -768,6 +768,11 @@ _html
 			res.headers['Location'],
 			{}
 		)
+		assert_match(
+			/thank you!/,
+			res.body,
+			'Sofa#call should refer to (action).html if available'
+		)
 		assert_no_match(
 			/message/,
 			res.body,

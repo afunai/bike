@@ -57,6 +57,7 @@ class Sofa
 	end
 
 	def call(env)
+		uri    = "#{env['rack.url_scheme']}://#{env['HTTP_HOST']}#{env['SCRIPT_NAME']}"
 		req    = Rack::Request.new env
 		method = req.request_method.downcase
 		params = params_from_request req
@@ -78,6 +79,7 @@ class Sofa
 		end
 		return response_not_found unless base
 
+		base[:uri] = uri
 		base[:tid] = tid
 		Sofa.current[:base] = base
 
@@ -120,7 +122,7 @@ class Sofa
 		path   = Sofa::Path.path_of params[:conds]
 		action = (params['dest_action'] =~ /\A\w+\z/) ? params['dest_action'] : 'index'
 		response_see_other(
-			:location => "#{base[:path]}/#{path}#{action}.html"
+			:location => "#{base[:uri]}#{base[:path]}/#{path}#{action}.html"
 		)
 	end
 
@@ -128,7 +130,7 @@ class Sofa
 		Sofa.client = nil
 		path = Sofa::Path.path_of params[:conds]
 		response_see_other(
-			:location => "#{base[:path]}/#{path}index.html"
+			:location => "#{base[:uri]}#{base[:path]}/#{path}index.html"
 		)
 	end
 
@@ -154,7 +156,7 @@ class Sofa
 			id_step = result_step(base,params)
 			action = "confirm_#{params[:sub_action]}"
 			response_see_other(
-				:location => "/#{base[:tid]}/#{id_step}#{action}.html"
+				:location => "#{base[:uri]}/#{base[:tid]}/#{id_step}#{action}.html"
 			)
 		else
 			params = {:action => :update}
@@ -173,7 +175,7 @@ class Sofa
 				action = base.workflow.next_action params
 				id_step = result_step(base,params) if base[:parent] == base[:folder] && action != :done
 				response_see_other(
-					:location => "/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
+					:location => "#{base[:uri]}/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
 				)
 			else
 				params = {:action => :update}
@@ -184,7 +186,7 @@ class Sofa
 			base.commit :temp
 			id_step = result_step(base,params)
 			response_see_other(
-				:location => "/#{base[:tid]}/#{id_step}update.html"
+				:location => "#{base[:uri]}/#{base[:tid]}/#{id_step}update.html"
 			)
 		end
 	end
@@ -294,16 +296,15 @@ class Sofa
 	end
 
 	def response_see_other(result = {})
-location = 'http://localhost:9292' + result[:location]
 		body = <<_html
-<a href="#{location}">updated</a>
+<a href="#{result[:location]}">see other</a>
 _html
 		[
 			303,
 			{
 				'Content-Type'   => 'text/html',
 				'Content-Length' => body.size.to_s,
-				'Location'       => location,
+				'Location'       => result[:location],
 			},
 			body
 		]

@@ -119,6 +119,7 @@ _html
 	end
 
 	def _g_message(arg)
+		return if arg[:orig_action] == :done
 		return unless self == Sofa.base
 
 		if arg[:dest_action]

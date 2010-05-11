@@ -765,8 +765,13 @@ _html
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/done.html',
+			res.headers['Location'],
 			{}
+		)
+		assert_no_match(
+			/message/,
+			res.body,
+			'Sofa#call should not include messages for action :done'
 		)
 		assert_no_match(
 			/login/,

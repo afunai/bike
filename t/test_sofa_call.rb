@@ -630,9 +630,10 @@ _html
 	def test_post_confirm_update
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
+		base_uri = ''
 
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/t_store/main/update.html",
+			"http://#{base_uri}/t_store/main/update.html",
 			{
 				:input => ".action-confirm_update=submit&_1-name=fz&_1-comment=howdy.&.status-public=create"
 			}
@@ -645,7 +646,7 @@ _html
 			'Sofa#call with :confirm action should return status 303 upon success'
 		)
 		assert_equal(
-			"http://localhost:9292/#{tid}/id=_1/confirm_update.html",
+			"http://#{base_uri}/#{tid}/id=_1/confirm_update.html",
 			res.headers['Location'],
 			'Sofa#call with :confirm action should return a proper location'
 		)
@@ -656,7 +657,7 @@ _html
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			"http://localhost:9292/#{tid}/id=_1/confirm_update.html"
+			"http://#{base_uri}/#{tid}/id=_1/confirm_update.html"
 		)
 		assert_equal(
 			<<"_html",

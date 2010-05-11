@@ -23,6 +23,14 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		load load_val(my[:dir],my[:parent])
 	end
 
+	def meta_html_dir
+		if ::File.readable? ::File.join(Sofa['skin_dir'],my[:dir],'index.html')
+			my[:dir]
+		elsif my[:parent]
+			my[:parent][:html_dir]
+		end
+	end
+
 	private
 
 	def collect_item(conds = {},&block)

@@ -182,7 +182,6 @@ class TC_Storage < Test::Unit::TestCase
 			[
 				'-foo-main-20091120_0001,yaml',
 				'-foo-bar-main-20091120_0001,yaml',
-				'-foo-not_css-foo,css',
 				'-foo-sub-20100306_0001,yaml',
 			],
 			storage.class.traverse('/foo') {|entry| "#{entry[:full_name]},#{entry[:ext]}" },

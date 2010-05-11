@@ -77,7 +77,7 @@ class TC_Storage < Test::Unit::TestCase
 
 			storage.clear
 
-			_test_traverse(storage) if storage.is_a? Sofa::Storage::File
+			_test_traverse(storage) if storage.is_a? Sofa::Storage::File # TODO: other parsistent
 		}
 	end
 

@@ -14,8 +14,13 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		meta[:html] = load_html(meta[:dir],meta[:parent])
 		super
 
-		html_summary = load_html(meta[:dir],meta[:parent],'summary')
-		merge_meta(@meta,Sofa::Parser.parse_html(html_summary,'summary')) if html_summary
+		::Dir.glob(::File.join Sofa['skin_dir'],my[:html_dir].to_s,'*.html').each {|f|
+			action = ::File.basename(f,'.*').intern
+			if action != :index
+				html_action = load_html(my[:html_dir].to_s,my[:parent],action)
+				merge_meta(@meta,Sofa::Parser.parse_html(html_action,action),action)
+			end
+		}
 
 		my[:item]['_label'] = {:klass => 'text'}
 		my[:item]['_owner'] = {:klass => 'meta-owner'}

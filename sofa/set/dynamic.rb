@@ -115,7 +115,7 @@ _html
 	end
 
 	def _g_done(arg)
-		_ 'done.'
+		(_get_by_action_tmpl(arg) || _('done.')) if arg[:orig_action] == :done
 	end
 
 	def _g_message(arg)

@@ -166,7 +166,7 @@ _html
 		label = _('create new %{item}...') % {
 			:item => _((my[:item].size == 1 && my[:item]['default'][:label]) || my[:item_label])
 		}
-		(_get_by_action_tmpl(arg) || <<_html) if permit_get?(:action => :create)
+		(_get_by_action_tmpl(arg) || <<_html) if permit? :create
 <div><a href="#{_g_uri_create arg}">#{label}</a></div>
 _html
 	end

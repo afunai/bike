@@ -840,6 +840,17 @@ _tmpl
 			result,
 			'Parser.gsub_action_tmpl should yield action templates'
 		)
+
+		result,html = _test_gsub_action_tmpl 'a<div class="bar foo-done baz">Foo</div>c'
+		assert_equal(
+			{
+				:id     => 'foo',
+				:action => 'done',
+				:tmpl   => '<div class="bar foo-done baz">Foo</div>',
+			},
+			result,
+			'Parser.gsub_action_tmpl should yield action templates'
+		)
 	end
 
 	def test_gsub_action_tmpl_with_empty_id

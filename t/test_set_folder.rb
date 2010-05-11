@@ -300,4 +300,20 @@ _html
 		)
 	end
 
+	def test_tmpl_done
+		folder = Sofa::Set::Static::Folder.root.item('t_enquete')
+		assert_equal(
+			<<'_html',
+<html>
+	<head><title>$(_label)</title></head>
+	<body>
+		<p>thank you!</p>
+	</body>
+</html>
+_html
+			folder[:tmpl_done],
+			'Folder#initialize should load [:tmpl_done] from [:dir]/done.html'
+		)
+	end
+
 end

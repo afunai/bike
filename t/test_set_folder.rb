@@ -300,6 +300,24 @@ _html
 		)
 	end
 
+	def test_tmpl_create
+		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+
+		assert_equal(
+			<<'_html',
+<h1>create</h1>
+<ul id="main" class="sofa-blog">
+	<li>main-create</li>
+</ul>
+<input name=".status-public" type="submit" value="create" />
+_html
+			folder.get(
+				'main' => {:action => :create}
+			),
+			'Set#get should use [:tmpl_create] when available and appropriate'
+		)
+	end
+
 	def test_tmpl_done
 		folder = Sofa::Set::Static::Folder.root.item('t_enquete')
 		assert_equal(

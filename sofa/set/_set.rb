@@ -80,6 +80,8 @@ module Sofa::Set
 			_get_by_method arg
 		elsif my[:tmpl_summary] && summary?(arg)
 			_get_by_tmpl(arg,my[:tmpl_summary])
+		elsif action_tmpl = my[:"tmpl_#{arg[:action]}"]
+			_get_by_tmpl(arg,action_tmpl)
 		else
 			_get_by_tmpl(arg,my[:tmpl])
 		end

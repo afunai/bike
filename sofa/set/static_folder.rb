@@ -39,8 +39,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	private
 
 	def _get(arg)
-		item_id = arg.keys.find {|id| id.is_a? ::String }
-		if item_id && action_tmpl = my[:"tmpl_#{arg[item_id][:action]}"]
+		if arg['main'] && action_tmpl = my[:"tmpl_#{arg['main'][:action]}"]
 			_get_by_tmpl(arg,action_tmpl)
 		else
 			super

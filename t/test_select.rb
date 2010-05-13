@@ -35,6 +35,44 @@ class TC_Select < Test::Unit::TestCase
 		)
 	end
 
+	def test_meta_options_from_range
+		meta = nil
+		Sofa::Parser.gsub_scalar("$(foo select 1..5)") {|id,m|
+			meta = m
+			''
+		}
+		f = Sofa::Field.instance meta
+		assert_equal(
+			['1','2','3','4','5'],
+			f[:options],
+			'Select#initialize should set :options from the range token'
+		)
+
+		meta = nil
+		Sofa::Parser.gsub_scalar("$(foo select ..5)") {|id,m|
+			meta = m
+			''
+		}
+		f = Sofa::Field.instance meta
+		assert_equal(
+			['0','1','2','3','4','5'],
+			f[:options],
+			'Select#initialize should set :options from the range token'
+		)
+
+		meta = nil
+		Sofa::Parser.gsub_scalar("$(foo select 1..)") {|id,m|
+			meta = m
+			''
+		}
+		f = Sofa::Field.instance meta
+		assert_equal(
+			nil,
+			f[:options],
+			'Select#initialize should not refer to the range token if there is no maximum'
+		)
+	end
+
 	def test_val_cast
 		assert_equal(
 			'',

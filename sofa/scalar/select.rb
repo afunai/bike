@@ -6,7 +6,8 @@
 class Sofa::Select < Sofa::Field
 
 	def initialize(meta = {})
-		meta[:mandatory] = (meta[:tokens] && meta[:tokens].include?('mandatory'))
+		meta[:mandatory] = meta[:tokens] && meta[:tokens].include?('mandatory')
+		meta[:options] ||= meta[:max] && (meta[:min].to_i..meta[:max]).collect {|i| i.to_s }
 		super
 	end
 

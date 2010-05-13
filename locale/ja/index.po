@@ -194,3 +194,11 @@ msgstr "12"
 #: sofa/set/static.rb:40
 msgid "update..."
 msgstr "更新..."
+
+#: sofa/set/static_folder.rb:52
+msgid "login..."
+msgstr "ログイン"
+
+#: sofa/set/static_folder.rb:56
+msgid "logout"
+msgstr "ログアウト"

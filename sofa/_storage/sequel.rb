@@ -104,6 +104,8 @@ class Sofa::Storage::Sequel < Sofa::Storage
 			collect {|v| _id v[:full_name] }
 	end
 
+# TODO: overrride _sort() & _page() (they can be done in _select_*)
+
 	def _conds(id)
 		(id == :all) ? {} : {:full_name => _full_name(id)}
 	end
@@ -117,6 +119,7 @@ class Sofa::Storage::Sequel < Sofa::Storage
 	end
 
 	def load(id)
+# TODO: cache in _select_*
 		v = @dataset[:full_name => _full_name(id)]
 		(v[:ext] == 'yaml' ? YAML.load(v[:body]) : v[:binary_body]) if v
 	end

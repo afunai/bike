@@ -42,6 +42,7 @@ class TC_Storage < Test::Unit::TestCase
 
 	def test_fetch
 		sd = Sofa::Set::Static::Folder.root.item('t_select','main')
+		sd[:order]  = :asc
 		sd[:p_size] = 10
 
 		Sofa::Storage.constants.collect {|c| Sofa::Storage.const_get c }.each {|klass|
@@ -59,6 +60,7 @@ class TC_Storage < Test::Unit::TestCase
 
 			_test_select(storage)
 			_test_sort(storage)
+			_test_order(storage)
 			_test_page(storage)
 			_test_val(storage)
 			_test_navi(storage)
@@ -130,6 +132,36 @@ class TC_Storage < Test::Unit::TestCase
 			],
 			storage.select(:order => '-d'),
 			"#{storage.class}#_sort should sort the item ids returned by _select()"
+		)
+	end
+
+	def _test_order(storage)
+		storage.sd[:order] = :desc
+		assert_equal(
+			[
+				'20091226_0001',
+				'20091225_0002',
+				'20091225_0001',
+				'20091115_0001',
+				'20091114_0002',
+				'20091114_0001',
+			],
+			storage.select(:order => 'd'),
+			"#{storage.class}#_sort should refer to sd[:order]"
+		)
+
+		storage.sd[:order] = :asc
+		assert_equal(
+			[
+				'20091114_0001',
+				'20091114_0002',
+				'20091115_0001',
+				'20091225_0001',
+				'20091225_0002',
+				'20091226_0001',
+			],
+			storage.select(:order => 'd'),
+			"#{storage.class}#_sort should refer to sd[:order]"
 		)
 	end
 

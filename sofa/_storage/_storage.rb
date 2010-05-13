@@ -32,11 +32,16 @@ class Sofa::Storage
 		true
 	end
 
+	def order
+		@sd[:order]
+	end
+
 	def select(conds = {})
 		_cast conds
 		item_ids = _select(conds)
 		item_ids = _sort(item_ids,conds)
 		item_ids = _page(item_ids,conds)
+		(order == :desc) ? item_ids.reverse : item_ids
 	end
 
 	def build(v)
@@ -188,7 +193,7 @@ class Sofa::Storage
 		else
 			d = Time.now.strftime '%Y%m%d'
 		end
-		if max_in_d = select(:d => d,:order => 'id').last
+		if max_in_d = _select(:d => d).sort.last
 			max_in_d.succ
 		else
 			d + '_0001'

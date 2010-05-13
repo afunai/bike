@@ -118,7 +118,9 @@ _html
 	end
 
 	def _g_done(arg)
-		(_get_by_action_tmpl(arg) || _('done.')) if arg[:orig_action] == :done
+		(_get_by_action_tmpl(arg) || <<_html.chomp) if arg[:orig_action] == :done
+<div class="done">#{_ 'done.'}</div>
+_html
 	end
 
 	def _g_message(arg)
@@ -171,7 +173,7 @@ _html
 			:item => _((my[:item].size == 1 && my[:item]['default'][:label]) || my[:item_label])
 		}
 		(_get_by_action_tmpl(arg) || <<_html) if permit? :create
-<div><a href="#{_g_uri_create arg}">#{label}</a></div>
+<div class="action_create"><a href="#{_g_uri_create arg}">#{label}</a></div>
 _html
 	end
 

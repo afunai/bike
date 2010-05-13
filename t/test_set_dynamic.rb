@@ -114,6 +114,19 @@ _html
 		)
 	end
 
+	def test_meta_order
+		sd = Sofa::Set::Dynamic.new(
+			:id       => 'foo',
+			:klass    => 'set-dynamic',
+			:workflow => 'enquete'
+		)
+		assert_equal(
+			:asc,
+			sd[:order],
+			'Set::Dynamic#[:order] should be :asc by default'
+		)
+	end
+
 	def test_item
 		@sd.load('20100131_1234' => {'name' => 'frank'})
 		assert_instance_of(

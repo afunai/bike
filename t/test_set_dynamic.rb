@@ -125,6 +125,29 @@ _html
 			sd[:order],
 			'Set::Dynamic#[:order] should be :asc by default'
 		)
+
+		sd = Sofa::Set::Dynamic.new(
+			:id       => 'foo',
+			:klass    => 'set-dynamic',
+			:workflow => 'blog'
+		)
+		assert_equal(
+			:desc,
+			sd[:order],
+			'Set::Dynamic#[:order] should refer to the default_meta[:order]'
+		)
+
+		sd = Sofa::Set::Dynamic.new(
+			:id       => 'foo',
+			:klass    => 'set-dynamic',
+			:workflow => 'blog',
+			:tokens   => ['asc']
+		)
+		assert_equal(
+			:asc,
+			sd[:order],
+			'Set::Dynamic#[:order] should override the default_meta[:order] by meta[:order]'
+		)
 	end
 
 	def test_item
@@ -179,8 +202,8 @@ _html
 		assert_equal(
 			<<'_html',
 <ul id="foo" class="sofa-blog">
-	<li>frank: bar</li>
 	<li>carl: baz</li>
+	<li>frank: bar</li>
 </ul>
 _html
 			@sd.get,

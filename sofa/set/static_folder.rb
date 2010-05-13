@@ -46,6 +46,18 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		end
 	end
 
+	def _g_action_login(arg)
+		if Sofa.client == 'nobody'
+			<<_html
+<div class="action_login"><a href="#{my[:dir]}/login.html">#{_ 'login...'}</a></div>
+_html
+		else
+			<<_html
+<div class="action_logout"><a href="#{my[:dir]}/logout.html">#{_ 'logout'}</a></div>
+_html
+		end
+	end
+
 	def collect_item(conds = {},&block)
 		if conds[:id] =~ Sofa::REX::ID && sd = item('main')
 			return sd.instance_eval { collect_item(conds,&block) }

@@ -334,4 +334,26 @@ _html
 		)
 	end
 
+	def test_g_login
+		folder = Sofa::Set::Static::Folder.root.item('t_enquete')
+
+		Sofa.client = nil
+		assert_equal(
+			<<'_html',
+<div class="action_login"><a href="/t_enquete/login.html">login...</a></div>
+_html
+			folder.get(:action => :action_login),
+			'Folder#_g_login should return a link to login/logout according to the current client'
+		)
+
+		Sofa.client = 'frank'
+		assert_equal(
+			<<'_html',
+<div class="action_logout"><a href="/t_enquete/logout.html">logout</a></div>
+_html
+			folder.get(:action => :action_login),
+			'Folder#_g_login should return a link to login/logout according to the current client'
+		)
+	end
+
 end

@@ -97,7 +97,7 @@ class TC_Select < Test::Unit::TestCase
 		)
 		assert_equal(
 			<<_html.chomp,
-<select name="" class="">
+<select name="" class="select">
 	<option value="">please select</option>
 	<option>bar</option>
 	<option>baz</option>
@@ -116,7 +116,7 @@ _html
 		)
 		assert_equal(
 			<<_html.chomp,
-<select name="" class="">
+<select name="" class="select">
 	<option>bar</option>
 	<option>baz</option>
 	<option selected>qux</option>

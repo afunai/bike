@@ -38,11 +38,6 @@ _html
 	end
 	alias :_g_create :_g_update
 
-	def _g_class(arg)
-		out = super
-		out ? "radio #{out}" : 'radio'
-	end
-
 	def val_cast(v)
 		v.to_s
 	end

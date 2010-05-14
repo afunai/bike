@@ -221,7 +221,8 @@ _html
 	end
 
 	def _g_class(arg)
-		_g_valid?(arg) ? nil : 'error'
+		c = self.class.to_s.sub('Sofa::','').gsub('::','-').downcase
+		_g_valid?(arg) ? c : "#{c} error"
 	end
 
 	def _g_valid?(arg)

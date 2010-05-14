@@ -227,7 +227,7 @@ _html
 		assert_equal(
 			<<_html.chomp,
 <input type="hidden" name="[]" value="" />
-<input type="checkbox" name="[]" value="_on" />
+<input type="checkbox" name="[]" value="_on" class="checkbox" />
 _html
 			f.get(:action => :create),
 			'Checkbox#get should not include the label if no options is defined'

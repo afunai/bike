@@ -285,7 +285,7 @@ _html
 <h1>index</h1>
 <form id="main" method="post" enctype="multipart/form-data" action="/t_summary/12345.012/update.html">
 <ul id="main" class="sofa-blog">
-	<li><a><input type="text" name="20100326_0001-name" value="frank" class="" /></a>: <input type="text" name="20100326_0001-comment" value="hi." class="" /></li>
+	<li><a><input type="text" name="20100326_0001-name" value="frank" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." class="text" /></li>
 </ul>
 <input name=".status-public" type="submit" value="update" />
 <input name=".action-confirm_delete" type="submit" value="delete..." />

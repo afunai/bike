@@ -63,7 +63,7 @@ class TC_Textarea < Test::Unit::TestCase
 			'Textarea#get should return proper string'
 		)
 		assert_equal(
-			'<textarea name="" cols="76" rows="8" class="">bar</textarea>',
+			'<textarea name="" cols="76" rows="8" class="textarea">bar</textarea>',
 			@f.get(:action => :update),
 			'Textarea#get should return proper string'
 		)

@@ -46,7 +46,7 @@ class Sofa::Meta::Timestamp < Sofa::Field
 
 	def _g_create(arg)
 		<<_html.chomp if my[:can_edit]
-<input type="text" name="#{my[:short_name]}" value="" class="" />
+<input type="text" name="#{my[:short_name]}" value="" class="#{_g_class arg}" />
 _html
 	end
 
@@ -60,8 +60,8 @@ _html
 		elsif my[:can_update] && !find_ancestor {|f| f[:id] =~ Sofa::REX::ID_NEW }
 			label = 'update the timestamp'
 			<<_html.chomp
-<input type="checkbox" id="#{my[:short_name]}" name="#{my[:short_name]}" value="true" />
-<label for="#{my[:short_name]}">#{label}</label>
+<input type="checkbox" id="#{my[:short_name]}" name="#{my[:short_name]}" value="true" class="#{_g_class arg}" />
+<label for="#{my[:short_name]}">#{label}</label>#{_g_errors arg}
 _html
 		end
 	end

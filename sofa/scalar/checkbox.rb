@@ -36,7 +36,7 @@ class Sofa::Checkbox < Sofa::Field
 			checked = (val.include? '_on') ? ' checked' : ''
 			<<_html.rstrip
 <input type="hidden" name="#{my[:short_name]}[]" value="" />
-<input type="checkbox" name="#{my[:short_name]}[]" value="_on" #{checked}/>
+<input type="checkbox" name="#{my[:short_name]}[]" value="_on" class="#{_g_class arg}" #{checked}/>
 #{_g_errors arg}
 _html
 		else
@@ -56,11 +56,6 @@ _html
 		end
 	end
 	alias :_g_create :_g_update
-
-	def _g_class(arg)
-		out = super
-		out ? "checkbox #{out}" : 'checkbox'
-	end
 
 	def val_cast(v)
 		Array(v).collect {|i|

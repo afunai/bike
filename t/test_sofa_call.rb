@@ -101,7 +101,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		<h1>Root Folder</h1>
 <form id="main" method="post" enctype="multipart/form-data" action="/t_enquete/1234567890.0123/update.html">
 		<ul id="main" class="sofa-enquete">
-			<li><a><input type="text" name="_001-name" value="foo" class="" /></a>: <input type="text" name="_001-comment" value="bar!" class="" /></li>
+			<li><a><input type="text" name="_001-name" value="foo" class="text" /></a>: <input type="text" name="_001-comment" value="bar!" class="text" /></li>
 		</ul>
 <input name=".status-public" type="submit" value="create" />
 </form>
@@ -235,7 +235,7 @@ _html
 <h1>index</h1>
 <form id="main" method="post" enctype="multipart/form-data" action="/t_summary/#{tid}/update.html">
 <ul id="main" class="sofa-blog">
-	<li><a><input type="text" name="20100326_0001-name" value="frank" class="" /></a>: <input type="text" name="20100326_0001-comment" value="hi." class="" /></li>
+	<li><a><input type="text" name="20100326_0001-name" value="frank" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." class="text" /></li>
 </ul>
 <input name=".status-public" type="submit" value="update" />
 <input name=".action-confirm_delete" type="submit" value="delete..." />

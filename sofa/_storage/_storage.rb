@@ -41,7 +41,7 @@ class Sofa::Storage
 		item_ids = _select(conds)
 		item_ids = _sort(item_ids,conds)
 		item_ids = _page(item_ids,conds)
-		(order == :desc) ? item_ids.reverse : item_ids
+		((conds[:order] || order) =~ /^-/) ? item_ids.reverse : item_ids
 	end
 
 	def build(v)
@@ -137,12 +137,7 @@ class Sofa::Storage
 	end
 
 	def _sort(item_ids,conds)
-		case conds[:order]
-			when '-d','-id'
-				item_ids.sort.reverse
-			else
-				item_ids.sort
-		end
+		item_ids.sort
 	end
 
 	def _page(item_ids,conds)

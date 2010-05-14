@@ -42,7 +42,7 @@ class TC_Storage < Test::Unit::TestCase
 
 	def test_fetch
 		sd = Sofa::Set::Static::Folder.root.item('t_select','main')
-		sd[:order]  = :asc
+		sd[:order]  = 'id'
 		sd[:p_size] = 10
 
 		Sofa::Storage.constants.collect {|c| Sofa::Storage.const_get c }.each {|klass|
@@ -136,21 +136,35 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def _test_order(storage)
-		storage.sd[:order] = :desc
+		storage.sd[:order] = 'id'
 		assert_equal(
 			[
-				'20091226_0001',
-				'20091225_0002',
-				'20091225_0001',
-				'20091115_0001',
-				'20091114_0002',
 				'20091114_0001',
+				'20091114_0002',
+				'20091115_0001',
+				'20091225_0001',
+				'20091225_0002',
+				'20091226_0001',
 			],
-			storage.select(:order => 'd'),
+			storage.select,
 			"#{storage.class}#_sort should refer to sd[:order]"
 		)
 
-		storage.sd[:order] = :asc
+		storage.sd[:order] = '-id'
+		assert_equal(
+			[
+				'20091226_0001',
+				'20091225_0002',
+				'20091225_0001',
+				'20091115_0001',
+				'20091114_0002',
+				'20091114_0001',
+			],
+			storage.select,
+			"#{storage.class}#_sort should refer to sd[:order]"
+		)
+
+		storage.sd[:order] = '-id'
 		assert_equal(
 			[
 				'20091114_0001',
@@ -160,9 +174,11 @@ class TC_Storage < Test::Unit::TestCase
 				'20091225_0002',
 				'20091226_0001',
 			],
-			storage.select(:order => 'd'),
-			"#{storage.class}#_sort should refer to sd[:order]"
+			storage.select(:order => 'id'),
+			"#{storage.class}#_sort should override sd[:order] by conds[:order]"
 		)
+
+		storage.sd[:order] = 'id'
 	end
 
 	def _test_page(storage)
@@ -345,10 +361,18 @@ class TC_Storage < Test::Unit::TestCase
 
 		assert_equal(
 			{
-				:next => {:d => '200911',:order => '-d'},
-				:sibs => {:d => ['200912','200911']},
+				:prev => {:d => '200911',:order => 'd'},
+				:sibs => {:d => ['200911','200912']},
 			},
-			storage.navi(:d => '200912',:order => '-d'),
+			storage.navi(:d => '200912',:order => 'd'),
+			"#{storage.class}#navi should return the next conditions for the given conds"
+		)
+		assert_equal(
+			{
+				:next => {:d => '200912',:order => '-d'},
+				:sibs => {:d => ['200911','200912']},
+			},
+			storage.navi(:d => '200911',:order => '-d'),
 			"#{storage.class}#navi should return the next conditions for the given conds"
 		)
 	end

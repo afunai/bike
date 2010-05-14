@@ -8,7 +8,7 @@ class Sofa::Workflow::Blog < Sofa::Workflow
 	DEFAULT_META = {
 		:p_size     => 10,
 		:conds      => {:d => '999999',:p => 'last'},
-		:order      => :desc,
+		:order      => '-id',
 		:item_label => Sofa::I18n.n_('entry','entries',1),
 	}
 

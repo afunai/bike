@@ -62,6 +62,10 @@ msgstr[1] "回答"
 msgid "%Y-%m-%dT%H:%M:%S"
 msgstr "%Y/%m/%d %H:%M:%S"
 
+#: sofa/meta/timestamp.rb:63
+msgid "update the timestamp"
+msgstr "タイムスタンプを更新する"
+
 #: sofa/scalar/checkbox.rb:22 sofa/scalar/file.rb:55 sofa/scalar/radio.rb:15
 #: sofa/scalar/select.rb:15 sofa/scalar/text.rb:17 sofa/scalar/textarea.rb:12
 msgid "mandatory"

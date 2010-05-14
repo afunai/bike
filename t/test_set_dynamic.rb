@@ -23,6 +23,7 @@ _html
 			}
 		)
 		@sd[:conds] = {}
+		@sd[:order] = nil
 		@sd[:tmpl_action_create] = ''
 		def @sd._g_submit(arg)
 			"[#{my[:id]}-#{arg[:orig_action]}#{arg[:sub_action] && ('.' + arg[:sub_action].to_s)}]\n"
@@ -201,8 +202,8 @@ _html
 		assert_equal(
 			<<'_html',
 <ul id="foo" class="sofa-blog">
-	<li>carl: baz</li>
 	<li>frank: bar</li>
+	<li>carl: baz</li>
 </ul>
 _html
 			@sd.get,

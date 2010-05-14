@@ -278,6 +278,7 @@ _tmpl
 			y[year] << u
 			y
 		}
+		p = (my[:order] =~ /^-/) ? 'p=last/' : ''
 		div.gsub('$(.years)') {
 			years.keys.sort.collect {|year|
 				year_tmpl.gsub('$(.y)',year).gsub('$(.months)') {
@@ -289,7 +290,7 @@ _tmpl
 							label = ($1 == 'ym') ? _label_ym(y,m) : _label_m(m)
 							(arg[:conds][:d] == d) ?
 								"<span class=\"current\">#{label}</span>" :
-								"<a href=\"#{my[:path]}/#{uri}\">#{label}</a>"
+								"<a href=\"#{my[:path]}/#{uri}#{p}\">#{label}</a>"
 						}
 					}.join
 				}

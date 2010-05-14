@@ -615,6 +615,7 @@ _html
 	end
 
 	def test_g_view_ym
+		@sd[:order] = 'id'
 		@sd.load(
 			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
 			'20091129_0001' => {'name' => 'frank','comment' => 'bar'},
@@ -645,6 +646,38 @@ _html
 			'Set::Dynamic#_g_view_ym should return the available ym conds'
 		)
 
+		@sd[:order] = '-id'
+		@sd.load(
+			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank','comment' => 'bar'},
+			'20100111_0001' => {'name' => 'frank','comment' => 'bar'}
+		)
+		assert_equal(
+			<<'_html',
+<div class="view_ym">
+	<span class="y">
+		2009 |
+		<span class="m"><a href="/foo/200911/p=last/">Nov</a></span>
+		<span class="m"><a href="/foo/200912/p=last/">Dec</a></span>
+		<br/>
+	</span>
+	<span class="y">
+		2010 |
+		<span class="m"><a href="/foo/201001/p=last/">Jan</a></span>
+		<br/>
+	</span>
+</div>
+_html
+			@sd.send(
+				:_g_view_ym,
+				{:conds => {}}
+			),
+			'Set::Dynamic#_g_view_ym should refer to [:order]'
+		)
+
+		@sd[:order] = 'id'
 		assert_equal(
 			<<'_html',
 <div class="view_ym">

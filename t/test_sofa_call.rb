@@ -313,6 +313,46 @@ _html
 		)
 	end
 
+	def test_get_static_cascade
+		Sofa.client = 'root'
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/bar/css/foo.css'
+		)
+		assert_equal(
+			"#foo {bar: baz;}\n",
+			res.body,
+			'Sofa#call should look the acnestor dirs for the static directory'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/bar/css/non_exist.css'
+		)
+		assert_equal(
+			404,
+			res.status,
+			'Sofa#call should return 404 if the file is not found in the nearest static dir'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/baz/css/foo.css'
+		)
+		assert_equal(
+			404,
+			res.status,
+			'Sofa#call should not look the ancestor dirs if the file is not found in the nearest dir'
+		)
+
+		res = Rack::MockRequest.new(@sofa).get(
+			'http://example.com/foo/bar/js/non_exist.css'
+		)
+		assert_equal(
+			404,
+			res.status,
+			'Sofa#call should return 404 if the static dir is not found in any ancestor dirs'
+		)
+	end
+
 	def test_post_simple_create
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear

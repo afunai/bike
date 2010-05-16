@@ -53,7 +53,19 @@ class Sofa
 
 	def self.static(env)
 		@static ||= Rack::Directory.new Sofa['skin_dir']
-		@static.call env
+		response = @static.call env
+
+		if response.first == 404
+			until ::File.readable? ::File.join(
+				Sofa['skin_dir'],
+				env['PATH_INFO'].sub(%r{(/#{Sofa::REX::DIR_STATIC}/).*},'\\1')
+			)
+				env['PATH_INFO'].sub!(%r{/[^/]+(?=/#{Sofa::REX::DIR_STATIC}/)},'') || break
+			end
+			@static.call env
+		else
+			response
+		end
 	end
 
 	def call(env)

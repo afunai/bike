@@ -202,10 +202,15 @@ _html
 		)
 		assert_equal(
 			<<'_html',
+<html>
+<head><title>summary</title></head>
+<body>
 <h1>summary</h1>
 <table id="main" class="sofa-blog">
 	<tr><td><a href="/t_summary/20100326/1/read_detail.html">frank</a></td><td>hi.</td></tr>
 </table>
+</body>
+</html>
 _html
 			res.body,
 			'Sofa#call() should use [:tmpl_summary] when available and appropriate'
@@ -216,10 +221,15 @@ _html
 		)
 		assert_equal(
 			<<'_html',
+<html>
+<head><title>index</title></head>
+<body>
 <h1>index</h1>
 <ul id="main" class="sofa-blog">
 	<li><a>frank</a>: hi.</li>
 </ul>
+</body>
+</html>
 _html
 			res.body,
 			'Sofa#call() should use [:tmpl] when the action is :read -> :detail'
@@ -232,6 +242,9 @@ _html
 		tid = res.body[%r{/(#{Sofa::REX::TID})/},1]
 		assert_equal(
 			<<"_html",
+<html>
+<head><title>index</title></head>
+<body>
 <h1>index</h1>
 <form id="main" method="post" enctype="multipart/form-data" action="/t_summary/#{tid}/update.html">
 <ul id="main" class="sofa-blog">
@@ -240,6 +253,8 @@ _html
 <input name=".status-public" type="submit" value="update" />
 <input name=".action-confirm_delete" type="submit" value="delete..." />
 </form>
+</body>
+</html>
 _html
 			res.body,
 			'Sofa#call() should use [:tmpl] unless the action is :read'

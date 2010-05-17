@@ -6,6 +6,8 @@
 class TC_Set_Folder < Test::Unit::TestCase
 
 	def setup
+		Sofa.client = 'root'
+		Sofa.current[:base] = nil
 	end
 
 	def teardown
@@ -196,17 +198,25 @@ class TC_Set_Folder < Test::Unit::TestCase
 	def test_tmpl_summary
 		folder = Sofa::Set::Static::Folder.root.item('t_summary')
 		assert_equal(
-			<<'_html'.chomp,
+			<<'_html',
+<html>
+<head><title>index</title></head>
+<body>
 <h1>index</h1>
-$(main.message)$(main)
+$(main.message)$(main)</body>
+</html>
 _html
 			folder[:tmpl],
 			'Folder#initialize should load [:tmpl] from [:dir]/index.html'
 		)
 		assert_equal(
-			<<'_html'.chomp,
+			<<'_html',
+<html>
+<head><title>summary</title></head>
+<body>
 <h1>summary</h1>
-$(main.message)$(main)
+$(main.message)$(main)</body>
+</html>
 _html
 			folder[:tmpl_summary],
 			'Folder#initialize should load [:tmpl_summary] from [:dir]/summary.html'
@@ -252,10 +262,16 @@ _html
 
 		assert_equal(
 			<<'_html',
+<html>
+<head><title>summary</title></head>
+<body>
 <h1>summary</h1>
 <table id="main" class="sofa-blog">
 	<tr><td><a href="/t_summary/20100326/1/read_detail.html">frank</a></td><td>hi.</td></tr>
 </table>
+<div class="action_create"><a href="/t_summary/create.html">create new entry...</a></div>
+</body>
+</html>
 _html
 			folder.get(
 				'main' => {:conds => {:p => 1}}
@@ -264,10 +280,16 @@ _html
 		)
 		assert_equal(
 			<<'_html',
+<html>
+<head><title>index</title></head>
+<body>
 <h1>index</h1>
 <ul id="main" class="sofa-blog">
-	<li><a>frank</a>: hi.</li>
+	<li><a href="/t_summary/20100326/1/update.html">frank</a>: hi.</li>
 </ul>
+<div class="action_create"><a href="/t_summary/create.html">create new entry...</a></div>
+</body>
+</html>
 _html
 			folder.get(
 				:action => :read,
@@ -282,6 +304,9 @@ _html
 		folder.item('main')[:tid] = '12345.012'
 		assert_equal(
 			<<'_html',
+<html>
+<head><title>index</title></head>
+<body>
 <h1>index</h1>
 <form id="main" method="post" enctype="multipart/form-data" action="/t_summary/12345.012/update.html">
 <ul id="main" class="sofa-blog">
@@ -290,6 +315,8 @@ _html
 <input name=".status-public" type="submit" value="update" />
 <input name=".action-confirm_delete" type="submit" value="delete..." />
 </form>
+</body>
+</html>
 _html
 			folder.get(
 				:action => :read,
@@ -305,11 +332,16 @@ _html
 
 		assert_equal(
 			<<'_html',
+<html>
+<head><title>create</title></head>
+<body>
 <h1>create</h1>
 <ul id="main" class="sofa-blog">
 	<li>main-create</li>
 </ul>
-<input name=".status-public" type="submit" value="create" />
+<input name="main.status-public" type="submit" value="create" />
+</body>
+</html>
 _html
 			folder.get(
 				'main' => {:action => :create}

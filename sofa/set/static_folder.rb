@@ -22,6 +22,12 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 			end
 		}
 
+		@meta.keys.each {|k|
+			@meta[k].sub!(/<head>([\s\n]*)/i) {
+				"#{$&}<base href=\"@(base_href)\" />#{$1}"
+			} if k.to_s =~ /^tmpl(?:_.+)?$/
+		}
+
 		my[:item]['_label'] = {:klass => 'text'}
 		my[:item]['_owner'] = {:klass => 'meta-owner'}
 		my[:item]['_group'] = {:klass => 'meta-group'}

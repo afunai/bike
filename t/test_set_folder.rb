@@ -257,6 +257,23 @@ _html
 		)
 	end
 
+	def test_base_href
+		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+		folder[:uri] = 'http://example.com'
+		Sofa.current[:base] = folder
+
+		assert_match(
+			'<base href="@(base_href)" />',
+			folder[:tmpl],
+			'Folder#initialize should supplement <base href=...> to [:tmpl]'
+		)
+		assert_match(
+			'<base href="@(base_href)" />',
+			folder[:tmpl_summary],
+			'Folder#initialize should supplement <base href=...> to [:tmpl_*]'
+		)
+	end
+
 	def test_get_summary
 		folder = Sofa::Set::Static::Folder.root.item('t_summary')
 

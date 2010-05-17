@@ -42,6 +42,10 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		end
 	end
 
+	def meta_base_href
+		Sofa.base ? "#{Sofa.base[:uri]}#{my[:dir]}/" : "#{my[:dir]}/"
+	end
+
 	private
 
 	def _get(arg)

@@ -52,6 +52,25 @@ class TC_Set_Folder < Test::Unit::TestCase
 		)
 	end
 
+	def test_meta_base_href
+		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+
+		Sofa.current[:base] = folder.item('main')
+		Sofa.current[:base][:uri] = 'http://example.com'
+		assert_equal(
+			'http://example.com/t_summary/',
+			folder[:base_href],
+			'Folder#meta_base_href should return a full URI when Sofa.base is available'
+		)
+
+		Sofa.current[:base] = nil
+		assert_equal(
+			'/t_summary/',
+			folder[:base_href],
+			'Folder#meta_base_href should return [:dir] when Sofa.base is not available'
+		)
+	end
+
 	def test_default_items
 		folder = Sofa::Set::Static::Folder.new(:id => 'foo',:parent => nil)
 		assert_instance_of(

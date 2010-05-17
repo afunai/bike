@@ -96,7 +96,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		assert_equal(
 			<<'_html',
 <html>
-	<head><title>Root Folder</title></head>
+	<head><base href="http:///t_enquete/" /><title>Root Folder</title></head>
 	<body>
 		<h1>Root Folder</h1>
 <form id="main" method="post" enctype="multipart/form-data" action="/t_enquete/1234567890.0123/update.html">
@@ -203,7 +203,7 @@ _html
 		assert_equal(
 			<<'_html',
 <html>
-<head><title>summary</title></head>
+<head><base href="http:///t_summary/" /><title>summary</title></head>
 <body>
 <h1>summary</h1>
 <table id="main" class="sofa-blog">
@@ -222,7 +222,7 @@ _html
 		assert_equal(
 			<<'_html',
 <html>
-<head><title>index</title></head>
+<head><base href="http:///t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
 <ul id="main" class="sofa-blog">
@@ -243,7 +243,7 @@ _html
 		assert_equal(
 			<<"_html",
 <html>
-<head><title>index</title></head>
+<head><base href="http:///t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
 <form id="main" method="post" enctype="multipart/form-data" action="/t_summary/#{tid}/update.html">
@@ -717,7 +717,7 @@ _html
 		assert_equal(
 			<<"_html",
 <html>
-	<head><title>Root Folder</title></head>
+	<head><base href="http://#{base_uri}/t_store/" /><title>Root Folder</title></head>
 	<body>
 		<h1>Root Folder</h1>
 <ul class="message notice">

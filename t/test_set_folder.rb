@@ -219,7 +219,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 		assert_equal(
 			<<'_html',
 <html>
-<head><title>index</title></head>
+<head><base href="@(base_href)" /><title>index</title></head>
 <body>
 <h1>index</h1>
 $(main.message)$(main)</body>
@@ -231,7 +231,7 @@ _html
 		assert_equal(
 			<<'_html',
 <html>
-<head><title>summary</title></head>
+<head><base href="@(base_href)" /><title>summary</title></head>
 <body>
 <h1>summary</h1>
 $(main.message)$(main)</body>
@@ -299,7 +299,7 @@ _html
 		assert_equal(
 			<<'_html',
 <html>
-<head><title>summary</title></head>
+<head><base href="/t_summary/" /><title>summary</title></head>
 <body>
 <h1>summary</h1>
 <table id="main" class="sofa-blog">
@@ -317,7 +317,7 @@ _html
 		assert_equal(
 			<<'_html',
 <html>
-<head><title>index</title></head>
+<head><base href="/t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
 <ul id="main" class="sofa-blog">
@@ -341,7 +341,7 @@ _html
 		assert_equal(
 			<<'_html',
 <html>
-<head><title>index</title></head>
+<head><base href="/t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
 <form id="main" method="post" enctype="multipart/form-data" action="/t_summary/12345.012/update.html">
@@ -369,7 +369,7 @@ _html
 		assert_equal(
 			<<'_html',
 <html>
-<head><title>create</title></head>
+<head><base href="/t_summary/" /><title>create</title></head>
 <body>
 <h1>create</h1>
 <ul id="main" class="sofa-blog">
@@ -391,7 +391,7 @@ _html
 		assert_equal(
 			<<'_html',
 <html>
-	<head><title>$(_label)</title></head>
+	<head><base href="@(base_href)" /><title>$(_label)</title></head>
 	<body>
 		<p>thank you!</p>
 	</body>

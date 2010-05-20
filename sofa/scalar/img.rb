@@ -54,7 +54,7 @@ class Sofa::Img < Sofa::File
 		s_basename = basename.sub(/\.[^\.]+$/,'.small\\&')
 		<<_html.chomp unless val.empty?
 <span class="img">
-	<a href="#{path}/#{basename}"><img href="#{path}/#{s_basename}" /></a>
+	<a href="#{path}/#{basename}"><img src="#{path}/#{s_basename}" /></a>
 </span>
 _html
 	end

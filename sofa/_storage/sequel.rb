@@ -19,14 +19,14 @@ class Sofa::Storage::Sequel < Sofa::Storage
 	end
 
 	def self.load_skel
-		@db.create_table?(:sofa_main) {
-			string :full_name
-			string :ext
-			string :owner
-			string :body
-			blob   :binary_body
+		@db.create_table(:sofa_main) {
+			String :full_name
+			String :ext
+			String :owner
+			String :body
+			Blob   :binary_body
 			primary_key :full_name
-		}
+		} unless @db.table_exists? :sofa_main
 		Sofa::Storage::File.traverse('/',Sofa['skin_dir']) {|entry|
 			@db[:sofa_main].insert(
 				:full_name => entry[:full_name],

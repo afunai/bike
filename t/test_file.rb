@@ -537,6 +537,28 @@ _eos
 		)
 	end
 
+	def test_errors_options
+		@f.create(
+			:type     => 'image/jpeg',
+			:tempfile => @file,
+			:head     => <<'_eos',
+Content-Disposition: form-data; name="t_file"; filename="BAZ.JPG"
+Content-Type: image/jpeg
+_eos
+			:filename => 'BAZ.JPG',
+			:name     => 't_file'
+		)
+
+		@f[:min] = nil
+		@f[:max] = nil
+		@f[:options] = ['jpg']
+		assert_equal(
+			[],
+			@f.errors,
+			'File#errors should ignore the case of extentions'
+		)
+	end
+
 	def test_save_file
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_file','main')

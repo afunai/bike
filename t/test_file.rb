@@ -37,6 +37,20 @@ class TC_File < Test::Unit::TestCase
 		)
 	end
 
+	def test_meta_options
+		meta = nil
+		Sofa::Parser.gsub_scalar('$(foo file jpg,GIF,Png)') {|id,m|
+			meta = m
+			''
+		}
+		@f = Sofa::Field.instance meta.merge(:id => 'foo')
+		assert_equal(
+			['jpg','gif','png'],
+			@f[:options],
+			'File#initialize should downcase :options'
+		)
+	end
+
 	def test_meta_path
 		@f[:parent] = Sofa::Set::Static::Folder.root.item('t_file','main')
 		assert_equal(

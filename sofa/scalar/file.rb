@@ -6,6 +6,7 @@
 class Sofa::File < Sofa::Field
 
 	def initialize(meta = {})
+		meta[:options].collect! {|i| i.downcase } if meta[:options]
 		super
 	end
 

@@ -24,7 +24,8 @@ class Sofa::Img < Sofa::File
 	end
 
 	def errors
-		if nil # malformed image
+		if @error_thumbnail
+			[_("wrong file type: should be %{types}") % {:types => my[:options].join('/')}]
 		else
 			super
 		end
@@ -60,12 +61,16 @@ _html
 	end
 
 	def _thumbnail(tempfile)
-		if self.class.thumbnail?
+		@error_thumbnail = nil
+		begin
 			tempfile.rewind
 			img = QuickMagick::Image.read(tempfile.path).first
 			img.resize "#{my[:width]}x#{my[:height]}"
 			img.to_blob
-		end
+		rescue QuickMagick::QuickMagickError
+			@error_thumbnail = $!.inspect
+			nil
+		end if self.class.quick_magick?
 	end
 
 	def val_cast(v)

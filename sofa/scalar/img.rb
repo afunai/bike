@@ -13,7 +13,7 @@ class Sofa::Img < Sofa::File
 	DEFAULT_META = {
 		:width   => '120',
 		:height  => '120',
-		:options => [],
+		:options => ['png','jpg','jpeg','gif','tiff','bmp'],
 	}
 
 	def self.quick_magick?

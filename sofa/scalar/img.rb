@@ -18,7 +18,7 @@ class Sofa::Img < Sofa::File
 		raise Sofa::Error::Forbidden unless permit? :read
 
 		if ps = my[:persistent_sd]
-			@thumbnail ||= ps.storage.val "#{my[:persistent_name]}.small"
+			@thumbnail ||= ps.storage.val "#{my[:persistent_name]}_small"
 		end
 		@thumbnail || body
 	end
@@ -37,7 +37,7 @@ class Sofa::Img < Sofa::File
 			case @action
 				when :create,:update,nil
 					ps.storage.store(
-						"#{my[:persistent_name]}.small",
+						"#{my[:persistent_name]}_small",
 						@thumbnail,
 						val['basename'][/\.([\w\.]+)$/,1] || 'bin'
 					) if @thumbnail && valid?
@@ -51,7 +51,7 @@ class Sofa::Img < Sofa::File
 	def _g_default(arg = {})
 		path       = [:read,nil].include?(arg[:action]) ? my[:path] : my[:tmp_path]
 		basename   = Rack::Utils.escape_html val['basename'].to_s
-		s_basename = basename.sub(/\.[^\.]+$/,'.small\\&')
+		s_basename = basename.sub(/\..+$/,'_small\\&')
 		<<_html.chomp unless val.empty?
 <span class="img">
 	<a href="#{path}/#{basename}"><img src="#{path}/#{s_basename}" /></a>

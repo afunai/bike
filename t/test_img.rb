@@ -109,7 +109,7 @@ _eos
 		assert_equal(
 			<<'_html'.chomp,
 <span class="img">
-	<a href="/t_img/main/foo/baz.jpg"><img src="/t_img/main/foo/baz.small.jpg" /></a>
+	<a href="/t_img/main/foo/baz.jpg"><img src="/t_img/main/foo/baz_small.jpg" /></a>
 </span>
 _html
 			@f.get,
@@ -136,7 +136,7 @@ _html
 		assert_equal(
 			<<'_html'.chomp,
 <span class="img">
-	<a href="/t_img/main/foo/&lt;baz&gt;.jpg"><img src="/t_img/main/foo/&lt;baz&gt;.small.jpg" /></a>
+	<a href="/t_img/main/foo/&lt;baz&gt;.jpg"><img src="/t_img/main/foo/&lt;baz&gt;_small.jpg" /></a>
 </span>
 _html
 			@f.get,

@@ -118,7 +118,7 @@ _html
 		assert_equal(
 			<<"_html".chomp,
 <span class="img">
-	<a href="/#{tid}/foo/baz.jpg"><img src="/#{tid}/foo/baz.small.jpg" /></a>
+	<a href="/t_img/#{tid}/foo/baz.jpg"><img src="/t_img/#{tid}/foo/baz_small.jpg" /></a>
 </span>
 <span class="file">
 	<input type="file" name="foo" class="img" />

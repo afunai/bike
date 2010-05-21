@@ -14,7 +14,7 @@ class Sofa::File < Sofa::Field
 	end
 
 	def meta_tmp_path
-		"/#{Sofa.base[:tid]}/#{my[:short_name].gsub('-','/')}" if Sofa.base
+		"#{Sofa.base[:path]}/#{Sofa.base[:tid]}/#{my[:short_name].gsub('-','/')}" if Sofa.base
 	end
 
 	def meta_persistent_sd

@@ -52,7 +52,7 @@ class TC_File < Test::Unit::TestCase
 		tid = @f[:parent][:tid]
 
 		assert_equal(
-			"/#{tid}/foo",
+			"/t_file/#{tid}/foo",
 			@f[:tmp_path],
 			'File#meta_tmp_path should return the short path from the tid'
 		)
@@ -163,7 +163,7 @@ _eos
 		)
 		assert_equal(
 			<<"_html".chomp,
-<span class="file"><a href="/#{tid}/foo/baz.jpg">baz.jpg (12 bytes)</a></span>
+<span class="file"><a href="/t_file/#{tid}/foo/baz.jpg">baz.jpg (12 bytes)</a></span>
 <span class="file">
 	<input type="file" name="foo" class="file" />
 </span>
@@ -239,7 +239,7 @@ _eos
 		)
 		assert_equal(
 			<<"_html".chomp,
-<span class="file"><a href="/1234.567/_1/baz/_1/qux/qux.jpg">qux.jpg (#{@file.length} bytes)</a></span>
+<span class="file"><a href="/t_file/1234.567/_1/baz/_1/qux/qux.jpg">qux.jpg (#{@file.length} bytes)</a></span>
 <span class="file">
 	<input type="file" name="_1-baz-_1-qux" class="file" />
 </span>
@@ -289,7 +289,7 @@ _eos
 		)
 		assert_equal(
 			<<"_html".chomp,
-<span class="file"><a href="/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
+<span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
 <span class="file">
 	<input type="submit" name="_1-foo.action-delete" value="x">
 	<input type="file" name="_1-foo" class="file" />
@@ -302,7 +302,7 @@ _html
 		sd.item('_1','foo')[:min] = 1
 		assert_equal(
 			<<"_html".chomp,
-<span class="file"><a href="/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
+<span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
 <span class="file">
 	<input type="file" name="_1-foo" class="file" />
 </span>

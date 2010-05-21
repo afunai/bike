@@ -153,7 +153,7 @@ class Sofa
 					'Content-Type'   => base.val['type'],
 					'Content-Length' => base.body.to_s.size.to_s,
 				},
-				:body    => base.body
+				:body    => (params[:sub_action] == :small) ? base.thumbnail : base.body
 			)
 		else
 			response_ok :body => _get(base,params)

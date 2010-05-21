@@ -10,7 +10,7 @@ end
 
 class Sofa::Img < Sofa::File
 
-	def self.thumbnail?
+	def self.quick_magick?
 		Object.const_defined? :QuickMagick
 	end
 

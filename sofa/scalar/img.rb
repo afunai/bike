@@ -11,8 +11,8 @@ end
 class Sofa::Img < Sofa::File
 
 	DEFAULT_META = {
-		:width   => '120',
-		:height  => '120',
+		:width   => 120,
+		:height  => 120,
 		:options => ['png','jpg','jpeg','gif','tiff','bmp'],
 	}
 

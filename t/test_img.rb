@@ -88,6 +88,25 @@ _eos
 		)
 	end
 
+	def test_large_thumbnail
+		@f[:width] = @f[:height] = 640
+		@f.create(
+			:type     => 'image/jpeg',
+			:tempfile => @file,
+			:head     => <<'_eos',
+Content-Disposition: form-data; name="t_img"; filename="baz.jpg"
+Content-Type: image/jpeg
+_eos
+			:filename => 'baz.jpg',
+			:name     => 't_img'
+		)
+		assert_equal(
+			0,
+			@f.instance_variable_get(:@thumbnail).to_s.size,
+			'Img#_thumbnail should not make a thumbnail larger than the original img'
+		)
+	end
+
 	def test_get
 		Sofa.client = 'root'
 

@@ -71,8 +71,10 @@ _html
 		begin
 			tempfile.rewind
 			img = QuickMagick::Image.read(tempfile.path).first
-			img.resize "#{my[:width]}x#{my[:height]}"
-			img.to_blob
+			if img.width > my[:width] || img.height > my[:height]
+				img.resize "#{my[:width]}x#{my[:height]}"
+				img.to_blob
+			end
 		rescue QuickMagick::QuickMagickError
 			@error_thumbnail = $!.inspect
 			nil

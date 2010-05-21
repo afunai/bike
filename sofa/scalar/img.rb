@@ -31,6 +31,7 @@ class Sofa::Img < Sofa::File
 	end
 
 	def commit(type = :temp)
+		super
 		if type == :temp && @action == :delete
 			@thumbnail = nil
 		elsif type == :persistent && ps = my[:persistent_sd]
@@ -43,7 +44,6 @@ class Sofa::Img < Sofa::File
 					) if @thumbnail && valid?
 			end
 		end
-		super
 	end
 
 	private

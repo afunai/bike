@@ -144,18 +144,19 @@ _html
 		)
 	end
 
-	def ptest_call_body
+	def test_call_body
 		Sofa.client = 'root'
 		sd = Sofa::Set::Static::Folder.root.item('t_img','main')
 		sd.storage.clear
 
 		# post a multipart request
-		input = <<"_eos".gsub(/\r?\n/,"\r\n")
+		input = <<"_eos".gsub(/\r?\n/,"\r\n").sub('@img',@img)
 ---foobarbaz
 Content-Disposition: form-data; name="_1-foo"; filename="foo.jpg"
 Content-Type: image/jpeg
+Content-Transfer-Encoding: binary
 
-#{@file.read.base64}
+@img
 ---foobarbaz--
 _eos
 		res = Rack::MockRequest.new(Sofa.new).post(
@@ -185,28 +186,38 @@ _eos
 		assert_equal(
 			'image/jpeg',
 			res.headers['Content-Type'],
-			'Sofa#call to a file item should return the mime type of the file'
+			'Sofa#call to a img item should return the mime type of the file'
 		)
 		assert_equal(
-			@file.length.to_s,
-			res.headers['Content-Length'],
-			'Sofa#call to a file item should return the content length of the file'
+			@img.size,
+			res.body.size,
+			'Sofa#call to a img item should return the binary body of the file'
+		)
+
+		res = Rack::MockRequest.new(Sofa.new).get(
+			"http://example.com/t_img/#{new_id}/foo/foo_small.jpg"
 		)
 		assert_equal(
-			@file.read,
-			res.body,
-			'Sofa#call to a file item should return the binary body of the file'
+			'image/jpeg',
+			res.headers['Content-Type'],
+			"Sofa#call to 'file-small.*' should return the thumbnail of the file"
+		)
+		@file.rewind
+		assert_equal(
+			@f.send(:_thumbnail,@file).size,
+			res.body.size,
+			"Sofa#call to 'file-small.*' should return the thumbnail of the file"
 		)
 
 		# delete
 		Rack::MockRequest.new(Sofa.new).post(
 			'http://example.com/t_img/update.html',
 			{
-				:input => '19811202_0001.action=delete&.status-public=delete',
+				:input => "#{new_id}.action=delete&.status-public=delete",
 			}
 		)
 		res = Rack::MockRequest.new(Sofa.new).get(
-			'http://example.com/t_img/19811202_0001/foo/foo.jpg'
+			"http://example.com/t_img/#{new_id}/foo/foo.jpg"
 		)
 		assert_equal(
 			404,
@@ -214,7 +225,7 @@ _eos
 			'Sofa#call should delete child files as well'
 		)
 		res = Rack::MockRequest.new(Sofa.new).get(
-			'http://example.com/t_img/19811202_0001/foo/foo.small.jpg'
+			"http://example.com/t_img/#{new_id}/foo/foo_small.jpg"
 		)
 		assert_equal(
 			404,

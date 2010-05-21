@@ -235,6 +235,47 @@ _eos
 	end
 
 	def test_errors
+		File.open('t/skin/t_img/index.html') {|f|
+			@img  = f.read
+			@file = Tempfile.open('tc_img')
+			@file << @img
+		}
+		@f.create(
+			:type     => 'image/jpeg',
+			:tempfile => @file,
+			:head     => <<'_eos',
+Content-Disposition: form-data; name="t_img"; filename="baz.jpg"
+Content-Type: image/jpeg
+_eos
+			:filename => 'baz.jpg',
+			:name     => 't_img'
+		)
+		assert_equal(
+			['wrong file type: should be jpg/gif/png'],
+			@f.errors,
+			"Img#errors should regard quick_magick errors as 'wrong file type'"
+		)
+
+		File.open('t/skin/t_img/test.jpg') {|f|
+			@img  = f.read
+			@file = Tempfile.open('tc_img')
+			@file << @img
+		}
+		@f.update(
+			:type     => 'image/jpeg',
+			:tempfile => @file,
+			:head     => <<'_eos',
+Content-Disposition: form-data; name="t_img"; filename="baz.jpg"
+Content-Type: image/jpeg
+_eos
+			:filename => 'baz.jpg',
+			:name     => 't_img'
+		)
+		assert_equal(
+			[],
+			@f.errors,
+			"Img#errors should raise no errors for good imgs"
+		)
 	end
 
 end

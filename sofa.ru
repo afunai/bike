@@ -8,5 +8,6 @@ require 'sofa'
 
 use Rack::ShowExceptions
 use Rack::Session::Pool #Cookie
+use Rack::Lock
 
 run Sofa.new

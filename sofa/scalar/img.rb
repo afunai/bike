@@ -63,7 +63,7 @@ _html
 		if self.class.thumbnail?
 			tempfile.rewind
 			img = QuickMagick::Image.read(tempfile.path).first
-			img.resize '10x10'
+			img.resize "#{my[:width]}x#{my[:height]}"
 			img.to_blob
 		end
 	end

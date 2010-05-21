@@ -10,6 +10,12 @@ end
 
 class Sofa::Img < Sofa::File
 
+	DEFAULT_META = {
+		:width   => '120',
+		:height  => '120',
+		:options => [],
+	}
+
 	def self.quick_magick?
 		Object.const_defined? :QuickMagick
 	end

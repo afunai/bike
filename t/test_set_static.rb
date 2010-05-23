@@ -217,6 +217,12 @@ _html
 			ss.send(:_get_by_tmpl,{},'foo @(baz) foo'),
 			'Set#_get_by_tmpl should replace @(...) with @meta[...]'
 		)
+
+		assert_equal(
+			'foo baz foo',
+			ss.send(:_get_by_tmpl,{},'foo _(baz) foo'),
+			'Set#_get_by_tmpl should evaluate _(...)'
+		)
 	end
 
 	def test_recursive_tmpl

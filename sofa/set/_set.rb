@@ -93,6 +93,8 @@ module Sofa::Set
 			id    = steps.pop
 			item  = item steps
 			item ? item[id.intern] : '???'
+		}.gsub(/_\((.+?)\)/) {
+			_ $1
 		}.gsub(/\$\((.*?)(?:\.([\w\-]+))?\)/) {
 			name,action = $1,$2
 			if name == ''

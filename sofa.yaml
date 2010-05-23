@@ -1,5 +1,5 @@
 ---
-skin_dir: './data'
+skin_dir: './skin'
 storage:
   default: File
   File:

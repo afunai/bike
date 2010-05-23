@@ -6,7 +6,7 @@
 
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>$(_label)</title>
+		<title>_(User Admin)</title>
 		<link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
 		<link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
 	</head>
@@ -14,18 +14,18 @@
 	<body>
 		<div id="container">
 			<div id="header">
-				<h1><a href="@(dir)/">$(_label)</a></h1>
+				<h1><a href="@(dir)/">_(User Admin)</a></h1>
 			</div>
 
 			<div id="center" class="column">
 				<ul id="main" class="sofa-blog">
 					<!-- 1..5 may_confirm -->
 					<table title="user,users">
-						<tr><th>id</th><td>$(_id = text 32 1..32)</td></tr>
-						<tr><th>name</th><td>$(name = text 1..64)</td></tr>
-						<tr><th>e-mail</th><td>$(email = text 1..64)</td></tr>
-						<tr><th>password</th><td>$(password = password 12 1..32)</td></tr>
-						<tr><th>avatar</th><td>$(avatar = img 72*72 1..320000)</td></tr>
+						<tr><th>_(ID)</th><td>$(_id = text 32 1..32)</td></tr>
+						<tr><th>_(Name)</th><td>$(name = text 1..64)</td></tr>
+						<tr><th>_(Email)</th><td>$(email = text 1..64)</td></tr>
+						<tr><th>_(Password)</th><td>$(password = password 12 1..32)</td></tr>
+						<tr><th>_(Avatar)</th><td>$(avatar = img 72*72 1..320000)</td></tr>
 					</table>
 				</ul>
 			</div>

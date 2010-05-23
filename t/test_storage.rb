@@ -581,7 +581,7 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def _test_rename(storage)
-		orig_id = storage.store(:new_id,{'foo' => 'bar'})
+		orig_id = storage.store(:new_id,{'_id' => 'test','foo' => 'bar'})
 		file_id = storage.store("#{orig_id}-file",'i am file.','bin')
 		new_id  = storage.store(orig_id,{'_id' => 'renamed'})
 

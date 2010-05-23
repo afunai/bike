@@ -123,7 +123,7 @@ _html
 	end
 
 	def _g_message(arg)
-		return if arg[:orig_action] == :done
+		return if arg[:orig_action] == :done && my[:tmpl_done]
 		return unless self == Sofa.base
 
 		if arg[:dest_action]

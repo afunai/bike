@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html 
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ja" lang="ja">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>$(_label)</title>
+		<link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="./css/users.css" type="text/css" media="screen" />
+	</head>
+
+	<body>
+		<div id="container">
+			<div id="header">
+				<h1><a href="@(dir)/">$(_label)</a></h1>
+			</div>
+
+			<div id="center" class="column">
+				<ul id="main" class="sofa-blog">
+					<!-- 1..5 may_confirm -->
+					<table title="user,users">
+						<tr><th>id</th><td>$(_id = text 32 1..32)</td></tr>
+						<tr><th>name</th><td>$(name = text 1..64)</td></tr>
+						<tr><th>e-mail</th><td>$(email = text 1..64)</td></tr>
+						<tr><th>password</th><td>$(password = password 12 1..32)</td></tr>
+						<tr><th>avatar</th><td>$(avatar = img 72*72 1..320000)</td></tr>
+					</table>
+				</ul>
+			</div>
+
+			<div id="right" class="column">
+				<p>user: @(client)</p>
+				<p>$(.action_login)</p>
+				<p>$(main.action_create)</p>
+			</div>
+
+			<div id="footer"></div>
+		</div>
+	</body>
+
+</html>

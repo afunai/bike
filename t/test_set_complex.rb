@@ -206,43 +206,21 @@ _html
 	def test_get_with_partial_permission
 		Sofa.client = 'carl' # can edit only his own item
 
-		assert_equal(
-			<<'_html',
-<ul id="main" class="sofa-pipco">
-	<li id="main-20091123_0002">
-		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
-		<ul id="main-20091123_0002-files" class="sofa-attachment">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
-		</ul>
-		<ul id="main-20091123_0002-replies" class="sofa-pipco">
-			<li id="main-20091123_0002-replies-20091125_0001"><a>'ho ho.'(action=read,p_action=read)</a></li>
-			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=read,p_action=read)</a></li>
-		</ul>
-		'potato'
-	</li>
-</ul>
-_html
-			@sd.get(:action => :update,:conds => {:id => '20091123_0002'}),
-			'Field#get should fall back to a possible action if the given action is not permitted'
-		)
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Field#get should raise Error::Forbidden when an action is given but forbidden'
+		) {
+			@sd.get(:action => :update,:conds => {:id => '20091123_0002'})
+		}
 
 		@sd.item('20091123_0002','comment')[:owner] = 'carl' # enclave in roy's item
 
-		assert_equal(
-			<<'_html',
-<ul id="main" class="sofa-pipco">
-	<li id="main-20091123_0002">
-		'RE'(action=read,p_action=update): 'wee'(action=update,p_action=update)
-		<ul id="main-20091123_0002-files" class="sofa-attachment">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
-		</ul>
-	</li>
-</ul>
-[main-update]
-_html
-			@sd.get(:action => :update,:conds => {:id => '20091123_0002'}),
-			'Field#get should preserve the given action wherever possible'
-		)
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Field#get should not allow partially permitted get'
+		) {
+			@sd.get(:action => :update,:conds => {:id => '20091123_0002'})
+		}
 	end
 
 	def test_get_with_partial_action

@@ -1227,21 +1227,29 @@ _html
 		)
 		Sofa.client = 'carl' # carl is not the member of the group
 
-		arg = {:action => :create}
+		arg = {}
 		@sd.get arg
 		assert_equal(
 			:read,
 			arg[:action],
-			'Set::Dynamic#get should retreat from the forbidden action'
+			'Set::Dynamic#get should set the default action'
 		)
 
+		arg = {:action => :create}
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Set::Dynamic#get should raise Error::Forbidden when an action is given but forbidden'
+		) {
+			@sd.get arg
+		}
+
 		arg = {:action => :update,:conds => {:d => '2009'}}
-		@sd.get arg
-		assert_equal(
-			:read,
-			arg[:action],
+		assert_raise(
+			Sofa::Error::Forbidden,
 			'Set::Dynamic#get should not keep the partially-permitted action'
-		)
+		) {
+			@sd.get arg
+		}
 
 		arg = {:action => :update,:conds => {:id => '20091122_0002'}}
 		@sd.get arg
@@ -1300,12 +1308,12 @@ _html
 		)
 
 		arg = {:action => :delete,:conds => {:d => '2009'}}
-		@sd.get arg
-		assert_equal(
-			:read,
-			arg[:action],
-			'Set::Dynamic#get should retreat from the forbidden action'
-		)
+		assert_raise(
+			Sofa::Error::Forbidden,
+			'Set::Dynamic#get should raise Error::Forbidden when an action is given but forbidden'
+		) {
+			@sd.get arg
+		}
 	end
 
 	def test_post_by_roy

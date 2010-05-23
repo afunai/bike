@@ -124,7 +124,7 @@ class Sofa::Field
 		if permit_get? arg
 			_get(arg)
 		else
-			if arg[:action] && my[:client] == 'nobody'
+			if arg[:action]
 				raise Sofa::Error::Forbidden
 			else
 				arg[:action] = default_action

@@ -1,0 +1,16 @@
+.error { background: pink; }
+ul.message {
+  background: white;
+  list-style-type: none;
+  padding-left: 0.5em;
+  -moz-border-radius: 0.5em;
+}
+ul.message li { padding: 0.5em; }
+ul.notice { border: 2px solid blue; }
+ul.alert { border: 2px solid orange; }
+ul.error { border: 2px solid red; }
+div.error {
+  color: pink;
+  background: transparent;
+  font-weight: bold;
+}

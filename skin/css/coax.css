@@ -1,0 +1,111 @@
+body, html {
+  margin: 0;
+  padding: 0;
+  background: #666699;
+}
+#container {
+  width: 950px;
+  margin: 0 auto;
+  background: white;
+}
+#header {
+  background: #000000;
+  border-bottom: 3px solid #666699;
+  padding-top: 1em;
+  padding-left: 2em;
+}
+#header h1 {
+  color: white;
+  padding: 0.2em 0px;
+  margin: 0;
+}
+#header h1 > a { color: white; }
+#center {
+  float: left;
+  width: 667px;
+  padding: 10px;
+  background: white;
+  border-right: 3px solid #666699;
+}
+#right {
+  float: right;
+  width: 240px;
+  padding: 10px;
+  background: white;
+  margin-left: -3px;
+  border-left: 3px solid #666699;
+}
+#footer {
+  clear: both;
+  border-top: 3px solid #666699;
+  padding-bottom: 3em;
+  padding-left: 2em;
+  background: #000000;
+}
+* html #footer { height: 1px; }
+.column {
+  position: relative;
+  float: left;
+}
+.column h2 {
+  padding: 0;
+  margin: 0 0 -0.5em;
+  color: red;
+}
+.column ul {
+  list-style-type: none;
+  margin: 1em 0 0em 1em;
+}
+#center ul {
+  margin: 0.5em 0 0.5em 0;
+  padding: 0;
+}
+#center li div.label {
+  margin-top: 1em;
+  padding: 0.5em 10px 0.5em 10px;
+  width: 50%;
+  -moz-border-radius-topleft: 0.5em;
+  -moz-border-radius-topright: 0.5em;
+  background: black;
+  color: white;
+}
+#center li div.label a {
+  color: white;
+  font-weight: bold;
+}
+#center li div.label input {
+  margin: 0;
+  padding: 1px 0.2em;
+  border: none;
+  -moz-border-radius: 0.2em;
+}
+#center li div.ibody {
+  margin-bottom: 0.5em;
+  margin: 0;
+  padding: 0.5em 1em 0.5em 0.5em;
+  border: solid black 2px;
+  -moz-border-radius-topright: 0.5em;
+  -moz-border-radius-bottomleft: 0.5em;
+  -moz-border-radius-bottomright: 0.5em;
+}
+#center li div.ibody textarea {
+  width: 100%;
+  -moz-border-radius: 0.3em;
+}
+#center li div.ibody ul {
+  list-style-type: disc;
+  margin-left: 1.5em;
+}
+#center th {
+  width: 20%;
+  text-align: right;
+  vertical-align: top;
+  padding: 1em 1em 1.5em 1em;
+}
+#center td {
+  text-align: left;
+  vertical-align: top;
+  padding: 1em 1em 1.5em 0em;
+}
+#center td img { vertical-align: top; }
+img { border: none; }

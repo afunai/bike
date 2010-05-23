@@ -196,15 +196,18 @@ class Sofa::Storage
 	end
 
 	def new_id?(id,v)
-		return true if id == :new_id
-		return false unless v.is_a? ::Hash
-
-		return true if v['_id'] =~ /\A#{Sofa::REX::ID_SHORT}\z/ && id != new_id(v)
-		return true if (
+		if id == :new_id
+			true
+		elsif !v.is_a?(::Hash)
+			false
+		elsif id =~ /_#{Sofa::REX::ID_SHORT}\z/
+			v['_id'] =~ /\A#{Sofa::REX::ID_SHORT}\z/ &&
+			id != new_id(v)
+		else
 			v['_timestamp'] &&
 			v['_timestamp']['published'].is_a?(::Time) &&
 			id !~ /\A#{v['_timestamp']['published'].strftime('%Y%m%d')}/
-		)
+		end
 	end
 
 end

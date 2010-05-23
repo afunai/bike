@@ -835,4 +835,45 @@ class TC_Storage < Test::Unit::TestCase
 		)
 	end
 
+	def test_new_id?
+		storage = Sofa::Set::Static::Folder.root.item('t_select','main').storage
+
+		assert(
+			storage.send(:new_id?,:new_id,{}),
+			'Storage#new_id? should return true if the current id is :new_id'
+		)
+
+		assert(
+			!storage.send(:new_id?,'20100523_0001','foo'),
+			'Storage#new_id? should return false if v is a scalar'
+		)
+
+		assert(
+			!storage.send(:new_id?,'00000000_foo',{'_id' => 'foo'}),
+			"Storage#new_id? should return false if v['_id'] is same as the current id"
+		)
+		assert(
+			storage.send(:new_id?,'00000000_foo',{'_id' => 'bar'}),
+			"Storage#new_id? should return true if v['_id'] differs from the current id"
+		)
+
+		assert(
+			!storage.send(:new_id?,'20100523_0001',{'_timestamp' => {'published' => Time.parse('2010-05-23')}}),
+			"Storage#new_id? should return false if v['_timestamp'] is same as the current id"
+		)
+		assert(
+			storage.send(:new_id?,'20100523_0001',{'_timestamp' => {'published' => Time.parse('2010-05-24')}}),
+			"Storage#new_id? should return false if v['_timestamp'] differs from the current id"
+		)
+
+		assert(
+			!storage.send(:new_id?,'00000000_foo',{'_id' => 'foo','_timestamp' => {'published' => Time.parse('2010-05-24')}}),
+			"Storage#new_id? should not refer to v['timestamp'] if v['_id'] matched SHORT_ID"
+		)
+		assert(
+			!storage.send(:new_id?,'00000000_foo',{'_timestamp' => {'published' => Time.parse('2010-05-24')}}),
+			"Storage#new_id? should not refer to v['timestamp'] if v['_id'] matched SHORT_ID"
+		)
+	end
+
 end

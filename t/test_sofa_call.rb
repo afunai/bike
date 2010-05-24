@@ -81,26 +81,26 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		)
 	end
 
-	def test_get_enquete
+	def test_get_contact
 		Sofa.client = nil
-		Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.clear
+		Sofa::Set::Static::Folder.root.item('t_contact','main').storage.clear
 
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/1234567890.0123/t_enquete/'
+			'http://example.com/1234567890.0123/t_contact/'
 		)
 		assert_equal(
 			200,
 			res.status,
-			'Sofa#call to enquete by nobody should return status 200'
+			'Sofa#call to contact by nobody should return status 200'
 		)
 		assert_equal(
 			<<'_html',
 <html>
-	<head><base href="http:///t_enquete/" /><title>Root Folder</title></head>
+	<head><base href="http:///t_contact/" /><title>Root Folder</title></head>
 	<body>
 		<h1>Root Folder</h1>
-<form id="main" method="post" enctype="multipart/form-data" action="/t_enquete/1234567890.0123/update.html">
-		<ul id="main" class="sofa-enquete">
+<form id="main" method="post" enctype="multipart/form-data" action="/t_contact/1234567890.0123/update.html">
+		<ul id="main" class="sofa-contact">
 			<li><a><input type="text" name="_001-name" value="foo" class="text" /></a>: <input type="text" name="_001-comment" value="bar!" class="text" /></li>
 		</ul>
 <input name=".status-public" type="submit" value="create" />
@@ -109,89 +109,89 @@ class TC_Sofa_Call < Test::Unit::TestCase
 </html>
 _html
 			res.body,
-			'Sofa#call to enquete by nobody should return :create'
+			'Sofa#call to contact by nobody should return :create'
 		)
 	end
 
-	def test_get_enquete_forbidden
+	def test_get_contact_forbidden
 		Sofa.client = nil
-		Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.build(
+		Sofa::Set::Static::Folder.root.item('t_contact','main').storage.build(
 			'20100425_1234' => {'name' => 'cz','comment' => 'howdy.'}
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/20100425/1234/index.html'
+			'http://example.com/t_contact/20100425/1234/index.html'
 		)
 		assert_no_match(
 			/howdy/,
 			res.body,
-			'getting an enquete by nobody should not return any contents'
+			'getting an contact by nobody should not return any contents'
 		)
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/20100425_1234/'
+			'http://example.com/t_contact/20100425_1234/'
 		)
 		assert_no_match(
 			/howdy/,
 			res.body,
-			'peeking an enquete by nobody should not return any contents'
+			'peeking an contact by nobody should not return any contents'
 		)
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/20100425_1234/comment/'
+			'http://example.com/t_contact/20100425_1234/comment/'
 		)
 		assert_no_match(
 			/howdy/,
 			res.body,
-			'peeking an enquete by nobody should not return any contents'
+			'peeking an contact by nobody should not return any contents'
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/20100425/1234/done.html'
+			'http://example.com/t_contact/20100425/1234/done.html'
 		)
 		assert_no_match(
 			/howdy/,
 			res.body,
-			'getting an enquete by nobody should not return any contents'
+			'getting an contact by nobody should not return any contents'
 		)
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/20100425_1234/done.html'
+			'http://example.com/t_contact/20100425_1234/done.html'
 		)
 		assert_no_match(
 			/howdy/,
 			res.body,
-			'peeking an enquete by nobody should not return any contents'
+			'peeking an contact by nobody should not return any contents'
 		)
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/20100425_1234/comment/done.html'
+			'http://example.com/t_contact/20100425_1234/comment/done.html'
 		)
 		assert_no_match(
 			/howdy/,
 			res.body,
-			'peeking an enquete by nobody should not return any contents'
+			'peeking an contact by nobody should not return any contents'
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/20100425/1234/confirm_create.html'
+			'http://example.com/t_contact/20100425/1234/confirm_create.html'
 		)
 		assert_no_match(
 			/howdy/,
 			res.body,
-			'getting an enquete by nobody should not return any contents'
+			'getting an contact by nobody should not return any contents'
 		)
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/20100425_1234/confirm_create.html'
+			'http://example.com/t_contact/20100425_1234/confirm_create.html'
 		)
 		assert_no_match(
 			/howdy/,
 			res.body,
-			'peeking an enquete by nobody should not return any contents'
+			'peeking an contact by nobody should not return any contents'
 		)
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_enquete/20100425_1234/comment/confirm_create.html'
+			'http://example.com/t_contact/20100425_1234/comment/confirm_create.html'
 		)
 		assert_no_match(
 			/howdy/,
 			res.body,
-			'peeking an enquete by nobody should not return any contents'
+			'peeking an contact by nobody should not return any contents'
 		)
 	end
 
@@ -798,12 +798,12 @@ _html
 		)
 	end
 
-	def test_post_enquete
+	def test_post_contact
 		Sofa.client = nil
-		Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.clear
+		Sofa::Set::Static::Folder.root.item('t_contact','main').storage.clear
 
 		res = Rack::MockRequest.new(@sofa).post(
-			'http://example.com/t_enquete/main/update.html',
+			'http://example.com/t_contact/main/update.html',
 			{
 				:input => "_1-name=fz&_1-comment=hi.&.status-public=create"
 			}
@@ -816,7 +816,7 @@ _html
 		assert_no_match(
 			Sofa::REX::PATH_ID,
 			res.headers['Location'],
-			'Sofa#call should not tell the item location when the workflow is enquete'
+			'Sofa#call should not tell the item location when the workflow is contact'
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
@@ -840,14 +840,14 @@ _html
 		)
 	end
 
-	def test_post_enquete_forbidden
+	def test_post_contact_forbidden
 		Sofa.client = nil
-		Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.build(
+		Sofa::Set::Static::Folder.root.item('t_contact','main').storage.build(
 			'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}
 		)
 
 		res = Rack::MockRequest.new(@sofa).post(
-			'http://example.com/t_enquete/main/update.html',
+			'http://example.com/t_contact/main/update.html',
 			{
 				:input => "20100425_1234-comment=modified&20100425_1234.action=create&.status-public=create"
 			}
@@ -855,16 +855,16 @@ _html
 		assert_equal(
 			403,
 			res.status,
-			'Sofa#call should not allow nobody to update an existing enquete'
+			'Sofa#call should not allow nobody to update an existing contact'
 		)
 		assert_equal(
 			{'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}},
-			Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.val,
-			'Sofa#call should not allow nobody to update an existing enquete'
+			Sofa::Set::Static::Folder.root.item('t_contact','main').storage.val,
+			'Sofa#call should not allow nobody to update an existing contact'
 		)
 
 		res = Rack::MockRequest.new(@sofa).post(
-			'http://example.com/t_enquete/main/create.html',
+			'http://example.com/t_contact/main/create.html',
 			{
 				:input => "20100425_1234-comment=modified&20100425_1234.action=create&.status-public=create"
 			}
@@ -872,16 +872,16 @@ _html
 		assert_equal(
 			403,
 			res.status,
-			'Sofa#call should not allow nobody to update an existing enquete'
+			'Sofa#call should not allow nobody to update an existing contact'
 		)
 		assert_equal(
 			{'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}},
-			Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.val,
-			'Sofa#call should not allow nobody to update an existing enquete'
+			Sofa::Set::Static::Folder.root.item('t_contact','main').storage.val,
+			'Sofa#call should not allow nobody to update an existing contact'
 		)
 
 		res = Rack::MockRequest.new(@sofa).post(
-			'http://example.com/t_enquete/main/20100425_1234/create.html',
+			'http://example.com/t_contact/main/20100425_1234/create.html',
 			{
 				:input => "comment=modified&.action=create&.status-public=create"
 			}
@@ -889,12 +889,12 @@ _html
 		assert_equal(
 			403,
 			res.status,
-			'Sofa#call should not allow nobody to update an existing enquete'
+			'Sofa#call should not allow nobody to update an existing contact'
 		)
 		assert_equal(
 			{'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}},
-			Sofa::Set::Static::Folder.root.item('t_enquete','main').storage.val,
-			'Sofa#call should not allow nobody to update an existing enquete'
+			Sofa::Set::Static::Folder.root.item('t_contact','main').storage.val,
+			'Sofa#call should not allow nobody to update an existing contact'
 		)
 	end
 

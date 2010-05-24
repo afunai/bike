@@ -52,7 +52,7 @@ msgid_plural "entries"
 msgstr[0] "記事"
 msgstr[1] "記事"
 
-#: sofa/_workflow/enquete.rb:11
+#: sofa/_workflow/contact.rb:11
 msgid "answer"
 msgid_plural "answers"
 msgstr[0] "回答"

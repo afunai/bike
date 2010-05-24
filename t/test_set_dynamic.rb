@@ -119,7 +119,7 @@ _html
 		sd = Sofa::Set::Dynamic.new(
 			:id       => 'foo',
 			:klass    => 'set-dynamic',
-			:workflow => 'enquete'
+			:workflow => 'contact'
 		)
 		assert_nil(
 			sd[:order],

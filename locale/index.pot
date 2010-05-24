@@ -53,7 +53,7 @@ msgid_plural "entries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: sofa/_workflow/enquete.rb:11
+#: sofa/_workflow/contact.rb:11
 msgid "answer"
 msgid_plural "answers"
 msgstr[0] ""

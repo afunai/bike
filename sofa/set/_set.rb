@@ -121,7 +121,7 @@ module Sofa::Set
 	end
 
 	def _get_by_self_reference(arg)
-		return nil if arg[:action].to_s =~ /^action_/ && arg[:orig_action] != :read
+		return if arg[:action].to_s =~ /^action_/ && ![:read,nil].include?(arg[:orig_action])
 		_get_by_method(arg)
 	end
 

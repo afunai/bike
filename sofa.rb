@@ -184,7 +184,7 @@ class Sofa
 		if params[:status]
 			if base[:folder].commit :persistent
 				Sofa.transaction[base[:tid]] = result_summary base
-				action = base.workflow.next_action params
+				action = base.workflow.next_action base
 				id_step = result_step(base,params) if base[:parent] == base[:folder] && action != :done
 				response_see_other(
 					:location => "#{base[:uri]}/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"

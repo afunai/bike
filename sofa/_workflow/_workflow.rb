@@ -62,8 +62,8 @@ class Sofa::Workflow
 	def after_post
 	end
 
-	def next_action(params)
-		(@sd.default_action == :read) ? :read_detail : :done
+	def next_action(base)
+		(!base.result || base.result.values.all? {|item| item.permit? :read }) ? :read_detail : :done
 	end
 
 	def _get(arg)

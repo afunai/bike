@@ -112,7 +112,7 @@ module Sofa::Set
 						:orig_action => item_arg[:action],
 						:action      => action.intern
 					)
-					item.instance_eval { _get(item_arg) } # skip the authorization
+					item.send(:_get_by_self_reference,item_arg) # skip the authorization
 				else
 					item.get(item_arg)
 				end

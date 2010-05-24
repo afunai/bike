@@ -356,6 +356,30 @@ _html
 		}
 	end
 
+	def test_get_by_self_reference_via_parent_tmpl
+		ss = Sofa::Set::Static.new(
+			:html => '$(main.action_pipco)<ul class="sofa-attachment"></ul>'
+		)
+		sd = ss.item('main')
+		def sd._g_submit(arg)
+		end
+		def sd._g_action_pipco(arg)
+			'PIPCO'
+		end
+		sd[:tmpl_navi] = ''
+
+		assert_equal(
+			'PIPCO<ul class="sofa-attachment"></ul>',
+			ss.get,
+			'Set::Dynamic#_get_by_self_reference should work via [:parent]._get_by_tmpl()'
+		)
+		assert_equal(
+			'<ul class="sofa-attachment"></ul>',
+			ss.get('main' => {:action => :create}),
+			'Set::Dynamic#_get_by_self_reference should hide unused items via [:parent]._get_by_tmpl()'
+		)
+	end
+
 	def test_get_by_self_reference_multiple_vars
 		ss = Sofa::Set::Static.new(
 			:html => '<ul class="sofa-attachment">$(.pipco)<li class="body">$(foo=text)</li></ul>'

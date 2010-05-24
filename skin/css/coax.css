@@ -57,7 +57,7 @@ body, html {
   margin: 1em 0 0em 1em;
 }
 #center ul {
-  margin: 0.5em 0 0.5em 0;
+  margin: 0.5em 1.2em 0.5em 1.2em;
   padding: 0;
 }
 #center li div.label {
@@ -108,4 +108,18 @@ body, html {
   padding: 1em 1em 1.5em 0em;
 }
 #center td img { vertical-align: top; }
+#center table.summary th {
+  width: auto;
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5em 2.5em 0.5em 0.5em;
+  background: #000000;
+  color: white;
+}
+#center table.summary td {
+  width: auto;
+  text-align: left;
+  vertical-align: top;
+  padding: 0.5em 2.5em 0.5em 0.5em;
+}
 img { border: none; }

@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Sofa::Workflow::Registry < Sofa::Workflow
+class Sofa::Workflow::Register < Sofa::Workflow
 
 	DEFAULT_META = {
 		:p_size     => 0,

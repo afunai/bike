@@ -1,0 +1,23 @@
+#center table.panel {
+  display: -moz-inline-box;
+  display: inline-block;
+  margin: 0 0.5em 1em 0.5em;
+  padding: 0.5em 1.5em 2em 1.5em;
+  width: auto;
+  height: 120px;
+  border: 2px solid white;
+  -moz-border-radius: 0.5em;
+}
+#center table.panel th {
+  width: auto;
+  text-align: center;
+  vertical-align: top;
+  padding: 0;
+  background: white;
+  color: black;
+}
+#center table.panel td {
+  width: auto;
+  vertical-align: top;
+  padding: 0;
+}

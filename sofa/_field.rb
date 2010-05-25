@@ -203,6 +203,7 @@ class Sofa::Field
 		m = "_g_#{arg[:action]}"
 		respond_to?(m,true) ? __send__(m,arg) : _g_default(arg)
 	end
+	alias :_get_by_self_reference :_get_by_method
 
 	def _g_empty(arg)
 	end

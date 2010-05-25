@@ -115,9 +115,12 @@ _eos
 		tid = @f[:parent][:tid]
 
 		@f.load({})
-		assert_nil(
+		assert_equal(
+			<<'_html'.chomp,
+<span class="img" style="width: 32px; height: 32px;"></span>
+_html
 			@f.get,
-			'Img#get should return nil when the val is empty'
+			'Img#get should return default span when the val is empty'
 		)
 
 		@f.load(

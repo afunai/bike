@@ -56,14 +56,28 @@ class Sofa::Img < Sofa::File
 	private
 
 	def _g_default(arg = {})
+		_g_thumbnail arg.merge(:link => true)
+	end
+
+	def _g_thumbnail(arg = {})
 		path       = [:read,nil].include?(arg[:action]) ? my[:path] : my[:tmp_path]
 		basename   = Rack::Utils.escape_html val['basename'].to_s
 		s_basename = basename.sub(/\..+$/,'_small\\&')
-		<<_html.chomp unless val.empty?
+		if val.empty?
+			<<_html.chomp
+<span class="img" style="width: #{my[:width]}px; height: #{my[:height]}px;"></span>
+_html
+		elsif arg[:link]
+			<<_html.chomp
 <span class="img">
 	<a href="#{path}/#{basename}"><img src="#{path}/#{s_basename}" /></a>
 </span>
 _html
+		else
+			<<_html.chomp
+<span class="img"><img src="#{path}/#{s_basename}" /></span>
+_html
+		end
 	end
 
 	def _thumbnail(tempfile)

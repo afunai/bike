@@ -31,7 +31,7 @@ class Sofa::Img < Sofa::File
 
 	def errors
 		if @error_thumbnail
-			[_("wrong file type: should be %{types}") % {:types => my[:options].join('/')}]
+			[_('wrong file type: should be %{types}') % {:types => my[:options].join('/')}]
 		else
 			super
 		end

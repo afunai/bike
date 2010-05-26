@@ -59,6 +59,14 @@ msgid_plural "answers"
 msgstr[0] ""
 msgstr[1] ""
 
+#: sofa/meta/id.rb:23
+msgid "malformatted id"
+msgstr ""
+
+#: sofa/meta/id.rb:30
+msgid "duplicate id: %{id}"
+msgstr ""
+
 #: sofa/meta/timestamp.rb:44
 msgid "%Y-%m-%dT%H:%M:%S"
 msgstr ""
@@ -74,6 +82,10 @@ msgstr ""
 
 #: sofa/scalar/checkbox.rb:24 sofa/scalar/radio.rb:17 sofa/scalar/select.rb:19
 msgid "no such option"
+msgstr ""
+
+#: sofa/scalar/file.rb:53
+msgid "wrong file type: should be %{types}"
 msgstr ""
 
 #: sofa/scalar/file.rb:53

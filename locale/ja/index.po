@@ -58,6 +58,14 @@ msgid_plural "answers"
 msgstr[0] "回答"
 msgstr[1] "回答"
 
+#: sofa/meta/id.rb:23
+msgid "malformatted id"
+msgstr "使用可能な文字は、a-z および 0-9 です"
+
+#: sofa/meta/id.rb:30
+msgid "duplicate id: %{id}"
+msgstr "「%{id}」は既に使われています"
+
 #: sofa/meta/timestamp.rb:44
 msgid "%Y-%m-%dT%H:%M:%S"
 msgstr "%Y/%m/%d %H:%M:%S"
@@ -74,6 +82,10 @@ msgstr "入力してください"
 #: sofa/scalar/checkbox.rb:24 sofa/scalar/radio.rb:17 sofa/scalar/select.rb:19
 msgid "no such option"
 msgstr "選択肢が存在しません"
+
+#: sofa/scalar/file.rb:53
+msgid "wrong file type: should be %{types}"
+msgstr "ファイル形式は %{types} のみです"
 
 #: sofa/scalar/file.rb:53
 msgid "too large: %{max} bytes maximum"

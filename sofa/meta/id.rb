@@ -29,10 +29,11 @@ class Sofa::Meta::Id < Sofa::Field
 	private
 
 	def _g_create(arg)
-		<<_html.chomp
+		new_id? ? <<_html.chomp : _g_default(arg)
 <input type="text" name="#{my[:short_name]}" value="#{val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
 _html
 	end
+	alias :_g_update :_g_create
 
 	def new_id?
 		find_ancestor {|i| i[:id] =~ Sofa::REX::ID_NEW } ? true : false

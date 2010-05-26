@@ -67,10 +67,18 @@ class TC_Id < Test::Unit::TestCase
 	end
 
 	def test_get
+		@f[:parent] = Sofa::Set::Static.new(:id => '_001')
 		assert_equal(
 			'<input type="text" name="" value="" size="3" class="meta-id" />',
 			@f.get(:action => :create),
-			'Meta::Id#get should return proper string'
+			'Meta::Id#_g_create should return <input> if the ancestor is new'
+		)
+
+		@f[:parent] = Sofa::Set::Static.new(:id => '20100526_0001')
+		assert_equal(
+			'',
+			@f.get(:action => :create),
+			'Meta::Id#_g_create should return val if the ancestor is not new'
 		)
 
 		@f.load 'bar'
@@ -79,10 +87,19 @@ class TC_Id < Test::Unit::TestCase
 			@f.get,
 			'Meta::Id#get should return proper string'
 		)
+
+		@f[:parent] = Sofa::Set::Static.new(:id => '_001')
+		assert_equal(
+			'<input type="text" name="" value="bar" size="3" class="meta-id" />',
+			@f.get(:action => :update),
+			'Meta::Id#_g_update should return <input> if the ancestor is new'
+		)
+
+		@f[:parent] = Sofa::Set::Static.new(:id => '20100526_0001')
 		assert_equal(
 			'bar',
 			@f.get(:action => :update),
-			'Meta::Id#get should not be updated'
+			'Meta::Id#_g_update should return val if the ancestor is not new'
 		)
 
 		@f.load '<bar>'

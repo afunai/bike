@@ -40,7 +40,7 @@ _html
 	end
 
 	def _post(action,v)
-		if action == :load || (action == :create && @val.empty?)
+		if action == :load || ([:create,:update].include?(action) && new_id?)
 			@val = val_cast v
 		end
 	end

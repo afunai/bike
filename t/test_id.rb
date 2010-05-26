@@ -110,7 +110,8 @@ class TC_Id < Test::Unit::TestCase
 		)
 	end
 
-	def test_post
+	def test_post_new_ancestor
+		@f[:parent] = Sofa::Set::Static.new(:id => '_001')
 		@f.create 'frank'
 		assert_equal(
 			'frank',
@@ -120,16 +121,21 @@ class TC_Id < Test::Unit::TestCase
 
 		@f.update 'bobby'
 		assert_equal(
-			'frank',
+			'bobby',
 			@f.val,
-			'Meta::Id#post should not update the current val'
+			'Meta::Id#post should update the current val if the ancestor is new'
 		)
+	end
 
-		@f.create 'bobby'
+	def test_post_old_ancestor
+		@f[:parent] = Sofa::Set::Static.new(:id => '20100526_0001')
+		@f.load 'frank'
+
+		@f.update 'bobby'
 		assert_equal(
 			'frank',
 			@f.val,
-			'Meta::Id#post should not re-create the current val'
+			'Meta::Id#post should not update the current val if the ancestor is not new'
 		)
 	end
 

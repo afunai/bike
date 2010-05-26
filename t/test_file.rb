@@ -179,7 +179,7 @@ _eos
 			<<"_html".chomp,
 <span class="file"><a href="/t_file/#{tid}/foo/baz.jpg">baz.jpg (12 bytes)</a></span>
 <span class="file">
-	<input type="file" name="foo" class="file" />
+	<input type="file" name="foo" size="" class="file" />
 </span>
 _html
 			@f.get(:action => :update),
@@ -215,7 +215,7 @@ _html
 			<<'_html'.chomp,
 
 <span class="file">
-	<input type="file" name="_1-foo" class="file" />
+	<input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html
 			sd.item('_1','foo').get(:action => :create),
@@ -226,7 +226,7 @@ _html
 
 <span class="file">
 	<input type="hidden" name="_1-baz-_1-qux" value="" />
-	<input type="file" name="_1-baz-_1-qux" class="file" />
+	<input type="file" name="_1-baz-_1-qux" size="" class="file" />
 </span>
 _html
 			sd.item('_1','baz','_1','qux').get(:action => :create),
@@ -255,7 +255,7 @@ _eos
 			<<"_html".chomp,
 <span class="file"><a href="/t_file/1234.567/_1/baz/_1/qux/qux.jpg">qux.jpg (#{@file.length} bytes)</a></span>
 <span class="file">
-	<input type="file" name="_1-baz-_1-qux" class="file" />
+	<input type="file" name="_1-baz-_1-qux" size="" class="file" />
 </span>
 _html
 			sd.item('_1','baz','_1','qux').get(:action => :update),
@@ -280,7 +280,7 @@ _html
 			<<'_html'.chomp,
 
 <span class="file">
-	<input type="file" name="_1-foo" class="file" />
+	<input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html
 			sd.item('_1','foo').get(:action => :create),
@@ -306,7 +306,7 @@ _eos
 <span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
 <span class="file">
 	<input type="submit" name="_1-foo.action-delete" value="x">
-	<input type="file" name="_1-foo" class="file" />
+	<input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html
 			sd.item('_1','foo').get(:action => :update),
@@ -318,7 +318,7 @@ _html
 			<<"_html".chomp,
 <span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
 <span class="file">
-	<input type="file" name="_1-foo" class="file" />
+	<input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html
 			sd.item('_1','foo').get(:action => :update),

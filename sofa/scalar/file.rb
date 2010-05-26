@@ -7,6 +7,7 @@ class Sofa::File < Sofa::Field
 
 	def initialize(meta = {})
 		meta[:options].collect! {|i| i.downcase } if meta[:options]
+#		meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
 		super
 	end
 
@@ -106,7 +107,7 @@ _html
 _html
 		end
 		update = <<_html
-	<input type="file" name="#{my[:short_name]}" class="#{_g_class arg}" />
+	<input type="file" name="#{my[:short_name]}" size="#{my[:size]}" class="#{_g_class arg}" />
 _html
 		<<_html.chomp
 #{_g_default arg}

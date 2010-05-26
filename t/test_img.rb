@@ -143,7 +143,7 @@ _html
 	<a href="/t_img/#{tid}/foo/baz.jpg"><img src="/t_img/#{tid}/foo/baz_small.jpg" /></a>
 </span>
 <span class="file">
-	<input type="file" name="foo" class="img" />
+	<input type="file" name="foo" size="" class="img" />
 </span>
 _html
 			@f.get(:action => :update),

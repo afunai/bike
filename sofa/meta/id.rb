@@ -21,6 +21,13 @@ class Sofa::Meta::Id < Sofa::Field
 			[_('too short: %{min} characters minimum') % {:min => my[:min]}]
 		elsif val !~ /\A#{Sofa::REX::ID_SHORT}\z/
 			[_('malformatted id')]
+		elsif (
+			my[:parent] &&
+			my[:parent][:id] !~ /00000000_#{val}$/ &&
+			my[:parent][:parent].is_a?(Sofa::Set::Dynamic) &&
+			my[:parent][:parent].item(val)
+		)
+			[_('duplicate id: %{id}') % {:id => val}]
 		else
 			[]
 		end

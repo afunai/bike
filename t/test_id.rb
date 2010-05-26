@@ -50,6 +50,22 @@ class TC_Id < Test::Unit::TestCase
 		)
 	end
 
+	def test_new_id?
+		@f[:parent] = Sofa::Set::Static.new(:id => '20100526_0001')
+		assert_equal(
+			false,
+			@f.send(:new_id?),
+			'Meta::Id#new_id? should return whether the ancestors is new or not'
+		)
+
+		@f[:parent] = Sofa::Set::Static.new(:id => '_001')
+		assert_equal(
+			true,
+			@f.send(:new_id?),
+			'Meta::Id#new_id? should return whether the ancestors is new or not'
+		)
+	end
+
 	def test_get
 		assert_equal(
 			'<input type="text" name="" value="" size="3" class="meta-id" />',

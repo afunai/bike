@@ -34,6 +34,10 @@ class Sofa::Meta::Id < Sofa::Field
 _html
 	end
 
+	def new_id?
+		find_ancestor {|i| i[:id] =~ Sofa::REX::ID_NEW } ? true : false
+	end
+
 	def _post(action,v)
 		if action == :load || (action == :create && @val.empty?)
 			@val = val_cast v

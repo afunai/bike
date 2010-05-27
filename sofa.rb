@@ -12,7 +12,7 @@ class Sofa
 	Dir['./sofa/*/*.rb'].sort.each {|file| require file }
 
 	module REX
-		ID_SHORT   = /[a-z][a-z0-9\_\-]*/
+		ID_SHORT   = /[a-z][a-z0-9]*/
 		ID         = /^(\d{8})_(\d{4,}|#{ID_SHORT})/
 		ID_NEW     = /^_\d/
 		COND       = /^(.+?)=(.+)$/

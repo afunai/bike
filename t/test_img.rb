@@ -13,7 +13,7 @@ class TC_Img < Test::Unit::TestCase
 		}
 
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo img 32*32 1..100000 jpg,gif,png)') {|id,m|
+		Sofa::Parser.gsub_scalar('$(foo img 32*32 1..100000 jpg,gif,png crop)') {|id,m|
 			meta = m
 			''
 		}
@@ -34,6 +34,11 @@ class TC_Img < Test::Unit::TestCase
 		assert_equal(
 			['jpg','gif','png'],
 			@f[:options],
+			'Img#initialize should set :options from the csv token'
+		)
+		assert_equal(
+			true,
+			@f[:crop],
 			'Img#initialize should set :options from the csv token'
 		)
 	end

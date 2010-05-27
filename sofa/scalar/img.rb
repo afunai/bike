@@ -20,6 +20,11 @@ class Sofa::Img < Sofa::File
 		Object.const_defined? :QuickMagick
 	end
 
+	def initialize(meta = {})
+		meta[:crop] = true if meta[:tokens] && meta[:tokens].include?('crop')
+		super
+	end
+
 	def thumbnail
 		raise Sofa::Error::Forbidden unless permit? :read
 
@@ -85,7 +90,13 @@ _html
 		begin
 			tempfile.rewind
 			img = QuickMagick::Image.read(tempfile.path).first
-			img.resize "#{my[:width]}x#{my[:height]}"
+			if my[:crop]
+				img.gravity = 'center'
+				img.resize "#{my[:width]}x#{my[:height]}^"
+				img.extent "#{my[:width]}x#{my[:height]}"
+			else
+				img.resize "#{my[:width]}x#{my[:height]}"
+			end
 			img.to_blob
 		rescue QuickMagick::QuickMagickError
 			@error_thumbnail = $!.inspect

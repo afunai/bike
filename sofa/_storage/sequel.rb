@@ -76,7 +76,7 @@ class Sofa::Storage::Sequel < Sofa::Storage
 
 	def delete(id)
 		@dataset.filter(_conds id).delete &&
-		@dataset.grep(:full_name,_full_name("#{id}%")).and(~:ext => 'yaml').delete &&
+		@dataset.grep(:full_name,_full_name("#{id}-%")).and(~:ext => 'yaml').delete &&
 		id
 	end
 

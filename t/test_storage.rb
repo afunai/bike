@@ -476,6 +476,7 @@ class TC_Storage < Test::Unit::TestCase
 			_test_delete_raw(storage,id)
 			_test_clear_raw(storage)
 
+			_test_delete_substr(storage) unless klass == Sofa::Storage::Temp
 			_test_load_skel(storage) unless klass == Sofa::Storage::Temp
 		}
 	end
@@ -713,6 +714,39 @@ class TC_Storage < Test::Unit::TestCase
 			{'name' => 'frank','comment' => 'hi.'},
 			storage.val('20100326_0001'),
 			"#{storage.class}.load_skel should load the default entries"
+		)
+	end
+
+	def _test_delete_substr(storage)
+		storage.clear
+		storage.store('00000000_bob',{'foo' => 'bar'})
+		storage.store('00000000_bobby',{'foo' => 'baz'})
+		storage.delete '00000000_bob'
+		assert_equal(
+			{'00000000_bobby' => {'foo' => 'baz'}},
+			storage.val,
+			"#{storage.class}#delete should not delete another ids that matches the given id"
+		)
+
+		storage.clear
+		storage.store('20100527_1234',{'foo' => 'bar'})
+		storage.store('20100527_12345',{'foo' => 'baz'})
+		storage.delete '20100527_1234'
+		assert_equal(
+			{'20100527_12345' => {'foo' => 'baz'}},
+			storage.val,
+			"#{storage.class}#delete should not delete another ids that matches the given id"
+		)
+
+		storage.clear
+		storage.store('00000000_bob',{'foo' => 'bar'})
+		storage.store('00000000_bob-foo','qux','bin')
+		storage.store('00000000_bobby',{'foo' => 'baz'})
+		storage.delete '00000000_bob'
+		assert_equal(
+			{'00000000_bobby' => {'foo' => 'baz'}},
+			storage.val,
+			"#{storage.class}#delete should delete child ids that matches the given id"
 		)
 	end
 

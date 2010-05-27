@@ -24,7 +24,7 @@ class Sofa::Workflow::Register < Sofa::Workflow
 		:delete => 0b1110,
 	}
 
-	def after_post
+	def before_commit
 		@sd.send(:pending_items).each {|id,item|
 			if id =~ Sofa::REX::ID_NEW
 				item.item('_owner').instance_variable_set(:@val,item.item('_id').val)

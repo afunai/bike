@@ -58,6 +58,8 @@ class Sofa::Set::Dynamic < Sofa::Field
 	end
 
 	def commit(type = :temp)
+		@workflow.before_commit
+
 		items = pending_items
 		items.each {|id,item|
 			item.commit(:temp) || next
@@ -72,6 +74,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 		if valid?
 			@result = (@action == :update) ? items : @action
 			@action = nil if type == :persistent
+			@workflow.after_commit
 			self
 		end
 	end
@@ -324,8 +327,6 @@ _tmpl
 	end
 
 	def _post(action,v = nil)
-		@workflow.before_post(action,v)
-
 		if action == :create
 			@storage.build({})
 			@item_object.clear
@@ -343,7 +344,6 @@ _tmpl
 				@storage.build v
 		end
 
-		@workflow.after_post
 		!pending_items.empty? || action == :delete
 	end
 

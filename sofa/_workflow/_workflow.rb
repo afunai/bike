@@ -56,10 +56,10 @@ class Sofa::Workflow
 		end
 	end
 
-	def before_post(action,v)
+	def before_commit
 	end
 
-	def after_post
+	def after_commit
 	end
 
 	def next_action(base)

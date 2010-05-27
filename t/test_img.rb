@@ -100,10 +100,10 @@ _eos
 			:filename => 'baz.jpg',
 			:name     => 't_img'
 		)
-		assert_equal(
+		assert_not_equal(
 			0,
 			@f.instance_variable_get(:@thumbnail).to_s.size,
-			'Img#_thumbnail should not make a thumbnail larger than the original img'
+			'Img#_thumbnail should make a thumbnail larger than the original img'
 		)
 	end
 

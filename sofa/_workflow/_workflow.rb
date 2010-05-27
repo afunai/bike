@@ -80,40 +80,4 @@ class Sofa::Workflow
 		(arg[:orig_action] == :read && arg[:action] == :submit)
 	end
 
-	def _g_submit(arg)
-		"#{_g_submit_commit arg}#{_g_submit_confirm arg}#{_g_submit_confirm_delete arg}"
-	end
-
-	def _g_submit_commit(arg)
-		if @sd.send(:collect_item,arg[:conds]).all? {|i| i[:id] =~ Sofa::REX::ID_NEW }
-			action = :create
-		elsif arg[:orig_action] == :confirm
-			action = arg[:sub_action]
-		else
-			action = arg[:orig_action]
-		end
-		<<_html unless @sd[:confirm] == :mandatory && arg[:orig_action] != :confirm
-<input name="#{@sd[:short_name]}.status-public" type="submit" value="#{_ action.to_s}" />
-_html
-	end
-
-	def _g_submit_confirm(arg)
-		label = _ 'confirm'
-		<<_html if @sd[:confirm] && arg[:orig_action] != :confirm
-<input name="#{@sd[:short_name]}.action-confirm_#{arg[:orig_action]}" type="submit" value="#{label}" />
-_html
-	end
-
-	def _g_submit_confirm_delete(arg)
-		if (
-			@sd.send(:permit_get?,arg.merge(:action => :delete)) &&
-			!@sd.send(:collect_item,arg[:conds]).all? {|item| item[:id][Sofa::REX::ID_NEW] } &&
-			arg[:orig_action] != :confirm
-		)
-			<<_html
-<input name="#{@sd[:short_name]}.action-confirm_delete" type="submit" value="#{_ 'delete...'}" />
-_html
-		end
-	end
-
 end

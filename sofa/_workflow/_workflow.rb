@@ -56,16 +56,6 @@ class Sofa::Workflow
 		end
 	end
 
-	def before_commit
-	end
-
-	def after_commit
-	end
-
-	def next_action(base)
-		(!base.result || base.result.values.all? {|item| item.permit? :read }) ? :read_detail : :done
-	end
-
 	def _get(arg)
 		@sd.instance_eval {
 			if arg[:action] == :create
@@ -78,6 +68,16 @@ class Sofa::Workflow
 	def _hide?(arg)
 		(arg[:p_action] && arg[:p_action] != :read) ||
 		(arg[:orig_action] == :read && arg[:action] == :submit)
+	end
+
+	def before_commit
+	end
+
+	def after_commit
+	end
+
+	def next_action(base)
+		(!base.result || base.result.values.all? {|item| item.permit? :read }) ? :read_detail : :done
 	end
 
 end

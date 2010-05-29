@@ -10,6 +10,7 @@ class Sofa::Meta::Timestamp < Sofa::Field
 	REX_DATE = /\A(\d+).(\d+).(\d+)(?:[T\s](\d+):(\d+)(?::(\d+))?)?\z/
 
 	def initialize(meta = {})
+		meta[:size]       = $&.to_i if meta[:tokens] && meta[:tokens].find {|t| t =~ /^\d+$/ }
 		meta[:can_edit]   = true if meta[:tokens].to_a.include? 'can_edit'
 		meta[:can_update] = true if meta[:tokens].to_a.include? 'can_update'
 		super
@@ -46,7 +47,7 @@ class Sofa::Meta::Timestamp < Sofa::Field
 
 	def _g_create(arg)
 		<<_html.chomp if my[:can_edit]
-<input type="text" name="#{my[:short_name]}" value="" class="#{_g_class arg}" />
+<input type="text" name="#{my[:short_name]}" value="" size="#{my[:size]}" class="#{_g_class arg}" />
 _html
 	end
 
@@ -55,7 +56,7 @@ _html
 			v = @date_str
 			v ||= val['published'].is_a?(::Time) ? val['published'].strftime('%Y-%m-%d %H:%M:%S') : ''
 			<<_html.chomp
-<input type="text" name="#{my[:short_name]}" value="#{v}" class="#{_g_class arg}" />#{_g_errors arg}
+<input type="text" name="#{my[:short_name]}" value="#{v}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
 _html
 		elsif my[:can_update] && !find_ancestor {|f| f[:id] =~ Sofa::REX::ID_NEW }
 			<<_html.chomp

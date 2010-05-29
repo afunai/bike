@@ -7,7 +7,7 @@ class TC_Timestamp < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo meta-timestamp)') {|id,m|
+		Sofa::Parser.gsub_scalar('$(foo meta-timestamp 16)') {|id,m|
 			meta = m
 			''
 		}
@@ -138,7 +138,7 @@ class TC_Timestamp < Test::Unit::TestCase
 		@f[:can_edit]   = true
 		@f[:can_update] = nil
 		assert_equal(
-			'<input type="text" name="" value="" class="meta-timestamp" />',
+			'<input type="text" name="" value="" size="16" class="meta-timestamp" />',
 			@f.get(:action => :create),
 			'Timestamp#_g_create should return proper string'
 		)
@@ -164,7 +164,7 @@ class TC_Timestamp < Test::Unit::TestCase
 		@f[:can_edit]   = true
 		@f[:can_update] = nil
 		assert_equal(
-			'<input type="text" name="" value="" class="meta-timestamp" />',
+			'<input type="text" name="" value="" size="16" class="meta-timestamp" />',
 			@f.get(:action => :update),
 			'Timestamp#_g_update should return proper string'
 		)
@@ -184,14 +184,14 @@ _html
 		@f[:can_update] = nil
 		@f.load('published' => Time.local(2010,4,25))
 		assert_equal(
-			'<input type="text" name="" value="2010-04-25 00:00:00" class="meta-timestamp" />',
+			'<input type="text" name="" value="2010-04-25 00:00:00" size="16" class="meta-timestamp" />',
 			@f.get(:action => :update),
 			'Timestamp#_g_update should return proper string'
 		)
 		@f.update '2010-4-89'
 		assert_equal(
 			<<'_html',
-<input type="text" name="" value="2010-4-89" class="meta-timestamp error" /><div class="error">out of range</div>
+<input type="text" name="" value="2010-4-89" size="16" class="meta-timestamp error" /><div class="error">out of range</div>
 _html
 			@f.get(:action => :update),
 			'Timestamp#_g_update should return proper string'

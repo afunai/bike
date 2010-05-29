@@ -196,6 +196,15 @@ _html
 			@f.get(:action => :update),
 			'Timestamp#_g_update should return proper string'
 		)
+
+		@f.update '<2010-4-9>'
+		assert_equal(
+			<<'_html',
+<input type="text" name="" value="&lt;2010-4-9&gt;" size="16" class="meta-timestamp error" /><div class="error">wrong format</div>
+_html
+			@f.get(:action => :update),
+			'Timestamp#_g_update should escape the special chars'
+		)
 	end
 
 	def test_errors

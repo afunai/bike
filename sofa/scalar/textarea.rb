@@ -21,7 +21,7 @@ class Sofa::Textarea < Sofa::Field
 
 	def _g_create(arg)
 		<<_html.chomp
-<textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}" class="#{_g_class arg}">#{val}</textarea>#{_g_errors arg}
+<textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}" class="#{_g_class arg}">#{Sofa::Field.h val}</textarea>#{_g_errors arg}
 _html
 	end
 	alias :_g_update :_g_create

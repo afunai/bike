@@ -26,7 +26,7 @@ class Sofa::Text < Sofa::Field
 
 	def _g_update(arg)
 		<<_html.chomp
-<input type="text" name="#{my[:short_name]}" value="#{val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
+<input type="text" name="#{my[:short_name]}" value="#{Sofa::Field.h val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
 _html
 	end
 	alias :_g_create :_g_update

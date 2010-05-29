@@ -26,7 +26,7 @@ class Sofa::Select < Sofa::Field
 	def _g_update(arg)
 		options = my[:options].collect {|opt|
 			selected = (opt == val) ? ' selected' : ''
-			"\t<option#{selected}>#{opt}</option>\n"
+			"\t<option#{selected}>#{Sofa::Field.h opt}</option>\n"
 		}.join
 		unless my[:mandatory] && my[:options].include?(val)
 			options = "\t<option value=\"\">#{_ 'please select'}</option>\n#{options}"

@@ -127,6 +127,26 @@ _html
 		)
 	end
 
+	def test_get_escape
+		@f[:options] = ['foo','<bar>']
+		@f.load '<bar>'
+		assert_equal(
+			'&lt;bar&gt;',
+			@f.get,
+			'Select#get should escape the special characters'
+		)
+		assert_equal(
+			<<_html.chomp,
+<select name="" class="select">
+	<option>foo</option>
+	<option selected>&lt;bar&gt;</option>
+</select>
+_html
+			@f.get(:action => :update),
+			'Select#get should escape the special characters'
+		)
+	end
+
 	def test_errors
 		@f.load ''
 		@f[:mandatory] = nil

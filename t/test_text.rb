@@ -69,6 +69,11 @@ class TC_Text < Test::Unit::TestCase
 			@f.get,
 			'Text#get should escape the special characters'
 		)
+		assert_equal(
+			'<input type="text" name="" value="&lt;bar&gt;" size="3" class="text" />',
+			@f.get(:action => :update),
+			'Text#get should escape the special characters'
+		)
 	end
 
 	def test_errors

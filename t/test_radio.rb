@@ -164,6 +164,31 @@ _html
 		)
 	end
 
+	def test_get_escape
+		@f[:options] = ['foo','<bar>']
+		@f.load '<bar>'
+		assert_equal(
+			'&lt;bar&gt;',
+			@f.get,
+			'Radio#get should escape the special characters'
+		)
+		assert_equal(
+			<<_html.chomp,
+<input type="hidden" name="" value="" />
+<span class="radio">
+	<input type="radio" id="-foo" name="" value="foo" />
+	<label for="-foo">foo</label>
+</span>
+<span class="radio">
+	<input type="radio" id="-&lt;bar&gt;" name="" value="&lt;bar&gt;" checked />
+	<label for="-&lt;bar&gt;">&lt;bar&gt;</label>
+</span>
+_html
+			@f.get(:action => :update),
+			'Radio#get should escape the special characters'
+		)
+	end
+
 	def test_errors
 		@f.load ''
 		@f[:mandatory] = nil

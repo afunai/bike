@@ -37,7 +37,7 @@ class Sofa::Meta::Id < Sofa::Field
 
 	def _g_create(arg)
 		new_id? ? <<_html.chomp : _g_default(arg)
-<input type="text" name="#{my[:short_name]}" value="#{val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
+<input type="text" name="#{my[:short_name]}" value="#{Sofa::Field.h val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
 _html
 	end
 	alias :_g_update :_g_create

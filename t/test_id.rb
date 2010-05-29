@@ -108,6 +108,14 @@ class TC_Id < Test::Unit::TestCase
 			@f.get,
 			'Meta::Id#get should escape the special characters'
 		)
+
+		@f[:parent] = Sofa::Set::Static.new(:id => '_001')
+		@f.load '<bar>'
+		assert_equal(
+			'<input type="text" name="" value="&lt;bar&gt;" size="3" class="meta-id error" /><div class="error">malformatted id</div>' + "\n",
+			@f.get(:action => :update),
+			'Meta::Id#get should escape the special characters'
+		)
 	end
 
 	def test_post_new_ancestor

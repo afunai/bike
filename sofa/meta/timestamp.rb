@@ -56,7 +56,7 @@ _html
 			v = @date_str
 			v ||= val['published'].is_a?(::Time) ? val['published'].strftime('%Y-%m-%d %H:%M:%S') : ''
 			<<_html.chomp
-<input type="text" name="#{my[:short_name]}" value="#{v}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
+<input type="text" name="#{my[:short_name]}" value="#{Sofa::Field.h v}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
 _html
 		elsif my[:can_update] && !find_ancestor {|f| f[:id] =~ Sofa::REX::ID_NEW }
 			<<_html.chomp

@@ -74,6 +74,11 @@ class TC_Textarea < Test::Unit::TestCase
 			@f.get,
 			'Textarea#get should escape the special characters'
 		)
+		assert_equal(
+			'<textarea name="" cols="76" rows="8" class="textarea">&lt;bar&gt;</textarea>',
+			@f.get(:action => :update),
+			'Textarea#get should escape the special characters'
+		)
 	end
 
 	def test_errors

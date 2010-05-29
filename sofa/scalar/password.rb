@@ -10,6 +10,20 @@ class Sofa::Password < Sofa::Field
 		super
 	end
 
+	def errors
+		if @size.nil?
+			[]
+		elsif (my[:max].to_i > 0) && (@size > my[:max])
+			[_('too long: %{max} characters maximum') % {:max => my[:max]}]
+		elsif (my[:min].to_i == 1) && (@size == 0)
+			[_ 'mandatory']
+		elsif (my[:min].to_i > 0) && (@size < my[:min])
+			[_('too short: %{min} characters minimum') % {:min => my[:min]}]
+		else
+			[]
+		end
+	end
+
 	private
 
 	def _g_default(arg)

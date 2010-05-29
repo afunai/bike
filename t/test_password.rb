@@ -101,4 +101,75 @@ class TC_Password < Test::Unit::TestCase
 		)
 	end
 
+	def test_errors_on_load
+		Sofa.client = 'root'
+
+		@f[:min] = 1
+		@f.load ''
+		assert_equal(
+			[],
+			@f.errors,
+			'Password#errors should not return the errors of a loaded val'
+		)
+	end
+
+	def test_errors
+		@f.create nil
+		@f[:min] = 1
+		assert_equal(
+			['mandatory'],
+			@f.errors,
+			'Password#errors should return the errors of the current val'
+		)
+
+		@f.create nil
+		assert_equal(
+			['mandatory'],
+			@f.errors,
+			'Password#errors should keep the errors of the previous non-empty update'
+		)
+
+		@f.create 'a'
+		@f[:min] = 1
+		assert_equal(
+			[],
+			@f.errors,
+			'Password#errors should return the errors of the current val'
+		)
+		@f[:min] = 2
+		assert_equal(
+			['too short: 2 characters minimum'],
+			@f.errors,
+			'Password#errors should return the errors of the current val'
+		)
+
+		@f.update 'abcde'
+		@f[:max] = 5
+		assert_equal(
+			[],
+			@f.errors,
+			'Password#errors should return the errors of the current val'
+		)
+		@f[:max] = 4
+		assert_equal(
+			['too long: 4 characters maximum'],
+			@f.errors,
+			'Password#errors should return the errors of the current val'
+		)
+
+		@f.update nil
+		assert_equal(
+			['too long: 4 characters maximum'],
+			@f.errors,
+			'Password#errors should keep the errors of the previous non-empty update'
+		)
+
+		@f.update 'abc'
+		assert_equal(
+			[],
+			@f.errors,
+			'Password#errors should return the errors of the current val'
+		)
+	end
+
 end

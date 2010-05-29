@@ -424,4 +424,34 @@ _html
 		)
 	end
 
+	def test_g_me
+		folder = Sofa::Set::Static::Folder.root.item('t_contact')
+
+		Sofa.client = nil
+		assert_equal(
+			<<'_html',
+<div class="me">
+	<div class="action_login"><a href="/t_contact/login.html">login...</a></div>
+</div>
+_html
+			folder.get(:action => :me),
+			'Folder#_g_me should return a link to login if the current client is nobody'
+		)
+
+		Sofa.client = 'test'
+		assert_equal(
+			<<'_html',
+<div class="me">
+	<a href="/_users/id=test/update.html">
+		<span class="img" style="width: 72px; height: 72px;"></span>
+	</a>
+	<div class="client">test</div>
+	<div class="action_logout"><a href="/t_contact/logout.html">logout</a></div>
+</div>
+_html
+			folder.get(:action => :me),
+			'Folder#_g_me should return a thumbnail of the current client and a link to logout'
+		)
+	end
+
 end

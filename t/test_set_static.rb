@@ -39,7 +39,7 @@ _tmpl
 						'default' => {
 							:label => 'Diary',
 							:tmpl  => <<'_tmpl',
-		<li title="Diary">
+		<li title="">
 			$(.a_update)$(subject)</a>
 			$(body)$(.hidden)
 			<ul><li>qux</li></ul>

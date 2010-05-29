@@ -42,8 +42,8 @@ module Sofa::Parser
 			html.sub!("$(#{id})","$(#{id}.message)\\&") unless _include_menu?(html,tmpl,id,'message')
 		}
 
-		html =~ /\A(?:[^<]*<!--)?[^<]*<[^>]*title="([^"]+)/
-		plural_msgs = $1.to_s.split(/,/).collect {|s| s.strip }
+		html.sub!(/\A((?:[^<]*<!--)?[^<]*<[^>]*title=")([^"]+)/,'\\1')
+		plural_msgs = $2.to_s.split(/,/).collect {|s| s.strip }
 		plural_msgs *= 4 if plural_msgs.size == 1
 		label = plural_msgs.first
 		Sofa::I18n.msg[label] ||= plural_msgs

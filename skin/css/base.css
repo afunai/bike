@@ -31,3 +31,15 @@ span.img {
   margin: 1px 0 1px 0;
   background: lightgray;
 }
+div.me {
+  overflow: hidden;
+  position: relative;
+}
+div.me .img {
+  float: left;
+  margin-right: 1em;
+}
+div.me .client {
+  font-weight: bold;
+  margin: 0;
+}

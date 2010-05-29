@@ -19,9 +19,16 @@ class TC_Password < Test::Unit::TestCase
 		@f.instance_variable_set(:@val,'hello')
 
 		assert_equal(
-			'xxxxx',
+			'*****',
 			@f.get(:action => :read),
 			'Password#get should not return anything other than a dummy string'
+		)
+
+		@f.update 'abcdefg'
+		assert_equal(
+			'*******',
+			@f.get(:action => :read),
+			'Password#get should refer to @size as a length of the dummy string'
 		)
 
 		assert_match(

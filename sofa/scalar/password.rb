@@ -27,7 +27,7 @@ class Sofa::Password < Sofa::Field
 	private
 
 	def _g_default(arg)
-		'xxxxx'
+		'*' * (@size || 5)
 	end
 
 	def _g_update(arg)

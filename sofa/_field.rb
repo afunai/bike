@@ -22,6 +22,10 @@ class Sofa::Field
 		k.new(meta) if k < self
 	end
 
+	def self.h(val)
+		Rack::Utils.escape_html val.to_s
+	end
+
 	attr_reader :action,:result
 
 	def initialize(meta = {})
@@ -212,7 +216,7 @@ class Sofa::Field
 	alias :_g_message :_g_empty
 
 	def _g_default(arg)
-		Rack::Utils.escape_html val.to_s
+		Sofa::Field.h val
 	end
 
 	def _g_errors(arg)

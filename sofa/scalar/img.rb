@@ -66,7 +66,7 @@ class Sofa::Img < Sofa::File
 
 	def _g_thumbnail(arg = {})
 		path       = [:read,nil].include?(arg[:action]) ? my[:path] : my[:tmp_path]
-		basename   = Rack::Utils.escape_html val['basename'].to_s
+		basename   = Sofa::Field.h val['basename']
 		s_basename = basename.sub(/\..+$/,'_small\\&')
 		if val.empty?
 			<<_html.chomp

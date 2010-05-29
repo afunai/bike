@@ -40,7 +40,7 @@ class Sofa::Set::Dynamic
 		end
 
 		message.keys.collect {|type|
-			lis = message[type].collect {|m| "\t<li>#{Rack::Utils.escape_html m}</li>\n" }
+			lis = message[type].collect {|m| "\t<li>#{Sofa::Field.h m}</li>\n" }
 			<<_html
 <ul class="message #{type}">
 #{lis}</ul>

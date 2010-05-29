@@ -85,8 +85,8 @@ class Sofa::File < Sofa::Field
 
 	def _g_default(arg = {})
 		path     = [:read,nil].include?(arg[:action]) ? my[:path] : my[:tmp_path]
-		basename = Rack::Utils.escape_html val['basename'].to_s
-		type     = Rack::Utils.escape_html val['type'].to_s
+		basename = Sofa::Field.h val['basename']
+		type     = Sofa::Field.h val['type']
 		<<_html.chomp unless val.empty?
 <span class="file"><a href="#{path}/#{basename}">#{basename} (#{val['size']} bytes)</a></span>
 _html

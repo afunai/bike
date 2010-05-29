@@ -20,7 +20,7 @@ class Sofa::Textarea::Wiki < Sofa::Textarea
 		body = ''
 		type = :p
 
-		Rack::Utils.escape_html(str).each_line {|line|
+		Sofa::Field.h(str).each_line {|line|
 			if line =~ /^---$/
 				new_type = :hr
 			else

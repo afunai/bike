@@ -8,7 +8,7 @@ require 'rack/utils'
 class Sofa::Textarea::Pre < Sofa::Textarea
 
 	def _g_default(arg)
-		'<pre>' + Rack::Utils.escape_html(val.to_s) + '</pre>'
+		'<pre>' + Sofa::Field.h(val) + '</pre>'
 	end
 
 end

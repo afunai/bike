@@ -6,7 +6,7 @@
 class Sofa::Password < Sofa::Field
 
 	def initialize(meta = {})
-		meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
+		meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].find {|t| t =~ /^\d+$/ }
 		super
 	end
 
@@ -32,7 +32,7 @@ class Sofa::Password < Sofa::Field
 
 	def _g_update(arg)
 		<<_html.chomp
-<input type="password" name="#{my[:short_name]}" value="" class="#{_g_class arg}" />#{_g_errors arg}
+<input type="password" name="#{my[:short_name]}" value="" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
 _html
 	end
 	alias :_g_create :_g_update

@@ -8,7 +8,8 @@ class TC_Password < Test::Unit::TestCase
 	def setup
 		@f = Sofa::Field.instance(
 			:klass   => 'password',
-			:default => 'secret'
+			:default => 'secret',
+			:size    => 16
 		)
 	end
 
@@ -23,6 +24,13 @@ class TC_Password < Test::Unit::TestCase
 			@f.get(:action => :read),
 			'Password#get should not return anything other than a dummy string'
 		)
+		assert_equal(
+			<<'_html'.chomp,
+<input type="password" name="" value="" size="16" class="password" />
+_html
+			@f.get(:action => :create),
+			'Password#get(:action => :create) should return an empty form'
+		)
 
 		@f.update 'abcdefg'
 		assert_equal(
@@ -30,14 +38,10 @@ class TC_Password < Test::Unit::TestCase
 			@f.get(:action => :read),
 			'Password#get should refer to @size as a length of the dummy string'
 		)
-
-		assert_match(
-			/<input/,
-			@f.get(:action => :create),
-			'Password#get(:action => :create) should return an empty form'
-		)
-		assert_match(
-			/<input/,
+		assert_equal(
+			<<'_html'.chomp,
+<input type="password" name="" value="" size="16" class="password" />
+_html
 			@f.get(:action => :update),
 			'Password#get(:action => :update) should return an empty form'
 		)

@@ -18,7 +18,7 @@ class Sofa::Password < Sofa::Field
 
 	def _g_update(arg)
 		<<_html.chomp
-<input type="password" name="#{my[:short_name]}" value="" class="#{_g_class arg}" />
+<input type="password" name="#{my[:short_name]}" value="" class="#{_g_class arg}" />#{_g_errors arg}
 _html
 	end
 	alias :_g_create :_g_update

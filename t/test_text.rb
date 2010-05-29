@@ -58,7 +58,7 @@ class TC_Text < Test::Unit::TestCase
 			'Text#get should return proper string'
 		)
 		assert_equal(
-			'<input type="text" name="" value="bar" class="text" />',
+			'<input type="text" name="" value="bar" size="3" class="text" />',
 			@f.get(:action => :update),
 			'Text#get should return proper string'
 		)

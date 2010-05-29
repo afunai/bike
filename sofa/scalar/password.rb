@@ -26,11 +26,17 @@ _html
 	def _post(action,v)
 		case action
 			when :load
+				@size = nil
 				@val = v
 			when :create,:update
 				if v.is_a?(::String) && !v.empty?
 					salt = ('a'..'z').to_a[rand 26] + ('a'..'z').to_a[rand 26]
+					@size = v.size
 					@val = v.crypt salt
+				elsif @val.nil?
+					@size = 0
+				else
+					# no action: keep current @val
 				end
 		end
 	end

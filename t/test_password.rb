@@ -62,6 +62,15 @@ class TC_Password < Test::Unit::TestCase
 		)
 	end
 
+	def test_create_empty
+		@f.create nil
+		assert_equal(
+			:create,
+			@f.action,
+			'Password#create should set @action even if the val is empty'
+		)
+	end
+
 	def test_update
 		@f.load 'original'
 

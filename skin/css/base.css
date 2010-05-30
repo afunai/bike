@@ -48,3 +48,9 @@ span.radio input {
   margin-right: 0;
   padding-right: 0;
 }
+div.login {
+  margin: 5em 0 5em 0;
+  text-align: center;
+}
+div.login label { margin-right: 0.5em; }
+div.login input { margin-right: 1em; }

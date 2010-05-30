@@ -11,7 +11,7 @@ class Sofa::Set::Dynamic
 		arg[:navi] ||= @storage.navi(arg[:conds] || {})
 		return unless (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
 
-		div = my[:tmpl_navi] || '<div>$(.navi_prev) | $(.navi_p)$(.navi_next)</div>'
+		div = my[:tmpl_navi] || '<div class="navi">$(.navi_prev) | $(.navi_p)$(.navi_next)</div>'
 		div.gsub(/\$\(\.(navi_prev|navi_next|navi_p|uri_prev|uri_next)\)/) {
 			__send__("_g_#{$1}",arg)
 		}

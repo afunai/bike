@@ -348,8 +348,10 @@ _html
 <ul id="main" class="sofa-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" size="32" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." size="64" class="text" /></li>
 </ul>
-<input name=".status-public" type="submit" value="update" />
-<input name=".action-confirm_delete" type="submit" value="delete..." />
+<div class="submit">
+	<input name=".status-public" type="submit" value="update" />
+	<input name=".action-confirm_delete" type="submit" value="delete..." />
+</div>
 </form>
 </body>
 </html>
@@ -375,7 +377,9 @@ _html
 <ul id="main" class="sofa-blog">
 	<li>main-create</li>
 </ul>
-<input name="main.status-public" type="submit" value="create" />
+<div class="submit">
+	<input name="main.status-public" type="submit" value="create" />
+</div>
 </body>
 </html>
 _html

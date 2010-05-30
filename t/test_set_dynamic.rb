@@ -750,7 +750,9 @@ _html
 
 		assert_equal(
 			<<'_html',
-<input name=".status-public" type="submit" value="create" />
+<div class="submit">
+	<input name=".status-public" type="submit" value="create" />
+</div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '_001'}),
 			'Set#_g_submit should not return confirm_delete when there is only new items'
@@ -758,8 +760,10 @@ _html
 		@sd[:confirm] = nil
 		assert_equal(
 			<<'_html',
-<input name=".status-public" type="submit" value="update" />
-<input name=".action-confirm_delete" type="submit" value="delete..." />
+<div class="submit">
+	<input name=".status-public" type="submit" value="update" />
+	<input name=".action-confirm_delete" type="submit" value="delete..." />
+</div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
@@ -767,9 +771,11 @@ _html
 		@sd[:confirm] = :optional
 		assert_equal(
 			<<'_html',
-<input name=".status-public" type="submit" value="update" />
-<input name=".action-confirm_update" type="submit" value="confirm" />
-<input name=".action-confirm_delete" type="submit" value="delete..." />
+<div class="submit">
+	<input name=".status-public" type="submit" value="update" />
+	<input name=".action-confirm_update" type="submit" value="confirm" />
+	<input name=".action-confirm_delete" type="submit" value="delete..." />
+</div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
@@ -777,22 +783,28 @@ _html
 		@sd[:confirm] = :mandatory
 		assert_equal(
 			<<'_html',
-<input name=".action-confirm_update" type="submit" value="confirm" />
-<input name=".action-confirm_delete" type="submit" value="delete..." />
+<div class="submit">
+	<input name=".action-confirm_update" type="submit" value="confirm" />
+	<input name=".action-confirm_delete" type="submit" value="delete..." />
+</div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		assert_equal(
 			<<'_html',
-<input name=".status-public" type="submit" value="update" />
+<div class="submit">
+	<input name=".status-public" type="submit" value="update" />
+</div>
 _html
 			@sd.get(:action => :confirm,:sub_action => :update),
 			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
 		)
 		assert_equal(
 			<<'_html',
-<input name=".status-public" type="submit" value="delete" />
+<div class="submit">
+	<input name=".status-public" type="submit" value="delete" />
+</div>
 _html
 			@sd.get(:action => :confirm,:sub_action => :delete),
 			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
@@ -804,7 +816,9 @@ _html
 		@sd[:confirm] = nil
 		assert_equal(
 			<<'_html',
-<input name=".status-public" type="submit" value="update" />
+<div class="submit">
+	<input name=".status-public" type="submit" value="update" />
+</div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
@@ -812,8 +826,10 @@ _html
 		@sd[:confirm] = :optional
 		assert_equal(
 			<<'_html',
-<input name=".status-public" type="submit" value="update" />
-<input name=".action-confirm_update" type="submit" value="confirm" />
+<div class="submit">
+	<input name=".status-public" type="submit" value="update" />
+	<input name=".action-confirm_update" type="submit" value="confirm" />
+</div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
@@ -821,14 +837,18 @@ _html
 		@sd[:confirm] = :mandatory
 		assert_equal(
 			<<'_html',
-<input name=".action-confirm_update" type="submit" value="confirm" />
+<div class="submit">
+	<input name=".action-confirm_update" type="submit" value="confirm" />
+</div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		assert_equal(
 			<<'_html',
-<input name=".status-public" type="submit" value="update" />
+<div class="submit">
+	<input name=".status-public" type="submit" value="update" />
+</div>
 _html
 			@sd.get(:action => :confirm,:sub_action => :update),
 			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
@@ -840,7 +860,9 @@ _html
 		@sd[:confirm] = nil
 		assert_equal(
 			<<'_html',
-<input name=".status-public" type="submit" value="delete" />
+<div class="submit">
+	<input name=".status-public" type="submit" value="delete" />
+</div>
 _html
 			@sd.get(:action => :confirm,:sub_action => :delete),
 			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'

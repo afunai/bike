@@ -103,7 +103,9 @@ class TC_Sofa_Call < Test::Unit::TestCase
 		<ul id="main" class="sofa-contact">
 			<li><a><input type="text" name="_001-name" value="foo" size="32" class="text" /></a>: <input type="text" name="_001-comment" value="bar!" size="64" class="text" /></li>
 		</ul>
-<input name=".status-public" type="submit" value="create" />
+<div class="submit">
+	<input name=".status-public" type="submit" value="create" />
+</div>
 </form>
 	</body>
 </html>
@@ -250,8 +252,10 @@ _html
 <ul id="main" class="sofa-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" size="32" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." size="64" class="text" /></li>
 </ul>
-<input name=".status-public" type="submit" value="update" />
-<input name=".action-confirm_delete" type="submit" value="delete..." />
+<div class="submit">
+	<input name=".status-public" type="submit" value="update" />
+	<input name=".action-confirm_delete" type="submit" value="delete..." />
+</div>
 </form>
 </body>
 </html>
@@ -727,7 +731,9 @@ _html
 		<ul id="main" class="sofa-blog">
 			<li><a>fz</a>: howdy.<input type="hidden" name="_1.action" value="create" /></li>
 		</ul>
-<input name=".status-public" type="submit" value="create" />
+<div class="submit">
+	<input name=".status-public" type="submit" value="create" />
+</div>
 </form>
 	</body>
 </html>

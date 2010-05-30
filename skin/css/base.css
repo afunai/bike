@@ -54,3 +54,5 @@ div.login {
 }
 div.login label { margin-right: 0.5em; }
 div.login input { margin-right: 1em; }
+div.submit { margin: 1em 0 2em 2em; }
+div.submit input { margin-right: 1em; }

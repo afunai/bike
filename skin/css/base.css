@@ -43,3 +43,8 @@ div.me .client {
   font-weight: bold;
   margin: 0;
 }
+span.radio input {
+  vertical-align: top;
+  margin-right: 0;
+  padding-right: 0;
+}

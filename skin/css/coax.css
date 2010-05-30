@@ -1,8 +1,17 @@
-body, html {
+body {
   margin: 0;
   padding: 0;
   background: #666699;
+  font-family: sans-serif;
 }
+body a { text-decoration: none; }
+html {
+  margin: 0;
+  padding: 0;
+  background: #666699;
+  font-family: sans-serif;
+}
+html a { text-decoration: none; }
 #container {
   width: 950px;
   margin: 0 auto;

@@ -10,7 +10,7 @@ ul.notice { border: 2px solid blue; }
 ul.alert { border: 2px solid orange; }
 ul.error { border: 2px solid red; }
 div.error {
-  color: pink;
+  color: red;
   background: transparent;
   font-weight: bold;
 }

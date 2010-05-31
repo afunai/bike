@@ -84,7 +84,7 @@ class Sofa::File < Sofa::Field
 	private
 
 	def _g_default(arg = {})
-		path     = [:read,nil].include?(arg[:action]) ? my[:path] : my[:tmp_path]
+		path     = _path arg[:action]
 		basename = Sofa::Field.h val['basename']
 		type     = Sofa::Field.h val['type']
 		<<_html.chomp unless val.empty?
@@ -116,6 +116,11 @@ _html
 _html
 	end
 	alias :_g_create :_g_update
+
+	def _path(action)
+		(Sofa.base ? Sofa.base[:uri].to_s : '') +
+		([nil,:read,:thumbnail].include?(action) ? my[:path] : my[:tmp_path])
+	end
 
 	def val_cast(v)
 		if v && v[:tempfile]

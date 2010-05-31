@@ -18,7 +18,7 @@ _html
 			<<_html
 <div class="me">
 	<a href="#{Sofa.base[:uri] if Sofa.base}/_users/id=#{Sofa.client}/update.html">
-		#{img.send(:_get_by_self_reference,:action => 'thumbnail') if img}
+		#{img.send(:_get_by_self_reference,:action => :thumbnail) if img}
 	</a>
 	<div class="client">#{Sofa.client}</div>
 	#{_g_action_login arg}</div>

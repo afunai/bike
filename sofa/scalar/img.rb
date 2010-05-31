@@ -65,7 +65,7 @@ class Sofa::Img < Sofa::File
 	end
 
 	def _g_thumbnail(arg = {})
-		path       = [:read,nil].include?(arg[:action]) ? my[:path] : my[:tmp_path]
+		path       = _path arg[:action]
 		basename   = Sofa::Field.h val['basename']
 		s_basename = basename.sub(/\..+$/,'_small\\&')
 		if val.empty?

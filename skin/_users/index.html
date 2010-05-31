@@ -18,7 +18,7 @@
 			</div>
 
 			<div id="center" class="column">
-				<ul id="main" class="sofa-register">
+				<div id="main" class="sofa-register">
 					<!-- 1..10 may_confirm -->
 					<table title="user,users">
 						<tr><th>_(ID)</th><td>$(_id = meta-id 16 1..16)</td></tr>
@@ -27,12 +27,12 @@
 						<tr><th>_(Password)</th><td>$(password = password 12 8..32)</td></tr>
 						<tr><th>_(Avatar)</th><td>$(avatar = img 72*72 10 0..320000 crop)</td></tr>
 					</table>
-				</ul>
+				</div>
 			</div>
 
 			<div id="right" class="column">
 				$(.me)
-				<p>$(main.action_create)</p>
+				$(main.action_create)
 			</div>
 
 			<div id="footer"></div>

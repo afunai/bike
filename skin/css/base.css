@@ -32,6 +32,7 @@ span.img {
   margin: 1px 0 1px 0;
   background: lightgray;
 }
+div.action_create { margin: 1em 0 0 0; }
 div.me {
   margin: 1em 0 0 0;
   overflow: hidden;

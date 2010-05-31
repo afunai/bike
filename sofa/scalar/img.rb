@@ -75,12 +75,12 @@ _html
 		elsif arg[:link]
 			<<_html.chomp
 <span class="img">
-	<a href="#{path}/#{basename}"><img src="#{path}/#{s_basename}" /></a>
+	<a href="#{path}/#{basename}"><img src="#{path}/#{s_basename}" alt="#{basename}" /></a>
 </span>
 _html
 		else
 			<<_html.chomp
-<span class="img"><img src="#{path}/#{s_basename}" /></span>
+<span class="img"><img src="#{path}/#{s_basename}" alt="#{basename}" /></span>
 _html
 		end
 	end

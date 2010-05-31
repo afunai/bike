@@ -221,7 +221,7 @@ class Sofa::Field
 
 	def _g_errors(arg)
 		<<_html unless _g_valid? arg
-<div class="error">#{errors.join "<br/>\n"}</div>
+<span class="error">#{errors.join "<br/>\n"}</span>
 _html
 	end
 

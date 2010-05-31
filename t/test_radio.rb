@@ -157,7 +157,7 @@ _html
 	<input type="radio" id="-qux" name="" value="qux" />
 	<label for="-qux">qux</label>
 </span>
-<div class=\"error\">no such option</div>
+<span class=\"error\">no such option</span>
 _html
 			@f.get(:action => :update),
 			'Radio#get should return proper string'

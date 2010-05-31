@@ -32,6 +32,16 @@ span.img {
   margin: 1px 0 1px 0;
   background: lightgray;
 }
+span.checkbox input {
+  vertical-align: top;
+  margin-right: 0;
+  padding-right: 0;
+}
+span.radio input {
+  vertical-align: top;
+  margin-right: 0;
+  padding-right: 0;
+}
 div.action_create { margin: 1em 0 0 0; }
 div.me {
   margin: 1em 0 0 0;
@@ -48,11 +58,6 @@ div.me .client {
   margin: 0;
 }
 div.me .action_logout { margin: 0.5em 0 0 0; }
-span.radio input {
-  vertical-align: top;
-  margin-right: 0;
-  padding-right: 0;
-}
 div.login {
   margin: 5em 0 5em 0;
   text-align: center;

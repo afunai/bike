@@ -118,16 +118,16 @@ class TC_Checkbox < Test::Unit::TestCase
 			<<_html.chomp,
 <input type="hidden" name="[]" value="" />
 <span class="checkbox">
-	<input type="checkbox" id="-bar" name="[]" value="bar" />
-	<label for="-bar">bar</label>
+	<input type="checkbox" id="checkbox_-bar" name="[]" value="bar" />
+	<label for="checkbox_-bar">bar</label>
 </span>
 <span class="checkbox">
-	<input type="checkbox" id="-baz" name="[]" value="baz" />
-	<label for="-baz">baz</label>
+	<input type="checkbox" id="checkbox_-baz" name="[]" value="baz" />
+	<label for="checkbox_-baz">baz</label>
 </span>
 <span class="checkbox">
-	<input type="checkbox" id="-qux" name="[]" value="qux" />
-	<label for="-qux">qux</label>
+	<input type="checkbox" id="checkbox_-qux" name="[]" value="qux" />
+	<label for="checkbox_-qux">qux</label>
 </span>
 _html
 			@f.get(:action => :create),
@@ -144,16 +144,16 @@ _html
 			<<_html.chomp,
 <input type="hidden" name="[]" value="" />
 <span class="checkbox">
-	<input type="checkbox" id="-bar" name="[]" value="bar" />
-	<label for="-bar">bar</label>
+	<input type="checkbox" id="checkbox_-bar" name="[]" value="bar" />
+	<label for="checkbox_-bar">bar</label>
 </span>
 <span class="checkbox">
-	<input type="checkbox" id="-baz" name="[]" value="baz" checked />
-	<label for="-baz">baz</label>
+	<input type="checkbox" id="checkbox_-baz" name="[]" value="baz" checked />
+	<label for="checkbox_-baz">baz</label>
 </span>
 <span class="checkbox">
-	<input type="checkbox" id="-qux" name="[]" value="qux" checked />
-	<label for="-qux">qux</label>
+	<input type="checkbox" id="checkbox_-qux" name="[]" value="qux" checked />
+	<label for="checkbox_-qux">qux</label>
 </span>
 _html
 			@f.get(:action => :update),
@@ -165,16 +165,16 @@ _html
 			<<_html.chomp,
 <input type="hidden" name="[]" value="" />
 <span class="checkbox error">
-	<input type="checkbox" id="-bar" name="[]" value="bar" />
-	<label for="-bar">bar</label>
+	<input type="checkbox" id="checkbox_-bar" name="[]" value="bar" />
+	<label for="checkbox_-bar">bar</label>
 </span>
 <span class="checkbox error">
-	<input type="checkbox" id="-baz" name="[]" value="baz" />
-	<label for="-baz">baz</label>
+	<input type="checkbox" id="checkbox_-baz" name="[]" value="baz" />
+	<label for="checkbox_-baz">baz</label>
 </span>
 <span class="checkbox error">
-	<input type="checkbox" id="-qux" name="[]" value="qux" />
-	<label for="-qux">qux</label>
+	<input type="checkbox" id="checkbox_-qux" name="[]" value="qux" />
+	<label for="checkbox_-qux">qux</label>
 </span>
 <span class=\"error\">no such option</span>
 _html
@@ -201,8 +201,8 @@ _html
 			<<_html.chomp,
 <input type="hidden" name="[]" value="" />
 <span class="checkbox">
-	<input type="checkbox" id="-ok?" name="[]" value="ok?" />
-	<label for="-ok?">ok?</label>
+	<input type="checkbox" id="checkbox_-ok?" name="[]" value="ok?" />
+	<label for="checkbox_-ok?">ok?</label>
 </span>
 _html
 			f.get(:action => :create),

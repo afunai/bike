@@ -173,8 +173,8 @@ class TC_Timestamp < Test::Unit::TestCase
 		@f[:can_update] = true
 		assert_equal(
 			<<'_html'.chomp,
-<input type="checkbox" id="" name="" value="true" class="meta-timestamp" />
-<label for="">update the timestamp</label>
+<input type="checkbox" id="timestamp_" name="" value="true" class="meta-timestamp" />
+<label for="timestamp_">update the timestamp</label>
 _html
 			@f.get(:action => :update),
 			'Timestamp#_g_update should return proper string'

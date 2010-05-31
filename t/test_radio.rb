@@ -99,16 +99,16 @@ class TC_Radio < Test::Unit::TestCase
 			<<_html.chomp,
 <input type="hidden" name="" value="" />
 <span class="radio">
-	<input type="radio" id="-bar" name="" value="bar" />
-	<label for="-bar">bar</label>
+	<input type="radio" id="radio_-bar" name="" value="bar" />
+	<label for="radio_-bar">bar</label>
 </span>
 <span class="radio">
-	<input type="radio" id="-baz" name="" value="baz" />
-	<label for="-baz">baz</label>
+	<input type="radio" id="radio_-baz" name="" value="baz" />
+	<label for="radio_-baz">baz</label>
 </span>
 <span class="radio">
-	<input type="radio" id="-qux" name="" value="qux" />
-	<label for="-qux">qux</label>
+	<input type="radio" id="radio_-qux" name="" value="qux" />
+	<label for="radio_-qux">qux</label>
 </span>
 _html
 			@f.get(:action => :create),
@@ -125,16 +125,16 @@ _html
 			<<_html.chomp,
 <input type="hidden" name="" value="" />
 <span class="radio">
-	<input type="radio" id="-bar" name="" value="bar" />
-	<label for="-bar">bar</label>
+	<input type="radio" id="radio_-bar" name="" value="bar" />
+	<label for="radio_-bar">bar</label>
 </span>
 <span class="radio">
-	<input type="radio" id="-baz" name="" value="baz" />
-	<label for="-baz">baz</label>
+	<input type="radio" id="radio_-baz" name="" value="baz" />
+	<label for="radio_-baz">baz</label>
 </span>
 <span class="radio">
-	<input type="radio" id="-qux" name="" value="qux" checked />
-	<label for="-qux">qux</label>
+	<input type="radio" id="radio_-qux" name="" value="qux" checked />
+	<label for="radio_-qux">qux</label>
 </span>
 _html
 			@f.get(:action => :update),
@@ -146,16 +146,16 @@ _html
 			<<_html.chomp,
 <input type="hidden" name="" value="" />
 <span class="radio error">
-	<input type="radio" id="-bar" name="" value="bar" />
-	<label for="-bar">bar</label>
+	<input type="radio" id="radio_-bar" name="" value="bar" />
+	<label for="radio_-bar">bar</label>
 </span>
 <span class="radio error">
-	<input type="radio" id="-baz" name="" value="baz" />
-	<label for="-baz">baz</label>
+	<input type="radio" id="radio_-baz" name="" value="baz" />
+	<label for="radio_-baz">baz</label>
 </span>
 <span class="radio error">
-	<input type="radio" id="-qux" name="" value="qux" />
-	<label for="-qux">qux</label>
+	<input type="radio" id="radio_-qux" name="" value="qux" />
+	<label for="radio_-qux">qux</label>
 </span>
 <span class=\"error\">no such option</span>
 _html
@@ -176,12 +176,12 @@ _html
 			<<_html.chomp,
 <input type="hidden" name="" value="" />
 <span class="radio">
-	<input type="radio" id="-foo" name="" value="foo" />
-	<label for="-foo">foo</label>
+	<input type="radio" id="radio_-foo" name="" value="foo" />
+	<label for="radio_-foo">foo</label>
 </span>
 <span class="radio">
-	<input type="radio" id="-&lt;bar&gt;" name="" value="&lt;bar&gt;" checked />
-	<label for="-&lt;bar&gt;">&lt;bar&gt;</label>
+	<input type="radio" id="radio_-&lt;bar&gt;" name="" value="&lt;bar&gt;" checked />
+	<label for="radio_-&lt;bar&gt;">&lt;bar&gt;</label>
 </span>
 _html
 			@f.get(:action => :update),

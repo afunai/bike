@@ -44,8 +44,8 @@ _html
 				checked = (val.include? opt) ? ' checked' : ''
 				<<_html
 <span class="#{_g_class arg}">
-	<input type="checkbox" id="#{my[:short_name]}-#{opt}" name="#{my[:short_name]}[]" value="#{opt}"#{checked} />
-	<label for="#{my[:short_name]}-#{opt}">#{opt}</label>
+	<input type="checkbox" id="checkbox_#{my[:short_name]}-#{opt}" name="#{my[:short_name]}[]" value="#{opt}"#{checked} />
+	<label for="checkbox_#{my[:short_name]}-#{opt}">#{opt}</label>
 </span>
 _html
 			}.join

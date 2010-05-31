@@ -27,8 +27,8 @@ class Sofa::Radio < Sofa::Field
 			h_opt = Sofa::Field.h opt
 			<<_html
 <span class="#{_g_class arg}">
-	<input type="radio" id="#{my[:short_name]}-#{h_opt}" name="#{my[:short_name]}" value="#{h_opt}"#{checked} />
-	<label for="#{my[:short_name]}-#{h_opt}">#{h_opt}</label>
+	<input type="radio" id="radio_#{my[:short_name]}-#{h_opt}" name="#{my[:short_name]}" value="#{h_opt}"#{checked} />
+	<label for="radio_#{my[:short_name]}-#{h_opt}">#{h_opt}</label>
 </span>
 _html
 		}.join

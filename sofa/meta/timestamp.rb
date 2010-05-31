@@ -60,8 +60,8 @@ _html
 _html
 		elsif my[:can_update] && !find_ancestor {|f| f[:id] =~ Sofa::REX::ID_NEW }
 			<<_html.chomp
-<input type="checkbox" id="#{my[:short_name]}" name="#{my[:short_name]}" value="true" class="#{_g_class arg}" />
-<label for="#{my[:short_name]}">#{_ 'update the timestamp'}</label>#{_g_errors arg}
+<input type="checkbox" id="timestamp_#{my[:short_name]}" name="#{my[:short_name]}" value="true" class="#{_g_class arg}" />
+<label for="timestamp_#{my[:short_name]}">#{_ 'update the timestamp'}</label>#{_g_errors arg}
 _html
 		end
 	end

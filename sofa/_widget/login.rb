@@ -11,7 +11,7 @@ class Sofa::Set::Dynamic
 		path = Sofa::Path.path_of arg[:conds]
 		action = arg[:dest_action]
 		<<_html
-<form id="#{my[:name]}" method="post" action="#{my[:base_path]}/#{path}login.html">
+<form id="form_#{my[:name]}" method="post" action="#{my[:base_path]}/#{path}login.html">
 	<div class="login">
 		<input type="hidden" name="dest_action" value="#{action}" />
 		<label for="id">#{_ 'ID'}</label><input type="text" id="id" name="id" size="10" value="" />

@@ -99,7 +99,7 @@ class TC_Sofa_Call < Test::Unit::TestCase
 	<head><base href="http:///t_contact/" /><title>Root Folder</title></head>
 	<body>
 		<h1>Root Folder</h1>
-<form id="main" method="post" enctype="multipart/form-data" action="/t_contact/1234567890.0123/update.html">
+<form id="form_main" method="post" enctype="multipart/form-data" action="/t_contact/1234567890.0123/update.html">
 		<ul id="main" class="sofa-contact">
 			<li><a><input type="text" name="_001-name" value="foo" size="32" class="text" /></a>: <input type="text" name="_001-comment" value="bar!" size="64" class="text" /></li>
 		</ul>
@@ -248,7 +248,7 @@ _html
 <head><base href="http:///t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
-<form id="main" method="post" enctype="multipart/form-data" action="/t_summary/#{tid}/update.html">
+<form id="form_main" method="post" enctype="multipart/form-data" action="/t_summary/#{tid}/update.html">
 <ul id="main" class="sofa-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" size="32" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." size="64" class="text" /></li>
 </ul>
@@ -727,7 +727,7 @@ _html
 <ul class="message notice">
 	<li>please confirm.</li>
 </ul>
-<form id="main" method="post" enctype="multipart/form-data" action="/#{tid}/update.html">
+<form id="form_main" method="post" enctype="multipart/form-data" action="/#{tid}/update.html">
 		<ul id="main" class="sofa-blog">
 			<li><a>fz</a>: howdy.<input type="hidden" name="_1.action" value="create" /></li>
 		</ul>

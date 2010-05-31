@@ -344,7 +344,7 @@ _html
 <head><base href="/t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
-<form id="main" method="post" enctype="multipart/form-data" action="/t_summary/12345.012/update.html">
+<form id="form_main" method="post" enctype="multipart/form-data" action="/t_summary/12345.012/update.html">
 <ul id="main" class="sofa-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" size="32" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." size="64" class="text" /></li>
 </ul>

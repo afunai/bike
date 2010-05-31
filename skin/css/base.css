@@ -42,7 +42,7 @@ span.radio input {
   margin-right: 0;
   padding-right: 0;
 }
-div.action_create { margin: 1em 0 0 0; }
+div.view_ym, div.action_create { margin: 1em 0 0 0; }
 div.me {
   margin: 1em 0 0 0;
   overflow: hidden;

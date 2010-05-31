@@ -61,10 +61,6 @@ class Sofa::Img < Sofa::File
 	private
 
 	def _g_default(arg = {})
-		_g_thumbnail arg.merge(:link => true)
-	end
-
-	def _g_thumbnail(arg = {})
 		path       = _path arg[:action]
 		basename   = Sofa::Field.h val['basename']
 		s_basename = basename.sub(/\..+$/,'_small\\&')
@@ -72,15 +68,15 @@ class Sofa::Img < Sofa::File
 			<<_html.chomp
 <span class="img" style="width: #{my[:width]}px; height: #{my[:height]}px;"></span>
 _html
-		elsif arg[:link]
+		elsif arg[:sub_action] == :without_link
+			<<_html.chomp
+<span class="img"><img src="#{path}/#{s_basename}" alt="#{basename}" /></span>
+_html
+		else
 			<<_html.chomp
 <span class="img">
 	<a href="#{path}/#{basename}"><img src="#{path}/#{s_basename}" alt="#{basename}" /></a>
 </span>
-_html
-		else
-			<<_html.chomp
-<span class="img"><img src="#{path}/#{s_basename}" alt="#{basename}" /></span>
 _html
 		end
 	end

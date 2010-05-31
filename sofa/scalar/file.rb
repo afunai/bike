@@ -119,7 +119,7 @@ _html
 
 	def _path(action)
 		(Sofa.base ? Sofa.base[:uri].to_s : '') +
-		([nil,:read,:thumbnail].include?(action) ? my[:path] : my[:tmp_path])
+		([:read,nil].include?(action) ? my[:path] : my[:tmp_path])
 	end
 
 	def val_cast(v)

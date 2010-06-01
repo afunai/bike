@@ -103,7 +103,7 @@ _html
 			my[:parent][:item].find {|id,meta| id != my[:id] && meta[:klass] !~ /^meta-/ }
 		)
 			delete = <<_html
-	<input type="submit" name="#{my[:short_name]}.action-delete" value="x" />
+	<input type="submit" name="#{my[:short_name]}.action-delete" value="#{_ 'delete'}" />
 _html
 		end
 		update = <<_html
@@ -112,7 +112,7 @@ _html
 		<<_html.chomp
 #{_g_default arg}
 <span class="file">
-#{hidden}#{delete}#{update}#{_g_errors arg}</span>
+#{hidden}#{update}#{delete}#{_g_errors arg}</span>
 _html
 	end
 	alias :_g_create :_g_update

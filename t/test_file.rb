@@ -305,8 +305,8 @@ _eos
 			<<"_html".chomp,
 <span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
 <span class="file">
-	<input type="submit" name="_1-foo.action-delete" value="x" />
 	<input type="file" name="_1-foo" size="" class="file" />
+	<input type="submit" name="_1-foo.action-delete" value="delete" />
 </span>
 _html
 			sd.item('_1','foo').get(:action => :update),

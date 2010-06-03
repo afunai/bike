@@ -382,6 +382,10 @@ Content-Disposition: form-data; name="_1-foo"; filename="foo.jpg"
 Content-Type: image/jpeg
 
 #{@file.read}
+---foobarbaz
+Content-Disposition: form-data; name="_token"
+
+#{Sofa.token}
 ---foobarbaz--
 _eos
 		res = Rack::MockRequest.new(Sofa.new).post(
@@ -413,7 +417,7 @@ _eos
 		res = Rack::MockRequest.new(Sofa.new).post(
 			"http://example.com/#{tid}/update.html",
 			{
-				:input => '.status-public=create',
+				:input => ".status-public=create&_token=#{Sofa.token}",
 			}
 		)
 
@@ -443,7 +447,7 @@ _eos
 		Rack::MockRequest.new(Sofa.new).post(
 			'http://example.com/t_file/update.html',
 			{
-				:input => "#{new_id}-_timestamp=1981-12-02&.status-public=update",
+				:input => "#{new_id}-_timestamp=1981-12-02&.status-public=update&_token=#{Sofa.token}",
 			}
 		)
 		res = Rack::MockRequest.new(Sofa.new).get(
@@ -467,7 +471,7 @@ _eos
 		Rack::MockRequest.new(Sofa.new).post(
 			'http://example.com/t_file/update.html',
 			{
-				:input => '19811202_0001.action=delete&.status-public=delete',
+				:input => "19811202_0001.action=delete&.status-public=delete&_token=#{Sofa.token}",
 			}
 		)
 		res = Rack::MockRequest.new(Sofa.new).get(

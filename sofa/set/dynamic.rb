@@ -97,6 +97,7 @@ class Sofa::Set::Dynamic < Sofa::Field
 			action = "#{base_path}/#{my[:tid]}/update.html"
 			<<_html
 <form id="form_#{my[:name]}" method="post" enctype="multipart/form-data" action="#{action}">
+<input name="_token" type="hidden" value="#{Sofa.token}" />
 #{super}</form>
 _html
 		end

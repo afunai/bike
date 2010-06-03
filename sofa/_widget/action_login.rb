@@ -14,7 +14,7 @@ class Sofa::Set::Static::Folder
 _html
 		else
 			<<_html
-<div class="action_logout"><a href="#{my[:dir]}/logout.html">#{_ 'logout'}</a></div>
+<div class="action_logout"><a href="#{my[:dir]}/logout.html?_token=#{Sofa.token}">#{_ 'logout'}</a></div>
 _html
 		end
 	end

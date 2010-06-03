@@ -48,6 +48,10 @@ class Sofa
 		self.session[:client] = id
 	end
 
+	def self.token
+		self.session[:token] ||= rand(36 ** 32).to_s(36)
+	end
+
 	def self.base
 		self.current[:base]
 	end
@@ -97,7 +101,7 @@ class Sofa
 		Sofa.current[:base] = base
 
 		begin
-			if params[:action] == :logout
+			if params[:action] == :logout && params[:token] == Sofa.token
 				logout(base,params)
 			elsif method == 'get'
 				get(base,params)
@@ -105,12 +109,14 @@ class Sofa
 				login(base,params)
 			elsif params[:action] == :confirm
 				confirm(base,params)
-			else
+			elsif params[:token] == Sofa.token
 				begin
 					post(base,params)
 				rescue Sofa::Error::Forbidden
 					response_forbidden
 				end
+			else
+				response_forbidden(:body => 'invalid token')
 			end
 		rescue Sofa::Error::Forbidden
 			if params[:action] && Sofa.client == 'nobody'
@@ -276,6 +282,8 @@ class Sofa
 				hash[:conds][special_val.intern] = val
 			elsif hash[item_id].is_a? ::Hash
 				hash[item_id][:self] = val
+			elsif item_id == '_token'
+				hash[:token] = val
 			else
 				hash[item_id] = val
 			end

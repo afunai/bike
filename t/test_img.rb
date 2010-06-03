@@ -184,6 +184,10 @@ Content-Type: image/jpeg
 Content-Transfer-Encoding: binary
 
 @img
+---foobarbaz
+Content-Disposition: form-data; name="_token"
+
+#{Sofa.token}
 ---foobarbaz--
 _eos
 		res = Rack::MockRequest.new(Sofa.new).post(
@@ -200,7 +204,7 @@ _eos
 		res = Rack::MockRequest.new(Sofa.new).post(
 			"http://example.com/#{tid}/update.html",
 			{
-				:input => '.status-public=create',
+				:input => ".status-public=create&_token=#{Sofa.token}",
 			}
 		)
 
@@ -240,7 +244,7 @@ _eos
 		Rack::MockRequest.new(Sofa.new).post(
 			'http://example.com/t_img/update.html',
 			{
-				:input => "#{new_id}.action=delete&.status-public=delete",
+				:input => "#{new_id}.action=delete&.status-public=delete&_token=#{Sofa.token}",
 			}
 		)
 		res = Rack::MockRequest.new(Sofa.new).get(

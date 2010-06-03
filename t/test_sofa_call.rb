@@ -94,12 +94,13 @@ class TC_Sofa_Call < Test::Unit::TestCase
 			'Sofa#call to contact by nobody should return status 200'
 		)
 		assert_equal(
-			<<'_html',
+			<<_html,
 <html>
 	<head><base href="http:///t_contact/" /><title>Root Folder</title></head>
 	<body>
 		<h1>Root Folder</h1>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_contact/1234567890.0123/update.html">
+<input name="_token" type="hidden" value="#{Sofa.token}" />
 		<ul id="main" class="sofa-contact">
 			<li><a><input type="text" name="_001-name" value="foo" size="32" class="text" /></a>: <input type="text" name="_001-comment" value="bar!" size="64" class="text" /></li>
 		</ul>
@@ -249,6 +250,7 @@ _html
 <body>
 <h1>index</h1>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_summary/#{tid}/update.html">
+<input name="_token" type="hidden" value="#{Sofa.token}" />
 <ul id="main" class="sofa-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" size="32" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." size="64" class="text" /></li>
 </ul>
@@ -379,7 +381,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input => "_1-name=fz&_1-comment=hi.&.status-public=create"
+				:input => "_1-name=fz&_1-comment=hi.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(
@@ -417,7 +419,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://example.com/t_store/main/update.html",
 			{
-				:input => "_1-name=tooooooooooooloooooooooooooooooooooooooooong&_1-comment=hi.&.status-public=create"
+				:input => "_1-name=tooooooooooooloooooooooooooooooooooooooooong&_1-comment=hi.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		tid = res.body[%r{/(#{Sofa::REX::TID})/},1]
@@ -441,7 +443,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input => "_1-name=&_1-comment=&.status-public=create"
+				:input => "_1-name=&_1-comment=&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(
@@ -457,7 +459,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input => "_1-name=don&_1-comment=brown.&.status-public=create"
+				:input => "_1-name=don&_1-comment=brown.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		res.headers['Location'] =~ Sofa::REX::PATH_ID
@@ -466,7 +468,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input => "#{new_id}-name=don&.status-public=update"
+				:input => "#{new_id}-name=don&.status-public=update&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(
@@ -500,13 +502,33 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/1234567890.9999/update.html',
 			{
-				:input => "_1-name=don&_1-comment=brown.&.status-public=create"
+				:input => "_1-name=don&_1-comment=brown.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(
 			303,
 			res.status,
 			'Sofa#post twice from the same first form should work properly'
+		)
+	end
+
+	def test_post_with_invalid_token
+		Sofa.client = 'root'
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/update.html',
+			{
+				:input => "_1-name=fz&_1-comment=hi.&.status-public=create&_token=invalid"
+			}
+		)
+		assert_equal(
+			403,
+			res.status,
+			'Sofa#call without a valid token should return status 403'
+		)
+		assert_equal(
+			'invalid token',
+			res.body,
+			'Sofa#call without a valid token should return status 403'
 		)
 	end
 
@@ -518,7 +540,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_attachment/main/update.html',
 			{
-				:input => "_012-files-_1-file=wow.jpg&_012-files-_1.action-create=create"
+				:input => "_012-files-_1-file=wow.jpg&_012-files-_1.action-create=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_match(
@@ -543,7 +565,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://example.com/#{tid}/update.html",
 			{
-				:input => "_012-comment=hello.&.status-public=create"
+				:input => "_012-comment=hello.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_no_match(
@@ -580,7 +602,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://example.com/t_attachment/main/#{new_id}/replies/update.html",
 			{
-				:input => "_001-reply=wow.&.status-public=create"
+				:input => "_001-reply=wow.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(303,res.status)
@@ -615,14 +637,14 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://example.com/#{tid}/t_attachment/update.html",
 			{
-				:input => "#{new_id}-files-_1-file=boo.jpg&#{new_id}-files-_1.action-create=create"
+				:input => "#{new_id}-files-_1-file=boo.jpg&#{new_id}-files-_1.action-create=create&_token=#{Sofa.token}"
 			}
 		)
 		attachment_id = Sofa.transaction[tid].item(new_id,'files').val.keys.first
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://example.com/#{tid}/update.html",
 			{
-				:input => "#{new_id}-files-#{attachment_id}-file=boo.jpg&#{new_id}-files-_1-file=&.status-public=create"
+				:input => "#{new_id}-files-#{attachment_id}-file=boo.jpg&#{new_id}-files-_1-file=&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 
@@ -640,7 +662,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_attachment/main/update.html',
 			{
-				:input => "_012-files-_1-file=&_012-files-_1.action-create=create"
+				:input => "_012-files-_1-file=&_012-files-_1.action-create=create&_token=#{Sofa.token}"
 			}
 		)
 		tid = res.headers['Location'][Sofa::REX::TID]
@@ -649,7 +671,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://example.com/#{tid}/update.html",
 			{
-				:input => "_012-comment=hello.&.status-public=create"
+				:input => "_012-comment=hello.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(
@@ -667,7 +689,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_attachment/main/update.html',
 			{
-				:input => "_012-files-_1-file=tooloooooooooooong&_012-files-_1.action-create=create"
+				:input => "_012-files-_1-file=tooloooooooooooong&_012-files-_1.action-create=create&_token=#{Sofa.token}"
 			}
 		)
 		tid = res.headers['Location'][Sofa::REX::TID]
@@ -676,7 +698,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://example.com/#{tid}/update.html",
 			{
-				:input => "_012-comment=hello.&.status-public=create"
+				:input => "_012-comment=hello.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(
@@ -728,6 +750,7 @@ _html
 	<li>please confirm.</li>
 </ul>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/#{tid}/update.html">
+<input name="_token" type="hidden" value="#{Sofa.token}" />
 		<ul id="main" class="sofa-blog">
 			<li><a>fz</a>: howdy.<input type="hidden" name="_1.action" value="create" /></li>
 		</ul>
@@ -745,7 +768,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://example.com/#{tid}/update.html",
 			{
-				:input => "_1.action=create&.status-public=create"
+				:input => "_1.action=create&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(
@@ -811,7 +834,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_contact/main/update.html',
 			{
-				:input => "_1-name=fz&_1-comment=hi.&.status-public=create"
+				:input => "_1-name=fz&_1-comment=hi.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(
@@ -922,7 +945,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/read.html',
 			{
-				:input => "_1-name=fz&_1-comment=hi.&.status-public=create"
+				:input => "_1-name=fz&_1-comment=hi.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_equal(
@@ -980,7 +1003,7 @@ _html
 	def test_post_logout
 		Sofa.client = 'frank'
 		res = Rack::MockRequest.new(@sofa).post(
-			"http://example.com/foo/20100222/1/logout.html",
+			"http://example.com/foo/20100222/1/logout.html?_token=#{Sofa.token}",
 			{}
 		)
 		assert_equal(
@@ -1000,10 +1023,33 @@ _html
 		)
 	end
 
+	def test_post_logout_with_invalid_token
+		Sofa.client = 'frank'
+		res = Rack::MockRequest.new(@sofa).post(
+			"http://example.com/foo/20100222/1/logout.html?_token=invalid",
+			{}
+		)
+		assert_equal(
+			403,
+			res.status,
+			'Sofa#call without a valid token should return status 403'
+		)
+		assert_equal(
+			'invalid token',
+			res.body,
+			'Sofa#call without a valid token should return status 403'
+		)
+		assert_equal(
+			'frank',
+			Sofa.client,
+			'Sofa#call without a valid token should return status 403'
+		)
+	end
+
 	def test_get_logout
 		Sofa.client = 'frank'
 		res = Rack::MockRequest.new(@sofa).get(
-			"http://example.com/foo/20100222/1/logout.html",
+			"http://example.com/foo/20100222/1/logout.html?_token=#{Sofa.token}",
 			{}
 		)
 		assert_equal(
@@ -1025,7 +1071,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input => "_2-name=fz&_2-comment=hi.&.status-public=create"
+				:input => "_2-name=fz&_2-comment=hi.&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_match(
@@ -1060,7 +1106,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input => "#{new_id}-comment=howdy.&.status-public=update"
+				:input => "#{new_id}-comment=howdy.&.status-public=update&_token=#{Sofa.token}"
 			}
 		)
 		res = Rack::MockRequest.new(@sofa).get(
@@ -1075,7 +1121,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input => "#{new_id}.action=delete&.status-public=delete"
+				:input => "#{new_id}.action=delete&.status-public=delete&_token=#{Sofa.token}"
 			}
 		)
 		res = Rack::MockRequest.new(@sofa).get(
@@ -1094,7 +1140,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_attachment/main/update.html',
 			{
-				:input => "_1-comment=foo&_2-comment=bar&.status-public=create"
+				:input => "_1-comment=foo&_2-comment=bar&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		res = Rack::MockRequest.new(@sofa).get(
@@ -1127,7 +1173,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input => "_2-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylongname&.status-public=create"
+				:input => "_2-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylongname&.status-public=create&_token=#{Sofa.token}"
 			}
 		)
 		assert_match(
@@ -1144,7 +1190,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input                 => "_3-name=&.status-public=create",
+				:input                 => "_3-name=&.status-public=create&_token=#{Sofa.token}",
 				'HTTP_ACCEPT_LANGUAGE' => 'en,de',
 			}
 		)
@@ -1157,7 +1203,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input                 => "_3-name=&.status-public=create",
+				:input                 => "_3-name=&.status-public=create&_token=#{Sofa.token}",
 				'HTTP_ACCEPT_LANGUAGE' => 'en-US,de',
 			}
 		)
@@ -1170,7 +1216,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input                 => "_3-name=&.status-public=create",
+				:input                 => "_3-name=&.status-public=create&_token=#{Sofa.token}",
 				'HTTP_ACCEPT_LANGUAGE' => 'de,en',
 			}
 		)

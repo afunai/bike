@@ -238,7 +238,7 @@ _html
 			}
 		)
 		assert_equal(
-			<<'_html',
+			<<_html,
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0001">
 		'CZ'(action=read,p_action=read): 'oops'(action=read,p_action=read)
@@ -257,6 +257,7 @@ _html
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
 <form id="form_main-20091123_0002-replies" method="post" enctype="multipart/form-data" action="/20091123_0002/replies/123.45/update.html">
+<input name="_token" type="hidden" value="#{Sofa.token}" />
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update,p_action=update)</a></li>
 		</ul>
@@ -280,7 +281,7 @@ _html
 			}
 		)
 		assert_equal(
-			<<'_html',
+			<<_html,
 <ul id="main" class="sofa-pipco">
 	<li id="main-20091123_0002">
 		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
@@ -288,6 +289,7 @@ _html
 			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
 		</ul>
 <form id="form_main-20091123_0002-replies" method="post" enctype="multipart/form-data" action="/20091123_0002/replies/123.45/update.html">
+<input name="_token" type="hidden" value="#{Sofa.token}" />
 		<ul id="main-20091123_0002-replies" class="sofa-pipco">
 			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update,p_action=update)</a></li>
 		</ul>

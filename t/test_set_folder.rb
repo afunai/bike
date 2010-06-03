@@ -339,12 +339,13 @@ _html
 		Sofa.current[:base] = folder.item('main')
 		folder.item('main')[:tid] = '12345.012'
 		assert_equal(
-			<<'_html',
+			<<_html,
 <html>
 <head><base href="/t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_summary/12345.012/update.html">
+<input name="_token" type="hidden" value="#{Sofa.token}" />
 <ul id="main" class="sofa-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" size="32" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." size="64" class="text" /></li>
 </ul>
@@ -420,8 +421,8 @@ _html
 
 		Sofa.client = 'frank'
 		assert_equal(
-			<<'_html',
-<div class="action_logout"><a href="/t_contact/logout.html">logout</a></div>
+			<<_html,
+<div class="action_logout"><a href="/t_contact/logout.html?_token=#{Sofa.token}">logout</a></div>
 _html
 			folder.get(:action => :action_login),
 			'Folder#_g_login should return a link to login/logout according to the current client'
@@ -444,13 +445,13 @@ _html
 
 		Sofa.client = 'test'
 		assert_equal(
-			<<'_html',
+			<<_html,
 <div class="me">
 	<a href="/_users/id=test/update.html">
 		<span class="img" style="width: 72px; height: 72px;"></span>
 	</a>
 	<div class="client">test</div>
-	<div class="action_logout"><a href="/t_contact/logout.html">logout</a></div>
+	<div class="action_logout"><a href="/t_contact/logout.html?_token=#{Sofa.token}">logout</a></div>
 </div>
 _html
 			folder.get(:action => :me),

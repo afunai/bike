@@ -109,14 +109,14 @@ class Sofa
 				login(base,params)
 			elsif params[:action] == :confirm
 				confirm(base,params)
-			elsif params[:token] == Sofa.token
+			elsif params[:token] != Sofa.token
+				response_forbidden(:body => 'invalid token')
+			else
 				begin
 					post(base,params)
 				rescue Sofa::Error::Forbidden
 					response_forbidden
 				end
-			else
-				response_forbidden(:body => 'invalid token')
 			end
 		rescue Sofa::Error::Forbidden
 			if params[:action] && Sofa.client == 'nobody'

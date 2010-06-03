@@ -490,7 +490,7 @@ _html
 	def test_post_back_and_forth
 		Sofa.client = 'root'
 
-		# post from the first form
+		# post from a form without status
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/1234567890.9999/update.html',
 			{
@@ -498,7 +498,7 @@ _html
 			}
 		)
 
-		# back to the first form, post again
+		# back to the form, post again with status
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/1234567890.9999/update.html',
 			{
@@ -508,7 +508,25 @@ _html
 		assert_equal(
 			303,
 			res.status,
-			'Sofa#post twice from the same first form should work properly'
+			'Sofa#post twice from the same form should work if the previous post is without status'
+		)
+
+		# back to the form one more time, post again with status
+		res = Rack::MockRequest.new(@sofa).post(
+			'http://example.com/t_store/main/1234567890.9999/update.html',
+			{
+				:input => "_1-name=roy&_1-comment=brown.&.status-public=create&_token=#{Sofa.token}"
+			}
+		)
+		assert_equal(
+			422,
+			res.status,
+			'Sofa#post twice from the same form should not work if the previous post is with status'
+		)
+		assert_equal(
+			'transaction expired',
+			res.body,
+			'Sofa#post twice from the same form should not work if the previous post is with status'
 		)
 	end
 

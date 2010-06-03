@@ -36,7 +36,7 @@ class Sofa::Set::Dynamic
 					}
 				}
 			} unless Sofa.transaction[my[:tid]].empty?
-			Sofa.transaction.delete my[:tid]
+			Sofa.transaction[my[:tid]] = :expired
 		end
 
 		message.keys.collect {|type|

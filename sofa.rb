@@ -111,6 +111,8 @@ class Sofa
 				confirm(base,params)
 			elsif params[:token] != Sofa.token
 				response_forbidden(:body => 'invalid token')
+			elsif Sofa.transaction[tid] && !Sofa.transaction[tid].is_a?(Sofa::Field)
+				response_unprocessable_entity(:body => 'transaction expired')
 			else
 				begin
 					post(base,params)

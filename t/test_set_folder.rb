@@ -351,7 +351,7 @@ _html
 </ul>
 <div class="submit">
 	<input name=".status-public" type="submit" value="update" />
-	<input name=".action-confirm_delete" type="submit" value="delete..." />
+	<input name=".action-preview_delete" type="submit" value="delete..." />
 </div>
 </form>
 </body>

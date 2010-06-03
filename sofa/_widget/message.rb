@@ -13,7 +13,7 @@ class Sofa::Set::Dynamic
 
 		if arg[:dest_action]
 			message = {:alert => _('please login.')}
-		elsif arg[:orig_action] == :confirm
+		elsif arg[:orig_action] == :preview
 			message = {:notice => _('please confirm.')}
 		elsif !self.valid? && arg[:orig_action] != :create
 			message = {:error => _('malformed input.')}

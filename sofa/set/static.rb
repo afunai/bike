@@ -52,7 +52,7 @@ class Sofa::Set::Static < Sofa::Field
 	end
 
 	def _g_uri_delete(arg)
-		"#{my[:parent][:path]}/#{Sofa::Path::path_of :id => my[:id]}confirm_delete.html"
+		"#{my[:parent][:path]}/#{Sofa::Path::path_of :id => my[:id]}preview_delete.html"
 	end
 
 	def _g_uri_detail(arg)
@@ -60,7 +60,7 @@ class Sofa::Set::Static < Sofa::Field
 	end
 
 	def _g_hidden(arg)
-		if arg[:orig_action] == :confirm
+		if arg[:orig_action] == :preview
 			action = my[:id][Sofa::REX::ID_NEW] ? :create : arg[:sub_action]
 			<<_html.chomp
 <input type="hidden" name="#{my[:short_name]}.action" value="#{action}" />

@@ -272,9 +272,9 @@ _html
 			true unless action == :update
 		end
 		assert_equal(
-			'<a href="/confirm_delete.html">',
+			'<a href="/preview_delete.html">',
 			ss.get(:action => :read),
-			'Set#_g_a_update should return href to :confirm_delete if only :delete is permmited'
+			'Set#_g_a_update should return href to :preview_delete if only :delete is permmited'
 		)
 	end
 

@@ -30,6 +30,7 @@ _html
 		end
 		@sd[:item]['default'][:item].delete '_timestamp'
 		Sofa.client = 'root'
+		Sofa.current[:base] = nil
 	end
 
 	def teardown
@@ -282,7 +283,7 @@ _html
 		)
 	end
 
-	def test_get_confirm
+	def test_get_preview
 		Sofa.current[:base] = nil
 		@sd.load(
 			'20100330_1234' => {'name' => 'frank','comment' => 'bar'},
@@ -293,10 +294,10 @@ _html
 <ul id="foo" class="sofa-blog">
 	<li>frank: bar<input type="hidden" name="20100330_1234.action" value="howdy" /></li>
 </ul>
-[foo-confirm.howdy]
+[foo-preview.howdy]
 _html
-			@sd.get(:action => :confirm,:sub_action => :howdy,:conds => {:id => '20100330_1234'}),
-			'Set::Dynamic#_g_confirm should return _g_read + _g_submit'
+			@sd.get(:action => :preview,:sub_action => :howdy,:conds => {:id => '20100330_1234'}),
+			'Set::Dynamic#_g_preview should return _g_read + _g_submit'
 		)
 	end
 
@@ -746,7 +747,7 @@ _html
 		def wf.permit?(roles,action)
 			true
 		end
-		@sd[:confirm] = nil
+		@sd[:preview] = nil
 
 		assert_equal(
 			<<'_html',
@@ -755,37 +756,37 @@ _html
 </div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '_001'}),
-			'Set#_g_submit should not return confirm_delete when there is only new items'
+			'Set#_g_submit should not return preview_delete when there is only new items'
 		)
-		@sd[:confirm] = nil
+		@sd[:preview] = nil
 		assert_equal(
 			<<'_html',
 <div class="submit">
 	<input name=".status-public" type="submit" value="update" />
-	<input name=".action-confirm_delete" type="submit" value="delete..." />
+	<input name=".action-preview_delete" type="submit" value="delete..." />
 </div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
-		@sd[:confirm] = :optional
+		@sd[:preview] = :optional
 		assert_equal(
 			<<'_html',
 <div class="submit">
 	<input name=".status-public" type="submit" value="update" />
-	<input name=".action-confirm_update" type="submit" value="confirm" />
-	<input name=".action-confirm_delete" type="submit" value="delete..." />
+	<input name=".action-preview_update" type="submit" value="preview" />
+	<input name=".action-preview_delete" type="submit" value="delete..." />
 </div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
-		@sd[:confirm] = :mandatory
+		@sd[:preview] = :mandatory
 		assert_equal(
 			<<'_html',
 <div class="submit">
-	<input name=".action-confirm_update" type="submit" value="confirm" />
-	<input name=".action-confirm_delete" type="submit" value="delete..." />
+	<input name=".action-preview_update" type="submit" value="preview" />
+	<input name=".action-preview_delete" type="submit" value="delete..." />
 </div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
@@ -797,8 +798,8 @@ _html
 	<input name=".status-public" type="submit" value="update" />
 </div>
 _html
-			@sd.get(:action => :confirm,:sub_action => :update),
-			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
+			@sd.get(:action => :preview,:sub_action => :update),
+			'Set#_g_submit should not show preview buttons when the orig_action is :preview'
 		)
 		assert_equal(
 			<<'_html',
@@ -806,14 +807,14 @@ _html
 	<input name=".status-public" type="submit" value="delete" />
 </div>
 _html
-			@sd.get(:action => :confirm,:sub_action => :delete),
-			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
+			@sd.get(:action => :preview,:sub_action => :delete),
+			'Set#_g_submit should not show preview buttons when the orig_action is :preview'
 		)
 
 		def wf.permit?(roles,action)
 			true unless action == :delete
 		end
-		@sd[:confirm] = nil
+		@sd[:preview] = nil
 		assert_equal(
 			<<'_html',
 <div class="submit">
@@ -823,22 +824,22 @@ _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
-		@sd[:confirm] = :optional
+		@sd[:preview] = :optional
 		assert_equal(
 			<<'_html',
 <div class="submit">
 	<input name=".status-public" type="submit" value="update" />
-	<input name=".action-confirm_update" type="submit" value="confirm" />
+	<input name=".action-preview_update" type="submit" value="preview" />
 </div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
-		@sd[:confirm] = :mandatory
+		@sd[:preview] = :mandatory
 		assert_equal(
 			<<'_html',
 <div class="submit">
-	<input name=".action-confirm_update" type="submit" value="confirm" />
+	<input name=".action-preview_update" type="submit" value="preview" />
 </div>
 _html
 			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
@@ -850,22 +851,22 @@ _html
 	<input name=".status-public" type="submit" value="update" />
 </div>
 _html
-			@sd.get(:action => :confirm,:sub_action => :update),
-			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
+			@sd.get(:action => :preview,:sub_action => :update),
+			'Set#_g_submit should not show preview buttons when the orig_action is :preview'
 		)
 
 		def wf.permit?(roles,action)
 			true unless action == :update
 		end
-		@sd[:confirm] = nil
+		@sd[:preview] = nil
 		assert_equal(
 			<<'_html',
 <div class="submit">
 	<input name=".status-public" type="submit" value="delete" />
 </div>
 _html
-			@sd.get(:action => :confirm,:sub_action => :delete),
-			'Set#_g_submit should not show confirm buttons when the orig_action is :confirm'
+			@sd.get(:action => :preview,:sub_action => :delete),
+			'Set#_g_submit should not show preview buttons when the orig_action is :preview'
 		)
 	end
 

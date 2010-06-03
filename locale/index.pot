@@ -34,7 +34,7 @@ msgid "delete"
 msgstr ""
 
 #: sofa/_workflow/_workflow.rb:99
-msgid "confirm"
+msgid "preview"
 msgstr ""
 
 #: sofa/_workflow/_workflow.rb:112

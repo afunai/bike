@@ -33,7 +33,7 @@ msgid "delete"
 msgstr "削除"
 
 #: sofa/_workflow/_workflow.rb:99
-msgid "confirm"
+msgid "preview"
 msgstr "確認"
 
 #: sofa/_workflow/_workflow.rb:112

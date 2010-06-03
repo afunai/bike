@@ -24,8 +24,8 @@ class Sofa::Set::Dynamic < Sofa::Field
 		}
 
 		my[:p_size] = meta[:max] if meta[:max]
-		my[:confirm] = :optional if meta[:tokens].to_a.include?('may_confirm')
-		my[:confirm] = :mandatory if meta[:tokens].to_a.include?('should_confirm')
+		my[:preview] = :optional if meta[:tokens].to_a.include?('may_preview')
+		my[:preview] = :mandatory if meta[:tokens].to_a.include?('should_preview')
 		my[:order] = 'id'  if meta[:tokens].to_a.include? 'asc'
 		my[:order] = '-id' if meta[:tokens].to_a.include? 'desc'
 	end

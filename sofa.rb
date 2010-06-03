@@ -107,8 +107,8 @@ class Sofa
 				get(base,params)
 			elsif params[:action] == :login
 				login(base,params)
-			elsif params[:action] == :confirm
-				confirm(base,params)
+			elsif params[:action] == :preview
+				preview(base,params)
 			elsif params[:token] != Sofa.token
 				response_forbidden(:body => 'invalid token')
 			elsif Sofa.transaction[tid] && !Sofa.transaction[tid].is_a?(Sofa::Field)
@@ -169,13 +169,13 @@ class Sofa
 		end
 	end
 
-	def confirm(base,params)
+	def preview(base,params)
 		Sofa.transaction[base[:tid]] ||= base if base[:tid] =~ Sofa::REX::TID
 
 		base.update params
 		if base.commit(:temp) || params[:sub_action] == :delete
 			id_step = result_step(base,params)
-			action = "confirm_#{params[:sub_action]}"
+			action = "preview_#{params[:sub_action]}"
 			response_see_other(
 				:location => "#{base[:uri]}/#{base[:tid]}/#{id_step}#{action}.html"
 			)

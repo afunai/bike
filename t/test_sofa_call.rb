@@ -173,7 +173,7 @@ _html
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_contact/20100425/1234/confirm_create.html'
+			'http://example.com/t_contact/20100425/1234/preview_create.html'
 		)
 		assert_no_match(
 			/howdy/,
@@ -181,7 +181,7 @@ _html
 			'getting an contact by nobody should not return any contents'
 		)
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_contact/20100425_1234/confirm_create.html'
+			'http://example.com/t_contact/20100425_1234/preview_create.html'
 		)
 		assert_no_match(
 			/howdy/,
@@ -189,7 +189,7 @@ _html
 			'peeking an contact by nobody should not return any contents'
 		)
 		res = Rack::MockRequest.new(@sofa).get(
-			'http://example.com/t_contact/20100425_1234/comment/confirm_create.html'
+			'http://example.com/t_contact/20100425_1234/comment/preview_create.html'
 		)
 		assert_no_match(
 			/howdy/,
@@ -256,7 +256,7 @@ _html
 </ul>
 <div class="submit">
 	<input name=".status-public" type="submit" value="update" />
-	<input name=".action-confirm_delete" type="submit" value="delete..." />
+	<input name=".action-preview_delete" type="submit" value="delete..." />
 </div>
 </form>
 </body>
@@ -726,7 +726,7 @@ _html
 		)
 	end
 
-	def test_post_confirm_update
+	def test_post_preview_update
 		Sofa.client = 'root'
 		Sofa::Set::Static::Folder.root.item('t_store','main').storage.clear
 		base_uri = ''
@@ -734,7 +734,7 @@ _html
 		res = Rack::MockRequest.new(@sofa).post(
 			"http://#{base_uri}/t_store/main/update.html",
 			{
-				:input => ".action-confirm_update=submit&_1-name=fz&_1-comment=howdy.&.status-public=create"
+				:input => ".action-preview_update=submit&_1-name=fz&_1-comment=howdy.&.status-public=create"
 			}
 		)
 		tid = res.headers['Location'][Sofa::REX::TID]
@@ -742,12 +742,12 @@ _html
 		assert_equal(
 			303,
 			res.status,
-			'Sofa#call with :confirm action should return status 303 upon success'
+			'Sofa#call with :preview action should return status 303 upon success'
 		)
 		assert_equal(
-			"http://#{base_uri}/#{tid}/id=_1/confirm_update.html",
+			"http://#{base_uri}/#{tid}/id=_1/preview_update.html",
 			res.headers['Location'],
-			'Sofa#call with :confirm action should return a proper location'
+			'Sofa#call with :preview action should return a proper location'
 		)
 		assert_instance_of(
 			Sofa::Set::Dynamic,
@@ -756,7 +756,7 @@ _html
 		)
 
 		res = Rack::MockRequest.new(@sofa).get(
-			"http://#{base_uri}/#{tid}/id=_1/confirm_update.html"
+			"http://#{base_uri}/#{tid}/id=_1/preview_update.html"
 		)
 		assert_equal(
 			<<"_html",
@@ -780,7 +780,7 @@ _html
 </html>
 _html
 			res.body,
-			'Sofa#call with :confirm action should set a proper transaction upon success'
+			'Sofa#call with :preview action should set a proper transaction upon success'
 		)
 
 		res = Rack::MockRequest.new(@sofa).post(
@@ -817,24 +817,24 @@ _html
 		)
 	end
 
-	def test_post_confirm_invalid
+	def test_post_preview_invalid
 		Sofa.client = 'root'
 
 		res = Rack::MockRequest.new(@sofa).post(
 			'http://example.com/t_store/main/update.html',
 			{
-				:input => ".action-confirm_update=submit&_1-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylong&_1-comment=howdy.&.status-public=create"
+				:input => ".action-preview_update=submit&_1-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylong&_1-comment=howdy.&.status-public=create"
 			}
 		)
 		assert_equal(
 			422,
 			res.status,
-			'Sofa#call with :confirm action & malformed input should return status 422'
+			'Sofa#call with :preview action & malformed input should return status 422'
 		)
 		assert_match(
 			/malformed input\./,
 			res.body,
-			'Sofa#call with :confirm action & malformed input should return :update'
+			'Sofa#call with :preview action & malformed input should return :update'
 		)
 
 		tid = res.body[%r{/(#{Sofa::REX::TID})/},1]

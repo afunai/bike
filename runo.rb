@@ -5,12 +5,12 @@
 
 class Runo
 
-	require './sofa/_i18n.rb'
+	require './lib/_i18n.rb'
 	I18n.bindtextdomain('index','./locale')
 
-	Dir['./sofa/*.rb'].sort.each {|file| require file }
-	Dir['./sofa/[a-z]*/*.rb'].sort.each {|file| require file }
-	Dir['./sofa/_*/*.rb'].sort.each {|file| require file }
+	Dir['./lib/*.rb'].sort.each {|file| require file }
+	Dir['./lib/[a-z]*/*.rb'].sort.each {|file| require file }
+	Dir['./lib/_*/*.rb'].sort.each {|file| require file }
 
 	module REX
 		ID_SHORT   = /[a-z][a-z0-9]*/

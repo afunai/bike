@@ -14,207 +14,207 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n!=1;\n"
 
-#: sofa/_workflow/_workflow.rb:11
+#: lib/_workflow/_workflow.rb:11
 msgid "item"
 msgid_plural "items"
 msgstr[0] "アイテム"
 msgstr[1] "アイテム"
 
-#: sofa/_workflow/_workflow.rb:94 sofa/_workflow/attachment.rb:32
+#: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
 msgid "create"
 msgstr "作成"
 
-#: sofa/_workflow/_workflow.rb:94 sofa/_workflow/attachment.rb:32
+#: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
 msgid "update"
 msgstr "更新"
 
-#: sofa/_workflow/_workflow.rb:94 sofa/_workflow/attachment.rb:32
+#: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
 msgid "delete"
 msgstr "削除"
 
-#: sofa/_workflow/_workflow.rb:99
+#: lib/_workflow/_workflow.rb:99
 msgid "preview"
 msgstr "確認"
 
-#: sofa/_workflow/_workflow.rb:112
+#: lib/_workflow/_workflow.rb:112
 msgid "delete..."
 msgstr "削除..."
 
-#: sofa/_workflow/attachment.rb:10
+#: lib/_workflow/attachment.rb:10
 msgid "attachment"
 msgid_plural "attachments"
 msgstr[0] "添付アイテム"
 msgstr[1] "添付アイテム"
 
-#: sofa/_workflow/blog.rb:11
+#: lib/_workflow/blog.rb:11
 msgid "entry"
 msgid_plural "entries"
 msgstr[0] "記事"
 msgstr[1] "記事"
 
-#: sofa/_workflow/contact.rb:11
+#: lib/_workflow/contact.rb:11
 msgid "answer"
 msgid_plural "answers"
 msgstr[0] "回答"
 msgstr[1] "回答"
 
-#: sofa/meta/id.rb:23
+#: lib/meta/id.rb:23
 msgid "malformatted id"
 msgstr "使用可能な文字は、a-z および 0-9 です"
 
-#: sofa/meta/id.rb:30
+#: lib/meta/id.rb:30
 msgid "duplicate id: %{id}"
 msgstr "「%{id}」は既に使われています"
 
-#: sofa/meta/timestamp.rb:44
+#: lib/meta/timestamp.rb:44
 msgid "%Y-%m-%dT%H:%M:%S"
 msgstr "%Y/%m/%d %H:%M:%S"
 
-#: sofa/meta/timestamp.rb:63
+#: lib/meta/timestamp.rb:63
 msgid "update the timestamp"
 msgstr "タイムスタンプを更新する"
 
-#: sofa/scalar/checkbox.rb:22 sofa/scalar/file.rb:55 sofa/scalar/radio.rb:15
-#: sofa/scalar/select.rb:15 sofa/scalar/text.rb:17 sofa/scalar/textarea.rb:12
+#: lib/scalar/checkbox.rb:22 lib/scalar/file.rb:55 lib/scalar/radio.rb:15
+#: lib/scalar/select.rb:15 lib/scalar/text.rb:17 lib/scalar/textarea.rb:12
 msgid "mandatory"
 msgstr "入力してください"
 
-#: sofa/scalar/checkbox.rb:24 sofa/scalar/radio.rb:17 sofa/scalar/select.rb:19
+#: lib/scalar/checkbox.rb:24 lib/scalar/radio.rb:17 lib/scalar/select.rb:19
 msgid "no such option"
 msgstr "選択肢が存在しません"
 
-#: sofa/scalar/file.rb:53
+#: lib/scalar/file.rb:53
 msgid "wrong file type: should be %{types}"
 msgstr "ファイル形式は %{types} のみです"
 
-#: sofa/scalar/file.rb:53
+#: lib/scalar/file.rb:53
 msgid "too large: %{max} bytes maximum"
 msgstr "ファイルサイズは最大%{max} bytesです"
 
-#: sofa/scalar/file.rb:57
+#: lib/scalar/file.rb:57
 msgid "too small: %{min} bytes minimum"
 msgstr "ファイルサイズは最小%{min} bytesです"
 
-#: sofa/scalar/select.rb:31
+#: lib/scalar/select.rb:31
 msgid "please select"
 msgstr "選択してください"
 
-#: sofa/scalar/text.rb:15 sofa/scalar/textarea.rb:10
+#: lib/scalar/text.rb:15 lib/scalar/textarea.rb:10
 msgid "too long: %{max} characters maximum"
 msgstr "%{max}文字以内で入力してください"
 
-#: sofa/scalar/text.rb:19 sofa/scalar/textarea.rb:14
+#: lib/scalar/text.rb:19 lib/scalar/textarea.rb:14
 msgid "too short: %{min} characters minimum"
 msgstr "%{min}文字以上で入力してください"
 
-#: sofa/set/dynamic.rb:112
+#: lib/set/dynamic.rb:112
 msgid "login"
 msgstr "ログイン"
 
-#: sofa/set/dynamic.rb:118
+#: lib/set/dynamic.rb:118
 msgid "done."
 msgstr "送信しました"
 
-#: sofa/set/dynamic.rb:125
+#: lib/set/dynamic.rb:125
 msgid "please login."
 msgstr "ログインしてください。"
 
-#: sofa/set/dynamic.rb:127
+#: lib/set/dynamic.rb:127
 msgid "please confirm."
 msgstr "内容を確認してください。"
 
-#: sofa/set/dynamic.rb:129
+#: lib/set/dynamic.rb:129
 msgid "malformed input."
 msgstr "入力に問題があります。"
 
-#: sofa/set/dynamic.rb:134
+#: lib/set/dynamic.rb:134
 msgid "%{result} %{n} %{item}."
 msgstr "%{n}件の%{item}を%{result}。"
 
-#: sofa/set/dynamic.rb:136
+#: lib/set/dynamic.rb:136
 msgid "created"
 msgstr "追加しました"
 
-#: sofa/set/dynamic.rb:137
+#: lib/set/dynamic.rb:137
 msgid "updated"
 msgstr "更新しました"
 
-#: sofa/set/dynamic.rb:138
+#: lib/set/dynamic.rb:138
 msgid "deleted"
 msgstr "削除しました"
 
-#: sofa/set/dynamic.rb:161
+#: lib/set/dynamic.rb:161
 msgid "create new %{item}..."
 msgstr "新規%{item}..."
 
-#: sofa/set/dynamic.rb:181
+#: lib/set/dynamic.rb:181
 msgid "prev"
 msgstr "前へ"
 
-#: sofa/set/dynamic.rb:186
+#: lib/set/dynamic.rb:186
 msgid "next"
 msgstr "次へ"
 
-#: sofa/set/dynamic.rb:294
+#: lib/set/dynamic.rb:294
 msgid "%{year}/%{month}"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Jan"
 msgstr "01"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Feb"
 msgstr "02"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Mar"
 msgstr "03"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Apr"
 msgstr "04"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "May"
 msgstr "05"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Jun"
 msgstr "06"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Jul"
 msgstr "07"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Aug"
 msgstr "08"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Sep"
 msgstr "09"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Oct"
 msgstr "10"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Nov"
 msgstr "11"
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Dec"
 msgstr "12"
 
-#: sofa/set/static.rb:40
+#: lib/set/static.rb:40
 msgid "update..."
 msgstr "更新..."
 
-#: sofa/set/static_folder.rb:52
+#: lib/set/static_folder.rb:52
 msgid "login..."
 msgstr "ログイン"
 
-#: sofa/set/static_folder.rb:56
+#: lib/set/static_folder.rb:56
 msgid "logout"
 msgstr "ログアウト"

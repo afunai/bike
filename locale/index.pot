@@ -15,207 +15,207 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
-#: sofa/_workflow/_workflow.rb:11
+#: lib/_workflow/_workflow.rb:11
 msgid "item"
 msgid_plural "items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: sofa/_workflow/_workflow.rb:94 sofa/_workflow/attachment.rb:32
+#: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
 msgid "create"
 msgstr ""
 
-#: sofa/_workflow/_workflow.rb:94 sofa/_workflow/attachment.rb:32
+#: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
 msgid "update"
 msgstr ""
 
-#: sofa/_workflow/_workflow.rb:94 sofa/_workflow/attachment.rb:32
+#: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
 msgid "delete"
 msgstr ""
 
-#: sofa/_workflow/_workflow.rb:99
+#: lib/_workflow/_workflow.rb:99
 msgid "preview"
 msgstr ""
 
-#: sofa/_workflow/_workflow.rb:112
+#: lib/_workflow/_workflow.rb:112
 msgid "delete..."
 msgstr ""
 
-#: sofa/_workflow/attachment.rb:10
+#: lib/_workflow/attachment.rb:10
 msgid "attachment"
 msgid_plural "attachments"
 msgstr[0] ""
 msgstr[1] ""
 
-#: sofa/_workflow/blog.rb:11
+#: lib/_workflow/blog.rb:11
 msgid "entry"
 msgid_plural "entries"
 msgstr[0] ""
 msgstr[1] ""
 
-#: sofa/_workflow/contact.rb:11
+#: lib/_workflow/contact.rb:11
 msgid "answer"
 msgid_plural "answers"
 msgstr[0] ""
 msgstr[1] ""
 
-#: sofa/meta/id.rb:23
+#: lib/meta/id.rb:23
 msgid "malformatted id"
 msgstr ""
 
-#: sofa/meta/id.rb:30
+#: lib/meta/id.rb:30
 msgid "duplicate id: %{id}"
 msgstr ""
 
-#: sofa/meta/timestamp.rb:44
+#: lib/meta/timestamp.rb:44
 msgid "%Y-%m-%dT%H:%M:%S"
 msgstr ""
 
-#: sofa/meta/timestamp.rb:63
+#: lib/meta/timestamp.rb:63
 msgid "update the timestamp"
 msgstr ""
 
-#: sofa/scalar/checkbox.rb:22 sofa/scalar/file.rb:55 sofa/scalar/radio.rb:15
-#: sofa/scalar/select.rb:15 sofa/scalar/text.rb:17 sofa/scalar/textarea.rb:12
+#: lib/scalar/checkbox.rb:22 lib/scalar/file.rb:55 lib/scalar/radio.rb:15
+#: lib/scalar/select.rb:15 lib/scalar/text.rb:17 lib/scalar/textarea.rb:12
 msgid "mandatory"
 msgstr ""
 
-#: sofa/scalar/checkbox.rb:24 sofa/scalar/radio.rb:17 sofa/scalar/select.rb:19
+#: lib/scalar/checkbox.rb:24 lib/scalar/radio.rb:17 lib/scalar/select.rb:19
 msgid "no such option"
 msgstr ""
 
-#: sofa/scalar/file.rb:53
+#: lib/scalar/file.rb:53
 msgid "wrong file type: should be %{types}"
 msgstr ""
 
-#: sofa/scalar/file.rb:53
+#: lib/scalar/file.rb:53
 msgid "too large: %{max} bytes maximum"
 msgstr ""
 
-#: sofa/scalar/file.rb:57
+#: lib/scalar/file.rb:57
 msgid "too small: %{min} bytes minimum"
 msgstr ""
 
-#: sofa/scalar/select.rb:31
+#: lib/scalar/select.rb:31
 msgid "please select"
 msgstr ""
 
-#: sofa/scalar/text.rb:15 sofa/scalar/textarea.rb:10
+#: lib/scalar/text.rb:15 lib/scalar/textarea.rb:10
 msgid "too long: %{max} characters maximum"
 msgstr ""
 
-#: sofa/scalar/text.rb:19 sofa/scalar/textarea.rb:14
+#: lib/scalar/text.rb:19 lib/scalar/textarea.rb:14
 msgid "too short: %{min} characters minimum"
 msgstr ""
 
-#: sofa/set/dynamic.rb:112
+#: lib/set/dynamic.rb:112
 msgid "login"
 msgstr ""
 
-#: sofa/set/dynamic.rb:118
+#: lib/set/dynamic.rb:118
 msgid "done."
 msgstr ""
 
-#: sofa/set/dynamic.rb:125
+#: lib/set/dynamic.rb:125
 msgid "please login."
 msgstr ""
 
-#: sofa/set/dynamic.rb:127
+#: lib/set/dynamic.rb:127
 msgid "please confirm."
 msgstr ""
 
-#: sofa/set/dynamic.rb:129
+#: lib/set/dynamic.rb:129
 msgid "malformed input."
 msgstr ""
 
-#: sofa/set/dynamic.rb:134
+#: lib/set/dynamic.rb:134
 msgid "%{result} %{n} %{item}."
 msgstr ""
 
-#: sofa/set/dynamic.rb:136
+#: lib/set/dynamic.rb:136
 msgid "created"
 msgstr ""
 
-#: sofa/set/dynamic.rb:137
+#: lib/set/dynamic.rb:137
 msgid "updated"
 msgstr ""
 
-#: sofa/set/dynamic.rb:138
+#: lib/set/dynamic.rb:138
 msgid "deleted"
 msgstr ""
 
-#: sofa/set/dynamic.rb:161
+#: lib/set/dynamic.rb:161
 msgid "create new %{item}..."
 msgstr ""
 
-#: sofa/set/dynamic.rb:181
+#: lib/set/dynamic.rb:181
 msgid "prev"
 msgstr ""
 
-#: sofa/set/dynamic.rb:186
+#: lib/set/dynamic.rb:186
 msgid "next"
 msgstr ""
 
-#: sofa/set/dynamic.rb:294
+#: lib/set/dynamic.rb:294
 msgid "%{year}/%{month}"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Jan"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Feb"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Mar"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Apr"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "May"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Jun"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Jul"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Aug"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Sep"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Oct"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Nov"
 msgstr ""
 
-#: sofa/set/dynamic.rb:301
+#: lib/set/dynamic.rb:301
 msgid "Dec"
 msgstr ""
 
-#: sofa/set/static.rb:40
+#: lib/set/static.rb:40
 msgid "update..."
 msgstr ""
 
-#: sofa/set/static_folder.rb:52
+#: lib/set/static_folder.rb:52
 msgid "login..."
 msgstr ""
 
-#: sofa/set/static_folder.rb:56
+#: lib/set/static_folder.rb:56
 msgid "logout"
 msgstr ""

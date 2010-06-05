@@ -3,14 +3,14 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Storage
+class Runo::Storage
 
 	def self.instance(sd)
 		if folder = sd[:folder]
 			if folder != sd[:parent]
 				Temp.new sd
 			else
-				klass = Sofa['storage']['default'].capitalize
+				klass = Runo['storage']['default'].capitalize
 				self.const_get(klass).new sd
 			end
 		else
@@ -104,15 +104,15 @@ class Sofa::Storage
 				when :d
 					conds[:d] = conds[:d].to_s
 					conds[:d] = last(:d,conds) if conds[:d] =~ /9999(99)?(99)?/
-					conds[:d] = nil unless conds[:d] =~ Sofa::REX::COND_D
+					conds[:d] = nil unless conds[:d] =~ Runo::REX::COND_D
 				when :id
 					conds[:id] = Array(conds[:id]).collect {|id|
 						case id
 							when '99999999_9999','last'
 								last(:id,conds)
-							when /\A#{Sofa::REX::ID_SHORT}\z/
+							when /\A#{Runo::REX::ID_SHORT}\z/
 								"00000000_#{id}"
-							when Sofa::REX::ID,Sofa::REX::ID_NEW
+							when Runo::REX::ID,Runo::REX::ID_NEW
 								id
 						end
 					}.uniq.compact
@@ -176,12 +176,12 @@ class Sofa::Storage
 	def cast_ids(ids)
 		ids.to_a.collect {|i|
 			id = (i =~ /^[a-z]/) ? "00000000_#{i}" : i
-			id if id =~ Sofa::REX::ID
+			id if id =~ Runo::REX::ID
 		}.compact
 	end
 
 	def new_id(v = {})
-		return "00000000_#{v['_id']}" if v.is_a?(::Hash) && v['_id'] =~ /\A#{Sofa::REX::ID_SHORT}\z/
+		return "00000000_#{v['_id']}" if v.is_a?(::Hash) && v['_id'] =~ /\A#{Runo::REX::ID_SHORT}\z/
 
 		if v.is_a?(::Hash) && v['_timestamp'] && v['_timestamp']['published'].is_a?(::Time)
 			d = v['_timestamp']['published'].strftime '%Y%m%d'
@@ -200,8 +200,8 @@ class Sofa::Storage
 			true
 		elsif !v.is_a?(::Hash)
 			false
-		elsif id =~ /_#{Sofa::REX::ID_SHORT}\z/
-			v['_id'] =~ /\A#{Sofa::REX::ID_SHORT}\z/ &&
+		elsif id =~ /_#{Runo::REX::ID_SHORT}\z/
+			v['_id'] =~ /\A#{Runo::REX::ID_SHORT}\z/ &&
 			id != new_id(v)
 		else
 			v['_timestamp'] &&

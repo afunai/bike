@@ -3,9 +3,9 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Sofa::Meta::Id < Sofa::Field
+class Runo::Meta::Id < Runo::Field
 
-	# not include Sofa::Meta as this is SHORT_ID, not a full id.
+	# not include Runo::Meta as this is SHORT_ID, not a full id.
 
 	def initialize(meta = {})
 		meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
@@ -19,12 +19,12 @@ class Sofa::Meta::Id < Sofa::Field
 			[_ 'mandatory']
 		elsif (my[:min].to_i > 0) && (val.size < my[:min])
 			[_('too short: %{min} characters minimum') % {:min => my[:min]}]
-		elsif val !~ /\A#{Sofa::REX::ID_SHORT}\z/
+		elsif val !~ /\A#{Runo::REX::ID_SHORT}\z/
 			[_('malformatted id')]
 		elsif (
 			my[:parent] &&
 			my[:parent][:id] !~ /00000000_#{val}$/ &&
-			my[:parent][:parent].is_a?(Sofa::Set::Dynamic) &&
+			my[:parent][:parent].is_a?(Runo::Set::Dynamic) &&
 			my[:parent][:parent].item(val)
 		)
 			[_('duplicate id: %{id}') % {:id => val}]
@@ -37,13 +37,13 @@ class Sofa::Meta::Id < Sofa::Field
 
 	def _g_create(arg)
 		new_id? ? <<_html.chomp : _g_default(arg)
-<input type="text" name="#{my[:short_name]}" value="#{Sofa::Field.h val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
+<input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
 _html
 	end
 	alias :_g_update :_g_create
 
 	def new_id?
-		find_ancestor {|i| i[:id] =~ Sofa::REX::ID_NEW } ? true : false
+		find_ancestor {|i| i[:id] =~ Runo::REX::ID_NEW } ? true : false
 	end
 
 	def _post(action,v)

@@ -3,12 +3,12 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Sofa::Set::Dynamic
+class Runo::Set::Dynamic
 
 	private
 
 	def _g_login(arg)
-		path = Sofa::Path.path_of arg[:conds]
+		path = Runo::Path.path_of arg[:conds]
 		action = arg[:dest_action]
 		<<_html
 <form id="form_#{my[:name]}" method="post" action="#{my[:base_path]}/#{path}login.html">

@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Textarea < Sofa::Field
+class Runo::Textarea < Runo::Field
 
 	def errors
 		if (my[:max].to_i > 0) && (val.size > my[:max])
@@ -21,7 +21,7 @@ class Sofa::Textarea < Sofa::Field
 
 	def _g_create(arg)
 		<<_html.chomp
-<textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}" class="#{_g_class arg}">#{Sofa::Field.h val}</textarea>#{_g_errors arg}
+<textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}" class="#{_g_class arg}">#{Runo::Field.h val}</textarea>#{_g_errors arg}
 _html
 	end
 	alias :_g_update :_g_create

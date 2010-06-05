@@ -7,11 +7,11 @@ class TC_Text < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo text 3 1..5)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo text 3 1..5)') {|id,m|
 			meta = m
 			''
 		}
-		@f = Sofa::Field.instance meta
+		@f = Runo::Field.instance meta
 	end
 
 	def teardown

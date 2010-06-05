@@ -3,9 +3,9 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Meta::Owner < Sofa::Field
+class Runo::Meta::Owner < Runo::Field
 
-	include Sofa::Meta
+	include Runo::Meta
 
 	private
 
@@ -13,7 +13,7 @@ class Sofa::Meta::Owner < Sofa::Field
 		if action == :load
 			@val = val_cast v
 		elsif action == :create
-			@val = Sofa.client
+			@val = Runo.client
 		end
 		nil
 	end

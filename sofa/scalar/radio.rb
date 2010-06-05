@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Radio < Sofa::Field
+class Runo::Radio < Runo::Field
 
 	def initialize(meta = {})
 		meta[:mandatory] = meta[:tokens] && meta[:tokens].include?('mandatory')
@@ -24,7 +24,7 @@ class Sofa::Radio < Sofa::Field
 	def _g_update(arg)
 		options = my[:options].collect {|opt|
 			checked = (opt == val) ? ' checked' : ''
-			h_opt = Sofa::Field.h opt
+			h_opt = Runo::Field.h opt
 			<<_html
 <span class="#{_g_class arg}">
 	<input type="radio" id="radio_#{my[:short_name]}-#{h_opt}" name="#{my[:short_name]}" value="#{h_opt}"#{checked} />

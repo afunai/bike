@@ -3,13 +3,13 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Sofa::Parser
+module Runo::Parser
 
 	module_function
 
 	def parse_html(html,action = :index)
 		item = {}
-		html = gsub_block(html,'sofa-\w+') {|open,inner,close|
+		html = gsub_block(html,'runo-\w+') {|open,inner,close|
 			id = open[/id="(.+?)"/i,1] || 'main'
 			item[id] = parse_block(open,inner,close,action)
 			"$(#{id})"
@@ -46,7 +46,7 @@ module Sofa::Parser
 		plural_msgs = $2.to_s.split(/,/).collect {|s| s.strip }
 		plural_msgs *= 4 if plural_msgs.size == 1
 		label = plural_msgs.first
-		Sofa::I18n.msg[label] ||= plural_msgs
+		Runo::I18n.msg[label] ||= plural_msgs
 
 		{
 			:label => label,
@@ -100,7 +100,7 @@ module Sofa::Parser
 
 	def parse_block(open_tag,inner_html,close_tag,action = :index)
 		open_tag.sub!(/id=".*?"/i,'id="@(name)"')
-		workflow = open_tag[/class=(?:"|".*?\s)sofa-(\w+)/,1]
+		workflow = open_tag[/class=(?:"|".*?\s)runo-(\w+)/,1]
 
 		if inner_html =~ /<(\w+).+?class=(?:"|"[^"]*?\s)body(?:"|\s)/i
 			item_html = ''
@@ -123,7 +123,7 @@ module Sofa::Parser
 			"$(.#{action})"
 		}
 
-		item_meta = Sofa::Parser.parse_html item_html
+		item_meta = Runo::Parser.parse_html item_html
 		if action == :summary
 			item_meta[:tmpl].sub!(
 				/\$\(.*?\)/m,

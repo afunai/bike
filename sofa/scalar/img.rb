@@ -8,7 +8,7 @@ begin
 rescue LoadError
 end
 
-class Sofa::Img < Sofa::File
+class Runo::Img < Runo::File
 
 	DEFAULT_META = {
 		:width   => 120,
@@ -26,7 +26,7 @@ class Sofa::Img < Sofa::File
 	end
 
 	def thumbnail
-		raise Sofa::Error::Forbidden unless permit? :read
+		raise Runo::Error::Forbidden unless permit? :read
 
 		if ps = my[:persistent_sd]
 			@thumbnail ||= ps.storage.val "#{my[:persistent_name]}_small"
@@ -62,7 +62,7 @@ class Sofa::Img < Sofa::File
 
 	def _g_default(arg = {})
 		path       = _path arg[:action]
-		basename   = Sofa::Field.h val['basename']
+		basename   = Runo::Field.h val['basename']
 		s_basename = basename.sub(/\..+$/,'_small\\&')
 		if val.empty?
 			<<_html.chomp

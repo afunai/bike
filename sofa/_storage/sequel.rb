@@ -8,32 +8,32 @@ require 'sequel'
 require 'yaml'
 require 'ya2yaml'
 
-class Sofa::Storage::Sequel < Sofa::Storage
+class Runo::Storage::Sequel < Runo::Storage
 
 	def self.db
-		if Sofa['storage']['Sequel'] && Sofa['storage']['Sequel']['uri']
-			@db ||= ::Sequel.connect Sofa['storage']['Sequel']['uri']
-			self.load_skel unless @db.table_exists? :sofa_main
+		if Runo['storage']['Sequel'] && Runo['storage']['Sequel']['uri']
+			@db ||= ::Sequel.connect Runo['storage']['Sequel']['uri']
+			self.load_skel unless @db.table_exists? :runo_main
 		end
 		@db
 	end
 
 	def self.load_skel
-		@db.create_table(:sofa_main) {
+		@db.create_table(:runo_main) {
 			String :full_name
 			String :ext
 			String :owner
 			String :body
 			Blob   :binary_body
 			primary_key :full_name
-		} unless @db.table_exists? :sofa_main
-		Sofa::Storage::File.traverse('/',Sofa['skin_dir']) {|entry|
-			@db[:sofa_main].insert(
+		} unless @db.table_exists? :runo_main
+		Runo::Storage::File.traverse('/',Runo['skin_dir']) {|entry|
+			@db[:runo_main].insert(
 				:full_name => entry[:full_name],
 				:ext       => entry[:ext],
 				:owner     => entry[:val]['_owner'],
 				:body      => entry[:val].ya2yaml(:syck_compatible => true)
-			) unless @db[:sofa_main][:full_name => entry[:full_name]]
+			) unless @db[:runo_main][:full_name => entry[:full_name]]
 		}
 	end
 
@@ -43,7 +43,7 @@ class Sofa::Storage::Sequel < Sofa::Storage
 
 	def initialize(sd)
 		super
-		@dataset = Sofa::Storage::Sequel.db[:sofa_main]
+		@dataset = Runo::Storage::Sequel.db[:runo_main]
 		@dirname = @sd[:full_name]
 	end
 
@@ -125,7 +125,7 @@ class Sofa::Storage::Sequel < Sofa::Storage
 	end
 
 	def save(id,v,ext)
-		Sofa::Storage::Sequel.db.transaction {
+		Runo::Storage::Sequel.db.transaction {
 			if new_id?(id,v)
 				old_id = id
 				id = new_id v

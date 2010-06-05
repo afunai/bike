@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Checkbox < Sofa::Field
+class Runo::Checkbox < Runo::Field
 
 	def initialize(meta = {})
 		if meta[:tokens]

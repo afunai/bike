@@ -3,13 +3,13 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Sofa::Set::Dynamic
+class Runo::Set::Dynamic
 
 	private
 
 	def _g_message(arg)
 		return if arg[:orig_action] == :done && my[:tmpl_done]
-		return unless self == Sofa.base
+		return unless self == Runo.base
 
 		if arg[:dest_action]
 			message = {:alert => _('please login.')}
@@ -17,10 +17,10 @@ class Sofa::Set::Dynamic
 			message = {:notice => _('please confirm.')}
 		elsif !self.valid? && arg[:orig_action] != :create
 			message = {:error => _('malformed input.')}
-		elsif Sofa.transaction[my[:tid]].is_a? ::Hash
+		elsif Runo.transaction[my[:tid]].is_a? ::Hash
 			message = {
-				:notice => Sofa.transaction[my[:tid]].keys.collect {|item_result|
-					n = Sofa.transaction[my[:tid]][item_result]
+				:notice => Runo.transaction[my[:tid]].keys.collect {|item_result|
+					n = Runo.transaction[my[:tid]][item_result]
 					_('%{result} %{n} %{item}.') % {
 						:result => {
 							:create => _('created'),
@@ -35,12 +35,12 @@ class Sofa::Set::Dynamic
 						)
 					}
 				}
-			} unless Sofa.transaction[my[:tid]].empty?
-			Sofa.transaction[my[:tid]] = :expired
+			} unless Runo.transaction[my[:tid]].empty?
+			Runo.transaction[my[:tid]] = :expired
 		end
 
 		message.keys.collect {|type|
-			lis = message[type].collect {|m| "\t<li>#{Sofa::Field.h m}</li>\n" }
+			lis = message[type].collect {|m| "\t<li>#{Runo::Field.h m}</li>\n" }
 			<<_html
 <ul class="message #{type}">
 #{lis}</ul>

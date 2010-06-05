@@ -5,10 +5,10 @@
 
 require 'rack/utils'
 
-class Sofa::Textarea::Pre < Sofa::Textarea
+class Runo::Textarea::Pre < Runo::Textarea
 
 	def _g_default(arg)
-		'<pre>' + Sofa::Field.h(val) + '</pre>'
+		'<pre>' + Runo::Field.h(val) + '</pre>'
 	end
 
 end

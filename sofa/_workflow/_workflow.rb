@@ -3,12 +3,12 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Workflow
+class Runo::Workflow
 
-	include Sofa::I18n
+	include Runo::I18n
 
 	DEFAULT_META = {
-		:item_label => Sofa::I18n.n_('item','items',1),
+		:item_label => Runo::I18n.n_('item','items',1),
 	}
 	DEFAULT_SUB_ITEMS = {}
 

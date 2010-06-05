@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Sofa::Set
+module Runo::Set
 
 	include Enumerable
 
@@ -33,9 +33,9 @@ module Sofa::Set
 
 	def errors
 		return {} if
-			my[:id] =~ Sofa::REX::ID_NEW &&
-			my[:parent].is_a?(Sofa::Set::Dynamic) &&
-			my[:parent].workflow.is_a?(Sofa::Workflow::Attachment)
+			my[:id] =~ Runo::REX::ID_NEW &&
+			my[:parent].is_a?(Runo::Set::Dynamic) &&
+			my[:parent].workflow.is_a?(Runo::Workflow::Attachment)
 
 		errors = {}
 		@item_object.each_pair {|id,item|
@@ -162,7 +162,7 @@ module Sofa::Set
 		super || val.all? {|id,v|
 			if id.is_a? ::Symbol
 				true # not a item value
-			elsif id =~ Sofa::REX::ID_NEW
+			elsif id =~ Runo::REX::ID_NEW
 				permit? :create
 			else
 				item_action = v[:action] || :update

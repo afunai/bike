@@ -3,24 +3,24 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Sofa::Path
+module Runo::Path
 
 	module_function
 
 	def tid_of(path)
-		path[Sofa::REX::TID]
+		path[Runo::REX::TID]
 	end
 
 	def steps_of(path)
-		_dirname(path).gsub(Sofa::REX::PATH_ID,'').split('/').select {|step_or_cond|
+		_dirname(path).gsub(Runo::REX::PATH_ID,'').split('/').select {|step_or_cond|
 			step_or_cond != '' &&
-			step_or_cond !~ Regexp.union(Sofa::REX::COND,Sofa::REX::COND_D,Sofa::REX::TID)
+			step_or_cond !~ Regexp.union(Runo::REX::COND,Runo::REX::COND_D,Runo::REX::TID)
 		}
 	end
 
 	def base_of(path)
-		base = Sofa::Set::Static::Folder.root.item(steps_of path)
-		if base.is_a? Sofa::Set::Static::Folder
+		base = Runo::Set::Static::Folder.root.item(steps_of path)
+		if base.is_a? Runo::Set::Static::Folder
 			base.item 'main'
 		else
 			base
@@ -28,13 +28,13 @@ module Sofa::Path
 	end
 
 	def conds_of(path)
-		dir   = _dirname path.gsub(Sofa::REX::PATH_ID,'')
+		dir   = _dirname path.gsub(Runo::REX::PATH_ID,'')
 		conds = $& ? {:id => sprintf('%.8d_%.4d',$1,$2)} : {}
 
 		dir.split('/').inject(conds) {|conds,step_or_cond|
-			if step_or_cond =~ Sofa::REX::COND
+			if step_or_cond =~ Runo::REX::COND
 				conds[$1.intern] = $2
-			elsif step_or_cond =~ Sofa::REX::COND_D
+			elsif step_or_cond =~ Runo::REX::COND_D
 				conds[:d] = $&
 			end
 			conds
@@ -59,9 +59,9 @@ module Sofa::Path
 		).collect {|cid|
 			if cid == :id
 				ids = Array(conds[:id]).collect {|id|
-					(id =~ /_(#{Sofa::REX::ID_SHORT})$/) ? $1 : (id if Sofa::REX::ID)
+					(id =~ /_(#{Runo::REX::ID_SHORT})$/) ? $1 : (id if Runo::REX::ID)
 				}.compact
-				if (ids.size == 1) && (ids.first =~ Sofa::REX::ID)
+				if (ids.size == 1) && (ids.first =~ Runo::REX::ID)
 					'%s/%d/' % [$1,$2.to_i]
 				elsif ids.size > 0
 					"id=#{ids.join ','}/"

@@ -5,7 +5,7 @@
 
 class TC_Set_Permit < Test::Unit::TestCase
 
-	class Sofa::Workflow::Test_set_permit < Sofa::Workflow
+	class Runo::Workflow::Test_set_permit < Runo::Workflow
 		DEFAULT_SUB_ITEMS = {
 			'_owner'   => {:klass => 'meta-owner'},
 		}
@@ -18,7 +18,7 @@ class TC_Set_Permit < Test::Unit::TestCase
 	end
 
 	def setup
-		@sd = Sofa::Set::Dynamic.new(
+		@sd = Runo::Set::Dynamic.new(
 			:workflow => 'test_set_permit',
 			:item_arg => {
 				:item => {'foo' => {:klass => 'text'}}
@@ -35,7 +35,7 @@ class TC_Set_Permit < Test::Unit::TestCase
 	end
 
 	def test_permit_get_by_frank
-		Sofa.client = 'frank'
+		Runo.client = 'frank'
 		assert_equal(
 			0b0010,
 			@sd[:roles],
@@ -83,7 +83,7 @@ class TC_Set_Permit < Test::Unit::TestCase
 	end
 
 	def test_permit_get_by_carl
-		Sofa.client = 'carl'
+		Runo.client = 'carl'
 		assert_equal(
 			0b0001,
 			@sd[:roles],
@@ -141,7 +141,7 @@ class TC_Set_Permit < Test::Unit::TestCase
 	end
 
 	def test_permit_post_by_frank
-		Sofa.client = 'frank'
+		Runo.client = 'frank'
 		assert_equal(
 			0b0010,
 			@sd[:roles],
@@ -183,7 +183,7 @@ class TC_Set_Permit < Test::Unit::TestCase
 	end
 
 	def test_permit_post_by_carl
-		Sofa.client = 'carl'
+		Runo.client = 'carl'
 		assert_equal(
 			0b0001,
 			@sd[:roles],

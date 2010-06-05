@@ -12,40 +12,40 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def test_instance
-		sd = Sofa::Set::Static::Folder.root.item('t_select','main')
+		sd = Runo::Set::Static::Folder.root.item('t_select','main')
 
 		assert_instance_of(
-			Sofa::Storage.const_get(Sofa['storage']['default']),
+			Runo::Storage.const_get(Runo['storage']['default']),
 			sd.storage,
 			'Storage.instance should return a File instance when the set is right under the folder'
 		)
 
-		child_set = Sofa::Field.instance(
+		child_set = Runo::Field.instance(
 			:klass  => 'set-dynamic',
 			:parent => sd
 		)
 		assert_instance_of(
-			Sofa::Storage::Temp,
+			Runo::Storage::Temp,
 			child_set.storage,
 			'Storage.instance should return a Temp when the set is not a child of the folder'
 		)
 
-		orphan_set = Sofa::Field.instance(
+		orphan_set = Runo::Field.instance(
 			:klass  => 'set-dynamic'
 		)
 		assert_instance_of(
-			Sofa::Storage::Temp,
+			Runo::Storage::Temp,
 			orphan_set.storage,
 			'Storage.instance should return a Temp when the set is a direct child of the folder'
 		)
 	end
 
 	def test_fetch
-		sd = Sofa::Set::Static::Folder.root.item('t_select','main')
+		sd = Runo::Set::Static::Folder.root.item('t_select','main')
 		sd[:order]  = 'id'
 		sd[:p_size] = 10
 
-		Sofa::Storage.constants.collect {|c| Sofa::Storage.const_get c }.each {|klass|
+		Runo::Storage.constants.collect {|c| Runo::Storage.const_get c }.each {|klass|
 			next unless klass.is_a?(::Class) && klass.available?
 
 			storage = klass.new sd
@@ -79,7 +79,7 @@ class TC_Storage < Test::Unit::TestCase
 
 			storage.clear
 
-			_test_traverse(storage) if storage.is_a? Sofa::Storage::File # TODO: other parsistent
+			_test_traverse(storage) if storage.is_a? Runo::Storage::File # TODO: other parsistent
 		}
 	end
 
@@ -455,9 +455,9 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def test_store
-		sd = Sofa::Set::Static::Folder.root.item('t_store','main')
+		sd = Runo::Set::Static::Folder.root.item('t_store','main')
 
-		Sofa::Storage.constants.collect {|c| Sofa::Storage.const_get c }.each {|klass|
+		Runo::Storage.constants.collect {|c| Runo::Storage.const_get c }.each {|klass|
 			next unless klass.is_a?(::Class) && klass.available?
 
 			storage = klass.new sd
@@ -476,8 +476,8 @@ class TC_Storage < Test::Unit::TestCase
 			_test_delete_raw(storage,id)
 			_test_clear_raw(storage)
 
-			_test_delete_substr(storage) unless klass == Sofa::Storage::Temp
-			_test_load_skel(storage) unless klass == Sofa::Storage::Temp
+			_test_delete_substr(storage) unless klass == Runo::Storage::Temp
+			_test_load_skel(storage) unless klass == Runo::Storage::Temp
 		}
 	end
 
@@ -489,7 +489,7 @@ class TC_Storage < Test::Unit::TestCase
 			id = storage.store(:new_id,{'foo' => 'bar'})
 		}
 		assert_match(
-			Sofa::REX::ID,
+			Runo::REX::ID,
 			id,
 			"#{storage.class}#store should return the id of the created item"
 		)
@@ -517,7 +517,7 @@ class TC_Storage < Test::Unit::TestCase
 			id = storage.delete(id)
 		}
 		assert_match(
-			Sofa::REX::ID,
+			Runo::REX::ID,
 			id,
 			"#{storage.class}#delete should return the id of the deleted item"
 		)
@@ -530,14 +530,14 @@ class TC_Storage < Test::Unit::TestCase
 	def _test_new_id(storage)
 		id1 = storage.store(:new_id,{'foo' => 'bar'})
 		assert_match(
-			Sofa::REX::ID,
+			Runo::REX::ID,
 			id1,
 			"#{storage.class}#new_id should return a valid id for the element"
 		)
 
 		id2 = storage.store(:new_id,{'foo' => 'bar'})
 		assert_match(
-			Sofa::REX::ID,
+			Runo::REX::ID,
 			id2,
 			"#{storage.class}#new_id should return a valid id for the element"
 		)
@@ -549,7 +549,7 @@ class TC_Storage < Test::Unit::TestCase
 
 		id3 = storage.store(:new_id,{'foo' => 'bar','_id' => 'carl'})
 		assert_match(
-			Sofa::REX::ID,
+			Runo::REX::ID,
 			id3,
 			"#{storage.class}#new_id should return a valid id for the element"
 		)
@@ -570,7 +570,7 @@ class TC_Storage < Test::Unit::TestCase
 			{'_timestamp' => {'published' => Time.local(1981,4,26)}}
 		)
 		assert_match(
-			Sofa::REX::ID,
+			Runo::REX::ID,
 			id5,
 			"#{storage.class}#new_id should return a valid id for the element"
 		)
@@ -676,7 +676,7 @@ class TC_Storage < Test::Unit::TestCase
 			id = storage.delete(id)
 		}
 		assert_match(
-			Sofa::REX::ID,
+			Runo::REX::ID,
 			id,
 			"#{storage.class}#delete should return the id of the deleted item"
 		)
@@ -703,7 +703,7 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def _test_load_skel(storage)
-		sd = Sofa::Set::Static::Folder.root.item('t_summary','main')
+		sd = Runo::Set::Static::Folder.root.item('t_summary','main')
 		storage = storage.class.new sd
 
 		storage.delete '20100326_0001'
@@ -751,7 +751,7 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def test_cast_d
-		sd = Sofa::Set::Dynamic.new(
+		sd = Runo::Set::Dynamic.new(
 			:klass => 'set-dynamic'
 		).load(
 			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
@@ -795,7 +795,7 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def test_cast_id
-		sd = Sofa::Set::Dynamic.new(
+		sd = Runo::Set::Dynamic.new(
 			:klass => 'set-dynamic'
 		).load(
 			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
@@ -831,7 +831,7 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def test_cast_p
-		sd = Sofa::Set::Dynamic.new(
+		sd = Runo::Set::Dynamic.new(
 			:klass => 'set-dynamic'
 		).load(
 			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
@@ -870,7 +870,7 @@ class TC_Storage < Test::Unit::TestCase
 	end
 
 	def test_new_id?
-		storage = Sofa::Set::Static::Folder.root.item('t_select','main').storage
+		storage = Runo::Set::Static::Folder.root.item('t_select','main').storage
 
 		assert(
 			storage.send(:new_id?,:new_id,{}),

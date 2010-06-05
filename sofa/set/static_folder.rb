@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Set::Static::Folder < Sofa::Set::Static
+class Runo::Set::Static::Folder < Runo::Set::Static
 
 	def self.root
 		self.new(:id => '')
@@ -14,11 +14,11 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 		meta[:html] = load_html(meta[:dir],meta[:parent])
 		super
 
-		::Dir.glob(::File.join Sofa['skin_dir'],my[:html_dir].to_s,'*.html').each {|f|
+		::Dir.glob(::File.join Runo['skin_dir'],my[:html_dir].to_s,'*.html').each {|f|
 			action = ::File.basename(f,'.*').intern
 			if action != :index
 				html_action = load_html(my[:html_dir].to_s,my[:parent],action)
-				merge_meta(@meta,Sofa::Parser.parse_html(html_action,action),action)
+				merge_meta(@meta,Runo::Parser.parse_html(html_action,action),action)
 			end
 		}
 
@@ -35,7 +35,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	end
 
 	def meta_html_dir
-		if ::File.readable? ::File.join(Sofa['skin_dir'],my[:dir],'index.html')
+		if ::File.readable? ::File.join(Runo['skin_dir'],my[:dir],'index.html')
 			my[:dir]
 		elsif my[:parent]
 			my[:parent][:html_dir]
@@ -43,7 +43,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	end
 
 	def meta_base_href
-		Sofa.base ? "#{Sofa.base[:uri]}#{my[:dir]}/" : "#{my[:dir]}/"
+		Runo.base ? "#{Runo.base[:uri]}#{my[:dir]}/" : "#{my[:dir]}/"
 	end
 
 	private
@@ -57,11 +57,11 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	end
 
 	def collect_item(conds = {},&block)
-		if conds[:id] =~ Sofa::REX::ID && sd = item('main')
+		if conds[:id] =~ Runo::REX::ID && sd = item('main')
 			return sd.instance_eval { collect_item(conds,&block) }
 		elsif (
 			conds[:id] =~ /\A\w+\z/ &&
-			::File.directory?(::File.join Sofa['skin_dir'],my[:dir],conds[:id])
+			::File.directory?(::File.join Runo['skin_dir'],my[:dir],conds[:id])
 		)
 			my[:item][conds[:id]] = {:klass  => 'set-static-folder'}
 		end
@@ -69,7 +69,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	end
 
 	def load_html(dir,parent,action = 'index')
-		html_file = ::File.join Sofa['skin_dir'],dir,"#{action}.html"
+		html_file = ::File.join Runo['skin_dir'],dir,"#{action}.html"
 		if ::File.exists? html_file
 			::File.open(html_file) {|f| f.read }
 		elsif parent
@@ -78,7 +78,7 @@ class Sofa::Set::Static::Folder < Sofa::Set::Static
 	end
 
 	def load_val(dir,parent)
-		val_file = ::File.join(Sofa['skin_dir'],dir,'index.yaml')
+		val_file = ::File.join(Runo['skin_dir'],dir,'index.yaml')
 		v = ::File.exists?(val_file) ? ::File.open(val_file) {|f| YAML.load f.read } : {}
 		parent ? {
 			'_label' => parent.val('_label'),

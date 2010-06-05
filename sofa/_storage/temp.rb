@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Storage::Temp < Sofa::Storage
+class Runo::Storage::Temp < Runo::Storage
 
 	def self.available?
 		true

@@ -12,13 +12,13 @@ class TC_Meta < Test::Unit::TestCase
 	end
 
 	def test_owner
-		ss = Sofa::Set::Static.new(
+		ss = Runo::Set::Static.new(
 			:item => {
 				'_owner' => {:klass => 'meta-owner'},
 			}
 		)
 		assert_instance_of(
-			Sofa::Meta::Owner,
+			Runo::Meta::Owner,
 			ss.item('_owner'),
 			"Set::Static#item('_owner') should be an instance of the meta field"
 		)

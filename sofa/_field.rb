@@ -8,14 +8,14 @@ require 'rack/utils'
 
 $KCODE = 'UTF8'
 
-class Sofa::Field
+class Runo::Field
 
-	include Sofa::I18n
+	include Runo::I18n
 
 	DEFAULT_META = {}
 
 	def self.instance(meta = {})
-		k = meta[:klass].to_s.split(/-/).inject(Sofa) {|c,name|
+		k = meta[:klass].to_s.split(/-/).inject(Runo) {|c,name|
 			name = name.capitalize
 			c.const_get(name)
 		}
@@ -60,7 +60,7 @@ class Sofa::Field
 	end
 
 	def meta_name
-		my[:parent] && !my[:parent].is_a?(Sofa::Set::Static::Folder) ?
+		my[:parent] && !my[:parent].is_a?(Runo::Set::Static::Folder) ?
 			"#{my[:parent][:name]}-#{my[:id]}" : my[:id]
 	end
 
@@ -69,21 +69,21 @@ class Sofa::Field
 	end
 
 	def meta_short_name
-		return '' if Sofa.base && my[:full_name] == Sofa.base[:full_name]
-		my[:parent] && Sofa.base && my[:parent][:full_name] != Sofa.base[:full_name] ?
+		return '' if Runo.base && my[:full_name] == Runo.base[:full_name]
+		my[:parent] && Runo.base && my[:parent][:full_name] != Runo.base[:full_name] ?
 			"#{my[:parent][:short_name]}-#{my[:id]}" : my[:id]
 	end
 
 	def meta_folder
-		find_ancestor {|f| f.is_a? Sofa::Set::Static::Folder }
+		find_ancestor {|f| f.is_a? Runo::Set::Static::Folder }
 	end
 
 	def meta_sd
-		find_ancestor {|f| f.is_a? Sofa::Set::Dynamic }
+		find_ancestor {|f| f.is_a? Runo::Set::Dynamic }
 	end
 
 	def meta_client
-		Sofa.client
+		Runo.client
 	end
 
 	def meta_owner
@@ -103,11 +103,11 @@ class Sofa::Field
 	end
 
 	def meta_roles
-		roles  = Sofa::Workflow::ROLE_NONE
-		roles |= Sofa::Workflow::ROLE_ADMIN if my[:admins].include? my[:client]
-		roles |= Sofa::Workflow::ROLE_GROUP if my[:group].include? my[:client]
-		roles |= Sofa::Workflow::ROLE_OWNER if my[:owner] == my[:client]
-		roles |= Sofa::Workflow::ROLE_GUEST if roles == Sofa::Workflow::ROLE_NONE
+		roles  = Runo::Workflow::ROLE_NONE
+		roles |= Runo::Workflow::ROLE_ADMIN if my[:admins].include? my[:client]
+		roles |= Runo::Workflow::ROLE_GROUP if my[:group].include? my[:client]
+		roles |= Runo::Workflow::ROLE_OWNER if my[:owner] == my[:client]
+		roles |= Runo::Workflow::ROLE_GUEST if roles == Runo::Workflow::ROLE_NONE
 		roles
 	end
 
@@ -115,7 +115,7 @@ class Sofa::Field
 		return false if action == :create && @result == :load
 		return true unless my[:sd]
 		return true if my[:sd].workflow.permit?(my[:roles],action)
-		return true if find_ancestor {|f| f[:id] =~ Sofa::REX::ID_NEW } # descendant of a new item
+		return true if find_ancestor {|f| f[:id] =~ Runo::REX::ID_NEW } # descendant of a new item
 	end
 
 	def default_action
@@ -129,7 +129,7 @@ class Sofa::Field
 			_get(arg)
 		else
 			if arg[:action]
-				raise Sofa::Error::Forbidden
+				raise Runo::Error::Forbidden
 			else
 				arg[:action] = default_action
 			end
@@ -158,7 +158,7 @@ class Sofa::Field
 	end
 
 	def post(action,v = nil)
-		raise Sofa::Error::Forbidden unless permit_post?(action,v)
+		raise Runo::Error::Forbidden unless permit_post?(action,v)
 
 		if _post action,val_cast(v)
 			@result = (action == :load || action == :load_default) ? action : nil
@@ -216,7 +216,7 @@ class Sofa::Field
 	alias :_g_message :_g_empty
 
 	def _g_default(arg)
-		Sofa::Field.h val
+		Runo::Field.h val
 	end
 
 	def _g_errors(arg)
@@ -226,7 +226,7 @@ _html
 	end
 
 	def _g_class(arg)
-		c = self.class.to_s.sub('Sofa::','').gsub('::','-').downcase
+		c = self.class.to_s.sub('Runo::','').gsub('::','-').downcase
 		_g_valid?(arg) ? c : "#{c} error"
 	end
 

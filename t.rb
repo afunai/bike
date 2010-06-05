@@ -8,9 +8,9 @@ require 'test/unit'
 require 'rubygems'
 require 'mocha'
 
-require 'sofa'
+require 'runo'
 
-Sofa.instance_eval { @config = YAML.load_file './t.yaml' }
-Sofa::I18n.bindtextdomain('index','./t/locale')
+Runo.instance_eval { @config = YAML.load_file './t.yaml' }
+Runo::I18n.bindtextdomain('index','./t/locale')
 
 result = Test::Unit::AutoRunner.run(true,'t/')

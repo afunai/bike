@@ -3,9 +3,9 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Foo < Sofa::Field
+class Runo::Foo < Runo::Field
 	DEFAULT_META = {:foo => 'foo foo'}
-	class Bar < Sofa::Field
+	class Bar < Runo::Field
 		def _g_test(arg)
 			'just a test.'
 		end
@@ -15,7 +15,7 @@ end
 class TC_Field < Test::Unit::TestCase
 
 	def setup
-		@f = Sofa::Field.instance(
+		@f = Runo::Field.instance(
 			:klass   => 'foo-bar',
 			:baz     => 1234,
 			:default => 'bar bar'
@@ -27,7 +27,7 @@ class TC_Field < Test::Unit::TestCase
 
 	def test_instance
 		assert_instance_of(
-			Sofa::Foo::Bar,
+			Runo::Foo::Bar,
 			@f,
 			'Field#instance should return an instance of the class specified by :klass'
 		)
@@ -35,11 +35,11 @@ class TC_Field < Test::Unit::TestCase
 
 	def test_wrong_instance
 		assert_nil(
-			Sofa::Field.instance(:klass => 'set'),
+			Runo::Field.instance(:klass => 'set'),
 			'Field#instance should not return an instance of other than Field'
 		)
 		assert_nil(
-			Sofa::Field.instance(:klass => 'storage'),
+			Runo::Field.instance(:klass => 'storage'),
 			'Field#instance should not return an instance of other than Field'
 		)
 	end
@@ -61,13 +61,13 @@ class TC_Field < Test::Unit::TestCase
 	end
 
 	def test_meta_name
-		item = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		item = Runo::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
 			'main',
 			item[:name],
 			'Field#[:name] should return the path name from the nearest folder'
 		)
-		item = Sofa::Set::Static::Folder.root.item('foo','bar')
+		item = Runo::Set::Static::Folder.root.item('foo','bar')
 		assert_equal(
 			'bar',
 			item[:name],
@@ -76,13 +76,13 @@ class TC_Field < Test::Unit::TestCase
 	end
 
 	def test_meta_full_name
-		item = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		item = Runo::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
 			'-foo-bar-main',
 			item[:full_name],
 			'Field#[:full_name] should return the path name from the root folder'
 		)
-		item = Sofa::Set::Static::Folder.root.item('foo','bar')
+		item = Runo::Set::Static::Folder.root.item('foo','bar')
 		assert_equal(
 			'-foo-bar',
 			item[:full_name],
@@ -91,25 +91,25 @@ class TC_Field < Test::Unit::TestCase
 	end
 
 	def test_meta_short_name
-		item = Sofa::Set::Static::Folder.root.item(
+		item = Runo::Set::Static::Folder.root.item(
 			'foo','bar','main','20091120_0001','replies','20091208_0001','reply'
 		)
 
-		Sofa.current[:base] = nil
+		Runo.current[:base] = nil
 		assert_equal(
 			'reply',
 			item[:short_name],
 			'Field#[:short_name] should return [:id] if no base SD is defined'
 		)
 
-		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
 			'20091120_0001-replies-20091208_0001-reply',
 			item[:short_name],
 			'Field#[:short_name] should return the path name from the base SD'
 		)
 
-		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item(
+		Runo.current[:base] = Runo::Set::Static::Folder.root.item(
 			'foo','bar','main','20091120_0001','replies'
 		)
 		assert_equal(
@@ -118,16 +118,16 @@ class TC_Field < Test::Unit::TestCase
 			'Field#[:short_name] should return the path name from the base SD'
 		)
 
-		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
 			'',
-			Sofa::Set::Static::Folder.root.item('foo','bar','main')[:short_name],
+			Runo::Set::Static::Folder.root.item('foo','bar','main')[:short_name],
 			'Field#[:short_name] should return empty string for the base SD itself'
 		)
 	end
 
 	def test_meta_sd
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
 			sd,
 			sd[:sd],
@@ -144,16 +144,16 @@ class TC_Field < Test::Unit::TestCase
 			'Field#[:sd] should return the nearest set_dynamic'
 		)
 		assert_nil(
-			Sofa::Set::Static::Folder.root[:sd],
+			Runo::Set::Static::Folder.root[:sd],
 			'Field#[:sd] should return nil if there is no set_dynamic in the ancestors'
 		)
 	end
 
 	def test_meta_client
-		Sofa.client = 'frank'
+		Runo.client = 'frank'
 		assert_equal(
 			'frank',
-			Sofa::Field.new[:client],
+			Runo::Field.new[:client],
 			'Field#[:client] should return the client of the current thread'
 		)
 	end
@@ -173,21 +173,21 @@ class TC_Field < Test::Unit::TestCase
 	end
 
 	def test_default_meta
-		f = Sofa::Field.instance(:klass => 'foo')
+		f = Runo::Field.instance(:klass => 'foo')
 		assert_equal(
 			'foo foo',
 			f[:foo],
 			'Field#[] should look for the default value in DEFAULT_META'
 		)
 
-		f = Sofa::Field.instance(:klass => 'foo',:foo => 'bar')
+		f = Runo::Field.instance(:klass => 'foo',:foo => 'bar')
 		assert_equal(
 			'bar',
 			f[:foo],
 			'Field.DEFAULT_META should be eclipsed by @meta'
 		)
 
-		f = Sofa::Field.instance(:klass => 'foo')
+		f = Runo::Field.instance(:klass => 'foo')
 		def f.meta_foo
 			'abc'
 		end

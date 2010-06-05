@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Sofa::Meta
+module Runo::Meta
 
 	def post(action,v = nil)
 		super

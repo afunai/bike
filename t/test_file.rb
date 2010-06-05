@@ -12,11 +12,11 @@ class TC_File < Test::Unit::TestCase
 		@file.stubs(:length).returns(@file.read.length)
 
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo file 1..50 jpg,gif,png)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo file 1..50 jpg,gif,png)') {|id,m|
 			meta = m
 			''
 		}
-		@f = Sofa::Field.instance meta.merge(:id => 'foo')
+		@f = Runo::Field.instance meta.merge(:id => 'foo')
 	end
 
 	def test_meta
@@ -39,11 +39,11 @@ class TC_File < Test::Unit::TestCase
 
 	def test_meta_options
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo file jpg,GIF,Png)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo file jpg,GIF,Png)') {|id,m|
 			meta = m
 			''
 		}
-		@f = Sofa::Field.instance meta.merge(:id => 'foo')
+		@f = Runo::Field.instance meta.merge(:id => 'foo')
 		assert_equal(
 			['jpg','gif','png'],
 			@f[:options],
@@ -52,7 +52,7 @@ class TC_File < Test::Unit::TestCase
 	end
 
 	def test_meta_path
-		@f[:parent] = Sofa::Set::Static::Folder.root.item('t_file','main')
+		@f[:parent] = Runo::Set::Static::Folder.root.item('t_file','main')
 		assert_equal(
 			'/t_file/main/foo',
 			@f[:path],
@@ -61,8 +61,8 @@ class TC_File < Test::Unit::TestCase
 	end
 
 	def test_meta_tmp_path
-		@f[:parent] = Sofa::Set::Static::Folder.root.item('t_file','main')
-		Sofa.current[:base] = @f[:parent]
+		@f[:parent] = Runo::Set::Static::Folder.root.item('t_file','main')
+		Runo.current[:base] = @f[:parent]
 		tid = @f[:parent][:tid]
 
 		assert_equal(
@@ -71,16 +71,16 @@ class TC_File < Test::Unit::TestCase
 			'File#meta_tmp_path should return the short path from the tid'
 		)
 
-		Sofa.current[:base] = nil
+		Runo.current[:base] = nil
 		assert_nil(
 			@f[:tmp_path],
-			'File#meta_tmp_path should return nil unless Sofa.base is set'
+			'File#meta_tmp_path should return nil unless Runo.base is set'
 		)
 	end
 
 	def test_meta_persistent_sd
-		root = Sofa::Set::Static::Folder.root.item('t_file','main')
-		parent = Sofa::Set::Dynamic.new(:id => 'boo',:parent => root)
+		root = Runo::Set::Static::Folder.root.item('t_file','main')
+		parent = Runo::Set::Dynamic.new(:id => 'boo',:parent => root)
 		@f[:parent] = parent
 		assert_equal(
 			root,
@@ -90,8 +90,8 @@ class TC_File < Test::Unit::TestCase
 	end
 
 	def test_meta_persistent_name
-		root = Sofa::Set::Static::Folder.root.item('t_file','main')
-		parent = Sofa::Set::Dynamic.new(:id => 'boo',:parent => root)
+		root = Runo::Set::Static::Folder.root.item('t_file','main')
+		parent = Runo::Set::Dynamic.new(:id => 'boo',:parent => root)
 		@f[:parent] = parent
 		assert_equal(
 			'boo-foo',
@@ -155,8 +155,8 @@ _eos
 	end
 
 	def test_get
-		@f[:parent] = Sofa::Set::Static::Folder.root.item('t_file','main')
-		Sofa.current[:base] = @f[:parent]
+		@f[:parent] = Runo::Set::Static::Folder.root.item('t_file','main')
+		Runo.current[:base] = @f[:parent]
 		tid = @f[:parent][:tid]
 
 		@f.load({})
@@ -199,8 +199,8 @@ _html
 	end
 
 	def test_get_hidden
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.update(
 			'_1' => {
 				'baz' => {
@@ -208,7 +208,7 @@ _html
 				},
 			}
 		)
-		Sofa.current[:base] = sd
+		Runo.current[:base] = sd
 		sd[:tid] = '1234.567'
 
 		assert_equal(
@@ -264,8 +264,8 @@ _html
 	end
 
 	def test_get_delete
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.update(
 			'_1' => {
 				'baz' => {
@@ -273,7 +273,7 @@ _html
 				},
 			}
 		)
-		Sofa.current[:base] = sd
+		Runo.current[:base] = sd
 		sd[:tid] = '1234.567'
 
 		assert_equal(
@@ -328,8 +328,8 @@ _html
 
 # TODO: test on all available storages.
 	def test_select
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
 		sd.update(
 			'20100425_1234' => {
@@ -371,8 +371,8 @@ _html
 	end
 
 	def test_call_body
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
 
 		# post a multipart request
@@ -385,10 +385,10 @@ Content-Type: image/jpeg
 ---foobarbaz
 Content-Disposition: form-data; name="_token"
 
-#{Sofa.token}
+#{Runo.token}
 ---foobarbaz--
 _eos
-		res = Rack::MockRequest.new(Sofa.new).post(
+		res = Rack::MockRequest.new(Runo.new).post(
 			'http://example.com/t_file/main/update.html',
 			{
 				:input           => input,
@@ -396,91 +396,91 @@ _eos
 				'CONTENT_LENGTH' => input.length,
 			}
 		)
-		tid = res.headers['Location'][Sofa::REX::TID]
+		tid = res.headers['Location'][Runo::REX::TID]
 
 		assert_equal(
 			@file.read,
-			Sofa.transaction[tid].item('_1','foo').body,
-			'Sofa#call should keep suspended field in Sofa.transaction'
+			Runo.transaction[tid].item('_1','foo').body,
+			'Runo#call should keep suspended field in Runo.transaction'
 		)
 
-		res = Rack::MockRequest.new(Sofa.new).get(
+		res = Rack::MockRequest.new(Runo.new).get(
 			"http://example.com/#{tid}/_1/foo/foo.jpg"
 		)
 		assert_equal(
 			@file.read,
 			res.body,
-			'Sofa#call should be able to access suspended file bodies'
+			'Runo#call should be able to access suspended file bodies'
 		)
 
 		# commit the base
-		res = Rack::MockRequest.new(Sofa.new).post(
+		res = Rack::MockRequest.new(Runo.new).post(
 			"http://example.com/#{tid}/update.html",
 			{
-				:input => ".status-public=create&_token=#{Sofa.token}",
+				:input => ".status-public=create&_token=#{Runo.token}",
 			}
 		)
 
-		res.headers['Location'] =~ Sofa::REX::PATH_ID
+		res.headers['Location'] =~ Runo::REX::PATH_ID
 		new_id = sprintf('%.8d_%.4d',$1,$2)
 
-		res = Rack::MockRequest.new(Sofa.new).get(
+		res = Rack::MockRequest.new(Runo.new).get(
 			"http://example.com/t_file/#{new_id}/foo/foo.jpg"
 		)
 		assert_equal(
 			'image/jpeg',
 			res.headers['Content-Type'],
-			'Sofa#call to a file item should return the mime type of the file'
+			'Runo#call to a file item should return the mime type of the file'
 		)
 		assert_equal(
 			@file.length.to_s,
 			res.headers['Content-Length'],
-			'Sofa#call to a file item should return the content length of the file'
+			'Runo#call to a file item should return the content length of the file'
 		)
 		assert_equal(
 			@file.read,
 			res.body,
-			'Sofa#call to a file item should return the binary body of the file'
+			'Runo#call to a file item should return the binary body of the file'
 		)
 
 		# move
-		Rack::MockRequest.new(Sofa.new).post(
+		Rack::MockRequest.new(Runo.new).post(
 			'http://example.com/t_file/update.html',
 			{
-				:input => "#{new_id}-_timestamp=1981-12-02&.status-public=update&_token=#{Sofa.token}",
+				:input => "#{new_id}-_timestamp=1981-12-02&.status-public=update&_token=#{Runo.token}",
 			}
 		)
-		res = Rack::MockRequest.new(Sofa.new).get(
+		res = Rack::MockRequest.new(Runo.new).get(
 			"http://example.com/t_file/#{new_id}/foo/foo.jpg"
 		)
 		assert_equal(
 			404,
 			res.status,
-			'Sofa#call should move child files as well'
+			'Runo#call should move child files as well'
 		)
-		res = Rack::MockRequest.new(Sofa.new).get(
+		res = Rack::MockRequest.new(Runo.new).get(
 			'http://example.com/t_file/19811202_0001/foo/foo.jpg'
 		)
 		assert_equal(
 			@file.read,
 			res.body,
-			'Sofa#call should move child files as well'
+			'Runo#call should move child files as well'
 		)
 
 		# delete
-		Rack::MockRequest.new(Sofa.new).post(
+		Rack::MockRequest.new(Runo.new).post(
 			'http://example.com/t_file/update.html',
 			{
-				:input => "19811202_0001.action=delete&.status-public=delete&_token=#{Sofa.token}",
+				:input => "19811202_0001.action=delete&.status-public=delete&_token=#{Runo.token}",
 			}
 		)
-		res = Rack::MockRequest.new(Sofa.new).get(
+		res = Rack::MockRequest.new(Runo.new).get(
 			'http://example.com/t_file/19811202_0001/foo/foo.jpg'
 		)
 		assert_equal(
 			404,
 			res.status,
-			'Sofa#call should delete child files as well'
+			'Runo#call should delete child files as well'
 		)
 	end
 
@@ -578,8 +578,8 @@ _eos
 	end
 
 	def test_save_file
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
 
 		# create a new set with file items
@@ -604,9 +604,9 @@ _eos
 		}
 		id = sd.result.values.first[:id]
 
-		item = Sofa::Set::Static::Folder.root.item('t_file','main',id,'foo')
+		item = Runo::Set::Static::Folder.root.item('t_file','main',id,'foo')
 		assert_instance_of(
-			Sofa::File,
+			Runo::File,
 			item,
 			'File#commit should commit the file item'
 		)
@@ -635,19 +635,19 @@ _eos
 
 		assert_equal(
 			@file.read,
-			Sofa::Set::Static::Folder.root.item('t_file','main',id,'bar').body,
+			Runo::Set::Static::Folder.root.item('t_file','main',id,'bar').body,
 			'File#commit should store the body of the file item'
 		)
 		assert_equal(
 			@file.read,
-			Sofa::Set::Static::Folder.root.item('t_file','main',id,'foo').body,
+			Runo::Set::Static::Folder.root.item('t_file','main',id,'foo').body,
 			'File#commit should keep the body of the untouched file item'
 		)
 	end
 
 	def test_delete_file
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
 
 		sd.update(
@@ -668,7 +668,7 @@ _eos
 
 		id = sd.result.values.first[:id]
 
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.update(
 			id => {'foo' => {:action => :delete}}
 		)
@@ -686,7 +686,7 @@ _eos
 			'File#delete should set @action'
 		)
 
-		another_sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		another_sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		assert_not_equal(
 			{},
 			another_sd.item(id,'foo').val,
@@ -700,7 +700,7 @@ _eos
 
 		sd.commit :persistent
 
-		another_sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		another_sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		assert_equal(
 			{},
 			another_sd.item(id,'foo').val,
@@ -713,8 +713,8 @@ _eos
 	end
 
 	def test_delete_parent_set
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
 
 		sd.update(
@@ -745,7 +745,7 @@ _eos
 
 		id = sd.result.values.first[:id]
 
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.update(
 			id => {:action => :delete}
 		)
@@ -759,8 +759,8 @@ _eos
 	end
 
 	def test_save_file_attachment
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
 
 		# create an attachment file item
@@ -787,9 +787,9 @@ _eos
 		baz_id = sd.result.values.first[:id]
 		qux_id = sd.result.values.first.item('baz').val.keys.first
 
-		item = Sofa::Set::Static::Folder.root.item('t_file','main',baz_id,'baz',qux_id,'qux')
+		item = Runo::Set::Static::Folder.root.item('t_file','main',baz_id,'baz',qux_id,'qux')
 		assert_instance_of(
-			Sofa::File,
+			Runo::File,
 			item,
 			'File#commit should commit the attachment file item'
 		)
@@ -800,7 +800,7 @@ _eos
 		)
 
 		# delete the attachment
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.update(
 			baz_id => {
 				'baz' => {
@@ -812,14 +812,14 @@ _eos
 
 		assert_equal(
 			{},
-			Sofa::Set::Static::Folder.root.item('t_file','main',baz_id,'baz').storage.val,
+			Runo::Set::Static::Folder.root.item('t_file','main',baz_id,'baz').storage.val,
 			'File#commit should delete the body of the attachment file item'
 		)
 	end
 
 	def test_delete_attachment_parent
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd.storage.clear
 
 		# create an attachment file item
@@ -848,16 +848,16 @@ _eos
 		baz_id = sd.result.values.first[:id]
 		qux_id = sd.result.values.first.item('baz').val.keys.first
 
-		item = Sofa::Set::Static::Folder.root.item('t_file','main',baz_id,'baz',qux_id,'qux')
+		item = Runo::Set::Static::Folder.root.item('t_file','main',baz_id,'baz',qux_id,'qux')
 		item_persistent_name = item[:persistent_name]
 		assert_equal(
 			@file.read,
-			Sofa::Set::Static::Folder.root.item('t_file','main').storage.val(item_persistent_name),
+			Runo::Set::Static::Folder.root.item('t_file','main').storage.val(item_persistent_name),
 			'the body of the file should be stored in the storage'
 		)
 
 		# delete the parent set
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		sd[:item]['default'][:item].delete '_timestamp'
 		sd.update(
 			baz_id => {:action => :delete}
@@ -885,10 +885,10 @@ _eos
 			sd.inspect_items
 		)
 
-		sd = Sofa::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file','main')
 		assert_equal({},sd.val)
 		assert_nil(
-			Sofa::Set::Static::Folder.root.item('t_file','main').storage.val(item_persistent_name),
+			Runo::Set::Static::Folder.root.item('t_file','main').storage.val(item_persistent_name),
 			'the body of the file should be deleted from the storage'
 		)
 	end

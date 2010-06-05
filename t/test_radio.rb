@@ -7,11 +7,11 @@ class TC_Radio < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Sofa::Parser.gsub_scalar("$(foo radio bar,baz,qux :'baz' mandatory)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo radio bar,baz,qux :'baz' mandatory)") {|id,m|
 			meta = m
 			''
 		}
-		@f = Sofa::Field.instance meta
+		@f = Runo::Field.instance meta
 	end
 
 	def teardown
@@ -37,11 +37,11 @@ class TC_Radio < Test::Unit::TestCase
 
 	def test_meta_options_from_range
 		meta = nil
-		Sofa::Parser.gsub_scalar("$(foo radio 1..5)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo radio 1..5)") {|id,m|
 			meta = m
 			''
 		}
-		f = Sofa::Field.instance meta
+		f = Runo::Field.instance meta
 		assert_equal(
 			['1','2','3','4','5'],
 			f[:options],
@@ -49,11 +49,11 @@ class TC_Radio < Test::Unit::TestCase
 		)
 
 		meta = nil
-		Sofa::Parser.gsub_scalar("$(foo radio ..5)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo radio ..5)") {|id,m|
 			meta = m
 			''
 		}
-		f = Sofa::Field.instance meta
+		f = Runo::Field.instance meta
 		assert_equal(
 			['0','1','2','3','4','5'],
 			f[:options],
@@ -61,11 +61,11 @@ class TC_Radio < Test::Unit::TestCase
 		)
 
 		meta = nil
-		Sofa::Parser.gsub_scalar("$(foo radio 1..)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo radio 1..)") {|id,m|
 			meta = m
 			''
 		}
-		f = Sofa::Field.instance meta
+		f = Runo::Field.instance meta
 		assert_equal(
 			nil,
 			f[:options],

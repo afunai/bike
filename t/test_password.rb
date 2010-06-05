@@ -6,7 +6,7 @@
 class TC_Password < Test::Unit::TestCase
 
 	def setup
-		@f = Sofa::Field.instance(
+		@f = Runo::Field.instance(
 			:klass   => 'password',
 			:default => 'secret',
 			:size    => 16
@@ -113,7 +113,7 @@ _html
 	end
 
 	def test_errors_on_load
-		Sofa.client = 'root'
+		Runo.client = 'root'
 
 		@f[:min] = 1
 		@f.load ''

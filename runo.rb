@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa
+class Runo
 
 	require './sofa/_i18n.rb'
 	I18n.bindtextdomain('index','./locale')
@@ -24,7 +24,7 @@ class Sofa
 	end
 
 	def self.[](name)
-		@config ||= YAML.load_file './sofa.yaml'
+		@config ||= YAML.load_file './runo.yaml'
 		@config[name]
 	end
 
@@ -57,15 +57,15 @@ class Sofa
 	end
 
 	def self.static(env)
-		@static ||= Rack::Directory.new Sofa['skin_dir']
+		@static ||= Rack::Directory.new Runo['skin_dir']
 		response = @static.call env
 
 		if response.first == 404
 			until ::File.readable? ::File.join(
-				Sofa['skin_dir'],
-				env['PATH_INFO'].sub(%r{(/#{Sofa::REX::DIR_STATIC}/).*},'\\1')
+				Runo['skin_dir'],
+				env['PATH_INFO'].sub(%r{(/#{Runo::REX::DIR_STATIC}/).*},'\\1')
 			)
-				env['PATH_INFO'].sub!(%r{/[^/]+(?=/#{Sofa::REX::DIR_STATIC}/)},'') || break
+				env['PATH_INFO'].sub!(%r{/[^/]+(?=/#{Runo::REX::DIR_STATIC}/)},'') || break
 			end
 			@static.call env
 		else
@@ -79,29 +79,29 @@ class Sofa
 		method = req.request_method.downcase
 		params = params_from_request req
 		path   = req.path_info
-		tid    = Sofa::Path.tid_of path
+		tid    = Runo::Path.tid_of path
 
-		return Sofa.static(env) if ::File.expand_path(path) =~ %r{/#{Sofa::REX::DIR_STATIC}/}
+		return Runo.static(env) if ::File.expand_path(path) =~ %r{/#{Runo::REX::DIR_STATIC}/}
 
-		Sofa::I18n.lang = env['HTTP_ACCEPT_LANGUAGE']
+		Runo::I18n.lang = env['HTTP_ACCEPT_LANGUAGE']
 
-		Sofa.current[:env]     = env
-		Sofa.current[:req]     = req
-		Sofa.current[:session] = env['rack.session']
+		Runo.current[:env]     = env
+		Runo.current[:req]     = req
+		Runo.current[:session] = env['rack.session']
 
-		if Sofa.transaction[tid].is_a? Sofa::Field
-			base = Sofa.transaction[tid].item(Sofa::Path.steps_of path.sub(/\A.*#{Sofa::REX::TID}/,''))
+		if Runo.transaction[tid].is_a? Runo::Field
+			base = Runo.transaction[tid].item(Runo::Path.steps_of path.sub(/\A.*#{Runo::REX::TID}/,''))
 		else
-			base = Sofa::Path.base_of path
+			base = Runo::Path.base_of path
 		end
 		return response_not_found unless base
 
 		base[:uri] = uri
 		base[:tid] = tid
-		Sofa.current[:base] = base
+		Runo.current[:base] = base
 
 		begin
-			if params[:action] == :logout && params[:token] == Sofa.token
+			if params[:action] == :logout && params[:token] == Runo.token
 				logout(base,params)
 			elsif method == 'get'
 				get(base,params)
@@ -109,19 +109,19 @@ class Sofa
 				login(base,params)
 			elsif params[:action] == :preview
 				preview(base,params)
-			elsif params[:token] != Sofa.token
+			elsif params[:token] != Runo.token
 				response_forbidden(:body => 'invalid token')
-			elsif Sofa.transaction[tid] && !Sofa.transaction[tid].is_a?(Sofa::Field)
+			elsif Runo.transaction[tid] && !Runo.transaction[tid].is_a?(Runo::Field)
 				response_unprocessable_entity(:body => 'transaction expired')
 			else
 				begin
 					post(base,params)
-				rescue Sofa::Error::Forbidden
+				rescue Runo::Error::Forbidden
 					response_forbidden
 				end
 			end
-		rescue Sofa::Error::Forbidden
-			if params[:action] && Sofa.client == 'nobody'
+		rescue Runo::Error::Forbidden
+			if params[:action] && Runo.client == 'nobody'
 				params[:dest_action] = (method == 'post') ? :index : params[:action]
 				params[:action] = :login
 			end
@@ -133,14 +133,14 @@ class Sofa
 	private
 
 	def login(base,params)
-		user = Sofa::Set::Static::Folder.root.item('_users','main',params['id'].to_s)
+		user = Runo::Set::Static::Folder.root.item('_users','main',params['id'].to_s)
 		if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
-			Sofa.client = params['id']
+			Runo.client = params['id']
 		else
-			Sofa.client = nil
-			raise Sofa::Error::Forbidden
+			Runo.client = nil
+			raise Runo::Error::Forbidden
 		end
-		path   = Sofa::Path.path_of params[:conds]
+		path   = Runo::Path.path_of params[:conds]
 		action = (params['dest_action'] =~ /\A\w+\z/) ? params['dest_action'] : 'index'
 		response_see_other(
 			:location => "#{base[:uri]}#{base[:path]}/#{path}#{action}.html"
@@ -148,15 +148,15 @@ class Sofa
 	end
 
 	def logout(base,params)
-		Sofa.client = nil
-		path = Sofa::Path.path_of params[:conds]
+		Runo.client = nil
+		path = Runo::Path.path_of params[:conds]
 		response_see_other(
 			:location => "#{base[:uri]}#{base[:path]}/#{path}index.html"
 		)
 	end
 
 	def get(base,params)
-		if base.is_a? Sofa::File
+		if base.is_a? Runo::File
 			response_ok(
 				:headers => {
 					'Content-Type'   => base.val['type'],
@@ -170,7 +170,7 @@ class Sofa
 	end
 
 	def preview(base,params)
-		Sofa.transaction[base[:tid]] ||= base if base[:tid] =~ Sofa::REX::TID
+		Runo.transaction[base[:tid]] ||= base if base[:tid] =~ Runo::REX::TID
 
 		base.update params
 		if base.commit(:temp) || params[:sub_action] == :delete
@@ -187,12 +187,12 @@ class Sofa
 	end
 
 	def post(base,params)
-		Sofa.transaction[base[:tid]] ||= base if base[:tid] =~ Sofa::REX::TID
+		Runo.transaction[base[:tid]] ||= base if base[:tid] =~ Runo::REX::TID
 
 		base.update params
 		if params[:status]
 			if base[:folder].commit :persistent
-				Sofa.transaction[base[:tid]] = result_summary base
+				Runo.transaction[base[:tid]] = result_summary base
 				action = base.workflow.next_action base
 				id_step = result_step(base,params) if base[:parent] == base[:folder] && action != :done
 				response_see_other(
@@ -225,36 +225,36 @@ class Sofa
 			id = base.result.values.collect {|item| item[:id] }
 		else
 			id = params.keys.select {|id|
-				id.is_a?(::String) && (id[Sofa::REX::ID] || id[Sofa::REX::ID_NEW])
+				id.is_a?(::String) && (id[Runo::REX::ID] || id[Runo::REX::ID_NEW])
 			}
 		end
-		Sofa::Path.path_of(:id => id)
+		Runo::Path.path_of(:id => id)
 	end
 
 	def _get(f,params)
 		params[:action] ||= f.default_action
-		until f.is_a? Sofa::Set::Static::Folder
+		until f.is_a? Runo::Set::Static::Folder
 			params = {
 				:action     => (f.default_action == :read) ? :read : nil,
 				:sub_action => f.send(:summary?,params) ? nil : :detail,
 				f[:id]      => params,
 			}
-			params[:conds] = {:id => f[:id]} if f[:parent].is_a? Sofa::Set::Dynamic
+			params[:conds] = {:id => f[:id]} if f[:parent].is_a? Runo::Set::Dynamic
 			f = f[:parent]
-		end if f.is_a? Sofa::Set::Dynamic
+		end if f.is_a? Runo::Set::Dynamic
 
 		f.get params
 	end
 
 	def params_from_request(req)
 		params = {
-			:action     => Sofa::Path.action_of(req.path_info),
-			:sub_action => Sofa::Path.sub_action_of(req.path_info),
+			:action     => Runo::Path.action_of(req.path_info),
+			:sub_action => Runo::Path.sub_action_of(req.path_info),
 		}
 		params.merge!(rebuild_params req.params)
 
 		params[:conds] ||= {}
-		params[:conds].merge!(Sofa::Path.conds_of req.path_info)
+		params[:conds].merge!(Runo::Path.conds_of req.path_info)
 
 		params
 	end

@@ -5,7 +5,7 @@
 
 class TC_Workflow < Test::Unit::TestCase
 
-	class Sofa::Workflow::Foo < Sofa::Workflow
+	class Runo::Workflow::Foo < Runo::Workflow
 		PERM = {
 			:create => 0b1100,
 			:read   => 0b1111,
@@ -21,137 +21,137 @@ class TC_Workflow < Test::Unit::TestCase
 	end
 
 	def test_instance
-		sd = Sofa::Set::Dynamic.new
+		sd = Runo::Set::Dynamic.new
 		assert_instance_of(
-			Sofa::Workflow,
-			Sofa::Workflow.instance(sd),
-			'Sofa::Workflow.instance should return a Workflow instance if sd[:workflow] is nil'
+			Runo::Workflow,
+			Runo::Workflow.instance(sd),
+			'Runo::Workflow.instance should return a Workflow instance if sd[:workflow] is nil'
 		)
-		sd = Sofa::Set::Static::Folder.root.item('foo','main')
+		sd = Runo::Set::Static::Folder.root.item('foo','main')
 		assert_instance_of(
-			Sofa::Workflow::Blog,
-			Sofa::Workflow.instance(sd),
-			'Sofa::Workflow.instance should return a instance according to sd[:workflow]'
+			Runo::Workflow::Blog,
+			Runo::Workflow.instance(sd),
+			'Runo::Workflow.instance should return a instance according to sd[:workflow]'
 		)
 
 		assert_equal(
 			sd,
-			Sofa::Workflow.instance(sd).sd,
-			'Sofa::Workflow.instance should set @sd'
+			Runo::Workflow.instance(sd).sd,
+			'Runo::Workflow.instance should set @sd'
 		)
 	end
 
 	def test_wf_permit_guest?
-		wf = Sofa::Workflow::Foo.new(nil)
+		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			!wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:create),
+			!wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:read),
+			wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:update),
+			!wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:delete),
+			!wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
 	def test_wf_permit_owner?
-		wf = Sofa::Workflow::Foo.new(nil)
+		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			!wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:create),
+			!wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:read),
+			wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:update),
+			wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:delete),
+			!wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
 	def test_wf_permit_group?
-		wf = Sofa::Workflow::Foo.new(nil)
+		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:create),
+			wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:read),
+			wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:update),
+			!wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:delete),
+			wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
 	def test_wf_permit_admin?
-		wf = Sofa::Workflow::Foo.new(nil)
+		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:create),
+			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:read),
+			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:update),
+			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:delete),
+			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
 
 	def test_wf_permit_login_action?
-		wf = Sofa::Workflow::Foo.new(nil)
+		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_GUEST,:login),
+			wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:login),
 			'Set::Workflow#permit? should always permit :login'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_OWNER,:login),
+			wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:login),
 			'Set::Workflow#permit? should always permit :login'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_GROUP,:login),
+			wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:login),
 			'Set::Workflow#permit? should always permit :login'
 		)
 		assert(
-			wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:login),
+			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:login),
 			'Set::Workflow#permit? should always permit :login'
 		)
 	end
 
 	def test_wf_permit_abnormal_action?
-		wf = Sofa::Workflow::Foo.new(nil)
+		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			!wf.send(:'permit?',Sofa::Workflow::ROLE_ADMIN,:'non-exist'),
+			!wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:'non-exist'),
 			'Set::Workflow#permit? should always return false for non-exist actions'
 		)
 	end
 
 	def test_permit_nobody?
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		Sofa.client = nil
+		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.client = nil
 		assert(
 			!sd.permit?(:create),
 			"'nobody' should not create"
@@ -171,8 +171,8 @@ class TC_Workflow < Test::Unit::TestCase
 	end
 
 	def test_permit_don?
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		Sofa.client = 'don' # don belongs to the group of foo/bar/
+		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.client = 'don' # don belongs to the group of foo/bar/
 		assert(
 			sd.permit?(:create),
 			'don should be able to create'
@@ -192,8 +192,8 @@ class TC_Workflow < Test::Unit::TestCase
 	end
 
 	def test_permit_carl?
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		Sofa.client = 'carl' # carl belongs to the group of foo/bar/, and the owner of the item #0001
+		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.client = 'carl' # carl belongs to the group of foo/bar/, and the owner of the item #0001
 		assert(
 			sd.permit?(:create),
 			'carl should be able to create'
@@ -213,8 +213,8 @@ class TC_Workflow < Test::Unit::TestCase
 	end
 
 	def test_permit_frank?
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		Sofa.client = 'frank' # frank is an admin of foo/bar/
+		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.client = 'frank' # frank is an admin of foo/bar/
 		assert(
 			sd.permit?(:create),
 			'frank should be able to create'
@@ -234,15 +234,15 @@ class TC_Workflow < Test::Unit::TestCase
 	end
 
 	def test_permit_abnormal_action?
-		sd = Sofa::Set::Static::Folder.root.item('foo','bar','main')
-		Sofa.client = 'frank'
+		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.client = 'frank'
 		assert(
 			!sd.permit?(:'****'),
 			'frank should not **** on the stage'
 		)
 	end
 
-	class Sofa::Workflow::Test_default_action < Sofa::Workflow
+	class Runo::Workflow::Test_default_action < Runo::Workflow
 		DEFAULT_SUB_ITEMS = {
 			'_owner' => {:klass => 'meta-owner'},
 			'_group' => {:klass => 'meta-group'},
@@ -255,7 +255,7 @@ class TC_Workflow < Test::Unit::TestCase
 		}
 	end
 	def test_default_action
-		sd = Sofa::Set::Dynamic.new(
+		sd = Runo::Set::Dynamic.new(
 			:workflow => 'test_default_action',
 			:group    => ['roy']
 		)
@@ -269,14 +269,14 @@ class TC_Workflow < Test::Unit::TestCase
 		assert_equal('carl', sd.item('20091122_0001')[:owner])
 		assert_equal('frank',sd.item('20091122_0002')[:owner])
 
-		Sofa.client = nil
+		Runo.client = nil
 		assert_equal(
 			:foo,
 			sd.default_action,
 			'Workflow#default_action should return a permitted action for the client'
 		)
 
-		Sofa.client = 'carl' # carl is not the member of the group
+		Runo.client = 'carl' # carl is not the member of the group
 		assert_equal(
 			:foo,
 			sd.default_action,
@@ -288,14 +288,14 @@ class TC_Workflow < Test::Unit::TestCase
 			'Workflow#default_action should see the given conds'
 		)
 
-		Sofa.client = 'roy' # roy belongs to the group
+		Runo.client = 'roy' # roy belongs to the group
 		assert_equal(
 			:create,
 			sd.default_action,
 			'Workflow#default_action should return a permitted action for the client'
 		)
 
-		Sofa.client = 'frank' # frank is the admin
+		Runo.client = 'frank' # frank is the admin
 		assert_equal(
 			:read,
 			sd.default_action,
@@ -303,13 +303,13 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 	end
 
-	class Sofa::Workflow::Test_default_sub_items < Sofa::Workflow
+	class Runo::Workflow::Test_default_sub_items < Runo::Workflow
 		DEFAULT_SUB_ITEMS = {
 			'_timestamp' => {:klass => 'meta-timestamp'},
 		}
 	end
 	def test_default_sub_items
-		sd = Sofa::Set::Dynamic.new(
+		sd = Runo::Set::Dynamic.new(
 			:workflow => 'test_default_sub_items'
 		)
 		assert_equal(
@@ -318,7 +318,7 @@ class TC_Workflow < Test::Unit::TestCase
 			'Workflow#default_sub_items should supply DEFAULT_SUB_ITEMS to sd[:item][*]'
 		)
 
-		sd = Sofa::Set::Dynamic.new(
+		sd = Runo::Set::Dynamic.new(
 			:workflow => 'test_default_sub_items',
 			:item     => {
 				'default' => {

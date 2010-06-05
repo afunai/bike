@@ -7,11 +7,11 @@ class TC_Textarea < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo textarea 76*8 1..1024)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo textarea 76*8 1..1024)') {|id,m|
 			meta = m
 			''
 		}
-		@f = Sofa::Field.instance meta
+		@f = Runo::Field.instance meta
 	end
 
 	def teardown

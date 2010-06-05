@@ -7,11 +7,11 @@ class TC_Timestamp < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo meta-timestamp 16)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo meta-timestamp 16)') {|id,m|
 			meta = m
 			''
 		}
-		@f = Sofa::Field.instance meta
+		@f = Runo::Field.instance meta
 	end
 
 	def teardown
@@ -19,11 +19,11 @@ class TC_Timestamp < Test::Unit::TestCase
 
 	def test_meta
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo meta-timestamp can_edit)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo meta-timestamp can_edit)') {|id,m|
 			meta = m
 			''
 		}
-		f = Sofa::Field.instance meta
+		f = Runo::Field.instance meta
 		assert_equal(
 			true,
 			f[:can_edit],
@@ -31,11 +31,11 @@ class TC_Timestamp < Test::Unit::TestCase
 		)
 
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo meta-timestamp can_update)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo meta-timestamp can_update)') {|id,m|
 			meta = m
 			''
 		}
-		f = Sofa::Field.instance meta
+		f = Runo::Field.instance meta
 		assert_equal(
 			true,
 			f[:can_update],

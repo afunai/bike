@@ -3,11 +3,11 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Workflow::Attachment < Sofa::Workflow
+class Runo::Workflow::Attachment < Runo::Workflow
 
 	DEFAULT_META = {
 		:p_size     => 0,
-		:item_label => Sofa::I18n.n_('attachment','attachments',1),
+		:item_label => Runo::I18n.n_('attachment','attachments',1),
 	}
 
 	PERM = {
@@ -28,7 +28,7 @@ class Sofa::Workflow::Attachment < Sofa::Workflow
 				new_item = item_instance '_001'
 
 				item_outs = _g_default(arg) {|item,item_arg|
-					action = item[:id][Sofa::REX::ID_NEW] ? :create : :delete
+					action = item[:id][Runo::REX::ID_NEW] ? :create : :delete
 					button_tmpl = my["tmpl_submit_#{action}".intern] || <<_html.chomp
 <input type="submit" name="@(short_name).action-#{action}" value="#{_ action.to_s}" />
 _html

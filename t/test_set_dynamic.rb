@@ -6,18 +6,18 @@
 class TC_Set_Dynamic < Test::Unit::TestCase
 
 	def setup
-		@sd = Sofa::Set::Dynamic.new(
+		@sd = Runo::Set::Dynamic.new(
 			:id       => 'foo',
 			:klass    => 'set-dynamic',
 			:workflow => 'blog',
 			:group    => ['roy','don'],
 			:tmpl     => <<'_tmpl'.chomp,
-<ul id="foo" class="sofa-blog">
+<ul id="foo" class="runo-blog">
 $()</ul>
 $(.submit)
 _tmpl
 			:item     => {
-				'default' => Sofa::Parser.parse_html(<<'_html')
+				'default' => Runo::Parser.parse_html(<<'_html')
 	<li>$(name = text 16 0..16 :'nobody'): $(comment = text 64 :'hi.')$(.hidden)</li>
 _html
 			}
@@ -29,46 +29,46 @@ _html
 			"[#{my[:id]}-#{arg[:orig_action]}#{arg[:sub_action] && ('.' + arg[:sub_action].to_s)}]\n"
 		end
 		@sd[:item]['default'][:item].delete '_timestamp'
-		Sofa.client = 'root'
-		Sofa.current[:base] = nil
+		Runo.client = 'root'
+		Runo.current[:base] = nil
 	end
 
 	def teardown
-		Sofa.client = nil
+		Runo.client = nil
 	end
 
 	def test_storage
 		assert_kind_of(
-			Sofa::Storage,
+			Runo::Storage,
 			@sd.storage,
 			'Set::Dynamic#instance should load an apropriate storage for the list'
 		)
 		assert_instance_of(
-			Sofa::Storage::Temp,
+			Runo::Storage::Temp,
 			@sd.storage,
 			'Set::Dynamic#instance should load an apropriate storage for the list'
 		)
 	end
 
-	class Sofa::Workflow::Default_meta < Sofa::Workflow
+	class Runo::Workflow::Default_meta < Runo::Workflow
 		DEFAULT_META = {:foo => 'FOO'}
 	end
 	def test_default_meta
-		sd = Sofa::Set::Dynamic.new(:workflow  => 'default_meta')
+		sd = Runo::Set::Dynamic.new(:workflow  => 'default_meta')
 		assert_equal(
 			'FOO',
 			sd[:foo],
 			'Set::Dynamic#[] should look for the default value in the workflow'
 		)
 
-		sd = Sofa::Set::Dynamic.new(:workflow  => 'default_meta',:foo => 'BAR')
+		sd = Runo::Set::Dynamic.new(:workflow  => 'default_meta',:foo => 'BAR')
 		assert_equal(
 			'BAR',
 			sd[:foo],
 			'workflow.DEFAULT_META should be eclipsed by @meta'
 		)
 
-		sd = Sofa::Set::Dynamic.new(:workflow  => 'default_meta')
+		sd = Runo::Set::Dynamic.new(:workflow  => 'default_meta')
 		def sd.meta_foo
 			'abc'
 		end
@@ -82,7 +82,7 @@ _html
 	def test_meta_tid
 		tid = @sd[:tid]
 		assert_match(
-			Sofa::REX::TID,
+			Runo::REX::TID,
 			tid,
 			'Set::Dynamic#meta_tid should return an unique id per an instance'
 		)
@@ -93,22 +93,22 @@ _html
 		)
 		assert_not_equal(
 			tid,
-			Sofa::Set::Dynamic.new[:tid],
+			Runo::Set::Dynamic.new[:tid],
 			'Set::Dynamic#meta_tid should be unique to an item'
 		)
 	end
 
 	def test_meta_base_path
-		item = Sofa::Set::Static::Folder.root.item('foo','main')
+		item = Runo::Set::Static::Folder.root.item('foo','main')
 
-		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','sub')
+		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo','bar','sub')
 		assert_equal(
 			'/foo/bar/sub',
 			item[:base_path],
 			'Field#[:base_path] should return the path name of the base SD'
 		)
 
-		Sofa.current[:base] = Sofa::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo','bar','main')
 		assert_equal(
 			'/foo/bar',
 			item[:base_path],
@@ -117,7 +117,7 @@ _html
 	end
 
 	def test_meta_order
-		sd = Sofa::Set::Dynamic.new(
+		sd = Runo::Set::Dynamic.new(
 			:id       => 'foo',
 			:klass    => 'set-dynamic',
 			:workflow => 'contact'
@@ -127,7 +127,7 @@ _html
 			'Set::Dynamic#[:order] should be nil by default'
 		)
 
-		sd = Sofa::Set::Dynamic.new(
+		sd = Runo::Set::Dynamic.new(
 			:id       => 'foo',
 			:klass    => 'set-dynamic',
 			:workflow => 'blog'
@@ -138,7 +138,7 @@ _html
 			'Set::Dynamic#[:order] should refer to the default_meta[:order]'
 		)
 
-		sd = Sofa::Set::Dynamic.new(
+		sd = Runo::Set::Dynamic.new(
 			:id       => 'foo',
 			:klass    => 'set-dynamic',
 			:workflow => 'blog',
@@ -154,7 +154,7 @@ _html
 	def test_item
 		@sd.load('20100131_1234' => {'name' => 'frank'})
 		assert_instance_of(
-			Sofa::Set::Static,
+			Runo::Set::Static,
 			@sd.item('20100131_1234'),
 			'Set::Dynamic#item should return the child set in the storage'
 		)
@@ -202,7 +202,7 @@ _html
 		@sd.each {|item| item[:tmpl_action_update] = '' }
 		assert_equal(
 			<<'_html',
-<ul id="foo" class="sofa-blog">
+<ul id="foo" class="runo-blog">
 	<li>frank: bar</li>
 	<li>carl: baz</li>
 </ul>
@@ -212,7 +212,7 @@ _html
 		)
 		assert_equal(
 			<<'_html',
-<ul id="foo" class="sofa-blog">
+<ul id="foo" class="runo-blog">
 	<li>carl: baz</li>
 </ul>
 _html
@@ -229,7 +229,7 @@ _html
 		}
 		assert_equal(
 			<<'_html',
-<ul id="foo" class="sofa-blog">
+<ul id="foo" class="runo-blog">
 	<li>moo!: moo!</li>
 </ul>
 [foo-update]
@@ -264,7 +264,7 @@ _html
 
 		assert_equal(
 			<<'_html',
-<ul id="foo" class="sofa-blog">
+<ul id="foo" class="runo-blog">
 </ul>
 _html
 			@sd.get(:action => :read),
@@ -273,7 +273,7 @@ _html
 
 		assert_equal(
 			<<'_html',
-<ul id="foo" class="sofa-blog">
+<ul id="foo" class="runo-blog">
 	<li><input type="text" name="name" value="" size="16" class="text" />: <input type="text" name="comment" value="" size="64" class="text" /></li>
 </ul>
 [foo-update]
@@ -284,14 +284,14 @@ _html
 	end
 
 	def test_get_preview
-		Sofa.current[:base] = nil
+		Runo.current[:base] = nil
 		@sd.load(
 			'20100330_1234' => {'name' => 'frank','comment' => 'bar'},
 			'20100330_1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
 		assert_equal(
 			<<'_html',
-<ul id="foo" class="sofa-blog">
+<ul id="foo" class="runo-blog">
 	<li>frank: bar<input type="hidden" name="20100330_1234.action" value="howdy" /></li>
 </ul>
 [foo-preview.howdy]
@@ -302,8 +302,8 @@ _html
 	end
 
 	def test_get_by_self_reference
-		ss = Sofa::Set::Static.new(
-			:html => '<ul class="sofa-attachment"><li class="body"></li>$(.pipco)</ul>'
+		ss = Runo::Set::Static.new(
+			:html => '<ul class="runo-attachment"><li class="body"></li>$(.pipco)</ul>'
 		)
 		sd = ss.item('main')
 		def sd._g_submit(arg)
@@ -320,7 +320,7 @@ _html
 		sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
 		sd[:tmpl_jawaka] = nil
 		assert_equal(
-			'<ul class="sofa-attachment"><foo>JAWAKA</foo></ul>',
+			'<ul class="runo-attachment"><foo>JAWAKA</foo></ul>',
 			ss.get,
 			'Set::Dynamic#_get_by_self_reference should work via [:parent]._get_by_tmpl()'
 		)
@@ -328,7 +328,7 @@ _html
 		sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
 		sd[:tmpl_jawaka] = 'via tmpl'
 		assert_equal(
-			'<ul class="sofa-attachment"><foo>JAWAKA</foo></ul>',
+			'<ul class="runo-attachment"><foo>JAWAKA</foo></ul>',
 			ss.get,
 			'Set::Dynamic#_get_by_self_reference should not recur'
 		)
@@ -358,8 +358,8 @@ _html
 	end
 
 	def test_get_by_self_reference_via_parent_tmpl
-		ss = Sofa::Set::Static.new(
-			:html => '$(main.action_pipco)<ul class="sofa-attachment"></ul>'
+		ss = Runo::Set::Static.new(
+			:html => '$(main.action_pipco)<ul class="runo-attachment"></ul>'
 		)
 		sd = ss.item('main')
 		def sd._g_submit(arg)
@@ -370,20 +370,20 @@ _html
 		sd[:tmpl_navi] = ''
 
 		assert_equal(
-			'PIPCO<ul class="sofa-attachment"></ul>',
+			'PIPCO<ul class="runo-attachment"></ul>',
 			ss.get,
 			'Set::Dynamic#_get_by_self_reference should work via [:parent]._get_by_tmpl()'
 		)
 		assert_equal(
-			'<ul class="sofa-attachment"></ul>',
+			'<ul class="runo-attachment"></ul>',
 			ss.get('main' => {:action => :create}),
 			'Set::Dynamic#_get_by_self_reference should hide unused items via [:parent]._get_by_tmpl()'
 		)
 	end
 
 	def test_get_by_self_reference_multiple_vars
-		ss = Sofa::Set::Static.new(
-			:html => '<ul class="sofa-attachment">$(.pipco)<li class="body">$(foo=text)</li></ul>'
+		ss = Runo::Set::Static.new(
+			:html => '<ul class="runo-attachment">$(.pipco)<li class="body">$(foo=text)</li></ul>'
 		)
 		sd = ss.item('main')
 		def sd._g_pipco(arg)
@@ -392,7 +392,7 @@ _html
 		sd[:tmpl_navi] = ''
 
 		assert_equal(
-			'<ul class="sofa-attachment">PIPCO</ul>',
+			'<ul class="runo-attachment">PIPCO</ul>',
 			ss.get,
 			'Set::Dynamic#_get_by_self_reference should not be affected by previous $(.action)'
 		)
@@ -728,13 +728,13 @@ _html
 	end
 
 	def test_g_submit
-		Sofa.client = nil
-		@sd = Sofa::Set::Dynamic.new(
+		Runo.client = nil
+		@sd = Runo::Set::Dynamic.new(
 			:klass    => 'set-dynamic',
 			:workflow => 'blog',
 			:tmpl     => '$(.submit)',
 			:item     => {
-				'default' => Sofa::Parser.parse_html(<<'_html')
+				'default' => Runo::Parser.parse_html(<<'_html')
 	<li>$(name = text 32 :'nobody'): $(comment = text 64 :'hi.')$(.hidden)</li>
 _html
 			}
@@ -893,8 +893,8 @@ _html
 	end
 
 	def test_post_multiple_attachments
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_attachment','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_attachment','main')
 		sd.storage.clear
 
 		# create an attachment item
@@ -939,14 +939,14 @@ _html
 		sd.commit :persistent
 		baz_id = sd.result.values.first[:id]
 
-		item = Sofa::Set::Static::Folder.root.item('t_attachment','main',baz_id,'files',first_id,'file')
+		item = Runo::Set::Static::Folder.root.item('t_attachment','main',baz_id,'files',first_id,'file')
 		assert_equal(
 			'foo',
 			item.val,
 			'Workflow::Attachment should store the body of the first file item'
 		)
 
-		item = Sofa::Set::Static::Folder.root.item('t_attachment','main',baz_id,'files',second_id,'file')
+		item = Runo::Set::Static::Folder.root.item('t_attachment','main',baz_id,'files',second_id,'file')
 		assert_equal(
 			'bar',
 			item.val,
@@ -1229,11 +1229,11 @@ _html
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = nil
+		Runo.client = nil
 
 		arg = {:action => :update,:conds => {:d => '2009'}}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			'Set::Dynamic#get should raise Error::Forbidden when sd[:client] is nobody'
 		) {
 			@sd.get arg
@@ -1245,22 +1245,22 @@ _html
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = nil
+		Runo.client = nil
 
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			"'nobody' should not create a new item"
 		) {
 			@sd.update('_0001' => {'comment' => 'qux'})
 		}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			"'nobody' should not update frank's item"
 		) {
 			@sd.update('20091122_0001' => {'comment' => 'qux'})
 		}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			"'nobody' should not delete frank's item"
 		) {
 			@sd.update('20091122_0001' => {:action => :delete})
@@ -1272,7 +1272,7 @@ _html
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = 'carl' # carl is not the member of the group
+		Runo.client = 'carl' # carl is not the member of the group
 
 		arg = {}
 		@sd.get arg
@@ -1284,7 +1284,7 @@ _html
 
 		arg = {:action => :create}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			'Set::Dynamic#get should raise Error::Forbidden when an action is given but forbidden'
 		) {
 			@sd.get arg
@@ -1292,7 +1292,7 @@ _html
 
 		arg = {:action => :update,:conds => {:d => '2009'}}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			'Set::Dynamic#get should not keep the partially-permitted action'
 		) {
 			@sd.get arg
@@ -1312,16 +1312,16 @@ _html
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = 'carl' # carl is not the member of the group
+		Runo.client = 'carl' # carl is not the member of the group
 
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			'carl should not create a new item'
 		) {
 			@sd.update('_0001' => {'comment' => 'qux'})
 		}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			"carl should not update frank's item"
 		) {
 			@sd.update('20091122_0001' => {'comment' => 'qux'})
@@ -1332,7 +1332,7 @@ _html
 			@sd.update('20091122_0002' => {'comment' => 'qux'})
 		}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			"carl should not delete frank's item"
 		) {
 			@sd.update('20091122_0001' => {:action => :delete})
@@ -1344,7 +1344,7 @@ _html
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = 'roy' # roy belongs to the group
+		Runo.client = 'roy' # roy belongs to the group
 
 		arg = {:action => :create}
 		@sd.get arg
@@ -1356,7 +1356,7 @@ _html
 
 		arg = {:action => :delete,:conds => {:d => '2009'}}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			'Set::Dynamic#get should raise Error::Forbidden when an action is given but forbidden'
 		) {
 			@sd.get arg
@@ -1368,7 +1368,7 @@ _html
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = 'roy' # roy belongs to the group
+		Runo.client = 'roy' # roy belongs to the group
 
 		assert_nothing_raised(
 			'roy should be able to create a new item'
@@ -1376,13 +1376,13 @@ _html
 			@sd.update('_0001' => {'comment' => 'qux'})
 		}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			"roy should not update frank's item"
 		) {
 			@sd.update('20091122_0001' => {'comment' => 'qux'})
 		}
 		assert_raise(
-			Sofa::Error::Forbidden,
+			Runo::Error::Forbidden,
 			"roy should not delete frank's item"
 		) {
 			@sd.update('20091122_0001' => {:action => :delete})
@@ -1394,7 +1394,7 @@ _html
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = 'root' # root is the admin
+		Runo.client = 'root' # root is the admin
 
 		arg = {:action => :create,:db => 1}
 		@sd.get arg
@@ -1418,7 +1418,7 @@ _html
 			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
-		Sofa.client = 'root' # root is the admin
+		Runo.client = 'root' # root is the admin
 
 		assert_nothing_raised(
 			'frank should be able to create a new item'

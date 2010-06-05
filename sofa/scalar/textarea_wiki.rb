@@ -5,7 +5,7 @@
 
 require 'csv'
 
-class Sofa::Textarea::Wiki < Sofa::Textarea
+class Runo::Textarea::Wiki < Runo::Textarea
 
 	private
 
@@ -20,7 +20,7 @@ class Sofa::Textarea::Wiki < Sofa::Textarea
 		body = ''
 		type = :p
 
-		Sofa::Field.h(str).each_line {|line|
+		Runo::Field.h(str).each_line {|line|
 			if line =~ /^---$/
 				new_type = :hr
 			else

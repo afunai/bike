@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Select < Sofa::Field
+class Runo::Select < Runo::Field
 
 	def initialize(meta = {})
 		meta[:mandatory] = meta[:tokens] && meta[:tokens].include?('mandatory')
@@ -26,7 +26,7 @@ class Sofa::Select < Sofa::Field
 	def _g_update(arg)
 		options = my[:options].collect {|opt|
 			selected = (opt == val) ? ' selected' : ''
-			"\t<option#{selected}>#{Sofa::Field.h opt}</option>\n"
+			"\t<option#{selected}>#{Runo::Field.h opt}</option>\n"
 		}.join
 		unless my[:mandatory] && my[:options].include?(val)
 			options = "\t<option value=\"\">#{_ 'please select'}</option>\n#{options}"

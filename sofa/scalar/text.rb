@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::Text < Sofa::Field
+class Runo::Text < Runo::Field
 
 	def initialize(meta = {})
 		meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
@@ -26,7 +26,7 @@ class Sofa::Text < Sofa::Field
 
 	def _g_update(arg)
 		<<_html.chomp
-<input type="text" name="#{my[:short_name]}" value="#{Sofa::Field.h val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
+<input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
 _html
 	end
 	alias :_g_create :_g_update

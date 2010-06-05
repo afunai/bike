@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Sofa::File < Sofa::Field
+class Runo::File < Runo::Field
 
 	def initialize(meta = {})
 		meta[:options].collect! {|i| i.downcase } if meta[:options]
@@ -16,11 +16,11 @@ class Sofa::File < Sofa::Field
 	end
 
 	def meta_tmp_path
-		"#{Sofa.base[:path]}/#{Sofa.base[:tid]}/#{my[:short_name].gsub('-','/')}" if Sofa.base
+		"#{Runo.base[:path]}/#{Runo.base[:tid]}/#{my[:short_name].gsub('-','/')}" if Runo.base
 	end
 
 	def meta_persistent_sd
-		find_ancestor {|f| f.is_a?(Sofa::Set::Dynamic) && f.storage.persistent? }
+		find_ancestor {|f| f.is_a?(Runo::Set::Dynamic) && f.storage.persistent? }
 	end
 
 	def meta_persistent_name
@@ -35,7 +35,7 @@ class Sofa::File < Sofa::Field
 	end
 
 	def body
-		raise Sofa::Error::Forbidden unless permit? :read
+		raise Runo::Error::Forbidden unless permit? :read
 
 		if ps = my[:persistent_sd]
 			@body ||= ps.storage.val my[:persistent_name]
@@ -85,8 +85,8 @@ class Sofa::File < Sofa::Field
 
 	def _g_default(arg = {})
 		path     = _path arg[:action]
-		basename = Sofa::Field.h val['basename']
-		type     = Sofa::Field.h val['type']
+		basename = Runo::Field.h val['basename']
+		type     = Runo::Field.h val['type']
 		<<_html.chomp unless val.empty?
 <span class="file"><a href="#{path}/#{basename}">#{basename} (#{val['size']} bytes)</a></span>
 _html
@@ -99,7 +99,7 @@ _html
 		if (
 			!val.empty? &&
 			my[:min].to_i == 0 &&
-			my[:parent].is_a?(Sofa::Set::Static) &&
+			my[:parent].is_a?(Runo::Set::Static) &&
 			my[:parent][:item].find {|id,meta| id != my[:id] && meta[:klass] !~ /^meta-/ }
 		)
 			delete = <<_html
@@ -118,7 +118,7 @@ _html
 	alias :_g_create :_g_update
 
 	def _path(action)
-		(Sofa.base ? Sofa.base[:uri].to_s : '') +
+		(Runo.base ? Runo.base[:uri].to_s : '') +
 		([:read,nil].include?(action) ? my[:path] : my[:tmp_path])
 	end
 

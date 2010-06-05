@@ -1,11 +1,11 @@
 # Copyright (C) 2009-2010 Akira FUNAI
-# This file is distributed under the same license as the Sofa package.
+# This file is distributed under the same license as the Runo package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Sofa 0.1\n"
+"Project-Id-Version: Runo 0.1\n"
 "POT-Creation-Date: 2010-05-09 17:07+0900\n"
 "PO-Revision-Date: 2010-05-09 17:07+0900\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"

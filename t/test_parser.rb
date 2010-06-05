@@ -14,38 +14,38 @@ class TC_Parser < Test::Unit::TestCase
 	def test_scan_tokens
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
-			Sofa::Parser.scan_tokens(StringScanner.new('foo bar baz')),
+			Runo::Parser.scan_tokens(StringScanner.new('foo bar baz')),
 			'Parser.scan_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar','baz baz']},
-			Sofa::Parser.scan_tokens(StringScanner.new('foo "bar" "baz baz"')),
+			Runo::Parser.scan_tokens(StringScanner.new('foo "bar" "baz baz"')),
 			'Parser.scan_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
-			Sofa::Parser.scan_tokens(StringScanner.new("foo 'bar' baz")),
+			Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz")),
 			'Parser.scan_tokens should be able to parse quoted tokens'
 		)
 
 		assert_equal(
 			{:tokens => ['foo','bar','baz']},
-			Sofa::Parser.scan_tokens(StringScanner.new("foo 'bar' baz) qux")),
+			Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz) qux")),
 			'Parser.scan_tokens should stop scanning at an ending bracket'
 		)
 		assert_equal(
 			{:tokens => ['foo','bar (bar?)','baz']},
-			Sofa::Parser.scan_tokens(StringScanner.new("foo 'bar (bar?)' baz) qux")),
+			Runo::Parser.scan_tokens(StringScanner.new("foo 'bar (bar?)' baz) qux")),
 			'Parser.scan_tokens should ignore brackets inside quoted tokens'
 		)
 	end
 
 	def test_parse_empty_tag
-		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz") world')
+		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz baz']}},
 			result[:item],
-			'Parser.parse_html should be able to parse empty sofa tags'
+			'Parser.parse_html should be able to parse empty runo tags'
 		)
 		assert_equal(
 			'hello $(foo) world',
@@ -53,7 +53,7 @@ class TC_Parser < Test::Unit::TestCase
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 <h1>$(foo=bar "baz baz")</h1>
 <p>$(bar=a b c)</p>
 _html
@@ -63,7 +63,7 @@ _html
 				'bar' => {:klass => 'a',:tokens => ['b','c']},
 			},
 			result[:item],
-			'Parser.parse_html should be able to parse empty sofa tags'
+			'Parser.parse_html should be able to parse empty runo tags'
 		)
 		assert_equal(
 			<<'_html',
@@ -76,7 +76,7 @@ _html
 	end
 
 	def test_obscure_markup
-		result = Sofa::Parser.parse_html('hello $(foo = bar $(baz=1) baz) world')
+		result = Runo::Parser.parse_html('hello $(foo = bar $(baz=1) baz) world')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['$(baz=1']}},
 			result[:item],
@@ -88,7 +88,7 @@ _html
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 
-		result = Sofa::Parser.parse_html('hello $(foo = bar baz world')
+		result = Runo::Parser.parse_html('hello $(foo = bar baz world')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
@@ -100,7 +100,7 @@ _html
 			'Parser.parse_html should be able to parse a tag that is not closed'
 		)
 
-		result = Sofa::Parser.parse_html('hello $(foo = bar "baz"world)')
+		result = Runo::Parser.parse_html('hello $(foo = bar "baz"world)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
 			result[:item],
@@ -112,7 +112,7 @@ _html
 			'Parser.parse_html should be able to parse tokens without a delimiter'
 		)
 
-		result = Sofa::Parser.parse_html('hello $(foo = bar,"baz")')
+		result = Runo::Parser.parse_html('hello $(foo = bar,"baz")')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz']}},
 			result[:item],
@@ -123,61 +123,61 @@ _html
 	def test_parse_token
 		assert_equal(
 			{:width => 160,:height => 120},
-			Sofa::Parser.parse_token(nil,'160*120',{}),
+			Runo::Parser.parse_token(nil,'160*120',{}),
 			'Parser.parse_token should be able to parse dimension tokens'
 		)
 		assert_equal(
 			{:min => 1,:max => 32},
-			Sofa::Parser.parse_token(nil,'1..32',{}),
+			Runo::Parser.parse_token(nil,'1..32',{}),
 			'Parser.parse_token should be able to parse range tokens'
 		)
 		assert_equal(
 			{:max => 32},
-			Sofa::Parser.parse_token(nil,'..32',{}),
+			Runo::Parser.parse_token(nil,'..32',{}),
 			'Parser.parse_token should be able to parse partial range tokens'
 		)
 		assert_equal(
 			{:min => 1},
-			Sofa::Parser.parse_token(nil,'1..',{}),
+			Runo::Parser.parse_token(nil,'1..',{}),
 			'Parser.parse_token should be able to parse partial range tokens'
 		)
 		assert_equal(
 			{:min => -32,:max => -1},
-			Sofa::Parser.parse_token(nil,'-32..-1',{}),
+			Runo::Parser.parse_token(nil,'-32..-1',{}),
 			'Parser.parse_token should be able to parse minus range tokens'
 		)
 
 		assert_equal(
 			{:options => ['foo']},
-			Sofa::Parser.parse_token(',','foo',{}),
+			Runo::Parser.parse_token(',','foo',{}),
 			'Parser.parse_token should be able to parse option tokens'
 		)
 		assert_equal(
 			{:options => ['foo','bar']},
-			Sofa::Parser.parse_token(',','bar',{:options => ['foo']}),
+			Runo::Parser.parse_token(',','bar',{:options => ['foo']}),
 			'Parser.parse_token should be able to parse option tokens'
 		)
 
 		assert_equal(
 			{:default => 'bar'},
-			Sofa::Parser.parse_token(':','bar',{}),
+			Runo::Parser.parse_token(':','bar',{}),
 			'Parser.parse_token should be able to parse default tokens'
 		)
 		assert_equal(
 			{:defaults => ['bar','baz']},
-			Sofa::Parser.parse_token(';','baz',{:defaults => ['bar']}),
+			Runo::Parser.parse_token(';','baz',{:defaults => ['bar']}),
 			'Parser.parse_token should be able to parse defaults tokens'
 		)
 	end
 
 	def test_parse_options
-		result = Sofa::Parser.parse_html('hello $(foo = bar ,"baz baz","world",hi qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar ,"baz baz","world",hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should be able to parse a sequence of CSV'
 		)
-		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz","world",hi qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz","world",hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
@@ -186,26 +186,26 @@ _html
 	end
 
 	def test_parse_options_with_spaces
-		result = Sofa::Parser.parse_html('hello $(foo = bar world, qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar world, qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['world','qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the comma'
 		)
-		result = Sofa::Parser.parse_html('hello $(foo = bar world ,qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar world ,qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['qux'],:tokens => ['world']}},
 			result[:item],
 			'Parser.parse_html should not allow spaces before the comma'
 		)
-		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the comma'
 		)
 
-		result = Sofa::Parser.parse_html(<<'_eos')
+		result = Runo::Parser.parse_html(<<'_eos')
 hello $(foo =
 	bar
 	"baz baz",
@@ -221,13 +221,13 @@ _eos
 	end
 
 	def test_parse_defaults
-		result = Sofa::Parser.parse_html('hello $(foo = bar ;"baz baz";"world";hi qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar ;"baz baz";"world";hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
-		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz";"world";hi qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz";"world";hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
@@ -236,26 +236,26 @@ _eos
 	end
 
 	def test_parse_defaults_with_spaces
-		result = Sofa::Parser.parse_html('hello $(foo=bar world; qux)')
+		result = Runo::Parser.parse_html('hello $(foo=bar world; qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['world','qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the semicolon'
 		)
-		result = Sofa::Parser.parse_html('hello $(foo=bar world ;qux)')
+		result = Runo::Parser.parse_html('hello $(foo=bar world ;qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['qux'],:tokens => ['world']}},
 			result[:item],
 			'Parser.parse_html should not allow spaces before the semicolon'
 		)
-		result = Sofa::Parser.parse_html('hello $(foo=bar "baz baz"; "world"; hi qux)')
+		result = Runo::Parser.parse_html('hello $(foo=bar "baz baz"; "world"; hi qux)')
 		assert_equal(
 			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the comma'
 		)
 
-		result = Sofa::Parser.parse_html(<<'_eos')
+		result = Runo::Parser.parse_html(<<'_eos')
 hello $(foo =
 	bar
 	"baz baz";
@@ -271,7 +271,7 @@ _eos
 	end
 
 	def test_parse_duplicate_tag
-		result = Sofa::Parser.parse_html('hello $(foo = bar "baz baz") world $(foo=boo) $(foo)!')
+		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world $(foo=boo) $(foo)!')
 		assert_equal(
 			{'foo' => {:klass => 'boo'}},
 			result[:item],
@@ -286,7 +286,7 @@ _eos
 
 	def test_scan_inner_html
 		s = StringScanner.new 'bar</foo>bar'
-		inner_html,close_tag = Sofa::Parser.scan_inner_html(s,'foo')
+		inner_html,close_tag = Runo::Parser.scan_inner_html(s,'foo')
 		assert_equal(
 			'bar',
 			inner_html,
@@ -299,7 +299,7 @@ _eos
 		)
 
 		s = StringScanner.new '<foo>bar</foo></foo>'
-		inner_html,close_tag = Sofa::Parser.scan_inner_html(s,'foo')
+		inner_html,close_tag = Runo::Parser.scan_inner_html(s,'foo')
 		assert_equal(
 			'<foo>bar</foo>',
 			inner_html,
@@ -307,7 +307,7 @@ _eos
 		)
 
 		s = StringScanner.new "baz\n\t<foo>bar</foo>\n</foo>"
-		inner_html,close_tag = Sofa::Parser.scan_inner_html(s,'foo')
+		inner_html,close_tag = Runo::Parser.scan_inner_html(s,'foo')
 		assert_equal(
 			"baz\n\t<foo>bar</foo>\n",
 			inner_html,
@@ -316,8 +316,8 @@ _eos
 	end
 
 	def test_parse_block_tag
-		result = Sofa::Parser.parse_html <<'_html'
-<ul class="sofa-blog" id="foo"><li>hello</li></ul>
+		result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo"><li>hello</li></ul>
 _html
 		assert_equal(
 			{
@@ -325,7 +325,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-<ul class="sofa-blog" id="@(name)">$()</ul>
+<ul class="runo-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
@@ -338,7 +338,7 @@ _tmpl
 				},
 			},
 			result[:item],
-			'Parser.parse_html should be able to parse block sofa tags'
+			'Parser.parse_html should be able to parse block runo tags'
 		)
 		assert_equal(
 			'$(foo.message)$(foo)',
@@ -346,8 +346,8 @@ _tmpl
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
-<ul class="sofa-blog" id="foo">
+		result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo">
 	<li>hello</li>
 </ul>
 _html
@@ -357,7 +357,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-<ul class="sofa-blog" id="@(name)">
+<ul class="runo-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -371,7 +371,7 @@ _tmpl
 				},
 			},
 			result[:item],
-			'Parser.parse_html should be able to parse block sofa tags'
+			'Parser.parse_html should be able to parse block runo tags'
 		)
 		assert_equal(
 			'$(foo.message)$(foo)',
@@ -379,8 +379,8 @@ _tmpl
 			'Parser.parse_html[:tmpl] should be a proper template'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
-hello <ul class="sofa-blog" id="foo"><li>hello</li></ul> world
+		result = Runo::Parser.parse_html <<'_html'
+hello <ul class="runo-blog" id="foo"><li>hello</li></ul> world
 _html
 		assert_equal(
 			{
@@ -388,7 +388,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
- <ul class="sofa-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
+ <ul class="runo-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
 _tmpl
 					:item     => {
 						'default' => {
@@ -400,7 +400,7 @@ _tmpl
 				},
 			},
 			result[:item],
-			'Parser.parse_html should be able to parse block sofa tags'
+			'Parser.parse_html should be able to parse block runo tags'
 		)
 		assert_equal(
 			<<'_html',
@@ -412,22 +412,22 @@ _html
 	end
 
 	def test_look_a_like_block_tag
-		result = Sofa::Parser.parse_html <<'_html'
-hello <ul class="not-sofa-blog" id="foo"><li>hello</li></ul> world
+		result = Runo::Parser.parse_html <<'_html'
+hello <ul class="not-runo-blog" id="foo"><li>hello</li></ul> world
 _html
 		assert_equal(
 			<<'_tmpl',
-hello <ul class="not-sofa-blog" id="foo"><li>hello</li></ul> world
+hello <ul class="not-runo-blog" id="foo"><li>hello</li></ul> world
 _tmpl
 			result[:tmpl],
-			"Parser.parse_html[:tmpl] should skip a class which does not start with 'sofa'"
+			"Parser.parse_html[:tmpl] should skip a class which does not start with 'runo'"
 		)
 	end
 
 	def test_block_tags_with_options
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 hello
-	<table class="sofa-blog" id="foo">
+	<table class="runo-blog" id="foo">
 		<!-- 1..20 barbaz -->
 		<tbody class="body"><!-- qux --><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
 	</table>
@@ -442,7 +442,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-	<table class="sofa-blog" id="@(name)">
+	<table class="runo-blog" id="@(name)">
 		<!-- 1..20 barbaz -->
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
@@ -467,9 +467,9 @@ _tmpl
 	end
 
 	def test_block_tags_with_tbody
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 hello
-	<table class="sofa-blog" id="foo">
+	<table class="runo-blog" id="foo">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 		<tbody class="body"><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
 	</table>
@@ -481,7 +481,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-	<table class="sofa-blog" id="@(name)">
+	<table class="runo-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
@@ -514,8 +514,8 @@ _tmpl
 	end
 
 	def test_parse_item_label
-		result = Sofa::Parser.parse_html <<'_html'
-<ul class="sofa-blog" id="foo"><li title="Greeting">hello</li></ul>
+		result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo"><li title="Greeting">hello</li></ul>
 _html
 		assert_equal(
 			'Greeting',
@@ -523,8 +523,8 @@ _html
 			'Parser.parse_html should pick up item labels from title attrs'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
-<ul class="sofa-blog" id="foo"><!-- foo --><li title="Greeting">hello</li></ul>
+		result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo"><!-- foo --><li title="Greeting">hello</li></ul>
 _html
 		assert_equal(
 			'Greeting',
@@ -532,8 +532,8 @@ _html
 			'Parser.parse_html should pick up item labels from title attrs'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
-<ul class="sofa-blog" id="foo"><!-- foo --><li><div title="Foo">hello</div></li></ul>
+		result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo"><!-- foo --><li><div title="Foo">hello</div></li></ul>
 _html
 		assert_nil(
 			result[:item]['foo'][:item]['default'][:label],
@@ -542,8 +542,8 @@ _html
 	end
 
 	def test_parse_item_label_plural
-		result = Sofa::Parser.parse_html <<'_html'
-<ul class="sofa-blog" id="foo"><li title="tEntry, tEntries">hello</li></ul>
+		result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo"><li title="tEntry, tEntries">hello</li></ul>
 _html
 		assert_equal(
 			'tEntry',
@@ -552,12 +552,12 @@ _html
 		)
 		assert_equal(
 			['tEntry','tEntries'],
-			Sofa::I18n.msg['tEntry'],
+			Runo::I18n.msg['tEntry'],
 			'Parser.parse_html should I18n.merge_msg! the plural item labels'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
-<ul class="sofa-blog" id="foo"><li title="tFooFoo, BarBar, BazBaz">hello</li></ul>
+		result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo"><li title="tFooFoo, BarBar, BazBaz">hello</li></ul>
 _html
 		assert_equal(
 			'tFooFoo',
@@ -566,12 +566,12 @@ _html
 		)
 		assert_equal(
 			['tFooFoo','BarBar','BazBaz'],
-			Sofa::I18n.msg['tFooFoo'],
+			Runo::I18n.msg['tFooFoo'],
 			'Parser.parse_html should I18n.merge_msg! the plural item labels'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
-<ul class="sofa-blog" id="foo"><li title="tQux">hello</li></ul>
+		result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo"><li title="tQux">hello</li></ul>
 _html
 		assert_equal(
 			'tQux',
@@ -580,15 +580,15 @@ _html
 		)
 		assert_equal(
 			['tQux','tQux','tQux','tQux'],
-			Sofa::I18n.msg['tQux'],
+			Runo::I18n.msg['tQux'],
 			'Parser.parse_html should repeat a singular label to fill all possible plural forms'
 		)
 	end
 
 	def test_block_tags_with_nested_tbody
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 hello
-	<table class="sofa-blog" id="foo">
+	<table class="runo-blog" id="foo">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 		<tbody class="body"><tbody><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody></tbody>
 	</table>
@@ -600,7 +600,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-	<table class="sofa-blog" id="@(name)">
+	<table class="runo-blog" id="@(name)">
 		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()	</table>
 $(.navi)$(.submit)$(.action_create)
@@ -625,10 +625,10 @@ _tmpl
 	end
 
 	def test_nested_block_tags
-		result = Sofa::Parser.parse_html <<'_html'
-<ul class="sofa-blog" id="foo">
+		result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo">
 	<li>
-		<ul class="sofa-blog" id="bar"><li>baz</li></ul>
+		<ul class="runo-blog" id="bar"><li>baz</li></ul>
 	</li>
 </ul>
 _html
@@ -638,7 +638,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-<ul class="sofa-blog" id="@(name)">
+<ul class="runo-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -654,7 +654,7 @@ _tmpl
 									:klass    => 'set-dynamic',
 									:workflow => 'blog',
 									:tmpl     => <<'_tmpl'.chomp,
-		<ul class="sofa-blog" id="@(name)">$()</ul>
+		<ul class="runo-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
 									:item     => {
@@ -671,7 +671,7 @@ _tmpl
 				},
 			},
 			result[:item],
-			'Parser.parse_html should be able to parse nested block sofa tags'
+			'Parser.parse_html should be able to parse nested block runo tags'
 		)
 		assert_equal(
 			'$(foo.message)$(foo)',
@@ -681,10 +681,10 @@ _tmpl
 	end
 
 	def test_combination
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 <html>
 	<h1>$(title=text 32)</h1>
-	<ul id="foo" class="sofa-blog">
+	<ul id="foo" class="runo-blog">
 		<li>
 			$(subject=text 64)
 			$(body=textarea 72*10)
@@ -700,7 +700,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-	<ul id="@(name)" class="sofa-blog">
+	<ul id="@(name)" class="runo-blog">
 $()	</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -730,7 +730,7 @@ _tmpl
 				},
 			},
 			result[:item],
-			'Parser.parse_html should be able to parse combination of mixed sofa tags'
+			'Parser.parse_html should be able to parse combination of mixed runo tags'
 		)
 		assert_equal(
 			<<'_tmpl',
@@ -745,7 +745,7 @@ _tmpl
 
 	def test_gsub_block
 		match = nil
-		result = Sofa::Parser.gsub_block('a<div class="foo">bar</div>c','foo') {|open,inner,close|
+		result = Runo::Parser.gsub_block('a<div class="foo">bar</div>c','foo') {|open,inner,close|
 			match = [open,inner,close]
 			'b'
 		}
@@ -760,7 +760,7 @@ _tmpl
 			'Parser.gsub_block should pass the matching element to its block'
 		)
 
-		result = Sofa::Parser.gsub_block('<p><div class="foo">bar</div></p>','foo') {|open,inner,close|
+		result = Runo::Parser.gsub_block('<p><div class="foo">bar</div></p>','foo') {|open,inner,close|
 			match = [open,inner,close]
 			'b'
 		}
@@ -775,7 +775,7 @@ _tmpl
 			'Parser.gsub_block should pass the matching element to its block'
 		)
 
-		result = Sofa::Parser.gsub_block('a<p><div class="foo">bar</div></p>c','foo') {|open,inner,close|
+		result = Runo::Parser.gsub_block('a<p><div class="foo">bar</div></p>c','foo') {|open,inner,close|
 			match = [open,inner,close]
 			'b'
 		}
@@ -793,7 +793,7 @@ _tmpl
 
 	def _test_gsub_action_tmpl(html)
 		result = {}
-		html = Sofa::Parser.gsub_action_tmpl(html) {|id,action,*tmpl|
+		html = Runo::Parser.gsub_action_tmpl(html) {|id,action,*tmpl|
 			result[:id]     = id
 			result[:action] = action
 			result[:tmpl]   = tmpl.join
@@ -909,9 +909,9 @@ _tmpl
 	end
 
 	def test_action_tmpl_in_ss
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="foo" class="sofa-blog">
+	<ul id="foo" class="runo-blog">
 		<li>$(subject=text)</li>
 	</ul>
 	<div class="foo-navi">bar</div>
@@ -935,9 +935,9 @@ _tmpl
 	end
 
 	def test_action_tmpl_in_ss_with_nil_id
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="main" class="sofa-blog">
+	<ul id="main" class="runo-blog">
 		<li>$(subject=text)</li>
 	</ul>
 	<div class="navi">bar</div>
@@ -961,9 +961,9 @@ _tmpl
 	end
 
 	def test_action_tmpl_in_ss_with_non_existent_id
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="main" class="sofa-blog">
+	<ul id="main" class="runo-blog">
 		<li>$(subject=text)</li>
 	</ul>
 	<div class="non_existent-navi">bar</div>
@@ -985,9 +985,9 @@ _tmpl
 	end
 
 	def test_action_tmpl_in_ss_with_nested_action_tmpl
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="foo" class="sofa-blog">
+	<ul id="foo" class="runo-blog">
 		<li>$(subject=text)</li>
 	</ul>
 	<div class="foo-navi"><span class="navi_prev">prev</span></div>
@@ -1006,9 +1006,9 @@ _html
 			'Parser.parse_html should parse nested action templates'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="foo" class="sofa-blog">
+	<ul id="foo" class="runo-blog">
 		<li>$(subject=text)</li>
 	</ul>
 	<div class="foo-navi"><span class="bar-navi_prev">prev</span></div>
@@ -1022,8 +1022,8 @@ _html
 	end
 
 	def test_action_tmpl_in_sd
-		result = Sofa::Parser.parse_html <<'_html'
-<ul id="foo" class="sofa-blog">
+		result = Runo::Parser.parse_html <<'_html'
+<ul id="foo" class="runo-blog">
 	<li class="body">$(text)</li>
 	<div class="navi">bar</div>
 </ul>
@@ -1043,8 +1043,8 @@ _html
 	end
 
 	def test_action_tmpl_in_sd_with_nested_action_tmpl
-		result = Sofa::Parser.parse_html <<'_html'
-<ul id="foo" class="sofa-blog">
+		result = Runo::Parser.parse_html <<'_html'
+<ul id="foo" class="runo-blog">
 	<li class="body">$(text)</li>
 	<div class="navi"><span class="navi_prev">prev</span></div>
 </ul>
@@ -1064,8 +1064,8 @@ _html
 	end
 
 	def test_supplement_menus_in_sd
-		result = Sofa::Parser.parse_html <<'_html'
-<ul id="foo" class="sofa-blog">
+		result = Runo::Parser.parse_html <<'_html'
+<ul id="foo" class="runo-blog">
 	<li class="body">$(text)</li>
 </ul>
 _html
@@ -1075,8 +1075,8 @@ _html
 			'Parser.parse_html should supplement sd[:tmpl] with default menus'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
-<ul id="foo" class="sofa-blog">
+		result = Runo::Parser.parse_html <<'_html'
+<ul id="foo" class="runo-blog">
 	<div class="navi">bar</div>
 	<li class="body">$(text)</li>
 </ul>
@@ -1087,9 +1087,9 @@ _html
 			'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
 		)
 
-		result = Sofa::Parser.parse_html <<'_html'
+		result = Runo::Parser.parse_html <<'_html'
 <div class="foo-navi">bar</div>
-<ul id="foo" class="sofa-blog">
+<ul id="foo" class="runo-blog">
 	<li class="body">$(text)</li>
 </ul>
 _html

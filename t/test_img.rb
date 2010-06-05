@@ -13,11 +13,11 @@ class TC_Img < Test::Unit::TestCase
 		}
 
 		meta = nil
-		Sofa::Parser.gsub_scalar('$(foo img 32*32 1..100000 jpg,gif,png crop)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo img 32*32 1..100000 jpg,gif,png crop)') {|id,m|
 			meta = m
 			''
 		}
-		@f = Sofa::Field.instance meta.merge(:id => 'foo')
+		@f = Runo::Field.instance meta.merge(:id => 'foo')
 	end
 
 	def test_meta
@@ -113,10 +113,10 @@ _eos
 	end
 
 	def test_get
-		Sofa.client = 'root'
+		Runo.client = 'root'
 
-		@f[:parent] = Sofa::Set::Static::Folder.root.item('t_img','main')
-		Sofa.current[:base] = @f[:parent]
+		@f[:parent] = Runo::Set::Static::Folder.root.item('t_img','main')
+		Runo.current[:base] = @f[:parent]
 		tid = @f[:parent][:tid]
 
 		@f.load({})
@@ -172,8 +172,8 @@ _html
 	end
 
 	def test_call_body
-		Sofa.client = 'root'
-		sd = Sofa::Set::Static::Folder.root.item('t_img','main')
+		Runo.client = 'root'
+		sd = Runo::Set::Static::Folder.root.item('t_img','main')
 		sd.storage.clear
 
 		# post a multipart request
@@ -187,10 +187,10 @@ Content-Transfer-Encoding: binary
 ---foobarbaz
 Content-Disposition: form-data; name="_token"
 
-#{Sofa.token}
+#{Runo.token}
 ---foobarbaz--
 _eos
-		res = Rack::MockRequest.new(Sofa.new).post(
+		res = Rack::MockRequest.new(Runo.new).post(
 			'http://example.com/t_img/main/update.html',
 			{
 				:input           => input,
@@ -198,70 +198,70 @@ _eos
 				'CONTENT_LENGTH' => input.length,
 			}
 		)
-		tid = res.headers['Location'][Sofa::REX::TID]
+		tid = res.headers['Location'][Runo::REX::TID]
 
 		# commit the base
-		res = Rack::MockRequest.new(Sofa.new).post(
+		res = Rack::MockRequest.new(Runo.new).post(
 			"http://example.com/#{tid}/update.html",
 			{
-				:input => ".status-public=create&_token=#{Sofa.token}",
+				:input => ".status-public=create&_token=#{Runo.token}",
 			}
 		)
 
-		res.headers['Location'] =~ Sofa::REX::PATH_ID
+		res.headers['Location'] =~ Runo::REX::PATH_ID
 		new_id = sprintf('%.8d_%.4d',$1,$2)
 
-		res = Rack::MockRequest.new(Sofa.new).get(
+		res = Rack::MockRequest.new(Runo.new).get(
 			"http://example.com/t_img/#{new_id}/foo/foo.jpg"
 		)
 		assert_equal(
 			'image/jpeg',
 			res.headers['Content-Type'],
-			'Sofa#call to a img item should return the mime type of the file'
+			'Runo#call to a img item should return the mime type of the file'
 		)
 		assert_equal(
 			@img.size,
 			res.body.size,
-			'Sofa#call to a img item should return the binary body of the file'
+			'Runo#call to a img item should return the binary body of the file'
 		)
 
-		res = Rack::MockRequest.new(Sofa.new).get(
+		res = Rack::MockRequest.new(Runo.new).get(
 			"http://example.com/t_img/#{new_id}/foo/foo_small.jpg"
 		)
 		assert_equal(
 			'image/jpeg',
 			res.headers['Content-Type'],
-			"Sofa#call to 'file-small.*' should return the thumbnail of the file"
+			"Runo#call to 'file-small.*' should return the thumbnail of the file"
 		)
 		@file.rewind
 		assert_equal(
 			@f.send(:_thumbnail,@file).size,
 			res.body.size,
-			"Sofa#call to 'file-small.*' should return the thumbnail of the file"
+			"Runo#call to 'file-small.*' should return the thumbnail of the file"
 		)
 
 		# delete
-		Rack::MockRequest.new(Sofa.new).post(
+		Rack::MockRequest.new(Runo.new).post(
 			'http://example.com/t_img/update.html',
 			{
-				:input => "#{new_id}.action=delete&.status-public=delete&_token=#{Sofa.token}",
+				:input => "#{new_id}.action=delete&.status-public=delete&_token=#{Runo.token}",
 			}
 		)
-		res = Rack::MockRequest.new(Sofa.new).get(
+		res = Rack::MockRequest.new(Runo.new).get(
 			"http://example.com/t_img/#{new_id}/foo/foo.jpg"
 		)
 		assert_equal(
 			404,
 			res.status,
-			'Sofa#call should delete child files as well'
+			'Runo#call should delete child files as well'
 		)
-		res = Rack::MockRequest.new(Sofa.new).get(
+		res = Rack::MockRequest.new(Runo.new).get(
 			"http://example.com/t_img/#{new_id}/foo/foo_small.jpg"
 		)
 		assert_equal(
 			404,
 			res.status,
-			'Sofa#call should delete child files as well'
+			'Runo#call should delete child files as well'
 		)
 	end
 

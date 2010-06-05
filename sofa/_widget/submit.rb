@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Sofa::Set::Dynamic
+class Runo::Set::Dynamic
 
 	private
 
@@ -15,7 +15,7 @@ _html
 	end
 
 	def _g_submit_commit(arg)
-		if collect_item(arg[:conds]).all? {|i| i[:id] =~ Sofa::REX::ID_NEW }
+		if collect_item(arg[:conds]).all? {|i| i[:id] =~ Runo::REX::ID_NEW }
 			action = :create
 		elsif arg[:orig_action] == :preview
 			action = arg[:sub_action]
@@ -37,7 +37,7 @@ _html
 	def _g_submit_preview_delete(arg)
 		if (
 			permit_get?(arg.merge :action => :delete) &&
-			collect_item(arg[:conds]).find {|item| item[:id] !~ Sofa::REX::ID_NEW } &&
+			collect_item(arg[:conds]).find {|item| item[:id] !~ Runo::REX::ID_NEW } &&
 			arg[:orig_action] != :preview
 		)
 			<<_html

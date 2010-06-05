@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Sofa::Error
+module Runo::Error
 
 	class Forbidden < StandardError
 	end

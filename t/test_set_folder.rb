@@ -6,45 +6,45 @@
 class TC_Set_Folder < Test::Unit::TestCase
 
 	def setup
-		Sofa.client = 'root'
-		Sofa.current[:base] = nil
+		Runo.client = 'root'
+		Runo.current[:base] = nil
 	end
 
 	def teardown
 	end
 
 	def test_root
-		root = Sofa::Set::Static::Folder.root
+		root = Runo::Set::Static::Folder.root
 		assert_instance_of(
-			Sofa::Set::Static::Folder,
+			Runo::Set::Static::Folder,
 			root,
 			'Folder.root should return the root folder instance'
 		)
 	end
 
 	def test_initialize
-		folder = Sofa::Set::Static::Folder.new(:id => 'foo',:parent => nil)
+		folder = Runo::Set::Static::Folder.new(:id => 'foo',:parent => nil)
 		assert_match(
 			/^<html>/,
 			folder[:html],
 			'Folder#initialize should load [:html] from [:dir]/index.html'
 		)
 		assert_instance_of(
-			Sofa::Set::Dynamic,
+			Runo::Set::Dynamic,
 			folder.item('main'),
 			'Folder#initialize should load the items according to [:html]'
 		)
 	end
 
 	def test_meta_html_dir
-		folder = Sofa::Set::Static::Folder.root.item('foo')
+		folder = Runo::Set::Static::Folder.root.item('foo')
 		assert_equal(
 			'/foo',
 			folder[:html_dir],
 			"Folder#meta_html_dir should return meta_dir if there is 'index.html'"
 		)
 
-		folder = Sofa::Set::Static::Folder.root.item('foo','bar')
+		folder = Runo::Set::Static::Folder.root.item('foo','bar')
 		assert_equal(
 			'/foo',
 			folder[:html_dir],
@@ -53,28 +53,28 @@ class TC_Set_Folder < Test::Unit::TestCase
 	end
 
 	def test_meta_base_href
-		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+		folder = Runo::Set::Static::Folder.root.item('t_summary')
 
-		Sofa.current[:base] = folder.item('main')
-		Sofa.current[:base][:uri] = 'http://example.com'
+		Runo.current[:base] = folder.item('main')
+		Runo.current[:base][:uri] = 'http://example.com'
 		assert_equal(
 			'http://example.com/t_summary/',
 			folder[:base_href],
-			'Folder#meta_base_href should return a full URI when Sofa.base is available'
+			'Folder#meta_base_href should return a full URI when Runo.base is available'
 		)
 
-		Sofa.current[:base] = nil
+		Runo.current[:base] = nil
 		assert_equal(
 			'/t_summary/',
 			folder[:base_href],
-			'Folder#meta_base_href should return [:dir] when Sofa.base is not available'
+			'Folder#meta_base_href should return [:dir] when Runo.base is not available'
 		)
 	end
 
 	def test_default_items
-		folder = Sofa::Set::Static::Folder.new(:id => 'foo',:parent => nil)
+		folder = Runo::Set::Static::Folder.new(:id => 'foo',:parent => nil)
 		assert_instance_of(
-			Sofa::Text,
+			Runo::Text,
 			folder.item('_label'),
 			'Folder#initialize should always load the default items'
 		)
@@ -91,10 +91,10 @@ class TC_Set_Folder < Test::Unit::TestCase
 	end
 
 	def test_child_folder
-		folder = Sofa::Set::Static::Folder.new(:id => 'foo',:parent => nil)
+		folder = Runo::Set::Static::Folder.new(:id => 'foo',:parent => nil)
 		child  = folder.item('bar')
 		assert_instance_of(
-			Sofa::Set::Static::Folder,
+			Runo::Set::Static::Folder,
 			child,
 			'Folder#item should look the real directory for the child item'
 		)
@@ -111,21 +111,21 @@ class TC_Set_Folder < Test::Unit::TestCase
 	end
 
 	def test_item
-		folder = Sofa::Set::Static::Folder.root.item('foo')
+		folder = Runo::Set::Static::Folder.root.item('foo')
 		assert_instance_of(
-			Sofa::Set::Static,
+			Runo::Set::Static,
 			folder.item('main','20091120_0001'),
 			'Folder#item should work just like any other sets'
 		)
 		assert_instance_of(
-			Sofa::Set::Static,
+			Runo::Set::Static,
 			folder.item('20091120_0001'),
 			"Folder#item should delegate to item('main') if full-formatted :id is given"
 		)
 	end
 
 	def test_merge_meta
-		folder = Sofa::Set::Static::Folder.root
+		folder = Runo::Set::Static::Folder.root
 
 		index = {
 			:item => {
@@ -215,7 +215,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 	end
 
 	def test_tmpl_summary
-		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+		folder = Runo::Set::Static::Folder.root.item('t_summary')
 		assert_equal(
 			<<'_html',
 <html>
@@ -243,7 +243,7 @@ _html
 
 		assert_equal(
 			<<'_html'.chomp,
-<ul id="@(name)" class="sofa-blog">
+<ul id="@(name)" class="runo-blog">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _html
@@ -252,7 +252,7 @@ _html
 		)
 		assert_equal(
 			<<'_html'.chomp,
-<table id="@(name)" class="sofa-blog">
+<table id="@(name)" class="runo-blog">
 $()</table>
 $(.navi)$(.submit)$(.action_create)
 _html
@@ -277,9 +277,9 @@ _html
 	end
 
 	def test_base_href
-		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+		folder = Runo::Set::Static::Folder.root.item('t_summary')
 		folder[:uri] = 'http://example.com'
-		Sofa.current[:base] = folder
+		Runo.current[:base] = folder
 
 		assert_match(
 			'<base href="@(base_href)" />',
@@ -294,7 +294,7 @@ _html
 	end
 
 	def test_get_summary
-		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+		folder = Runo::Set::Static::Folder.root.item('t_summary')
 
 		assert_equal(
 			<<'_html',
@@ -302,7 +302,7 @@ _html
 <head><base href="/t_summary/" /><title>summary</title></head>
 <body>
 <h1>summary</h1>
-<table id="main" class="sofa-blog">
+<table id="main" class="runo-blog">
 	<tr><td><a href="/t_summary/20100326/1/read_detail.html">frank</a></td><td>hi.</td></tr>
 </table>
 <div class="action_create"><a href="/t_summary/create.html">create new entry...</a></div>
@@ -320,7 +320,7 @@ _html
 <head><base href="/t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
-<ul id="main" class="sofa-blog">
+<ul id="main" class="runo-blog">
 	<li><a href="/t_summary/20100326/1/update.html">frank</a>: hi.</li>
 </ul>
 <div class="action_create"><a href="/t_summary/create.html">create new entry...</a></div>
@@ -335,8 +335,8 @@ _html
 			'Set#get should not use [:tmpl_summary] for :read -> :detail'
 		)
 
-		Sofa.client = 'root'
-		Sofa.current[:base] = folder.item('main')
+		Runo.client = 'root'
+		Runo.current[:base] = folder.item('main')
 		folder.item('main')[:tid] = '12345.012'
 		assert_equal(
 			<<_html,
@@ -345,8 +345,8 @@ _html
 <body>
 <h1>index</h1>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_summary/12345.012/update.html">
-<input name="_token" type="hidden" value="#{Sofa.token}" />
-<ul id="main" class="sofa-blog">
+<input name="_token" type="hidden" value="#{Runo.token}" />
+<ul id="main" class="runo-blog">
 	<li><a><input type="text" name="20100326_0001-name" value="frank" size="32" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." size="64" class="text" /></li>
 </ul>
 <div class="submit">
@@ -367,7 +367,7 @@ _html
 	end
 
 	def test_tmpl_create
-		folder = Sofa::Set::Static::Folder.root.item('t_summary')
+		folder = Runo::Set::Static::Folder.root.item('t_summary')
 
 		assert_equal(
 			<<'_html',
@@ -375,7 +375,7 @@ _html
 <head><base href="/t_summary/" /><title>create</title></head>
 <body>
 <h1>create</h1>
-<ul id="main" class="sofa-blog">
+<ul id="main" class="runo-blog">
 	<li>main-create</li>
 </ul>
 <div class="submit">
@@ -392,7 +392,7 @@ _html
 	end
 
 	def test_tmpl_done
-		folder = Sofa::Set::Static::Folder.root.item('t_contact')
+		folder = Runo::Set::Static::Folder.root.item('t_contact')
 		assert_equal(
 			<<'_html',
 <html>
@@ -408,9 +408,9 @@ _html
 	end
 
 	def test_g_login
-		folder = Sofa::Set::Static::Folder.root.item('t_contact')
+		folder = Runo::Set::Static::Folder.root.item('t_contact')
 
-		Sofa.client = nil
+		Runo.client = nil
 		assert_equal(
 			<<'_html',
 <div class="action_login"><a href="/t_contact/login.html">login...</a></div>
@@ -419,10 +419,10 @@ _html
 			'Folder#_g_login should return a link to login/logout according to the current client'
 		)
 
-		Sofa.client = 'frank'
+		Runo.client = 'frank'
 		assert_equal(
 			<<_html,
-<div class="action_logout"><a href="/t_contact/logout.html?_token=#{Sofa.token}">logout</a></div>
+<div class="action_logout"><a href="/t_contact/logout.html?_token=#{Runo.token}">logout</a></div>
 _html
 			folder.get(:action => :action_login),
 			'Folder#_g_login should return a link to login/logout according to the current client'
@@ -430,9 +430,9 @@ _html
 	end
 
 	def test_g_me
-		folder = Sofa::Set::Static::Folder.root.item('t_contact')
+		folder = Runo::Set::Static::Folder.root.item('t_contact')
 
-		Sofa.client = nil
+		Runo.client = nil
 		assert_equal(
 			<<'_html',
 <div class="me">
@@ -443,7 +443,7 @@ _html
 			'Folder#_g_me should return a link to login if the current client is nobody'
 		)
 
-		Sofa.client = 'test'
+		Runo.client = 'test'
 		assert_equal(
 			<<_html,
 <div class="me">
@@ -451,7 +451,7 @@ _html
 		<span class="img" style="width: 72px; height: 72px;"></span>
 	</a>
 	<div class="client">test</div>
-	<div class="action_logout"><a href="/t_contact/logout.html?_token=#{Sofa.token}">logout</a></div>
+	<div class="action_logout"><a href="/t_contact/logout.html?_token=#{Runo.token}">logout</a></div>
 </div>
 _html
 			folder.get(:action => :me),

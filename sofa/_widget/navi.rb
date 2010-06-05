@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Sofa::Set::Dynamic
+class Runo::Set::Dynamic
 
 	private
 
@@ -33,7 +33,7 @@ class Sofa::Set::Dynamic
 
 		item_tmpl = nil
 		div = my[:tmpl_navi_p] || '<span class="item">$() </span> | '
-		div = Sofa::Parser.gsub_block(div,'item') {|open,inner,close|
+		div = Runo::Parser.gsub_block(div,'item') {|open,inner,close|
 			item_tmpl = open + inner + close
 			'$(.items)'
 		}
@@ -51,12 +51,12 @@ class Sofa::Set::Dynamic
 
 	def _g_uri_prev(arg)
 		arg[:navi] ||= @storage.navi(arg[:conds] || {})
-		Sofa::Path.path_of(arg[:navi][:prev]) if arg[:navi][:prev]
+		Runo::Path.path_of(arg[:navi][:prev]) if arg[:navi][:prev]
 	end
 
 	def _g_uri_next(arg)
 		arg[:navi] ||= @storage.navi(arg[:conds] || {})
-		Sofa::Path.path_of(arg[:navi][:next]) if arg[:navi][:next]
+		Runo::Path.path_of(arg[:navi][:next]) if arg[:navi][:next]
 	end
 
 	def _uri_p(arg)
@@ -70,7 +70,7 @@ class Sofa::Set::Dynamic
 				conds = conds & range
 			end
 			conds.collect {|cond|
-				Sofa::Path.path_of base_conds.merge(:p => cond)
+				Runo::Path.path_of base_conds.merge(:p => cond)
 			}
 		end
 	end

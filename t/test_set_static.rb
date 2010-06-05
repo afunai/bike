@@ -12,10 +12,10 @@ class TC_Set_Static < Test::Unit::TestCase
 	end
 
 	def test_initialize
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <html>
 	<h1>$(title text 32)</h1>
-	<ul id="foo" class="sofa-blog">
+	<ul id="foo" class="runo-blog">
 		<li title="Diary">
 			$(subject text 64)
 			$(body textarea 72*10)
@@ -31,7 +31,7 @@ _html
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
 					:tmpl     => <<'_tmpl'.chomp,
-	<ul id="@(name)" class="sofa-blog">
+	<ul id="@(name)" class="runo-blog">
 $()	</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -66,7 +66,7 @@ _tmpl
 	end
 
 	def test_empty?
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <html>
 	<h1>$(title = text 32)</h1>
 </html>
@@ -91,17 +91,17 @@ _html
 	end
 
 	def test_item
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <html>
 	<h1>$(title = text 32)</h1>
-	<ul id="main" class="sofa-attachment">
+	<ul id="main" class="runo-attachment">
 		<li>hi</li>
 	</ul>
 </html>
 _html
 		title = ss.item('title')
 		assert_instance_of(
-			Sofa::Text,
+			Runo::Text,
 			title,
 			'Set::Static#item() should return the child item on the fly'
 		)
@@ -118,7 +118,7 @@ _html
 
 		main = ss.item('main')
 		assert_instance_of(
-			Sofa::Set::Static::Dynamic,
+			Runo::Set::Static::Dynamic,
 			main,
 			'Set::Static#item() should return the child item on the fly'
 		)
@@ -150,7 +150,7 @@ _html
 	end
 
 	def test_val
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <li>
 	$(name text): $(comment text)
 </li>
@@ -170,7 +170,7 @@ _html
 	end
 
 	def test_get
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <li>
 	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -203,7 +203,7 @@ _html
 	end
 
 	def test_get_by_tmpl
-		ss = Sofa::Set::Static.new(:html => '$(foo text)')
+		ss = Runo::Set::Static.new(:html => '$(foo text)')
 		ss.item('foo').load 'hello'
 		assert_equal(
 			'foo hello foo',
@@ -226,7 +226,7 @@ _html
 	end
 
 	def test_recursive_tmpl
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <li>$()</li>
 _html
 		assert_nothing_raised(
@@ -237,7 +237,7 @@ _html
 	end
 
 	def test_g_a_update
-		ss = Sofa::Set::Static.new(:html => '$(.a_update)',:parent => Sofa::Set::Static.new)
+		ss = Runo::Set::Static.new(:html => '$(.a_update)',:parent => Runo::Set::Static.new)
 
 		def ss.permit_get?(arg)
 			true
@@ -279,7 +279,7 @@ _html
 	end
 
 	def test_post
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <li>
 	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -306,7 +306,7 @@ _html
 	end
 
 	def test_load_default
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <li>
 	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -325,7 +325,7 @@ _html
 	end
 
 	def test_load
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <li>
 	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -351,7 +351,7 @@ _html
 	end
 
 	def test_create
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <li>
 	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -365,7 +365,7 @@ _html
 	end
 
 	def test_update
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <li>
 	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -405,7 +405,7 @@ _html
 	end
 
 	def test_delete
-		ss = Sofa::Set::Static.new(:html => <<'_html')
+		ss = Runo::Set::Static.new(:html => <<'_html')
 <li>
 	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>

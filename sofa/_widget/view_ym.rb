@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Sofa::Set::Dynamic
+class Runo::Set::Dynamic
 
 	private
 
@@ -23,8 +23,8 @@ class Sofa::Set::Dynamic
 	</span>
 </div>
 _tmpl
-		div = Sofa::Parser.gsub_block(div,'y') {|open,inner,close|
-			inner = Sofa::Parser.gsub_block(inner,'m') {|*t|
+		div = Runo::Parser.gsub_block(div,'y') {|open,inner,close|
+			inner = Runo::Parser.gsub_block(inner,'m') {|*t|
 				month_tmpl = t.join
 				'$(.months)'
 			}
@@ -59,7 +59,7 @@ _tmpl
 
 	def _uri_ym(arg)
 		@storage.__send__(:_sibs_d,:d => '000000').collect {|ym|
-			Sofa::Path.path_of :d => ym
+			Runo::Path.path_of :d => ym
 		}
 	end
 

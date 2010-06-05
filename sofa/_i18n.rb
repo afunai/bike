@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Sofa::I18n
+module Runo::I18n
 
 	class Msgstr < String
 		def %(*args)
@@ -123,18 +123,18 @@ module Sofa::I18n
 	module_function
 
 	def _(msgid)
-		Sofa::I18n::Msgstr.new(Sofa::I18n.msg[msgid].to_a.first || msgid)
+		Runo::I18n::Msgstr.new(Runo::I18n.msg[msgid].to_a.first || msgid)
 	end
 
 	def n_(msgid,msgid_plural,n)
-		msgstrs = Sofa::I18n.msg[msgid] || [msgid,msgid_plural]
-		case v = Sofa::I18n.msg[:plural] ? Sofa::I18n.msg[:plural].call(n) : (n != 1)
+		msgstrs = Runo::I18n.msg[msgid] || [msgid,msgid_plural]
+		case v = Runo::I18n.msg[:plural] ? Runo::I18n.msg[:plural].call(n) : (n != 1)
 			when true
-				Sofa::I18n::Msgstr.new msgstrs[1]
+				Runo::I18n::Msgstr.new msgstrs[1]
 			when false
-				Sofa::I18n::Msgstr.new msgstrs[0]
+				Runo::I18n::Msgstr.new msgstrs[0]
 			else
-				Sofa::I18n::Msgstr.new msgstrs[v.to_i]
+				Runo::I18n::Msgstr.new msgstrs[v.to_i]
 		end
 	end
 

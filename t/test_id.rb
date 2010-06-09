@@ -14,6 +14,8 @@ class TC_Id < Test::Unit::TestCase
 			''
 		}
 		@f = Runo::Field.instance meta
+
+		Runo.current[:base] = nil
 	end
 
 	def teardown

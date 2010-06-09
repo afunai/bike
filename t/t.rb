@@ -9,11 +9,11 @@ require 'rubygems'
 require 'mocha'
 require 'rack'
 
-t_dir = File.dirname __FILE__
+t_dir = ::File.dirname __FILE__
 
 $LOAD_PATH.unshift t_dir
-$LOAD_PATH.unshift(File.join(t_dir,'..','lib'))
+$LOAD_PATH.unshift(::File.expand_path('../lib',t_dir))
 require 'runo'
 
-Runo.instance_eval { @config = YAML.load_file File.join(t_dir,'t.yaml') }
-Runo::I18n.bindtextdomain('index',File.join(t_dir,'locale'))
+Runo.instance_eval { @config = YAML.load_file ::File.join(t_dir,'t.yaml') }
+Runo::I18n.bindtextdomain('index',::File.join(t_dir,'locale'))

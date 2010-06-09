@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-require 't'
+require "#{::File.dirname __FILE__}/t"
 
 class TC_Id < Test::Unit::TestCase
 

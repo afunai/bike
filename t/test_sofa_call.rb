@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-require 't'
+require "#{::File.dirname __FILE__}/t"
 
 class TC_Runo_Call < Test::Unit::TestCase
 

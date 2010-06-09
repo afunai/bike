@@ -731,4 +731,12 @@ class TC_Runo < Test::Unit::TestCase
 		)
 	end
 
+	def test_libdir
+		assert_match(
+			%r{^.*/lib$},
+			Runo.libdir,
+			'Runo#libdir should return the lib/ directory where the runo.rb is in'
+		)
+	end
+
 end

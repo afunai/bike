@@ -58,6 +58,10 @@ class Runo
 		self.current[:base]
 	end
 
+	def self.libdir
+		::File.dirname __FILE__
+	end
+
 	def self.static(env)
 		@static ||= Rack::Directory.new Runo['skin_dir']
 		response = @static.call env

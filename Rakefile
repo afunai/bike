@@ -4,13 +4,40 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name = "runo"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
-    gem.email = "akira@funai.com"
-    gem.homepage = "http://github.com/afunai/runo"
-    gem.authors = ["Akira FUNAI"]
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+    gem.name              = 'runo'
+    gem.rubyforge_project = 'runo'
+    gem.summary           = 'The laziest web application framework'
+    gem.description       = <<'_eos'
+Runo is a web application framework that can make feature-rich apps by HTML files only.
+You need no database setup (by default), no scheme definition, no command-line voodoo.
+Just put a good old HTML file under skin/, and your new app is already running.
+_eos
+
+    gem.authors  = ['Akira FUNAI']
+    gem.email    = 'akira@funai.com'
+    gem.homepage = 'http://github.com/afunai/runo'
+
+    gem.files = FileList[
+      'bin/*',
+      'lib/**/*.rb',
+      'locale/**/*',
+      'skel/*',
+      'skel/skin/**/*',
+      't/*',
+      't/locale/**/*',
+      't/skin/**/*',
+    ].to_a
+    gem.test_files = FileList['t/test_*.rb']
+    gem.executables = ['runo']
+
+    gem.add_dependency('rack',    '>= 0.9')
+    gem.add_dependency('sequel',  '>= 3.0')
+    gem.add_dependency('ya2yaml', '>= 0.26')
+
+    gem.add_development_dependency('gettext',      '>= 2.1.0')
+    gem.add_development_dependency('mocha',        '>= 0.9.8')
+    gem.add_development_dependency('sqlite3-ruby', '>= 1.2.5')
+    gem.add_development_dependency('quick_magick', '>= 0.7.4')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

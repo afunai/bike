@@ -2,7 +2,9 @@
 # encoding: UTF-8
 
 # Author::    Akira FUNAI
-# Copyright:: Copyright (c) 2009 Akira FUNAI
+# Copyright:: Copyright (c) 2009-2010 Akira FUNAI
+
+require 'rubygems'
 
 $LOAD_PATH.unshift(::File.expand_path('../lib',::File.dirname(__FILE__)))
 require 'runo'

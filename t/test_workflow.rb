@@ -3,6 +3,8 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
+require 't'
+
 class TC_Workflow < Test::Unit::TestCase
 
 	class Runo::Workflow::Foo < Runo::Workflow

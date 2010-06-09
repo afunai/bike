@@ -3,6 +3,8 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
+require 't'
+
 class Runo::Foo < Runo::Field
 	DEFAULT_META = {:foo => 'foo foo'}
 	class Bar < Runo::Field

@@ -3,8 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-require 'rubygems'
-require 'rack'
+require 't'
 
 class TC_Runo_Call < Test::Unit::TestCase
 

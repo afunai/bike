@@ -3,6 +3,8 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
+require 't'
+
 class TC_Id < Test::Unit::TestCase
 
 	def setup

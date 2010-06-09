@@ -3,6 +3,8 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
+require 't'
+
 class TC_Set_Complex < Test::Unit::TestCase
 
 	class ::Runo::Set::Dynamic

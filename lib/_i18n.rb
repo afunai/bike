@@ -50,19 +50,19 @@ module Runo::I18n
 	end
 
 	def self.domain
-		Thread.current[:domain] ||= 'index'
+		@@domain ||= 'index'
 	end
 
 	def self.domain=(domain)
-		Thread.current[:domain] = domain
+		@@domain = domain
 	end
 
 	def self.po_dir
-		Thread.current[:po_dir] ||= './locale'
+		@@po_dir ||= ::File.expand_path('../locale',::File.dirname(__FILE__))
 	end
 
 	def self.po_dir=(po_dir)
-		Thread.current[:po_dir] = po_dir
+		@@po_dir = po_dir
 	end
 
 	def self.bindtextdomain(domain,po_dir)

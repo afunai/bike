@@ -4,4 +4,32 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-puts 'howdy.'
+require 'rubygems'
+
+$LOAD_PATH.unshift(::File.expand_path('../lib',::File.dirname(__FILE__)))
+require 'runo'
+
+case ARGV.shift
+	when 'init'
+		runo_dir = ::File.expand_path './runo'
+
+		if ::File.exists? runo_dir
+			$stderr.puts "#{runo_dir} already exists."
+			exit 1
+		else
+			$stderr.puts "Setting up Runo files in #{runo_dir}..."
+			::FileUtils.cp_r(
+				::File.expand_path('../skel',Runo.libdir),
+				'./runo',
+				:verbose => :true
+			)
+		end
+	when 'run'
+		::Dir.chdir(File.exists?('./config.ru') ? '.' : './runo') {
+			$stderr.puts "Starting a server with Runo files in #{::File.expand_path '.'}..."
+			system('rackup',*ARGV)
+		}
+	else
+		$stderr.puts 'Usage: runo {init|run [Rack options]}'
+		exit 1
+end

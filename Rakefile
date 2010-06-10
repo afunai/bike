@@ -35,9 +35,10 @@ _eos
     gem.add_dependency('ya2yaml', '>= 0.26')
 
     gem.add_development_dependency('gettext',      '>= 2.1.0')
+    gem.add_development_dependency('jeweler',      '>= 1.4.0')
     gem.add_development_dependency('mocha',        '>= 0.9.8')
-    gem.add_development_dependency('sqlite3-ruby', '>= 1.2.5')
     gem.add_development_dependency('quick_magick', '>= 0.7.4')
+    gem.add_development_dependency('sqlite3-ruby', '>= 1.2.5')
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError

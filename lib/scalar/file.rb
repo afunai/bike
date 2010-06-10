@@ -7,7 +7,7 @@ class Runo::File < Runo::Field
 
   def initialize(meta = {})
     meta[:options].collect! {|i| i.downcase } if meta[:options]
-#		meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
+    meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
     super
   end
 

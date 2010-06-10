@@ -5,16 +5,16 @@
 
 module Runo::Meta
 
-	def post(action,v = nil)
-		super
-		my[:parent][klass_id] = val if my[:parent]
-		self
-	end
+  def post(action, v = nil)
+    super
+    my[:parent][klass_id] = val if my[:parent]
+    self
+  end
 
-	private
+  private
 
-	def klass_id
-		self.class.to_s[/\w+$/].downcase.intern
-	end
+  def klass_id
+    self.class.to_s[/\w+$/].downcase.intern
+  end
 
 end

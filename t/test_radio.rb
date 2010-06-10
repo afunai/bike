@@ -7,212 +7,212 @@ require "#{::File.dirname __FILE__}/t"
 
 class TC_Radio < Test::Unit::TestCase
 
-	def setup
-		meta = nil
-		Runo::Parser.gsub_scalar("$(foo radio bar,baz,qux :'baz' mandatory)") {|id,m|
-			meta = m
-			''
-		}
-		@f = Runo::Field.instance meta
-	end
+  def setup
+    meta = nil
+    Runo::Parser.gsub_scalar("$(foo radio bar, baz, qux :'baz' mandatory)") {|id, m|
+      meta = m
+      ''
+    }
+    @f = Runo::Field.instance meta
+  end
 
-	def teardown
-	end
+  def teardown
+  end
 
-	def test_meta
-		assert_equal(
-			['bar','baz','qux'],
-			@f[:options],
-			'Radio#initialize should set :options from the csv token'
-		)
-		assert_equal(
-			true,
-			@f[:mandatory],
-			'Radio#initialize should set :mandatory from the misc token'
-		)
-		assert_equal(
-			'baz',
-			@f[:default],
-			'Radio#initialize should set :default from the token'
-		)
-	end
+  def test_meta
+    assert_equal(
+      ['bar', 'baz', 'qux'],
+      @f[:options],
+      'Radio#initialize should set :options from the csv token'
+    )
+    assert_equal(
+      true,
+      @f[:mandatory],
+      'Radio#initialize should set :mandatory from the misc token'
+    )
+    assert_equal(
+      'baz',
+      @f[:default],
+      'Radio#initialize should set :default from the token'
+    )
+  end
 
-	def test_meta_options_from_range
-		meta = nil
-		Runo::Parser.gsub_scalar("$(foo radio 1..5)") {|id,m|
-			meta = m
-			''
-		}
-		f = Runo::Field.instance meta
-		assert_equal(
-			['1','2','3','4','5'],
-			f[:options],
-			'Radio#initialize should set :options from the range token'
-		)
+  def test_meta_options_from_range
+    meta = nil
+    Runo::Parser.gsub_scalar("$(foo radio 1..5)") {|id, m|
+      meta = m
+      ''
+    }
+    f = Runo::Field.instance meta
+    assert_equal(
+      ['1', '2', '3', '4', '5'],
+      f[:options],
+      'Radio#initialize should set :options from the range token'
+    )
 
-		meta = nil
-		Runo::Parser.gsub_scalar("$(foo radio ..5)") {|id,m|
-			meta = m
-			''
-		}
-		f = Runo::Field.instance meta
-		assert_equal(
-			['0','1','2','3','4','5'],
-			f[:options],
-			'Radio#initialize should set :options from the range token'
-		)
+    meta = nil
+    Runo::Parser.gsub_scalar("$(foo radio ..5)") {|id, m|
+      meta = m
+      ''
+    }
+    f = Runo::Field.instance meta
+    assert_equal(
+      ['0', '1', '2', '3', '4', '5'],
+      f[:options],
+      'Radio#initialize should set :options from the range token'
+    )
 
-		meta = nil
-		Runo::Parser.gsub_scalar("$(foo radio 1..)") {|id,m|
-			meta = m
-			''
-		}
-		f = Runo::Field.instance meta
-		assert_equal(
-			nil,
-			f[:options],
-			'Radio#initialize should not refer to the range token if there is no maximum'
-		)
-	end
+    meta = nil
+    Runo::Parser.gsub_scalar("$(foo radio 1..)") {|id, m|
+      meta = m
+      ''
+    }
+    f = Runo::Field.instance meta
+    assert_equal(
+      nil,
+      f[:options],
+      'Radio#initialize should not refer to the range token if there is no maximum'
+    )
+  end
 
-	def test_val_cast
-		assert_equal(
-			'',
-			@f.val,
-			'Radio#val_cast should cast the given val to String'
-		)
+  def test_val_cast
+    assert_equal(
+      '',
+      @f.val,
+      'Radio#val_cast should cast the given val to String'
+    )
 
-		@f.load 123
-		assert_equal(
-			'123',
-			@f.val,
-			'Radio#val_cast should cast the given val to String'
-		)
-	end
+    @f.load 123
+    assert_equal(
+      '123',
+      @f.val,
+      'Radio#val_cast should cast the given val to String'
+    )
+  end
 
-	def test_get
-		@f.load ''
-		assert_equal(
-			'',
-			@f.get,
-			'Radio#get should return proper string'
-		)
-		assert_equal(
-			<<_html.chomp,
+  def test_get
+    @f.load ''
+    assert_equal(
+      '',
+      @f.get,
+      'Radio#get should return proper string'
+    )
+    assert_equal(
+      <<_html.chomp,
 <input type="hidden" name="" value="" />
 <span class="radio">
-	<input type="radio" id="radio_-bar" name="" value="bar" />
-	<label for="radio_-bar">bar</label>
+  <input type="radio" id="radio_-bar" name="" value="bar" />
+  <label for="radio_-bar">bar</label>
 </span>
 <span class="radio">
-	<input type="radio" id="radio_-baz" name="" value="baz" />
-	<label for="radio_-baz">baz</label>
+  <input type="radio" id="radio_-baz" name="" value="baz" />
+  <label for="radio_-baz">baz</label>
 </span>
 <span class="radio">
-	<input type="radio" id="radio_-qux" name="" value="qux" />
-	<label for="radio_-qux">qux</label>
+  <input type="radio" id="radio_-qux" name="" value="qux" />
+  <label for="radio_-qux">qux</label>
 </span>
 _html
-			@f.get(:action => :create),
-			'Radio#get should return proper string'
-		)
+      @f.get(:action => :create),
+      'Radio#get should return proper string'
+    )
 
-		@f.load 'qux'
-		assert_equal(
-			'qux',
-			@f.get,
-			'Radio#get should return proper string'
-		)
-		assert_equal(
-			<<_html.chomp,
+    @f.load 'qux'
+    assert_equal(
+      'qux',
+      @f.get,
+      'Radio#get should return proper string'
+    )
+    assert_equal(
+      <<_html.chomp,
 <input type="hidden" name="" value="" />
 <span class="radio">
-	<input type="radio" id="radio_-bar" name="" value="bar" />
-	<label for="radio_-bar">bar</label>
+  <input type="radio" id="radio_-bar" name="" value="bar" />
+  <label for="radio_-bar">bar</label>
 </span>
 <span class="radio">
-	<input type="radio" id="radio_-baz" name="" value="baz" />
-	<label for="radio_-baz">baz</label>
+  <input type="radio" id="radio_-baz" name="" value="baz" />
+  <label for="radio_-baz">baz</label>
 </span>
 <span class="radio">
-	<input type="radio" id="radio_-qux" name="" value="qux" checked />
-	<label for="radio_-qux">qux</label>
+  <input type="radio" id="radio_-qux" name="" value="qux" checked />
+  <label for="radio_-qux">qux</label>
 </span>
 _html
-			@f.get(:action => :update),
-			'Radio#get should return proper string'
-		)
+      @f.get(:action => :update),
+      'Radio#get should return proper string'
+    )
 
-		@f.load 'non-exist'
-		assert_equal(
-			<<_html.chomp,
+    @f.load 'non-exist'
+    assert_equal(
+      <<_html.chomp,
 <input type="hidden" name="" value="" />
 <span class="radio error">
-	<input type="radio" id="radio_-bar" name="" value="bar" />
-	<label for="radio_-bar">bar</label>
+  <input type="radio" id="radio_-bar" name="" value="bar" />
+  <label for="radio_-bar">bar</label>
 </span>
 <span class="radio error">
-	<input type="radio" id="radio_-baz" name="" value="baz" />
-	<label for="radio_-baz">baz</label>
+  <input type="radio" id="radio_-baz" name="" value="baz" />
+  <label for="radio_-baz">baz</label>
 </span>
 <span class="radio error">
-	<input type="radio" id="radio_-qux" name="" value="qux" />
-	<label for="radio_-qux">qux</label>
+  <input type="radio" id="radio_-qux" name="" value="qux" />
+  <label for="radio_-qux">qux</label>
 </span>
 <span class=\"error\">no such option</span>
 _html
-			@f.get(:action => :update),
-			'Radio#get should return proper string'
-		)
-	end
+      @f.get(:action => :update),
+      'Radio#get should return proper string'
+    )
+  end
 
-	def test_get_escape
-		@f[:options] = ['foo','<bar>']
-		@f.load '<bar>'
-		assert_equal(
-			'&lt;bar&gt;',
-			@f.get,
-			'Radio#get should escape the special characters'
-		)
-		assert_equal(
-			<<_html.chomp,
+  def test_get_escape
+    @f[:options] = ['foo', '<bar>']
+    @f.load '<bar>'
+    assert_equal(
+      '&lt;bar&gt;',
+      @f.get,
+      'Radio#get should escape the special characters'
+    )
+    assert_equal(
+      <<_html.chomp,
 <input type="hidden" name="" value="" />
 <span class="radio">
-	<input type="radio" id="radio_-foo" name="" value="foo" />
-	<label for="radio_-foo">foo</label>
+  <input type="radio" id="radio_-foo" name="" value="foo" />
+  <label for="radio_-foo">foo</label>
 </span>
 <span class="radio">
-	<input type="radio" id="radio_-&lt;bar&gt;" name="" value="&lt;bar&gt;" checked />
-	<label for="radio_-&lt;bar&gt;">&lt;bar&gt;</label>
+  <input type="radio" id="radio_-&lt;bar&gt;" name="" value="&lt;bar&gt;" checked />
+  <label for="radio_-&lt;bar&gt;">&lt;bar&gt;</label>
 </span>
 _html
-			@f.get(:action => :update),
-			'Radio#get should escape the special characters'
-		)
-	end
+      @f.get(:action => :update),
+      'Radio#get should escape the special characters'
+    )
+  end
 
-	def test_errors
-		@f.load ''
-		@f[:mandatory] = nil
-		assert_equal(
-			[],
-			@f.errors,
-			'Radio#errors should return the errors of the current val'
-		)
-		@f[:mandatory] = true
-		assert_equal(
-			['mandatory'],
-			@f.errors,
-			'Radio#errors should return the errors of the current val'
-		)
+  def test_errors
+    @f.load ''
+    @f[:mandatory] = nil
+    assert_equal(
+      [],
+      @f.errors,
+      'Radio#errors should return the errors of the current val'
+    )
+    @f[:mandatory] = true
+    assert_equal(
+      ['mandatory'],
+      @f.errors,
+      'Radio#errors should return the errors of the current val'
+    )
 
-		@f.load 'non-exist'
-		@f[:mandatory] = nil
-		assert_equal(
-			['no such option'],
-			@f.errors,
-			'Radio#errors should return the errors of the current val'
-		)
-	end
+    @f.load 'non-exist'
+    @f[:mandatory] = nil
+    assert_equal(
+      ['no such option'],
+      @f.errors,
+      'Radio#errors should return the errors of the current val'
+    )
+  end
 
 end

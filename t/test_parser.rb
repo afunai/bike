@@ -7,1099 +7,1099 @@ require "#{::File.dirname __FILE__}/t"
 
 class TC_Parser < Test::Unit::TestCase
 
-	def setup
-	end
+  def setup
+  end
 
-	def teardown
-	end
+  def teardown
+  end
 
-	def test_scan_tokens
-		assert_equal(
-			{:tokens => ['foo','bar','baz']},
-			Runo::Parser.scan_tokens(StringScanner.new('foo bar baz')),
-			'Parser.scan_tokens should be able to parse unquoted tokens into array'
-		)
-		assert_equal(
-			{:tokens => ['foo','bar','baz baz']},
-			Runo::Parser.scan_tokens(StringScanner.new('foo "bar" "baz baz"')),
-			'Parser.scan_tokens should be able to parse quoted tokens'
-		)
-		assert_equal(
-			{:tokens => ['foo','bar','baz']},
-			Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz")),
-			'Parser.scan_tokens should be able to parse quoted tokens'
-		)
+  def test_scan_tokens
+    assert_equal(
+      {:tokens => ['foo', 'bar', 'baz']},
+      Runo::Parser.scan_tokens(StringScanner.new('foo bar baz')),
+      'Parser.scan_tokens should be able to parse unquoted tokens into array'
+    )
+    assert_equal(
+      {:tokens => ['foo', 'bar', 'baz baz']},
+      Runo::Parser.scan_tokens(StringScanner.new('foo "bar" "baz baz"')),
+      'Parser.scan_tokens should be able to parse quoted tokens'
+    )
+    assert_equal(
+      {:tokens => ['foo', 'bar', 'baz']},
+      Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz")),
+      'Parser.scan_tokens should be able to parse quoted tokens'
+    )
 
-		assert_equal(
-			{:tokens => ['foo','bar','baz']},
-			Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz) qux")),
-			'Parser.scan_tokens should stop scanning at an ending bracket'
-		)
-		assert_equal(
-			{:tokens => ['foo','bar (bar?)','baz']},
-			Runo::Parser.scan_tokens(StringScanner.new("foo 'bar (bar?)' baz) qux")),
-			'Parser.scan_tokens should ignore brackets inside quoted tokens'
-		)
-	end
+    assert_equal(
+      {:tokens => ['foo', 'bar', 'baz']},
+      Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz) qux")),
+      'Parser.scan_tokens should stop scanning at an ending bracket'
+    )
+    assert_equal(
+      {:tokens => ['foo', 'bar (bar?)', 'baz']},
+      Runo::Parser.scan_tokens(StringScanner.new("foo 'bar (bar?)' baz) qux")),
+      'Parser.scan_tokens should ignore brackets inside quoted tokens'
+    )
+  end
 
-	def test_parse_empty_tag
-		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:tokens => ['baz baz']}},
-			result[:item],
-			'Parser.parse_html should be able to parse empty runo tags'
-		)
-		assert_equal(
-			'hello $(foo) world',
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
+  def test_parse_empty_tag
+    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :tokens => ['baz baz']}},
+      result[:item],
+      'Parser.parse_html should be able to parse empty runo tags'
+    )
+    assert_equal(
+      'hello $(foo) world',
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 <h1>$(foo=bar "baz baz")</h1>
 <p>$(bar=a b c)</p>
 _html
-		assert_equal(
-			{
-				'foo' => {:klass => 'bar',:tokens => ['baz baz']},
-				'bar' => {:klass => 'a',:tokens => ['b','c']},
-			},
-			result[:item],
-			'Parser.parse_html should be able to parse empty runo tags'
-		)
-		assert_equal(
-			<<'_html',
+    assert_equal(
+      {
+        'foo' => {:klass => 'bar', :tokens => ['baz baz']},
+        'bar' => {:klass => 'a', :tokens => ['b', 'c']},
+      },
+      result[:item],
+      'Parser.parse_html should be able to parse empty runo tags'
+    )
+    assert_equal(
+      <<'_html',
 <h1>$(foo)</h1>
 <p>$(bar)</p>
 _html
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
-	end
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
+  end
 
-	def test_obscure_markup
-		result = Runo::Parser.parse_html('hello $(foo = bar $(baz=1) baz) world')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:tokens => ['$(baz=1']}},
-			result[:item],
-			'Parser.parse_html should not parse nested empty tag'
-		)
-		assert_equal(
-			'hello $(foo) baz) world',
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
+  def test_obscure_markup
+    result = Runo::Parser.parse_html('hello $(foo = bar $(baz=1) baz) world')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :tokens => ['$(baz=1']}},
+      result[:item],
+      'Parser.parse_html should not parse nested empty tag'
+    )
+    assert_equal(
+      'hello $(foo) baz) world',
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
 
-		result = Runo::Parser.parse_html('hello $(foo = bar baz world')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
-			result[:item],
-			'Parser.parse_html should be able to parse a tag that is not closed'
-		)
-		assert_equal(
-			'hello $(foo)',
-			result[:tmpl],
-			'Parser.parse_html should be able to parse a tag that is not closed'
-		)
+    result = Runo::Parser.parse_html('hello $(foo = bar baz world')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :tokens => ['baz', 'world']}},
+      result[:item],
+      'Parser.parse_html should be able to parse a tag that is not closed'
+    )
+    assert_equal(
+      'hello $(foo)',
+      result[:tmpl],
+      'Parser.parse_html should be able to parse a tag that is not closed'
+    )
 
-		result = Runo::Parser.parse_html('hello $(foo = bar "baz"world)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
-			result[:item],
-			'Parser.parse_html should be able to parse tokens without a delimiter'
-		)
-		assert_equal(
-			'hello $(foo)',
-			result[:tmpl],
-			'Parser.parse_html should be able to parse tokens without a delimiter'
-		)
+    result = Runo::Parser.parse_html('hello $(foo = bar "baz"world)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :tokens => ['baz', 'world']}},
+      result[:item],
+      'Parser.parse_html should be able to parse tokens without a delimiter'
+    )
+    assert_equal(
+      'hello $(foo)',
+      result[:tmpl],
+      'Parser.parse_html should be able to parse tokens without a delimiter'
+    )
 
-		result = Runo::Parser.parse_html('hello $(foo = bar,"baz")')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz']}},
-			result[:item],
-			'The first token should be regarded as [:klass]'
-		)
-	end
+    result = Runo::Parser.parse_html('hello $(foo = bar, "baz")')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :options => ['baz']}},
+      result[:item],
+      'The first token should be regarded as [:klass]'
+    )
+  end
 
-	def test_parse_token
-		assert_equal(
-			{:width => 160,:height => 120},
-			Runo::Parser.parse_token(nil,'160*120',{}),
-			'Parser.parse_token should be able to parse dimension tokens'
-		)
-		assert_equal(
-			{:min => 1,:max => 32},
-			Runo::Parser.parse_token(nil,'1..32',{}),
-			'Parser.parse_token should be able to parse range tokens'
-		)
-		assert_equal(
-			{:max => 32},
-			Runo::Parser.parse_token(nil,'..32',{}),
-			'Parser.parse_token should be able to parse partial range tokens'
-		)
-		assert_equal(
-			{:min => 1},
-			Runo::Parser.parse_token(nil,'1..',{}),
-			'Parser.parse_token should be able to parse partial range tokens'
-		)
-		assert_equal(
-			{:min => -32,:max => -1},
-			Runo::Parser.parse_token(nil,'-32..-1',{}),
-			'Parser.parse_token should be able to parse minus range tokens'
-		)
+  def test_parse_token
+    assert_equal(
+      {:width => 160, :height => 120},
+      Runo::Parser.parse_token(nil, '160*120', {}),
+      'Parser.parse_token should be able to parse dimension tokens'
+    )
+    assert_equal(
+      {:min => 1, :max => 32},
+      Runo::Parser.parse_token(nil, '1..32', {}),
+      'Parser.parse_token should be able to parse range tokens'
+    )
+    assert_equal(
+      {:max => 32},
+      Runo::Parser.parse_token(nil, '..32', {}),
+      'Parser.parse_token should be able to parse partial range tokens'
+    )
+    assert_equal(
+      {:min => 1},
+      Runo::Parser.parse_token(nil, '1..', {}),
+      'Parser.parse_token should be able to parse partial range tokens'
+    )
+    assert_equal(
+      {:min => -32, :max => -1},
+      Runo::Parser.parse_token(nil, '-32..-1', {}),
+      'Parser.parse_token should be able to parse minus range tokens'
+    )
 
-		assert_equal(
-			{:options => ['foo']},
-			Runo::Parser.parse_token(',','foo',{}),
-			'Parser.parse_token should be able to parse option tokens'
-		)
-		assert_equal(
-			{:options => ['foo','bar']},
-			Runo::Parser.parse_token(',','bar',{:options => ['foo']}),
-			'Parser.parse_token should be able to parse option tokens'
-		)
+    assert_equal(
+      {:options => ['foo']},
+      Runo::Parser.parse_token(',', 'foo', {}),
+      'Parser.parse_token should be able to parse option tokens'
+    )
+    assert_equal(
+      {:options => ['foo', 'bar']},
+      Runo::Parser.parse_token(',', 'bar', {:options => ['foo']}),
+      'Parser.parse_token should be able to parse option tokens'
+    )
 
-		assert_equal(
-			{:default => 'bar'},
-			Runo::Parser.parse_token(':','bar',{}),
-			'Parser.parse_token should be able to parse default tokens'
-		)
-		assert_equal(
-			{:defaults => ['bar','baz']},
-			Runo::Parser.parse_token(';','baz',{:defaults => ['bar']}),
-			'Parser.parse_token should be able to parse defaults tokens'
-		)
-	end
+    assert_equal(
+      {:default => 'bar'},
+      Runo::Parser.parse_token(':', 'bar', {}),
+      'Parser.parse_token should be able to parse default tokens'
+    )
+    assert_equal(
+      {:defaults => ['bar', 'baz']},
+      Runo::Parser.parse_token(';', 'baz', {:defaults => ['bar']}),
+      'Parser.parse_token should be able to parse defaults tokens'
+    )
+  end
 
-	def test_parse_options
-		result = Runo::Parser.parse_html('hello $(foo = bar ,"baz baz","world",hi qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
-			result[:item],
-			'Parser.parse_html should be able to parse a sequence of CSV'
-		)
-		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz","world",hi qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
-			result[:item],
-			'Parser.parse_html should be able to parse a sequence of CSV'
-		)
-	end
+  def test_parse_options
+    result = Runo::Parser.parse_html('hello $(foo = bar , "baz baz", "world", hi qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
+      result[:item],
+      'Parser.parse_html should be able to parse a sequence of CSV'
+    )
+    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
+      result[:item],
+      'Parser.parse_html should be able to parse a sequence of CSV'
+    )
+  end
 
-	def test_parse_options_with_spaces
-		result = Runo::Parser.parse_html('hello $(foo = bar world, qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['world','qux']}},
-			result[:item],
-			'Parser.parse_html should allow spaces after the comma'
-		)
-		result = Runo::Parser.parse_html('hello $(foo = bar world ,qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['qux'],:tokens => ['world']}},
-			result[:item],
-			'Parser.parse_html should not allow spaces before the comma'
-		)
-		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
-			result[:item],
-			'Parser.parse_html should allow spaces after the comma'
-		)
+  def test_parse_options_with_spaces
+    result = Runo::Parser.parse_html('hello $(foo = bar world, qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :options => ['world', 'qux']}},
+      result[:item],
+      'Parser.parse_html should allow spaces after the comma'
+    )
+    result = Runo::Parser.parse_html('hello $(foo = bar world , qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :options => ['qux'], :tokens => ['world']}},
+      result[:item],
+      'Parser.parse_html should not allow spaces before the comma'
+    )
+    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
+      result[:item],
+      'Parser.parse_html should allow spaces after the comma'
+    )
 
-		result = Runo::Parser.parse_html(<<'_eos')
+    result = Runo::Parser.parse_html(<<'_eos')
 hello $(foo =
-	bar
-	"baz baz",
-	"world",
-	hi
-	qux)
+  bar
+  "baz baz",
+  "world",
+  hi
+  qux)
 _eos
-		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
-			result[:item],
-			'Parser.parse_html should allow spaces after the comma'
-		)
-	end
+    assert_equal(
+      {'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
+      result[:item],
+      'Parser.parse_html should allow spaces after the comma'
+    )
+  end
 
-	def test_parse_defaults
-		result = Runo::Parser.parse_html('hello $(foo = bar ;"baz baz";"world";hi qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
-			result[:item],
-			'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
-		)
-		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz";"world";hi qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
-			result[:item],
-			'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
-		)
-	end
+  def test_parse_defaults
+    result = Runo::Parser.parse_html('hello $(foo = bar ;"baz baz";"world";hi qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
+      result[:item],
+      'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
+    )
+    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz";"world";hi qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
+      result[:item],
+      'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
+    )
+  end
 
-	def test_parse_defaults_with_spaces
-		result = Runo::Parser.parse_html('hello $(foo=bar world; qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['world','qux']}},
-			result[:item],
-			'Parser.parse_html should allow spaces after the semicolon'
-		)
-		result = Runo::Parser.parse_html('hello $(foo=bar world ;qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['qux'],:tokens => ['world']}},
-			result[:item],
-			'Parser.parse_html should not allow spaces before the semicolon'
-		)
-		result = Runo::Parser.parse_html('hello $(foo=bar "baz baz"; "world"; hi qux)')
-		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
-			result[:item],
-			'Parser.parse_html should allow spaces after the comma'
-		)
+  def test_parse_defaults_with_spaces
+    result = Runo::Parser.parse_html('hello $(foo=bar world; qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :defaults => ['world', 'qux']}},
+      result[:item],
+      'Parser.parse_html should allow spaces after the semicolon'
+    )
+    result = Runo::Parser.parse_html('hello $(foo=bar world ;qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :defaults => ['qux'], :tokens => ['world']}},
+      result[:item],
+      'Parser.parse_html should not allow spaces before the semicolon'
+    )
+    result = Runo::Parser.parse_html('hello $(foo=bar "baz baz"; "world"; hi qux)')
+    assert_equal(
+      {'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
+      result[:item],
+      'Parser.parse_html should allow spaces after the comma'
+    )
 
-		result = Runo::Parser.parse_html(<<'_eos')
+    result = Runo::Parser.parse_html(<<'_eos')
 hello $(foo =
-	bar
-	"baz baz";
-	"world";
-	hi
-	qux)
+  bar
+  "baz baz";
+  "world";
+  hi
+  qux)
 _eos
-		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
-			result[:item],
-			'Parser.parse_html should allow spaces after the comma'
-		)
-	end
+    assert_equal(
+      {'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
+      result[:item],
+      'Parser.parse_html should allow spaces after the comma'
+    )
+  end
 
-	def test_parse_duplicate_tag
-		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world $(foo=boo) $(foo)!')
-		assert_equal(
-			{'foo' => {:klass => 'boo'}},
-			result[:item],
-			'definition tags are overridden by a preceding definition'
-		)
-		assert_equal(
-			'hello $(foo) world $(foo) $(foo)!',
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
-	end
+  def test_parse_duplicate_tag
+    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world $(foo=boo) $(foo)!')
+    assert_equal(
+      {'foo' => {:klass => 'boo'}},
+      result[:item],
+      'definition tags are overridden by a preceding definition'
+    )
+    assert_equal(
+      'hello $(foo) world $(foo) $(foo)!',
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
+  end
 
-	def test_scan_inner_html
-		s = StringScanner.new 'bar</foo>bar'
-		inner_html,close_tag = Runo::Parser.scan_inner_html(s,'foo')
-		assert_equal(
-			'bar',
-			inner_html,
-			'Parser.scan_inner_html should extract the inner html from the scanner'
-		)
-		assert_equal(
-			'</foo>',
-			close_tag,
-			'Parser.scan_inner_html should extract the inner html from the scanner'
-		)
+  def test_scan_inner_html
+    s = StringScanner.new 'bar</foo>bar'
+    inner_html, close_tag = Runo::Parser.scan_inner_html(s, 'foo')
+    assert_equal(
+      'bar',
+      inner_html,
+      'Parser.scan_inner_html should extract the inner html from the scanner'
+    )
+    assert_equal(
+      '</foo>',
+      close_tag,
+      'Parser.scan_inner_html should extract the inner html from the scanner'
+    )
 
-		s = StringScanner.new '<foo>bar</foo></foo>'
-		inner_html,close_tag = Runo::Parser.scan_inner_html(s,'foo')
-		assert_equal(
-			'<foo>bar</foo>',
-			inner_html,
-			'Parser.scan_inner_html should be aware of nested tags'
-		)
+    s = StringScanner.new '<foo>bar</foo></foo>'
+    inner_html, close_tag = Runo::Parser.scan_inner_html(s, 'foo')
+    assert_equal(
+      '<foo>bar</foo>',
+      inner_html,
+      'Parser.scan_inner_html should be aware of nested tags'
+    )
 
-		s = StringScanner.new "baz\n\t<foo>bar</foo>\n</foo>"
-		inner_html,close_tag = Runo::Parser.scan_inner_html(s,'foo')
-		assert_equal(
-			"baz\n\t<foo>bar</foo>\n",
-			inner_html,
-			'Parser.scan_inner_html should be aware of nested tags'
-		)
-	end
+    s = StringScanner.new "baz\n  <foo>bar</foo>\n</foo>"
+    inner_html, close_tag = Runo::Parser.scan_inner_html(s, 'foo')
+    assert_equal(
+      "baz\n  <foo>bar</foo>\n",
+      inner_html,
+      'Parser.scan_inner_html should be aware of nested tags'
+    )
+  end
 
-	def test_parse_block_tag
-		result = Runo::Parser.parse_html <<'_html'
+  def test_parse_block_tag
+    result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo"><li>hello</li></ul>
 _html
-		assert_equal(
-			{
-				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl'.chomp,
+    assert_equal(
+      {
+        'foo' => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => <<'_tmpl'.chomp,
 <ul class="runo-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item     => {
-						'default' => {
-							:label => nil,
-							:tmpl  => '<li>hello</li>',
-							:item  => {},
-						},
-					},
-				},
-			},
-			result[:item],
-			'Parser.parse_html should be able to parse block runo tags'
-		)
-		assert_equal(
-			'$(foo.message)$(foo)',
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => '<li>hello</li>',
+              :item  => {},
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should be able to parse block runo tags'
+    )
+    assert_equal(
+      '$(foo.message)$(foo)',
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo">
-	<li>hello</li>
+  <li>hello</li>
 </ul>
 _html
-		assert_equal(
-			{
-				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl'.chomp,
+    assert_equal(
+      {
+        'foo' => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => <<'_tmpl'.chomp,
 <ul class="runo-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item     => {
-						'default' => {
-							:label => nil,
-							:tmpl  => "\t<li>hello</li>\n",
-							:item  => {},
-						},
-					}
-				},
-			},
-			result[:item],
-			'Parser.parse_html should be able to parse block runo tags'
-		)
-		assert_equal(
-			'$(foo.message)$(foo)',
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => "  <li>hello</li>\n",
+              :item  => {},
+            },
+          }
+        },
+      },
+      result[:item],
+      'Parser.parse_html should be able to parse block runo tags'
+    )
+    assert_equal(
+      '$(foo.message)$(foo)',
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 hello <ul class="runo-blog" id="foo"><li>hello</li></ul> world
 _html
-		assert_equal(
-			{
-				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl'.chomp,
+    assert_equal(
+      {
+        'foo' => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => <<'_tmpl'.chomp,
  <ul class="runo-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item     => {
-						'default' => {
-							:label => nil,
-							:tmpl  => '<li>hello</li>',
-							:item  => {},
-						},
-					},
-				},
-			},
-			result[:item],
-			'Parser.parse_html should be able to parse block runo tags'
-		)
-		assert_equal(
-			<<'_html',
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => '<li>hello</li>',
+              :item  => {},
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should be able to parse block runo tags'
+    )
+    assert_equal(
+      <<'_html',
 hello$(foo.message)$(foo) world
 _html
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
-	end
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
+  end
 
-	def test_look_a_like_block_tag
-		result = Runo::Parser.parse_html <<'_html'
+  def test_look_a_like_block_tag
+    result = Runo::Parser.parse_html <<'_html'
 hello <ul class="not-runo-blog" id="foo"><li>hello</li></ul> world
 _html
-		assert_equal(
-			<<'_tmpl',
+    assert_equal(
+      <<'_tmpl',
 hello <ul class="not-runo-blog" id="foo"><li>hello</li></ul> world
 _tmpl
-			result[:tmpl],
-			"Parser.parse_html[:tmpl] should skip a class which does not start with 'runo'"
-		)
-	end
+      result[:tmpl],
+      "Parser.parse_html[:tmpl] should skip a class which does not start with 'runo'"
+    )
+  end
 
-	def test_block_tags_with_options
-		result = Runo::Parser.parse_html <<'_html'
+  def test_block_tags_with_options
+    result = Runo::Parser.parse_html <<'_html'
 hello
-	<table class="runo-blog" id="foo">
-		<!-- 1..20 barbaz -->
-		<tbody class="body"><!-- qux --><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
-	</table>
+  <table class="runo-blog" id="foo">
+    <!-- 1..20 barbaz -->
+    <tbody class="body"><!-- qux --><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
+  </table>
 world
 _html
-		assert_equal(
-			{
-				'foo' => {
-					:min      => 1,
-					:max      => 20,
-					:tokens   => ['barbaz'],
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl'.chomp,
-	<table class="runo-blog" id="@(name)">
-		<!-- 1..20 barbaz -->
-$()	</table>
+    assert_equal(
+      {
+        'foo' => {
+          :min      => 1,
+          :max      => 20,
+          :tokens   => ['barbaz'],
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => <<'_tmpl'.chomp,
+  <table class="runo-blog" id="@(name)">
+    <!-- 1..20 barbaz -->
+$()  </table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item     => {
-						'default' => {
-							:label => nil,
-							:tmpl  => <<'_tmpl',
-		<tbody class="body"><!-- qux --><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => <<'_tmpl',
+    <tbody class="body"><!-- qux --><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
-							:item  => {
-								'bar' => {:klass => 'text'},
-								'baz' => {:klass => 'text'},
-							},
-						},
-					},
-				},
-			},
-			result[:item],
-			'Parser.parse_html should aware of <tbody class="body">'
-		)
-	end
+              :item  => {
+                'bar' => {:klass => 'text'},
+                'baz' => {:klass => 'text'},
+              },
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should aware of <tbody class="body">'
+    )
+  end
 
-	def test_block_tags_with_tbody
-		result = Runo::Parser.parse_html <<'_html'
+  def test_block_tags_with_tbody
+    result = Runo::Parser.parse_html <<'_html'
 hello
-	<table class="runo-blog" id="foo">
-		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-		<tbody class="body"><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
-	</table>
+  <table class="runo-blog" id="foo">
+    <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
+    <tbody class="body"><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
+  </table>
 world
 _html
-		assert_equal(
-			{
-				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl'.chomp,
-	<table class="runo-blog" id="@(name)">
-		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-$()	</table>
+    assert_equal(
+      {
+        'foo' => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => <<'_tmpl'.chomp,
+  <table class="runo-blog" id="@(name)">
+    <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
+$()  </table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item     => {
-						'default' => {
-							:label => nil,
-							:tmpl  => <<'_tmpl',
-		<tbody class="body"><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => <<'_tmpl',
+    <tbody class="body"><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
-							:item  => {
-								'bar' => {:klass => 'text'},
-								'baz' => {:klass => 'text'},
-							},
-						},
-					},
-				},
-			},
-			result[:item],
-			'Parser.parse_html should aware of <tbody class="body">'
-		)
-		assert_equal(
-			<<'_tmpl',
+              :item  => {
+                'bar' => {:klass => 'text'},
+                'baz' => {:klass => 'text'},
+              },
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should aware of <tbody class="body">'
+    )
+    assert_equal(
+      <<'_tmpl',
 hello
 $(foo.message)$(foo)world
 _tmpl
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
-	end
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
+  end
 
-	def test_parse_item_label
-		result = Runo::Parser.parse_html <<'_html'
+  def test_parse_item_label
+    result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo"><li title="Greeting">hello</li></ul>
 _html
-		assert_equal(
-			'Greeting',
-			result[:item]['foo'][:item]['default'][:label],
-			'Parser.parse_html should pick up item labels from title attrs'
-		)
+    assert_equal(
+      'Greeting',
+      result[:item]['foo'][:item]['default'][:label],
+      'Parser.parse_html should pick up item labels from title attrs'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo"><!-- foo --><li title="Greeting">hello</li></ul>
 _html
-		assert_equal(
-			'Greeting',
-			result[:item]['foo'][:item]['default'][:label],
-			'Parser.parse_html should pick up item labels from title attrs'
-		)
+    assert_equal(
+      'Greeting',
+      result[:item]['foo'][:item]['default'][:label],
+      'Parser.parse_html should pick up item labels from title attrs'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo"><!-- foo --><li><div title="Foo">hello</div></li></ul>
 _html
-		assert_nil(
-			result[:item]['foo'][:item]['default'][:label],
-			'Parser.parse_html should pick up item labels only from the first tags'
-		)
-	end
+    assert_nil(
+      result[:item]['foo'][:item]['default'][:label],
+      'Parser.parse_html should pick up item labels only from the first tags'
+    )
+  end
 
-	def test_parse_item_label_plural
-		result = Runo::Parser.parse_html <<'_html'
+  def test_parse_item_label_plural
+    result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo"><li title="tEntry, tEntries">hello</li></ul>
 _html
-		assert_equal(
-			'tEntry',
-			result[:item]['foo'][:item]['default'][:label],
-			'Parser.parse_html should split plural item labels'
-		)
-		assert_equal(
-			['tEntry','tEntries'],
-			Runo::I18n.msg['tEntry'],
-			'Parser.parse_html should I18n.merge_msg! the plural item labels'
-		)
+    assert_equal(
+      'tEntry',
+      result[:item]['foo'][:item]['default'][:label],
+      'Parser.parse_html should split plural item labels'
+    )
+    assert_equal(
+      ['tEntry', 'tEntries'],
+      Runo::I18n.msg['tEntry'],
+      'Parser.parse_html should I18n.merge_msg! the plural item labels'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo"><li title="tFooFoo, BarBar, BazBaz">hello</li></ul>
 _html
-		assert_equal(
-			'tFooFoo',
-			result[:item]['foo'][:item]['default'][:label],
-			'Parser.parse_html should split plural item labels'
-		)
-		assert_equal(
-			['tFooFoo','BarBar','BazBaz'],
-			Runo::I18n.msg['tFooFoo'],
-			'Parser.parse_html should I18n.merge_msg! the plural item labels'
-		)
+    assert_equal(
+      'tFooFoo',
+      result[:item]['foo'][:item]['default'][:label],
+      'Parser.parse_html should split plural item labels'
+    )
+    assert_equal(
+      ['tFooFoo', 'BarBar', 'BazBaz'],
+      Runo::I18n.msg['tFooFoo'],
+      'Parser.parse_html should I18n.merge_msg! the plural item labels'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo"><li title="tQux">hello</li></ul>
 _html
-		assert_equal(
-			'tQux',
-			result[:item]['foo'][:item]['default'][:label],
-			'Parser.parse_html should split plural item labels'
-		)
-		assert_equal(
-			['tQux','tQux','tQux','tQux'],
-			Runo::I18n.msg['tQux'],
-			'Parser.parse_html should repeat a singular label to fill all possible plural forms'
-		)
-	end
+    assert_equal(
+      'tQux',
+      result[:item]['foo'][:item]['default'][:label],
+      'Parser.parse_html should split plural item labels'
+    )
+    assert_equal(
+      ['tQux', 'tQux', 'tQux', 'tQux'],
+      Runo::I18n.msg['tQux'],
+      'Parser.parse_html should repeat a singular label to fill all possible plural forms'
+    )
+  end
 
-	def test_block_tags_with_nested_tbody
-		result = Runo::Parser.parse_html <<'_html'
+  def test_block_tags_with_nested_tbody
+    result = Runo::Parser.parse_html <<'_html'
 hello
-	<table class="runo-blog" id="foo">
-		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-		<tbody class="body"><tbody><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody></tbody>
-	</table>
+  <table class="runo-blog" id="foo">
+    <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
+    <tbody class="body"><tbody><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody></tbody>
+  </table>
 world
 _html
-		assert_equal(
-			{
-				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl'.chomp,
-	<table class="runo-blog" id="@(name)">
-		<thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-$()	</table>
+    assert_equal(
+      {
+        'foo' => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => <<'_tmpl'.chomp,
+  <table class="runo-blog" id="@(name)">
+    <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
+$()  </table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item     => {
-						'default' => {
-							:label => nil,
-							:tmpl  => <<'_tmpl',
-		<tbody class="body"><tbody><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody></tbody>
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => <<'_tmpl',
+    <tbody class="body"><tbody><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody></tbody>
 _tmpl
-							:item  => {
-								'bar' => {:klass => 'text'},
-								'baz' => {:klass => 'text'},
-							},
-						},
-					},
-				},
-			},
-			result[:item],
-			'Parser.parse_html should aware of nested <tbody class="body">'
-		)
-	end
+              :item  => {
+                'bar' => {:klass => 'text'},
+                'baz' => {:klass => 'text'},
+              },
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should aware of nested <tbody class="body">'
+    )
+  end
 
-	def test_nested_block_tags
-		result = Runo::Parser.parse_html <<'_html'
+  def test_nested_block_tags
+    result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo">
-	<li>
-		<ul class="runo-blog" id="bar"><li>baz</li></ul>
-	</li>
+  <li>
+    <ul class="runo-blog" id="bar"><li>baz</li></ul>
+  </li>
 </ul>
 _html
-		assert_equal(
-			{
-				'foo' => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl'.chomp,
+    assert_equal(
+      {
+        'foo' => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => <<'_tmpl'.chomp,
 <ul class="runo-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item     => {
-						'default' => {
-							:label => nil,
-							:tmpl  => <<'_tmpl',
-	<li>
-$(bar.message)$(.a_update)$(bar)$(.hidden)</a>	</li>
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => <<'_tmpl',
+  <li>
+$(bar.message)$(.a_update)$(bar)$(.hidden)</a>  </li>
 _tmpl
-							:item  => {
-								'bar' => {
-									:klass    => 'set-dynamic',
-									:workflow => 'blog',
-									:tmpl     => <<'_tmpl'.chomp,
-		<ul class="runo-blog" id="@(name)">$()</ul>
+              :item  => {
+                'bar' => {
+                  :klass    => 'set-dynamic',
+                  :workflow => 'blog',
+                  :tmpl     => <<'_tmpl'.chomp,
+    <ul class="runo-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-									:item     => {
-										'default' => {
-											:label => nil,
-											:tmpl  => '<li>baz</li>',
-											:item  => {},
-										},
-									},
-								},
-							},
-						},
-					},
-				},
-			},
-			result[:item],
-			'Parser.parse_html should be able to parse nested block runo tags'
-		)
-		assert_equal(
-			'$(foo.message)$(foo)',
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
-	end
+                  :item     => {
+                    'default' => {
+                      :label => nil,
+                      :tmpl  => '<li>baz</li>',
+                      :item  => {},
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should be able to parse nested block runo tags'
+    )
+    assert_equal(
+      '$(foo.message)$(foo)',
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
+  end
 
-	def test_combination
-		result = Runo::Parser.parse_html <<'_html'
+  def test_combination
+    result = Runo::Parser.parse_html <<'_html'
 <html>
-	<h1>$(title=text 32)</h1>
-	<ul id="foo" class="runo-blog">
-		<li>
-			$(subject=text 64)
-			$(body=textarea 72*10)
-			<ul><li>qux</li></ul>
-		</li>
-	</ul>
+  <h1>$(title=text 32)</h1>
+  <ul id="foo" class="runo-blog">
+    <li>
+      $(subject=text 64)
+      $(body=textarea 72*10)
+      <ul><li>qux</li></ul>
+    </li>
+  </ul>
 </html>
 _html
-		assert_equal(
-			{
-				'title' => {:klass => 'text',:tokens => ['32']},
-				'foo'   => {
-					:klass    => 'set-dynamic',
-					:workflow => 'blog',
-					:tmpl     => <<'_tmpl'.chomp,
-	<ul id="@(name)" class="runo-blog">
-$()	</ul>
+    assert_equal(
+      {
+        'title' => {:klass => 'text', :tokens => ['32']},
+        'foo'   => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => <<'_tmpl'.chomp,
+  <ul id="@(name)" class="runo-blog">
+$()  </ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
-					:item     => {
-						'default' => {
-							:label => nil,
-							:tmpl  => <<'_tmpl',
-		<li>
-			$(.a_update)$(subject)</a>
-			$(body)$(.hidden)
-			<ul><li>qux</li></ul>
-		</li>
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => <<'_tmpl',
+    <li>
+      $(.a_update)$(subject)</a>
+      $(body)$(.hidden)
+      <ul><li>qux</li></ul>
+    </li>
 _tmpl
-							:item  => {
-								'body' => {
-									:width  => 72,
-									:height => 10,
-									:klass  => 'textarea',
-								},
-								'subject' => {
-									:tokens => ['64'],
-									:klass  => 'text',
-								},
-							},
-						},
-					},
-				},
-			},
-			result[:item],
-			'Parser.parse_html should be able to parse combination of mixed runo tags'
-		)
-		assert_equal(
-			<<'_tmpl',
+              :item  => {
+                'body' => {
+                  :width  => 72,
+                  :height => 10,
+                  :klass  => 'textarea',
+                },
+                'subject' => {
+                  :tokens => ['64'],
+                  :klass  => 'text',
+                },
+              },
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should be able to parse combination of mixed runo tags'
+    )
+    assert_equal(
+      <<'_tmpl',
 <html>
-	<h1>$(title)</h1>
+  <h1>$(title)</h1>
 $(foo.message)$(foo)</html>
 _tmpl
-			result[:tmpl],
-			'Parser.parse_html[:tmpl] should be a proper template'
-		)
-	end
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
+  end
 
-	def test_gsub_block
-		match = nil
-		result = Runo::Parser.gsub_block('a<div class="foo">bar</div>c','foo') {|open,inner,close|
-			match = [open,inner,close]
-			'b'
-		}
-		assert_equal(
-			'abc',
-			result,
-			'Parser.gsub_block should replace tag blocks of the matching class with the given value'
-		)
-		assert_equal(
-			['<div class="foo">','bar','</div>'],
-			match,
-			'Parser.gsub_block should pass the matching element to its block'
-		)
+  def test_gsub_block
+    match = nil
+    result = Runo::Parser.gsub_block('a<div class="foo">bar</div>c', 'foo') {|open, inner, close|
+      match = [open, inner, close]
+      'b'
+    }
+    assert_equal(
+      'abc',
+      result,
+      'Parser.gsub_block should replace tag blocks of the matching class with the given value'
+    )
+    assert_equal(
+      ['<div class="foo">', 'bar', '</div>'],
+      match,
+      'Parser.gsub_block should pass the matching element to its block'
+    )
 
-		result = Runo::Parser.gsub_block('<p><div class="foo">bar</div></p>','foo') {|open,inner,close|
-			match = [open,inner,close]
-			'b'
-		}
-		assert_equal(
-			'<p>b</p>',
-			result,
-			'Parser.gsub_block should replace tag blocks of the matching class with the given value'
-		)
-		assert_equal(
-			['<div class="foo">','bar','</div>'],
-			match,
-			'Parser.gsub_block should pass the matching element to its block'
-		)
+    result = Runo::Parser.gsub_block('<p><div class="foo">bar</div></p>', 'foo') {|open, inner, close|
+      match = [open, inner, close]
+      'b'
+    }
+    assert_equal(
+      '<p>b</p>',
+      result,
+      'Parser.gsub_block should replace tag blocks of the matching class with the given value'
+    )
+    assert_equal(
+      ['<div class="foo">', 'bar', '</div>'],
+      match,
+      'Parser.gsub_block should pass the matching element to its block'
+    )
 
-		result = Runo::Parser.gsub_block('a<p><div class="foo">bar</div></p>c','foo') {|open,inner,close|
-			match = [open,inner,close]
-			'b'
-		}
-		assert_equal(
-			'a<p>b</p>c',
-			result,
-			'Parser.gsub_block should replace tag blocks of the matching class with the given value'
-		)
-		assert_equal(
-			['<div class="foo">','bar','</div>'],
-			match,
-			'Parser.gsub_block should pass the matching element to its block'
-		)
-	end
+    result = Runo::Parser.gsub_block('a<p><div class="foo">bar</div></p>c', 'foo') {|open, inner, close|
+      match = [open, inner, close]
+      'b'
+    }
+    assert_equal(
+      'a<p>b</p>c',
+      result,
+      'Parser.gsub_block should replace tag blocks of the matching class with the given value'
+    )
+    assert_equal(
+      ['<div class="foo">', 'bar', '</div>'],
+      match,
+      'Parser.gsub_block should pass the matching element to its block'
+    )
+  end
 
-	def _test_gsub_action_tmpl(html)
-		result = {}
-		html = Runo::Parser.gsub_action_tmpl(html) {|id,action,*tmpl|
-			result[:id]     = id
-			result[:action] = action
-			result[:tmpl]   = tmpl.join
-			'b'
-		}
-		[result,html]
-	end
+  def _test_gsub_action_tmpl(html)
+    result = {}
+    html = Runo::Parser.gsub_action_tmpl(html) {|id, action, *tmpl|
+      result[:id]     = id
+      result[:action] = action
+      result[:tmpl]   = tmpl.join
+      'b'
+    }
+    [result, html]
+  end
 
-	def test_gsub_action_tmpl
-		result,html = _test_gsub_action_tmpl 'a<div class="foo-navi">Foo</div>c'
-		assert_equal(
-			{
-				:id     => 'foo',
-				:action => 'navi',
-				:tmpl   => '<div class="foo-navi">Foo</div>',
-			},
-			result,
-			'Parser.gsub_action_tmpl should yield action templates'
-		)
-		assert_equal(
-			'abc',
-			html,
-			'Parser.gsub_action_tmpl should replace the action template with a value from the block'
-		)
+  def test_gsub_action_tmpl
+    result, html = _test_gsub_action_tmpl 'a<div class="foo-navi">Foo</div>c'
+    assert_equal(
+      {
+        :id     => 'foo',
+        :action => 'navi',
+        :tmpl   => '<div class="foo-navi">Foo</div>',
+      },
+      result,
+      'Parser.gsub_action_tmpl should yield action templates'
+    )
+    assert_equal(
+      'abc',
+      html,
+      'Parser.gsub_action_tmpl should replace the action template with a value from the block'
+    )
 
-		result,html = _test_gsub_action_tmpl 'a<div class="bar foo-navi">Foo</div>c'
-		assert_equal(
-			{
-				:id     => 'foo',
-				:action => 'navi',
-				:tmpl   => '<div class="bar foo-navi">Foo</div>',
-			},
-			result,
-			'Parser.gsub_action_tmpl should yield action templates'
-		)
+    result, html = _test_gsub_action_tmpl 'a<div class="bar foo-navi">Foo</div>c'
+    assert_equal(
+      {
+        :id     => 'foo',
+        :action => 'navi',
+        :tmpl   => '<div class="bar foo-navi">Foo</div>',
+      },
+      result,
+      'Parser.gsub_action_tmpl should yield action templates'
+    )
 
-		result,html = _test_gsub_action_tmpl 'a<div class="bar foo-navi baz">Foo</div>c'
-		assert_equal(
-			{
-				:id     => 'foo',
-				:action => 'navi',
-				:tmpl   => '<div class="bar foo-navi baz">Foo</div>',
-			},
-			result,
-			'Parser.gsub_action_tmpl should yield action templates'
-		)
+    result, html = _test_gsub_action_tmpl 'a<div class="bar foo-navi baz">Foo</div>c'
+    assert_equal(
+      {
+        :id     => 'foo',
+        :action => 'navi',
+        :tmpl   => '<div class="bar foo-navi baz">Foo</div>',
+      },
+      result,
+      'Parser.gsub_action_tmpl should yield action templates'
+    )
 
-		result,html = _test_gsub_action_tmpl 'a<div class="bar foo-done baz">Foo</div>c'
-		assert_equal(
-			{
-				:id     => 'foo',
-				:action => 'done',
-				:tmpl   => '<div class="bar foo-done baz">Foo</div>',
-			},
-			result,
-			'Parser.gsub_action_tmpl should yield action templates'
-		)
-	end
+    result, html = _test_gsub_action_tmpl 'a<div class="bar foo-done baz">Foo</div>c'
+    assert_equal(
+      {
+        :id     => 'foo',
+        :action => 'done',
+        :tmpl   => '<div class="bar foo-done baz">Foo</div>',
+      },
+      result,
+      'Parser.gsub_action_tmpl should yield action templates'
+    )
+  end
 
-	def test_gsub_action_tmpl_with_empty_id
-		result,html = _test_gsub_action_tmpl 'a<div class="navi">Foo</div>c'
-		assert_equal(
-			{
-				:id     => nil,
-				:action => 'navi',
-				:tmpl   => '<div class="navi">Foo</div>',
-			},
-			result,
-			'Parser.gsub_action_tmpl should yield action templates'
-		)
+  def test_gsub_action_tmpl_with_empty_id
+    result, html = _test_gsub_action_tmpl 'a<div class="navi">Foo</div>c'
+    assert_equal(
+      {
+        :id     => nil,
+        :action => 'navi',
+        :tmpl   => '<div class="navi">Foo</div>',
+      },
+      result,
+      'Parser.gsub_action_tmpl should yield action templates'
+    )
 
-		result,html = _test_gsub_action_tmpl 'a<div class="foo navi">Foo</div>c'
-		assert_equal(
-			{
-				:id     => nil,
-				:action => 'navi',
-				:tmpl   => '<div class="foo navi">Foo</div>',
-			},
-			result,
-			'Parser.gsub_action_tmpl should yield action templates'
-		)
+    result, html = _test_gsub_action_tmpl 'a<div class="foo navi">Foo</div>c'
+    assert_equal(
+      {
+        :id     => nil,
+        :action => 'navi',
+        :tmpl   => '<div class="foo navi">Foo</div>',
+      },
+      result,
+      'Parser.gsub_action_tmpl should yield action templates'
+    )
 
-		result,html = _test_gsub_action_tmpl 'a<div class="foo navi baz">Foo</div>c'
-		assert_equal(
-			{
-				:id     => nil,
-				:action => 'navi',
-				:tmpl   => '<div class="foo navi baz">Foo</div>',
-			},
-			result,
-			'Parser.gsub_action_tmpl should yield action templates'
-		)
-	end
+    result, html = _test_gsub_action_tmpl 'a<div class="foo navi baz">Foo</div>c'
+    assert_equal(
+      {
+        :id     => nil,
+        :action => 'navi',
+        :tmpl   => '<div class="foo navi baz">Foo</div>',
+      },
+      result,
+      'Parser.gsub_action_tmpl should yield action templates'
+    )
+  end
 
-	def test_gsub_action_tmpl_with_ambiguous_klass
-		result,html = _test_gsub_action_tmpl 'a<div class="not_navi">Foo</div>c'
-		assert_equal(
-			{},
-			result,
-			'Parser.gsub_action_tmpl should ignore classes other than action, view, navi or submit'
-		)
+  def test_gsub_action_tmpl_with_ambiguous_klass
+    result, html = _test_gsub_action_tmpl 'a<div class="not_navi">Foo</div>c'
+    assert_equal(
+      {},
+      result,
+      'Parser.gsub_action_tmpl should ignore classes other than action, view, navi or submit'
+    )
 
-		result,html = _test_gsub_action_tmpl 'a<div class="navi_bar">Foo</div>c'
-		assert_equal(
-			{
-				:id     => nil,
-				:action => 'navi_bar',
-				:tmpl   => '<div class="navi_bar">Foo</div>',
-			},
-			result,
-			'Parser.gsub_action_tmpl should yield an action template if the klass looks like special'
-		)
-	end
+    result, html = _test_gsub_action_tmpl 'a<div class="navi_bar">Foo</div>c'
+    assert_equal(
+      {
+        :id     => nil,
+        :action => 'navi_bar',
+        :tmpl   => '<div class="navi_bar">Foo</div>',
+      },
+      result,
+      'Parser.gsub_action_tmpl should yield an action template if the klass looks like special'
+    )
+  end
 
-	def test_action_tmpl_in_ss
-		result = Runo::Parser.parse_html <<'_html'
+  def test_action_tmpl_in_ss
+    result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="foo" class="runo-blog">
-		<li>$(subject=text)</li>
-	</ul>
-	<div class="foo-navi">bar</div>
+  <ul id="foo" class="runo-blog">
+    <li>$(subject=text)</li>
+  </ul>
+  <div class="foo-navi">bar</div>
 </html>
 _html
-		assert_equal(
-			<<'_tmpl',
-	<div class="foo-navi">bar</div>
+    assert_equal(
+      <<'_tmpl',
+  <div class="foo-navi">bar</div>
 _tmpl
-			result[:item]['foo'][:tmpl_navi],
-			'Parser.parse_html should parse action templates in the html'
-		)
-		assert_equal(
-			<<'_tmpl',
+      result[:item]['foo'][:tmpl_navi],
+      'Parser.parse_html should parse action templates in the html'
+    )
+    assert_equal(
+      <<'_tmpl',
 <html>
 $(foo.message)$(foo)$(foo.navi)</html>
 _tmpl
-			result[:tmpl],
-			'Parser.parse_html should replace action templates with proper tags'
-		)
-	end
+      result[:tmpl],
+      'Parser.parse_html should replace action templates with proper tags'
+    )
+  end
 
-	def test_action_tmpl_in_ss_with_nil_id
-		result = Runo::Parser.parse_html <<'_html'
+  def test_action_tmpl_in_ss_with_nil_id
+    result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="main" class="runo-blog">
-		<li>$(subject=text)</li>
-	</ul>
-	<div class="navi">bar</div>
+  <ul id="main" class="runo-blog">
+    <li>$(subject=text)</li>
+  </ul>
+  <div class="navi">bar</div>
 </html>
 _html
-		assert_equal(
-			<<'_tmpl',
-	<div class="navi">bar</div>
+    assert_equal(
+      <<'_tmpl',
+  <div class="navi">bar</div>
 _tmpl
-			result[:item]['main'][:tmpl_navi],
-			"Parser.parse_html should set action templates to item['main'] by default"
-		)
-		assert_equal(
-			<<'_tmpl',
+      result[:item]['main'][:tmpl_navi],
+      "Parser.parse_html should set action templates to item['main'] by default"
+    )
+    assert_equal(
+      <<'_tmpl',
 <html>
 $(main.message)$(main)$(main.navi)</html>
 _tmpl
-			result[:tmpl],
-			"Parser.parse_html should set action templates to item['main'] by default"
-		)
-	end
+      result[:tmpl],
+      "Parser.parse_html should set action templates to item['main'] by default"
+    )
+  end
 
-	def test_action_tmpl_in_ss_with_non_existent_id
-		result = Runo::Parser.parse_html <<'_html'
+  def test_action_tmpl_in_ss_with_non_existent_id
+    result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="main" class="runo-blog">
-		<li>$(subject=text)</li>
-	</ul>
-	<div class="non_existent-navi">bar</div>
+  <ul id="main" class="runo-blog">
+    <li>$(subject=text)</li>
+  </ul>
+  <div class="non_existent-navi">bar</div>
 </html>
 _html
-		assert_nil(
-			result[:item]['non_existent'],
-			'Parser.parse_html should ignore the action template without a corresponding SD'
-		)
-		assert_equal(
-			<<'_tmpl',
+    assert_nil(
+      result[:item]['non_existent'],
+      'Parser.parse_html should ignore the action template without a corresponding SD'
+    )
+    assert_equal(
+      <<'_tmpl',
 <html>
-$(main.message)$(main)	<div class="non_existent-navi">bar</div>
+$(main.message)$(main)  <div class="non_existent-navi">bar</div>
 </html>
 _tmpl
-			result[:tmpl],
-			'Parser.parse_html should ignore the action template without a corresponding SD'
-		)
-	end
+      result[:tmpl],
+      'Parser.parse_html should ignore the action template without a corresponding SD'
+    )
+  end
 
-	def test_action_tmpl_in_ss_with_nested_action_tmpl
-		result = Runo::Parser.parse_html <<'_html'
+  def test_action_tmpl_in_ss_with_nested_action_tmpl
+    result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="foo" class="runo-blog">
-		<li>$(subject=text)</li>
-	</ul>
-	<div class="foo-navi"><span class="navi_prev">prev</span></div>
+  <ul id="foo" class="runo-blog">
+    <li>$(subject=text)</li>
+  </ul>
+  <div class="foo-navi"><span class="navi_prev">prev</span></div>
 </html>
 _html
-		assert_equal(
-			<<'_html',
-	<div class="foo-navi">$(.navi_prev)</div>
+    assert_equal(
+      <<'_html',
+  <div class="foo-navi">$(.navi_prev)</div>
 _html
-			result[:item]['foo'][:tmpl_navi],
-			'Parser.parse_html should parse nested action templates'
-		)
-		assert_equal(
-			'<span class="navi_prev">prev</span>',
-			result[:item]['foo'][:tmpl_navi_prev],
-			'Parser.parse_html should parse nested action templates'
-		)
+      result[:item]['foo'][:tmpl_navi],
+      'Parser.parse_html should parse nested action templates'
+    )
+    assert_equal(
+      '<span class="navi_prev">prev</span>',
+      result[:item]['foo'][:tmpl_navi_prev],
+      'Parser.parse_html should parse nested action templates'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 <html>
-	<ul id="foo" class="runo-blog">
-		<li>$(subject=text)</li>
-	</ul>
-	<div class="foo-navi"><span class="bar-navi_prev">prev</span></div>
+  <ul id="foo" class="runo-blog">
+    <li>$(subject=text)</li>
+  </ul>
+  <div class="foo-navi"><span class="bar-navi_prev">prev</span></div>
 </html>
 _html
-		assert_equal(
-			'<span class="bar-navi_prev">prev</span>',
-			result[:item]['foo'][:tmpl_navi_prev],
-			'Parser.parse_html should ignore the id of a nested action template'
-		)
-	end
+    assert_equal(
+      '<span class="bar-navi_prev">prev</span>',
+      result[:item]['foo'][:tmpl_navi_prev],
+      'Parser.parse_html should ignore the id of a nested action template'
+    )
+  end
 
-	def test_action_tmpl_in_sd
-		result = Runo::Parser.parse_html <<'_html'
+  def test_action_tmpl_in_sd
+    result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
-	<li class="body">$(text)</li>
-	<div class="navi">bar</div>
+  <li class="body">$(text)</li>
+  <div class="navi">bar</div>
 </ul>
 _html
-		assert_equal(
-			<<'_html',
-	<div class="navi">bar</div>
+    assert_equal(
+      <<'_html',
+  <div class="navi">bar</div>
 _html
-			result[:item]['foo'][:tmpl_navi],
-			'Parser.parse_html should parse action templates in sd[:tmpl]'
-		)
-		assert_match(
-			%r{\$\(\.navi\)},
-			result[:item]['foo'][:tmpl],
-			'Parser.parse_html should parse action templates in sd[:tmpl]'
-		)
-	end
+      result[:item]['foo'][:tmpl_navi],
+      'Parser.parse_html should parse action templates in sd[:tmpl]'
+    )
+    assert_match(
+      %r{\$\(\.navi\)},
+      result[:item]['foo'][:tmpl],
+      'Parser.parse_html should parse action templates in sd[:tmpl]'
+    )
+  end
 
-	def test_action_tmpl_in_sd_with_nested_action_tmpl
-		result = Runo::Parser.parse_html <<'_html'
+  def test_action_tmpl_in_sd_with_nested_action_tmpl
+    result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
-	<li class="body">$(text)</li>
-	<div class="navi"><span class="navi_prev">prev</span></div>
+  <li class="body">$(text)</li>
+  <div class="navi"><span class="navi_prev">prev</span></div>
 </ul>
 _html
-		assert_equal(
-			<<'_html',
-	<div class="navi">$(.navi_prev)</div>
+    assert_equal(
+      <<'_html',
+  <div class="navi">$(.navi_prev)</div>
 _html
-			result[:item]['foo'][:tmpl_navi],
-			'Parser.parse_html should parse nested action templates in sd[:tmpl]'
-		)
-		assert_equal(
-			'<span class="navi_prev">prev</span>',
-			result[:item]['foo'][:tmpl_navi_prev],
-			'Parser.parse_html should parse nested action templates in sd[:tmpl]'
-		)
-	end
+      result[:item]['foo'][:tmpl_navi],
+      'Parser.parse_html should parse nested action templates in sd[:tmpl]'
+    )
+    assert_equal(
+      '<span class="navi_prev">prev</span>',
+      result[:item]['foo'][:tmpl_navi_prev],
+      'Parser.parse_html should parse nested action templates in sd[:tmpl]'
+    )
+  end
 
-	def test_supplement_menus_in_sd
-		result = Runo::Parser.parse_html <<'_html'
+  def test_supplement_menus_in_sd
+    result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
-	<li class="body">$(text)</li>
+  <li class="body">$(text)</li>
 </ul>
 _html
-		assert_match(
-			/\$\(\.navi\)/,
-			result[:item]['foo'][:tmpl],
-			'Parser.parse_html should supplement sd[:tmpl] with default menus'
-		)
+    assert_match(
+      /\$\(\.navi\)/,
+      result[:item]['foo'][:tmpl],
+      'Parser.parse_html should supplement sd[:tmpl] with default menus'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
-	<div class="navi">bar</div>
-	<li class="body">$(text)</li>
+  <div class="navi">bar</div>
+  <li class="body">$(text)</li>
 </ul>
 _html
-		assert_no_match(
-			/\$\(\.navi\).*\$\(\.navi\)/m,
-			result[:item]['foo'][:tmpl],
-			'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
-		)
+    assert_no_match(
+      /\$\(\.navi\).*\$\(\.navi\)/m,
+      result[:item]['foo'][:tmpl],
+      'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
+    )
 
-		result = Runo::Parser.parse_html <<'_html'
+    result = Runo::Parser.parse_html <<'_html'
 <div class="foo-navi">bar</div>
 <ul id="foo" class="runo-blog">
-	<li class="body">$(text)</li>
+  <li class="body">$(text)</li>
 </ul>
 _html
-		assert_no_match(
-			/\$\(\.navi\)/,
-			result[:item]['foo'][:tmpl],
-			'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
-		)
-	end
+    assert_no_match(
+      /\$\(\.navi\)/,
+      result[:item]['foo'][:tmpl],
+      'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
+    )
+  end
 
 end

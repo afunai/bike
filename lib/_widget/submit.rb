@@ -5,45 +5,45 @@
 
 class Runo::Set::Dynamic
 
-	private
+  private
 
-	def _g_submit(arg)
-		<<_html
+  def _g_submit(arg)
+    <<_html
 <div class="submit">
 #{_g_submit_commit arg}#{_g_submit_preview arg}#{_g_submit_preview_delete arg}</div>
 _html
-	end
+  end
 
-	def _g_submit_commit(arg)
-		if collect_item(arg[:conds]).all? {|i| i[:id] =~ Runo::REX::ID_NEW }
-			action = :create
-		elsif arg[:orig_action] == :preview
-			action = arg[:sub_action]
-		else
-			action = arg[:orig_action]
-		end
-		<<_html unless my[:preview] == :mandatory && arg[:orig_action] != :preview
-	<input name="#{my[:short_name]}.status-public" type="submit" value="#{_ action.to_s}" />
+  def _g_submit_commit(arg)
+    if collect_item(arg[:conds]).all? {|i| i[:id] =~ Runo::REX::ID_NEW }
+      action = :create
+    elsif arg[:orig_action] == :preview
+      action = arg[:sub_action]
+    else
+      action = arg[:orig_action]
+    end
+    <<_html unless my[:preview] == :mandatory && arg[:orig_action] != :preview
+  <input name="#{my[:short_name]}.status-public" type="submit" value="#{_ action.to_s}" />
 _html
-	end
+  end
 
-	def _g_submit_preview(arg)
-		label = _ 'preview'
-		<<_html if my[:preview] && arg[:orig_action] != :preview
-	<input name="#{my[:short_name]}.action-preview_#{arg[:orig_action]}" type="submit" value="#{label}" />
+  def _g_submit_preview(arg)
+    label = _ 'preview'
+    <<_html if my[:preview] && arg[:orig_action] != :preview
+  <input name="#{my[:short_name]}.action-preview_#{arg[:orig_action]}" type="submit" value="#{label}" />
 _html
-	end
+  end
 
-	def _g_submit_preview_delete(arg)
-		if (
-			permit_get?(arg.merge :action => :delete) &&
-			collect_item(arg[:conds]).find {|item| item[:id] !~ Runo::REX::ID_NEW } &&
-			arg[:orig_action] != :preview
-		)
-			<<_html
-	<input name="#{my[:short_name]}.action-preview_delete" type="submit" value="#{_ 'delete...'}" />
+  def _g_submit_preview_delete(arg)
+    if (
+      permit_get?(arg.merge :action => :delete) &&
+      collect_item(arg[:conds]).find {|item| item[:id] !~ Runo::REX::ID_NEW } &&
+      arg[:orig_action] != :preview
+    )
+      <<_html
+  <input name="#{my[:short_name]}.action-preview_delete" type="submit" value="#{_ 'delete...'}" />
 _html
-		end
-	end
+    end
+  end
 
 end

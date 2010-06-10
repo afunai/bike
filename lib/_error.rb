@@ -5,10 +5,10 @@
 
 module Runo::Error
 
-	class Forbidden < StandardError
-	end
+  class Forbidden < StandardError
+  end
 
-	class NotFound < StandardError
-	end
+  class NotFound < StandardError
+  end
 
 end

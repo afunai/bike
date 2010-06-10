@@ -5,18 +5,18 @@
 
 class Runo::Set::Static::Folder
 
-	private
+  private
 
-	def _g_action_login(arg)
-		if Runo.client == 'nobody'
-			<<_html
+  def _g_action_login(arg)
+    if Runo.client == 'nobody'
+      <<_html
 <div class="action_login"><a href="#{my[:dir]}/login.html">#{_ 'login...'}</a></div>
 _html
-		else
-			<<_html
+    else
+      <<_html
 <div class="action_logout"><a href="#{my[:dir]}/logout.html?_token=#{Runo.token}">#{_ 'logout'}</a></div>
 _html
-		end
-	end
+    end
+  end
 
 end

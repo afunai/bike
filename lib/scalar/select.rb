@@ -5,41 +5,41 @@
 
 class Runo::Select < Runo::Field
 
-	def initialize(meta = {})
-		meta[:mandatory] = meta[:tokens] && meta[:tokens].include?('mandatory')
-		meta[:options] ||= meta[:max] && (meta[:min].to_i..meta[:max]).collect {|i| i.to_s }
-		super
-	end
+  def initialize(meta = {})
+    meta[:mandatory] = meta[:tokens] && meta[:tokens].include?('mandatory')
+    meta[:options] ||= meta[:max] && (meta[:min].to_i..meta[:max]).collect {|i| i.to_s }
+    super
+  end
 
-	def errors
-		if my[:mandatory] && val.empty?
-			[_ 'mandatory']
-		elsif my[:options].include?(val) || val.empty?
-			[]
-		else
-			[_ 'no such option']
-		end
-	end
+  def errors
+    if my[:mandatory] && val.empty?
+      [_ 'mandatory']
+    elsif my[:options].include?(val) || val.empty?
+      []
+    else
+      [_ 'no such option']
+    end
+  end
 
-	private
+  private
 
-	def _g_update(arg)
-		options = my[:options].collect {|opt|
-			selected = (opt == val) ? ' selected' : ''
-			"\t<option#{selected}>#{Runo::Field.h opt}</option>\n"
-		}.join
-		unless my[:mandatory] && my[:options].include?(val)
-			options = "\t<option value=\"\">#{_ 'please select'}</option>\n#{options}"
-		end
-		<<_html.chomp
+  def _g_update(arg)
+    options = my[:options].collect {|opt|
+      selected = (opt == val) ? ' selected' : ''
+      "  <option#{selected}>#{Runo::Field.h opt}</option>\n"
+    }.join
+    unless my[:mandatory] && my[:options].include?(val)
+      options = "  <option value=\"\">#{_ 'please select'}</option>\n#{options}"
+    end
+    <<_html.chomp
 <select name="#{my[:short_name]}" class="#{_g_class arg}">
 #{options}</select>#{_g_errors arg}
 _html
-	end
-	alias :_g_create :_g_update
+  end
+  alias :_g_create :_g_update
 
-	def val_cast(v)
-		v.to_s
-	end
+  def val_cast(v)
+    v.to_s
+  end
 
 end

@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html 
-	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="_(en)" lang="_(en)">
 
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>_(User Admin)</title>
-		<link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
-		<link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
-	</head>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>_(User Admin)</title>
+    <link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
+  </head>
 
-	<body>
-		<div id="container">
-			<div id="header">
-				<h1><a href="@(dir)/">_(User Admin)</a></h1>
-			</div>
+  <body>
+    <div id="container">
+      <div id="header">
+        <h1><a href="@(dir)/">_(User Admin)</a></h1>
+      </div>
 
-			<div id="center" class="column">
-				<div id="main" class="runo-register">
-					<!-- 1..10 may_preview -->
-					<table title="user,users">
-						<tr><th>_(ID)</th><td>$(_id = meta-id 16 1..16)</td></tr>
-						<tr><th>_(Name)</th><td>$(name = text 1..64)</td></tr>
-						<tr><th>_(Email)</th><td>$(email = text 1..64)</td></tr>
-						<tr><th>_(Password)</th><td>$(password = password 12 8..32)</td></tr>
-						<tr><th>_(Avatar)</th><td>$(avatar = img 72*72 10 0..320000 crop)</td></tr>
-					</table>
-				</div>
-			</div>
+      <div id="center" class="column">
+        <div id="main" class="runo-register">
+          <!-- 1..10 may_preview -->
+          <table title="user,users">
+            <tr><th>_(ID)</th><td>$(_id = meta-id 16 1..16)</td></tr>
+            <tr><th>_(Name)</th><td>$(name = text 1..64)</td></tr>
+            <tr><th>_(Email)</th><td>$(email = text 1..64)</td></tr>
+            <tr><th>_(Password)</th><td>$(password = password 12 8..32)</td></tr>
+            <tr><th>_(Avatar)</th><td>$(avatar = img 72*72 10 0..320000 crop)</td></tr>
+          </table>
+        </div>
+      </div>
 
-			<div id="right" class="column">
-				$(.me)
-				$(main.action_create)
-			</div>
+      <div id="right" class="column">
+        $(.me)
+        $(main.action_create)
+      </div>
 
-			<div id="footer"></div>
-		</div>
-	</body>
+      <div id="footer"></div>
+    </div>
+  </body>
 
 </html>

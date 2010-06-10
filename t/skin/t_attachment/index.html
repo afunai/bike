@@ -1,13 +1,13 @@
 <html>
-	<head><title>@(label)</title></head>
-	<body>
-		<h1>@(label)</h1>
-		<ul id="main" class="runo-blog">
-			<li title="tArticle, tArticles">
-				$(comment=text)
-				<ul id="files" class="runo-attachment"><li>$(file=text 1..16)</li></ul>
-				<ul id="replies" class="runo-blog"><li>$(reply=text)</li></ul>
-			</li>
-		</ul>
-	</body>
+  <head><title>@(label)</title></head>
+  <body>
+    <h1>@(label)</h1>
+    <ul id="main" class="runo-blog">
+      <li title="tArticle, tArticles">
+        $(comment=text)
+        <ul id="files" class="runo-attachment"><li>$(file=text 1..16)</li></ul>
+        <ul id="replies" class="runo-blog"><li>$(reply=text)</li></ul>
+      </li>
+    </ul>
+  </body>
 </html>

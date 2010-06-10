@@ -5,12 +5,12 @@
 
 class Runo::Set::Dynamic
 
-	private
+  private
 
-	def _g_done(arg)
-		(_get_by_action_tmpl(arg) || <<_html.chomp) if arg[:orig_action] == :done
+  def _g_done(arg)
+    (_get_by_action_tmpl(arg) || <<_html.chomp) if arg[:orig_action] == :done
 <div class="done">#{_ 'done.'}</div>
 _html
-	end
+  end
 
 end

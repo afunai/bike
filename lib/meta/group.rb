@@ -5,15 +5,15 @@
 
 class Runo::Meta::Group < Runo::Field
 
-	include Runo::Meta
+  include Runo::Meta
 
-	private
+  private
 
-	def _post(action, v)
-		if action == :load
-			@val = val_cast v
-		end
-		nil
-	end
+  def _post(action, v)
+    if action == :load
+      @val = val_cast v
+    end
+    nil
+  end
 
 end

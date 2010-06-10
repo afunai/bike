@@ -7,8 +7,8 @@ require 'rack/utils'
 
 class Runo::Textarea::Pre < Runo::Textarea
 
-	def _g_default(arg)
-		'<pre>' + Runo::Field.h(val) + '</pre>'
-	end
+  def _g_default(arg)
+    '<pre>' + Runo::Field.h(val) + '</pre>'
+  end
 
 end

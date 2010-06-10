@@ -5,17 +5,17 @@
 
 class Runo::Meta::Owner < Runo::Field
 
-	include Runo::Meta
+  include Runo::Meta
 
-	private
+  private
 
-	def _post(action, v)
-		if action == :load
-			@val = val_cast v
-		elsif action == :create
-			@val = Runo.client
-		end
-		nil
-	end
+  def _post(action, v)
+    if action == :load
+      @val = val_cast v
+    elsif action == :create
+      @val = Runo.client
+    end
+    nil
+  end
 
 end

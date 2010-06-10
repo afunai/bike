@@ -5,34 +5,34 @@
 
 class Runo::Text < Runo::Field
 
-	def initialize(meta = {})
-		meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
-		super
-	end
+  def initialize(meta = {})
+    meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
+    super
+  end
 
-	def errors
-		if (my[:max].to_i > 0) && (val.size > my[:max])
-			[_('too long: %{max} characters maximum') % {:max => my[:max]}]
-		elsif (my[:min].to_i == 1) && val.empty?
-			[_ 'mandatory']
-		elsif (my[:min].to_i > 0) && (val.size < my[:min])
-			[_('too short: %{min} characters minimum') % {:min => my[:min]}]
-		else
-			[]
-		end
-	end
+  def errors
+    if (my[:max].to_i > 0) && (val.size > my[:max])
+      [_('too long: %{max} characters maximum') % {:max => my[:max]}]
+    elsif (my[:min].to_i == 1) && val.empty?
+      [_ 'mandatory']
+    elsif (my[:min].to_i > 0) && (val.size < my[:min])
+      [_('too short: %{min} characters minimum') % {:min => my[:min]}]
+    else
+      []
+    end
+  end
 
-	private
+  private
 
-	def _g_update(arg)
-		<<_html.chomp
+  def _g_update(arg)
+    <<_html.chomp
 <input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
 _html
-	end
-	alias :_g_create :_g_update
+  end
+  alias :_g_create :_g_update
 
-	def val_cast(v)
-		v.to_s
-	end
+  def val_cast(v)
+    v.to_s
+  end
 
 end

@@ -31,7 +31,7 @@ class TC_Set_Complex < Test::Unit::TestCase
 	class ::Runo::Tomago < ::Runo::Field
 		def _get(arg)
 			args = arg.keys.collect {|k| "#{k}=#{arg[k]}" }.sort
-			"'#{val}'(#{args.join ','})"
+			"'#{val}'(#{args.join ', '})"
 		end
 	end
 
@@ -41,7 +41,7 @@ class TC_Set_Complex < Test::Unit::TestCase
 			:id       => 'main',
 			:klass    => 'set-dynamic',
 			:workflow => 'pipco',
-			:group    => ['roy','don'],
+			:group    => ['roy', 'don'],
 			:tmpl     => <<'_tmpl'.chomp,
 <ul id="@(name)" class="runo-pipco">
 $()</ul>
@@ -72,7 +72,7 @@ _html
 					'20091123_0002' => {'file' => 'carl2.jpg'},
 				},
 				'replies'   => {
-					'20091125_0001' => {'_owner' => 'bobby','reply' => 'howdy.'},
+					'20091125_0001' => {'_owner' => 'bobby', 'reply' => 'howdy.'},
 				},
 			},
 			'20091123_0002' => {
@@ -83,18 +83,18 @@ _html
 					'20091123_0001' => {'file' => 'roy.png'},
 				},
 				'replies'   => {
-					'20091125_0001' => {'_owner' => 'don','reply' => 'ho ho.'},
-					'20091125_0002' => {'_owner' => 'roy','reply' => 'oops.'},
+					'20091125_0001' => {'_owner' => 'don', 'reply' => 'ho ho.'},
+					'20091125_0002' => {'_owner' => 'roy', 'reply' => 'oops.'},
 				},
 			}
 		)
 
 		[
 			@sd,
-			@sd.item('20091123_0001','files'),
-			@sd.item('20091123_0001','replies'),
-			@sd.item('20091123_0002','files'),
-			@sd.item('20091123_0002','replies'),
+			@sd.item('20091123_0001', 'files'),
+			@sd.item('20091123_0001', 'replies'),
+			@sd.item('20091123_0002', 'files'),
+			@sd.item('20091123_0002', 'replies'),
 		].each {|sd|
 			sd[:tmpl_action_create] = ''
 			sd[:tmpl_navi] = ''
@@ -127,24 +127,24 @@ _html
 			<<'_html',
 <ul id="main" class="runo-pipco">
 	<li id="main-20091123_0001">
-		'CZ'(action=read,p_action=read): 'oops'(action=read,p_action=read)
+		'CZ'(action=read, p_action=read): 'oops'(action=read, p_action=read)
 		<ul id="main-20091123_0001-files" class="runo-attachment">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=read,p_action=read)</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read,p_action=read)</li>
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=read, p_action=read)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read, p_action=read)</li>
 		</ul>
 		<ul id="main-20091123_0001-replies" class="runo-pipco">
-			<li id="main-20091123_0001-replies-20091125_0001"><a href="/20091123_0001/replies/20091125/1/update.html">'howdy.'(action=read,p_action=read)</a></li>
+			<li id="main-20091123_0001-replies-20091125_0001"><a href="/20091123_0001/replies/20091125/1/update.html">'howdy.'(action=read, p_action=read)</a></li>
 		</ul>
 		'potato'
 	</li>
 	<li id="main-20091123_0002">
-		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
+		'RE'(action=read, p_action=read): 'wee'(action=read, p_action=read)
 		<ul id="main-20091123_0002-files" class="runo-attachment">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read, p_action=read)</li>
 		</ul>
 		<ul id="main-20091123_0002-replies" class="runo-pipco">
-			<li id="main-20091123_0002-replies-20091125_0001"><a href="/20091123_0002/replies/20091125/1/update.html">'ho ho.'(action=read,p_action=read)</a></li>
-			<li id="main-20091123_0002-replies-20091125_0002"><a href="/20091123_0002/replies/20091125/2/update.html">'oops.'(action=read,p_action=read)</a></li>
+			<li id="main-20091123_0002-replies-20091125_0001"><a href="/20091123_0002/replies/20091125/1/update.html">'ho ho.'(action=read, p_action=read)</a></li>
+			<li id="main-20091123_0002-replies-20091125_0002"><a href="/20091123_0002/replies/20091125/2/update.html">'oops.'(action=read, p_action=read)</a></li>
 		</ul>
 		'potato'
 	</li>
@@ -183,18 +183,18 @@ _html
 			<<'_html',
 <ul id="main" class="runo-pipco">
 	<li id="main-20091123_0001">
-		'CZ'(action=update,p_action=update): 'oops'(action=update,p_action=update)
+		'CZ'(action=update, p_action=update): 'oops'(action=update, p_action=update)
 		<ul id="main-20091123_0001-files" class="runo-attachment">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update,p_action=update)[d]</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update,p_action=update)[d]</li>
-			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update, p_action=update)[d]</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update, p_action=update)[d]</li>
+			<li id="main-20091123_0001-files-_001">'foo.jpg'(action=create, p_action=create)[c]</li>
 		</ul>
 	</li>
 	<li id="main-20091123_0002">
-		'RE'(action=update,p_action=update): 'wee'(action=update,p_action=update)
+		'RE'(action=update, p_action=update): 'wee'(action=update, p_action=update)
 		<ul id="main-20091123_0002-files" class="runo-attachment">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=update,p_action=update)[d]</li>
-			<li id="main-20091123_0002-files-_001">'foo.jpg'(action=create,p_action=create)[c]</li>
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=update, p_action=update)[d]</li>
+			<li id="main-20091123_0002-files-_001">'foo.jpg'(action=create, p_action=create)[c]</li>
 		</ul>
 	</li>
 </ul>
@@ -212,23 +212,23 @@ _html
 			Runo::Error::Forbidden,
 			'Field#get should raise Error::Forbidden when an action is given but forbidden'
 		) {
-			@sd.get(:action => :update,:conds => {:id => '20091123_0002'})
+			@sd.get(:action => :update, :conds => {:id => '20091123_0002'})
 		}
 
-		@sd.item('20091123_0002','comment')[:owner] = 'carl' # enclave in roy's item
+		@sd.item('20091123_0002', 'comment')[:owner] = 'carl' # enclave in roy's item
 
 		assert_raise(
 			Runo::Error::Forbidden,
 			'Field#get should not allow partially permitted get'
 		) {
-			@sd.get(:action => :update,:conds => {:id => '20091123_0002'})
+			@sd.get(:action => :update, :conds => {:id => '20091123_0002'})
 		}
 	end
 
 	def test_get_with_partial_action
 		Runo.client = 'root'
 
-		Runo.current[:base] = @sd.item('20091123_0002','replies')
+		Runo.current[:base] = @sd.item('20091123_0002', 'replies')
 		Runo.base[:tid] = '123.45'
 
 		result = @sd.get(
@@ -243,25 +243,25 @@ _html
 			<<_html,
 <ul id="main" class="runo-pipco">
 	<li id="main-20091123_0001">
-		'CZ'(action=read,p_action=read): 'oops'(action=read,p_action=read)
+		'CZ'(action=read, p_action=read): 'oops'(action=read, p_action=read)
 		<ul id="main-20091123_0001-files" class="runo-attachment">
-			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=read,p_action=read)</li>
-			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read,p_action=read)</li>
+			<li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=read, p_action=read)</li>
+			<li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read, p_action=read)</li>
 		</ul>
 		<ul id="main-20091123_0001-replies" class="runo-pipco">
-			<li id="main-20091123_0001-replies-20091125_0001"><a href="/20091123_0001/replies/20091125/1/update.html">'howdy.'(action=read,p_action=read)</a></li>
+			<li id="main-20091123_0001-replies-20091125_0001"><a href="/20091123_0001/replies/20091125/1/update.html">'howdy.'(action=read, p_action=read)</a></li>
 		</ul>
 		'potato'
 	</li>
 	<li id="main-20091123_0002">
-		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
+		'RE'(action=read, p_action=read): 'wee'(action=read, p_action=read)
 		<ul id="main-20091123_0002-files" class="runo-attachment">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read, p_action=read)</li>
 		</ul>
 <form id="form_main-20091123_0002-replies" method="post" enctype="multipart/form-data" action="/20091123_0002/replies/123.45/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
 		<ul id="main-20091123_0002-replies" class="runo-pipco">
-			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update,p_action=update)</a></li>
+			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update, p_action=update)</a></li>
 		</ul>
 [replies-update]
 </form>
@@ -286,14 +286,14 @@ _html
 			<<_html,
 <ul id="main" class="runo-pipco">
 	<li id="main-20091123_0002">
-		'RE'(action=read,p_action=read): 'wee'(action=read,p_action=read)
+		'RE'(action=read, p_action=read): 'wee'(action=read, p_action=read)
 		<ul id="main-20091123_0002-files" class="runo-attachment">
-			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read,p_action=read)</li>
+			<li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read, p_action=read)</li>
 		</ul>
 <form id="form_main-20091123_0002-replies" method="post" enctype="multipart/form-data" action="/20091123_0002/replies/123.45/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
 		<ul id="main-20091123_0002-replies" class="runo-pipco">
-			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update,p_action=update)</a></li>
+			<li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update, p_action=update)</a></li>
 		</ul>
 [replies-update]
 </form>
@@ -310,27 +310,27 @@ _html
 		Runo.client = 'carl'
 		assert_match(
 			/\(action=update/,
-			@sd.item('20091123_0001','files').get(:action => :update)
+			@sd.item('20091123_0001', 'files').get(:action => :update)
 		)
 		assert_match(
 			/\(action=update/,
-			@sd.item('20091123_0001','files','20091123_0001').get(:action => :update)
+			@sd.item('20091123_0001', 'files', '20091123_0001').get(:action => :update)
 		)
 
-		@sd.instance_variable_set(:@item_object,{}) # remove item('_001')
+		@sd.instance_variable_set(:@item_object, {}) # remove item('_001')
 
 		Runo.client = nil
 		assert_raise(
 			Runo::Error::Forbidden,
 			'Field#get should not show an inner attachment when the parent is forbidden'
 		) {
-			@sd.item('20091123_0001','files').get(:action => :update)
+			@sd.item('20091123_0001', 'files').get(:action => :update)
 		}
 		assert_raise(
 			Runo::Error::Forbidden,
 			'Field#get should not show an inner attachment when the parent is forbidden'
 		) {
-			@sd.item('20091123_0001','files','20091123_0001').get(:action => :update)
+			@sd.item('20091123_0001', 'files', '20091123_0001').get(:action => :update)
 		}
 	end
 
@@ -387,7 +387,7 @@ _html
 			Runo::Error::Forbidden,
 			'Field#post to an inner attachment w/o the perm of the parent should be forbidden'
 		) {
-			@sd.item('20091123_0002','files','20091123_0001').update('file' => 'evil.gif')
+			@sd.item('20091123_0002', 'files', '20091123_0001').update('file' => 'evil.gif')
 		}
 	end
 
@@ -400,17 +400,17 @@ _html
 				},
 			}
 		)
-		orig_val = @sd.val('20091123_0002','replies').dup
+		orig_val = @sd.val('20091123_0002', 'replies').dup
 
 		@sd.commit :temp
-		new_val = @sd.val('20091123_0002','replies').dup
+		new_val = @sd.val('20091123_0002', 'replies').dup
 		assert_equal(
 			orig_val.size + 1,
 			new_val.size,
 			'Field#val should change after the commit :temp'
 		)
 
-		new_id = new_val.keys.find {|id| new_val[id] == {'_owner' => 'don','reply'  => 'yum.'} }
+		new_id = new_val.keys.find {|id| new_val[id] == {'_owner' => 'don', 'reply'  => 'yum.'} }
 		@sd.update(
 			'20091123_0002' => {
 				'replies' => {
@@ -423,7 +423,7 @@ _html
 		)
 
 		@sd.commit :temp
-		new_val = @sd.val('20091123_0002','replies').dup
+		new_val = @sd.val('20091123_0002', 'replies').dup
 		assert_equal(
 			orig_val,
 			new_val,
@@ -446,7 +446,7 @@ _html
 				},
 			}
 		)
-		orig_val = @sd.val('_1234','replies').dup
+		orig_val = @sd.val('_1234', 'replies').dup
 		assert_equal(
 			{},
 			orig_val,
@@ -454,19 +454,19 @@ _html
 		)
 
 		orig_storage = @sd.storage
-		@sd.instance_variable_set(:@storage,nil) # pretend persistent
+		@sd.instance_variable_set(:@storage, nil) # pretend persistent
 		@sd.commit :temp
-		@sd.instance_variable_set(:@storage,orig_storage)
+		@sd.instance_variable_set(:@storage, orig_storage)
 
-		new_val = @sd.val('_1234','replies').dup
+		new_val = @sd.val('_1234', 'replies').dup
 		assert_equal(
-			{'_owner' => 'don','reply'  => 'yum.'},
+			{'_owner' => 'don', 'reply'  => 'yum.'},
 			new_val.values.first,
 			'Field#val should change after the commit :temp'
 		)
 
 		# delete the sub-item
-		new_id = new_val.keys.find {|id| new_val[id] == {'_owner' => 'don','reply'  => 'yum.'} }
+		new_id = new_val.keys.find {|id| new_val[id] == {'_owner' => 'don', 'reply'  => 'yum.'} }
 		@sd.update(
 			'_1234' => {
 				'replies' => {
@@ -480,16 +480,16 @@ _html
 		)
 		assert_equal(
 			:delete,
-			@sd.item('_1234','replies',new_id).action,
+			@sd.item('_1234', 'replies', new_id).action,
 			'Set::Dynamic#post should not overwrite the action of descendant'
 		)
 
 		orig_storage = @sd.storage
-		@sd.instance_variable_set(:@storage,nil) # pretend persistent
+		@sd.instance_variable_set(:@storage, nil) # pretend persistent
 		@sd.commit :temp
-		@sd.instance_variable_set(:@storage,orig_storage)
+		@sd.instance_variable_set(:@storage, orig_storage)
 
-		new_val = @sd.val('_1234','replies').dup
+		new_val = @sd.val('_1234', 'replies').dup
 		assert_equal(
 			{},
 			new_val,
@@ -510,13 +510,13 @@ _html
 		)
 
 		orig_storage = @sd.storage
-		@sd.instance_variable_set(:@storage,nil) # pretend persistent
+		@sd.instance_variable_set(:@storage, nil) # pretend persistent
 		@sd.commit :temp
-		@sd.instance_variable_set(:@storage,orig_storage)
+		@sd.instance_variable_set(:@storage, orig_storage)
 
-		new_val = @sd.val('_1234','replies').dup
+		new_val = @sd.val('_1234', 'replies').dup
 		assert_equal(
-			{'_owner' => 'don','reply'  => 'yuck.'},
+			{'_owner' => 'don', 'reply'  => 'yuck.'},
 			new_val.values.first,
 			'Field#val should change after the commit :temp'
 		)

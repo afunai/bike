@@ -8,7 +8,7 @@ class Runo::Workflow
 	include Runo::I18n
 
 	DEFAULT_META = {
-		:item_label => Runo::I18n.n_('item','items',1),
+		:item_label => Runo::I18n.n_('item', 'items', 1),
 	}
 	DEFAULT_SUB_ITEMS = {}
 
@@ -44,12 +44,12 @@ class Runo::Workflow
 		self.class.const_get :DEFAULT_SUB_ITEMS
 	end
 
-	def permit?(roles,action)
+	def permit?(roles, action)
 		case action
-			when :login,:done,:message
+			when :login, :done, :message
 				true
 			when :preview
-				# TODO: permit?(roles,action,sub_action = nil)
+				# TODO: permit?(roles, action, sub_action = nil)
 				(roles & self.class.const_get(:PERM)[:read].to_i) > 0
 			else
 				(roles & self.class.const_get(:PERM)[action].to_i) > 0
@@ -60,7 +60,7 @@ class Runo::Workflow
 		@sd.instance_eval {
 			if arg[:action] == :create
 				item_instance '_001'
-				_get_by_tmpl({:action => :create,:conds => {:id => '_001'}},my[:tmpl])
+				_get_by_tmpl({:action => :create, :conds => {:id => '_001'}}, my[:tmpl])
 			end
 		}
 	end

@@ -9,7 +9,7 @@ class TC_Text < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Runo::Parser.gsub_scalar('$(foo text 3 1..5)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo text 3 1..5)') {|id, m|
 			meta = m
 			''
 		}

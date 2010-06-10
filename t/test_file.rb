@@ -14,7 +14,7 @@ class TC_File < Test::Unit::TestCase
 		@file.stubs(:length).returns(@file.read.length)
 
 		meta = nil
-		Runo::Parser.gsub_scalar('$(foo file 1..50 jpg,gif,png)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo file 1..50 jpg, gif, png)') {|id, m|
 			meta = m
 			''
 		}
@@ -33,7 +33,7 @@ class TC_File < Test::Unit::TestCase
 			'File#initialize should set :max from the range token'
 		)
 		assert_equal(
-			['jpg','gif','png'],
+			['jpg', 'gif', 'png'],
 			@f[:options],
 			'File#initialize should set :options from the csv token'
 		)
@@ -41,20 +41,20 @@ class TC_File < Test::Unit::TestCase
 
 	def test_meta_options
 		meta = nil
-		Runo::Parser.gsub_scalar('$(foo file jpg,GIF,Png)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo file jpg, GIF, Png)') {|id, m|
 			meta = m
 			''
 		}
 		@f = Runo::Field.instance meta.merge(:id => 'foo')
 		assert_equal(
-			['jpg','gif','png'],
+			['jpg', 'gif', 'png'],
 			@f[:options],
 			'File#initialize should downcase :options'
 		)
 	end
 
 	def test_meta_path
-		@f[:parent] = Runo::Set::Static::Folder.root.item('t_file','main')
+		@f[:parent] = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		assert_equal(
 			'/t_file/main/foo',
 			@f[:path],
@@ -63,7 +63,7 @@ class TC_File < Test::Unit::TestCase
 	end
 
 	def test_meta_tmp_path
-		@f[:parent] = Runo::Set::Static::Folder.root.item('t_file','main')
+		@f[:parent] = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		Runo.current[:base] = @f[:parent]
 		tid = @f[:parent][:tid]
 
@@ -81,8 +81,8 @@ class TC_File < Test::Unit::TestCase
 	end
 
 	def test_meta_persistent_sd
-		root = Runo::Set::Static::Folder.root.item('t_file','main')
-		parent = Runo::Set::Dynamic.new(:id => 'boo',:parent => root)
+		root = Runo::Set::Static::Folder.root.item('t_file', 'main')
+		parent = Runo::Set::Dynamic.new(:id => 'boo', :parent => root)
 		@f[:parent] = parent
 		assert_equal(
 			root,
@@ -92,8 +92,8 @@ class TC_File < Test::Unit::TestCase
 	end
 
 	def test_meta_persistent_name
-		root = Runo::Set::Static::Folder.root.item('t_file','main')
-		parent = Runo::Set::Dynamic.new(:id => 'boo',:parent => root)
+		root = Runo::Set::Static::Folder.root.item('t_file', 'main')
+		parent = Runo::Set::Dynamic.new(:id => 'boo', :parent => root)
 		@f[:parent] = parent
 		assert_equal(
 			'boo-foo',
@@ -157,7 +157,7 @@ _eos
 	end
 
 	def test_get
-		@f[:parent] = Runo::Set::Static::Folder.root.item('t_file','main')
+		@f[:parent] = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		Runo.current[:base] = @f[:parent]
 		tid = @f[:parent][:tid]
 
@@ -202,7 +202,7 @@ _html
 
 	def test_get_hidden
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.update(
 			'_1' => {
 				'baz' => {
@@ -220,7 +220,7 @@ _html
 	<input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html
-			sd.item('_1','foo').get(:action => :create),
+			sd.item('_1', 'foo').get(:action => :create),
 			'File#get should not include a hidden input if the field is not required'
 		)
 		assert_equal(
@@ -231,7 +231,7 @@ _html
 	<input type="file" name="_1-baz-_1-qux" size="" class="file" />
 </span>
 _html
-			sd.item('_1','baz','_1','qux').get(:action => :create),
+			sd.item('_1', 'baz', '_1', 'qux').get(:action => :create),
 			'File#get should include a hidden input to supplement an empty field'
 		)
 
@@ -260,14 +260,14 @@ _eos
 	<input type="file" name="_1-baz-_1-qux" size="" class="file" />
 </span>
 _html
-			sd.item('_1','baz','_1','qux').get(:action => :update),
+			sd.item('_1', 'baz', '_1', 'qux').get(:action => :update),
 			'File#get should not include a hidden if the field is not empty'
 		)
 	end
 
 	def test_get_delete
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.update(
 			'_1' => {
 				'baz' => {
@@ -285,7 +285,7 @@ _html
 	<input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html
-			sd.item('_1','foo').get(:action => :create),
+			sd.item('_1', 'foo').get(:action => :create),
 			'File#get should not include a delete submit if the field is empty'
 		)
 
@@ -311,11 +311,11 @@ _eos
 	<input type="submit" name="_1-foo.action-delete" value="delete" />
 </span>
 _html
-			sd.item('_1','foo').get(:action => :update),
+			sd.item('_1', 'foo').get(:action => :update),
 			'File#get should include a delete submit if the field is not empty'
 		)
 
-		sd.item('_1','foo')[:min] = 1
+		sd.item('_1', 'foo')[:min] = 1
 		assert_equal(
 			<<"_html".chomp,
 <span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
@@ -323,7 +323,7 @@ _html
 	<input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html
-			sd.item('_1','foo').get(:action => :update),
+			sd.item('_1', 'foo').get(:action => :update),
 			'File#get should not include a delete submit if the field is mandatory'
 		)
 	end
@@ -331,7 +331,7 @@ _html
 # TODO: test on all available storages.
 	def test_select
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.storage.clear
 		sd.update(
 			'20100425_1234' => {
@@ -374,11 +374,11 @@ _html
 
 	def test_call_body
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.storage.clear
 
 		# post a multipart request
-		input = <<"_eos".gsub(/\r?\n/,"\r\n")
+		input = <<"_eos".gsub(/\r?\n/, "\r\n")
 ---foobarbaz
 Content-Disposition: form-data; name="_1-foo"; filename="foo.jpg"
 Content-Type: image/jpeg
@@ -402,7 +402,7 @@ _eos
 
 		assert_equal(
 			@file.read,
-			Runo.transaction[tid].item('_1','foo').body,
+			Runo.transaction[tid].item('_1', 'foo').body,
 			'Runo#call should keep suspended field in Runo.transaction'
 		)
 
@@ -424,7 +424,7 @@ _eos
 		)
 
 		res.headers['Location'] =~ Runo::REX::PATH_ID
-		new_id = sprintf('%.8d_%.4d',$1,$2)
+		new_id = sprintf('%.8d_%.4d', $1, $2)
 
 		res = Rack::MockRequest.new(Runo.new).get(
 			"http://example.com/t_file/#{new_id}/foo/foo.jpg"
@@ -549,7 +549,7 @@ _eos
 
 		@f[:min] = nil
 		@f[:max] = nil
-		@f[:options] = ['txt','pdf','doc']
+		@f[:options] = ['txt', 'pdf', 'doc']
 		assert_equal(
 			['wrong file type: should be txt/pdf/doc'],
 			@f.errors,
@@ -581,7 +581,7 @@ _eos
 
 	def test_save_file
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.storage.clear
 
 		# create a new set with file items
@@ -606,7 +606,7 @@ _eos
 		}
 		id = sd.result.values.first[:id]
 
-		item = Runo::Set::Static::Folder.root.item('t_file','main',id,'foo')
+		item = Runo::Set::Static::Folder.root.item('t_file', 'main', id, 'foo')
 		assert_instance_of(
 			Runo::File,
 			item,
@@ -637,19 +637,19 @@ _eos
 
 		assert_equal(
 			@file.read,
-			Runo::Set::Static::Folder.root.item('t_file','main',id,'bar').body,
+			Runo::Set::Static::Folder.root.item('t_file', 'main', id, 'bar').body,
 			'File#commit should store the body of the file item'
 		)
 		assert_equal(
 			@file.read,
-			Runo::Set::Static::Folder.root.item('t_file','main',id,'foo').body,
+			Runo::Set::Static::Folder.root.item('t_file', 'main', id, 'foo').body,
 			'File#commit should keep the body of the untouched file item'
 		)
 	end
 
 	def test_delete_file
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.storage.clear
 
 		sd.update(
@@ -670,53 +670,53 @@ _eos
 
 		id = sd.result.values.first[:id]
 
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.update(
 			id => {'foo' => {:action => :delete}}
 		)
-		assert_equal(:delete,sd.item(id,'foo').action)
+		assert_equal(:delete, sd.item(id, 'foo').action)
 		sd.commit :temp
 
 		assert_equal(
 			{},
-			sd.item(id,'foo').val,
+			sd.item(id, 'foo').val,
 			'File#delete should clear the val of the field'
 		)
 		assert_equal(
 			:delete,
-			sd.item(id,'foo').action,
+			sd.item(id, 'foo').action,
 			'File#delete should set @action'
 		)
 
-		another_sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		another_sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		assert_not_equal(
 			{},
-			another_sd.item(id,'foo').val,
+			another_sd.item(id, 'foo').val,
 			'File#delete should not clear the persistent val before commit(:persistent)'
 		)
 		assert_equal(
 			@file.read,
-			another_sd.item(id,'foo').body,
+			another_sd.item(id, 'foo').body,
 			'File#delete should not delete the persistent body before commit(:persistent)'
 		)
 
 		sd.commit :persistent
 
-		another_sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		another_sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		assert_equal(
 			{},
-			another_sd.item(id,'foo').val,
+			another_sd.item(id, 'foo').val,
 			'File#delete should clear the persistent val after commit(:persistent)'
 		)
 		assert_nil(
-			another_sd.item(id,'foo').body,
+			another_sd.item(id, 'foo').body,
 			'File#delete should clear the persistent body after commit(:persistent)'
 		)
 	end
 
 	def test_delete_parent_set
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.storage.clear
 
 		sd.update(
@@ -747,7 +747,7 @@ _eos
 
 		id = sd.result.values.first[:id]
 
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.update(
 			id => {:action => :delete}
 		)
@@ -762,7 +762,7 @@ _eos
 
 	def test_save_file_attachment
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.storage.clear
 
 		# create an attachment file item
@@ -789,7 +789,7 @@ _eos
 		baz_id = sd.result.values.first[:id]
 		qux_id = sd.result.values.first.item('baz').val.keys.first
 
-		item = Runo::Set::Static::Folder.root.item('t_file','main',baz_id,'baz',qux_id,'qux')
+		item = Runo::Set::Static::Folder.root.item('t_file', 'main', baz_id, 'baz', qux_id, 'qux')
 		assert_instance_of(
 			Runo::File,
 			item,
@@ -802,7 +802,7 @@ _eos
 		)
 
 		# delete the attachment
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.update(
 			baz_id => {
 				'baz' => {
@@ -814,14 +814,14 @@ _eos
 
 		assert_equal(
 			{},
-			Runo::Set::Static::Folder.root.item('t_file','main',baz_id,'baz').storage.val,
+			Runo::Set::Static::Folder.root.item('t_file', 'main', baz_id, 'baz').storage.val,
 			'File#commit should delete the body of the attachment file item'
 		)
 	end
 
 	def test_delete_attachment_parent
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd.storage.clear
 
 		# create an attachment file item
@@ -845,21 +845,21 @@ _eos
 		)
 
 		sd.commit :persistent
-		assert_not_equal({},sd.val)
+		assert_not_equal({}, sd.val)
 
 		baz_id = sd.result.values.first[:id]
 		qux_id = sd.result.values.first.item('baz').val.keys.first
 
-		item = Runo::Set::Static::Folder.root.item('t_file','main',baz_id,'baz',qux_id,'qux')
+		item = Runo::Set::Static::Folder.root.item('t_file', 'main', baz_id, 'baz', qux_id, 'qux')
 		item_persistent_name = item[:persistent_name]
 		assert_equal(
 			@file.read,
-			Runo::Set::Static::Folder.root.item('t_file','main').storage.val(item_persistent_name),
+			Runo::Set::Static::Folder.root.item('t_file', 'main').storage.val(item_persistent_name),
 			'the body of the file should be stored in the storage'
 		)
 
 		# delete the parent set
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
 		sd[:item]['default'][:item].delete '_timestamp'
 		sd.update(
 			baz_id => {:action => :delete}
@@ -887,10 +887,10 @@ _eos
 			sd.inspect_items
 		)
 
-		sd = Runo::Set::Static::Folder.root.item('t_file','main')
-		assert_equal({},sd.val)
+		sd = Runo::Set::Static::Folder.root.item('t_file', 'main')
+		assert_equal({}, sd.val)
 		assert_nil(
-			Runo::Set::Static::Folder.root.item('t_file','main').storage.val(item_persistent_name),
+			Runo::Set::Static::Folder.root.item('t_file', 'main').storage.val(item_persistent_name),
 			'the body of the file should be deleted from the storage'
 		)
 	end

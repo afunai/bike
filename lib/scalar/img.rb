@@ -13,7 +13,7 @@ class Runo::Img < Runo::File
 	DEFAULT_META = {
 		:width   => 120,
 		:height  => 120,
-		:options => ['png','jpg','jpeg','gif','tiff','bmp'],
+		:options => ['png', 'jpg', 'jpeg', 'gif', 'tiff', 'bmp'],
 	}
 
 	def self.quick_magick?
@@ -48,11 +48,11 @@ class Runo::Img < Runo::File
 			@thumbnail = nil
 		elsif type == :persistent && ps = my[:persistent_sd]
 			case @action
-				when :create,:update,nil
+				when :create, :update, nil
 					ps.storage.store(
 						"#{my[:persistent_name]}_small",
 						@thumbnail,
-						val['basename'][/\.([\w\.]+)$/,1] || 'bin'
+						val['basename'][/\.([\w\.]+)$/, 1] || 'bin'
 					) if @thumbnail && valid?
 			end
 		end
@@ -63,7 +63,7 @@ class Runo::Img < Runo::File
 	def _g_default(arg = {})
 		path       = _path arg[:action]
 		basename   = Runo::Field.h val['basename']
-		s_basename = basename.sub(/\..+$/,'_small\\&')
+		s_basename = basename.sub(/\..+$/, '_small\\&')
 		if val.empty?
 			<<_html.chomp
 <span class="img" style="width: #{my[:width]}px; height: #{my[:height]}px;"></span>

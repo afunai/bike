@@ -34,7 +34,7 @@ class Runo::Textarea::Wiki < Runo::Textarea
 						new_type = :ul
 					when '+'
 						new_type = :ol
-					when ' ',"\t"
+					when ' ', "\t"
 						new_type = :pre
 					when ''
 						new_type = :blank
@@ -43,20 +43,20 @@ class Runo::Textarea::Wiki < Runo::Textarea
 				end
 			end
 			if new_type != type
-				html += __send__("element_#{type}",body.to_s)
+				html += __send__("element_#{type}", body.to_s)
 				body = ''
 			end
 			body += line
 			type = new_type
 		}
-		html += __send__("element_#{type}",body) if body != ''
+		html += __send__("element_#{type}", body) if body != ''
 
 		html
 	end
 
 	def element_hr(body)
-		body.gsub!(/\n*\Z/,'')
-		body.gsub!(/^---$/,"<hr />\n")
+		body.gsub!(/\n*\Z/, '')
+		body.gsub!(/^---$/, "<hr />\n")
 	
 		<<_html
 #{body}
@@ -70,9 +70,9 @@ _html
 	end
 
 	def element_table(body)
-		table = CSV.parse(body.gsub!(/^,/,''))
+		table = CSV.parse(body.gsub!(/^,/, ''))
 
-		table.each_with_index {|row,y|
+		table.each_with_index {|row, y|
 			row.each_index {|x|
 				if (row[x] == :same_as_above)
 					row[x] = nil
@@ -105,12 +105,12 @@ _html
 _html
 	end
 
-	def element_list(body,ul_ol)
+	def element_list(body, ul_ol)
 		items = []
 		lines = []
 		type  = nil
 		(body + "\n\n").each_line {|line|
-			line.sub!(/^(\*|\+)/,'')
+			line.sub!(/^(\*|\+)/, '')
 
 			unless line =~ /^(\*|\+)/ || lines.empty?
 				item = inline(lines.shift.to_s.chomp)
@@ -132,15 +132,15 @@ _html
 	end
 
 	def element_ul(body)
-		element_list(body,'ul')
+		element_list(body, 'ul')
 	end
 
 	def element_ol(body)
-		element_list(body,'ol')
+		element_list(body, 'ol')
 	end
 
 	def element_pre(body)
-		body.gsub!(/\n*\Z/,'')
+		body.gsub!(/\n*\Z/, '')
 
 		<<_html
 <pre class="wiki">#{body}
@@ -149,9 +149,9 @@ _html
 	end
 
 	def element_p(body)
-		body.gsub!(/\n*\Z/,'')
-		body.gsub!(/\n/,"<br />\n")
-		body.gsub!(/^/,"\t")
+		body.gsub!(/\n*\Z/, '')
+		body.gsub!(/\n/, "<br />\n")
+		body.gsub!(/^/, "\t")
 
 		<<_html
 <p class="wiki">
@@ -161,12 +161,12 @@ _html
 	end
 
 	def element_blank(body)
-		body.gsub!(/\n/,"<br />\n")
+		body.gsub!(/\n/, "<br />\n")
 	end
 
 	def inline(body)
-		body.gsub!(/\*(.+?)\*/,'<strong class="wiki">\1</strong>')
-		body.gsub!(/\=\=(.+?)\=\=/,'<s class="wiki">\1</s>')
+		body.gsub!(/\*(.+?)\*/, '<strong class="wiki">\1</strong>')
+		body.gsub!(/\=\=(.+?)\=\=/, '<s class="wiki">\1</s>')
 		body
 	end
 

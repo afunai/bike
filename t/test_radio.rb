@@ -9,7 +9,7 @@ class TC_Radio < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Runo::Parser.gsub_scalar("$(foo radio bar,baz,qux :'baz' mandatory)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo radio bar, baz, qux :'baz' mandatory)") {|id, m|
 			meta = m
 			''
 		}
@@ -21,7 +21,7 @@ class TC_Radio < Test::Unit::TestCase
 
 	def test_meta
 		assert_equal(
-			['bar','baz','qux'],
+			['bar', 'baz', 'qux'],
 			@f[:options],
 			'Radio#initialize should set :options from the csv token'
 		)
@@ -39,31 +39,31 @@ class TC_Radio < Test::Unit::TestCase
 
 	def test_meta_options_from_range
 		meta = nil
-		Runo::Parser.gsub_scalar("$(foo radio 1..5)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo radio 1..5)") {|id, m|
 			meta = m
 			''
 		}
 		f = Runo::Field.instance meta
 		assert_equal(
-			['1','2','3','4','5'],
+			['1', '2', '3', '4', '5'],
 			f[:options],
 			'Radio#initialize should set :options from the range token'
 		)
 
 		meta = nil
-		Runo::Parser.gsub_scalar("$(foo radio ..5)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo radio ..5)") {|id, m|
 			meta = m
 			''
 		}
 		f = Runo::Field.instance meta
 		assert_equal(
-			['0','1','2','3','4','5'],
+			['0', '1', '2', '3', '4', '5'],
 			f[:options],
 			'Radio#initialize should set :options from the range token'
 		)
 
 		meta = nil
-		Runo::Parser.gsub_scalar("$(foo radio 1..)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo radio 1..)") {|id, m|
 			meta = m
 			''
 		}
@@ -167,7 +167,7 @@ _html
 	end
 
 	def test_get_escape
-		@f[:options] = ['foo','<bar>']
+		@f[:options] = ['foo', '<bar>']
 		@f.load '<bar>'
 		assert_equal(
 			'&lt;bar&gt;',

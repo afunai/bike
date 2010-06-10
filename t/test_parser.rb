@@ -15,28 +15,28 @@ class TC_Parser < Test::Unit::TestCase
 
 	def test_scan_tokens
 		assert_equal(
-			{:tokens => ['foo','bar','baz']},
+			{:tokens => ['foo', 'bar', 'baz']},
 			Runo::Parser.scan_tokens(StringScanner.new('foo bar baz')),
 			'Parser.scan_tokens should be able to parse unquoted tokens into array'
 		)
 		assert_equal(
-			{:tokens => ['foo','bar','baz baz']},
+			{:tokens => ['foo', 'bar', 'baz baz']},
 			Runo::Parser.scan_tokens(StringScanner.new('foo "bar" "baz baz"')),
 			'Parser.scan_tokens should be able to parse quoted tokens'
 		)
 		assert_equal(
-			{:tokens => ['foo','bar','baz']},
+			{:tokens => ['foo', 'bar', 'baz']},
 			Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz")),
 			'Parser.scan_tokens should be able to parse quoted tokens'
 		)
 
 		assert_equal(
-			{:tokens => ['foo','bar','baz']},
+			{:tokens => ['foo', 'bar', 'baz']},
 			Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz) qux")),
 			'Parser.scan_tokens should stop scanning at an ending bracket'
 		)
 		assert_equal(
-			{:tokens => ['foo','bar (bar?)','baz']},
+			{:tokens => ['foo', 'bar (bar?)', 'baz']},
 			Runo::Parser.scan_tokens(StringScanner.new("foo 'bar (bar?)' baz) qux")),
 			'Parser.scan_tokens should ignore brackets inside quoted tokens'
 		)
@@ -45,7 +45,7 @@ class TC_Parser < Test::Unit::TestCase
 	def test_parse_empty_tag
 		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:tokens => ['baz baz']}},
+			{'foo' => {:klass => 'bar', :tokens => ['baz baz']}},
 			result[:item],
 			'Parser.parse_html should be able to parse empty runo tags'
 		)
@@ -61,8 +61,8 @@ class TC_Parser < Test::Unit::TestCase
 _html
 		assert_equal(
 			{
-				'foo' => {:klass => 'bar',:tokens => ['baz baz']},
-				'bar' => {:klass => 'a',:tokens => ['b','c']},
+				'foo' => {:klass => 'bar', :tokens => ['baz baz']},
+				'bar' => {:klass => 'a', :tokens => ['b', 'c']},
 			},
 			result[:item],
 			'Parser.parse_html should be able to parse empty runo tags'
@@ -80,7 +80,7 @@ _html
 	def test_obscure_markup
 		result = Runo::Parser.parse_html('hello $(foo = bar $(baz=1) baz) world')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:tokens => ['$(baz=1']}},
+			{'foo' => {:klass => 'bar', :tokens => ['$(baz=1']}},
 			result[:item],
 			'Parser.parse_html should not parse nested empty tag'
 		)
@@ -92,7 +92,7 @@ _html
 
 		result = Runo::Parser.parse_html('hello $(foo = bar baz world')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
+			{'foo' => {:klass => 'bar', :tokens => ['baz', 'world']}},
 			result[:item],
 			'Parser.parse_html should be able to parse a tag that is not closed'
 		)
@@ -104,7 +104,7 @@ _html
 
 		result = Runo::Parser.parse_html('hello $(foo = bar "baz"world)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:tokens => ['baz','world']}},
+			{'foo' => {:klass => 'bar', :tokens => ['baz', 'world']}},
 			result[:item],
 			'Parser.parse_html should be able to parse tokens without a delimiter'
 		)
@@ -114,9 +114,9 @@ _html
 			'Parser.parse_html should be able to parse tokens without a delimiter'
 		)
 
-		result = Runo::Parser.parse_html('hello $(foo = bar,"baz")')
+		result = Runo::Parser.parse_html('hello $(foo = bar, "baz")')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz']}},
+			{'foo' => {:klass => 'bar', :options => ['baz']}},
 			result[:item],
 			'The first token should be regarded as [:klass]'
 		)
@@ -124,64 +124,64 @@ _html
 
 	def test_parse_token
 		assert_equal(
-			{:width => 160,:height => 120},
-			Runo::Parser.parse_token(nil,'160*120',{}),
+			{:width => 160, :height => 120},
+			Runo::Parser.parse_token(nil, '160*120', {}),
 			'Parser.parse_token should be able to parse dimension tokens'
 		)
 		assert_equal(
-			{:min => 1,:max => 32},
-			Runo::Parser.parse_token(nil,'1..32',{}),
+			{:min => 1, :max => 32},
+			Runo::Parser.parse_token(nil, '1..32', {}),
 			'Parser.parse_token should be able to parse range tokens'
 		)
 		assert_equal(
 			{:max => 32},
-			Runo::Parser.parse_token(nil,'..32',{}),
+			Runo::Parser.parse_token(nil, '..32', {}),
 			'Parser.parse_token should be able to parse partial range tokens'
 		)
 		assert_equal(
 			{:min => 1},
-			Runo::Parser.parse_token(nil,'1..',{}),
+			Runo::Parser.parse_token(nil, '1..', {}),
 			'Parser.parse_token should be able to parse partial range tokens'
 		)
 		assert_equal(
-			{:min => -32,:max => -1},
-			Runo::Parser.parse_token(nil,'-32..-1',{}),
+			{:min => -32, :max => -1},
+			Runo::Parser.parse_token(nil, '-32..-1', {}),
 			'Parser.parse_token should be able to parse minus range tokens'
 		)
 
 		assert_equal(
 			{:options => ['foo']},
-			Runo::Parser.parse_token(',','foo',{}),
+			Runo::Parser.parse_token(',', 'foo', {}),
 			'Parser.parse_token should be able to parse option tokens'
 		)
 		assert_equal(
-			{:options => ['foo','bar']},
-			Runo::Parser.parse_token(',','bar',{:options => ['foo']}),
+			{:options => ['foo', 'bar']},
+			Runo::Parser.parse_token(',', 'bar', {:options => ['foo']}),
 			'Parser.parse_token should be able to parse option tokens'
 		)
 
 		assert_equal(
 			{:default => 'bar'},
-			Runo::Parser.parse_token(':','bar',{}),
+			Runo::Parser.parse_token(':', 'bar', {}),
 			'Parser.parse_token should be able to parse default tokens'
 		)
 		assert_equal(
-			{:defaults => ['bar','baz']},
-			Runo::Parser.parse_token(';','baz',{:defaults => ['bar']}),
+			{:defaults => ['bar', 'baz']},
+			Runo::Parser.parse_token(';', 'baz', {:defaults => ['bar']}),
 			'Parser.parse_token should be able to parse defaults tokens'
 		)
 	end
 
 	def test_parse_options
-		result = Runo::Parser.parse_html('hello $(foo = bar ,"baz baz","world",hi qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar , "baz baz", "world", hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should be able to parse a sequence of CSV'
 		)
-		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz","world",hi qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should be able to parse a sequence of CSV'
 		)
@@ -190,19 +190,19 @@ _html
 	def test_parse_options_with_spaces
 		result = Runo::Parser.parse_html('hello $(foo = bar world, qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['world','qux']}},
+			{'foo' => {:klass => 'bar', :options => ['world', 'qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the comma'
 		)
-		result = Runo::Parser.parse_html('hello $(foo = bar world ,qux)')
+		result = Runo::Parser.parse_html('hello $(foo = bar world , qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['qux'],:tokens => ['world']}},
+			{'foo' => {:klass => 'bar', :options => ['qux'], :tokens => ['world']}},
 			result[:item],
 			'Parser.parse_html should not allow spaces before the comma'
 		)
 		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the comma'
 		)
@@ -216,7 +216,7 @@ hello $(foo =
 	qux)
 _eos
 		assert_equal(
-			{'foo' => {:klass => 'bar',:options => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the comma'
 		)
@@ -225,13 +225,13 @@ _eos
 	def test_parse_defaults
 		result = Runo::Parser.parse_html('hello $(foo = bar ;"baz baz";"world";hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
 		result = Runo::Parser.parse_html('hello $(foo = bar "baz baz";"world";hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
 		)
@@ -240,19 +240,19 @@ _eos
 	def test_parse_defaults_with_spaces
 		result = Runo::Parser.parse_html('hello $(foo=bar world; qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['world','qux']}},
+			{'foo' => {:klass => 'bar', :defaults => ['world', 'qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the semicolon'
 		)
 		result = Runo::Parser.parse_html('hello $(foo=bar world ;qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['qux'],:tokens => ['world']}},
+			{'foo' => {:klass => 'bar', :defaults => ['qux'], :tokens => ['world']}},
 			result[:item],
 			'Parser.parse_html should not allow spaces before the semicolon'
 		)
 		result = Runo::Parser.parse_html('hello $(foo=bar "baz baz"; "world"; hi qux)')
 		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the comma'
 		)
@@ -266,7 +266,7 @@ hello $(foo =
 	qux)
 _eos
 		assert_equal(
-			{'foo' => {:klass => 'bar',:defaults => ['baz baz','world','hi'],:tokens => ['qux']}},
+			{'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
 			result[:item],
 			'Parser.parse_html should allow spaces after the comma'
 		)
@@ -288,7 +288,7 @@ _eos
 
 	def test_scan_inner_html
 		s = StringScanner.new 'bar</foo>bar'
-		inner_html,close_tag = Runo::Parser.scan_inner_html(s,'foo')
+		inner_html, close_tag = Runo::Parser.scan_inner_html(s, 'foo')
 		assert_equal(
 			'bar',
 			inner_html,
@@ -301,7 +301,7 @@ _eos
 		)
 
 		s = StringScanner.new '<foo>bar</foo></foo>'
-		inner_html,close_tag = Runo::Parser.scan_inner_html(s,'foo')
+		inner_html, close_tag = Runo::Parser.scan_inner_html(s, 'foo')
 		assert_equal(
 			'<foo>bar</foo>',
 			inner_html,
@@ -309,7 +309,7 @@ _eos
 		)
 
 		s = StringScanner.new "baz\n\t<foo>bar</foo>\n</foo>"
-		inner_html,close_tag = Runo::Parser.scan_inner_html(s,'foo')
+		inner_html, close_tag = Runo::Parser.scan_inner_html(s, 'foo')
 		assert_equal(
 			"baz\n\t<foo>bar</foo>\n",
 			inner_html,
@@ -553,7 +553,7 @@ _html
 			'Parser.parse_html should split plural item labels'
 		)
 		assert_equal(
-			['tEntry','tEntries'],
+			['tEntry', 'tEntries'],
 			Runo::I18n.msg['tEntry'],
 			'Parser.parse_html should I18n.merge_msg! the plural item labels'
 		)
@@ -567,7 +567,7 @@ _html
 			'Parser.parse_html should split plural item labels'
 		)
 		assert_equal(
-			['tFooFoo','BarBar','BazBaz'],
+			['tFooFoo', 'BarBar', 'BazBaz'],
 			Runo::I18n.msg['tFooFoo'],
 			'Parser.parse_html should I18n.merge_msg! the plural item labels'
 		)
@@ -581,7 +581,7 @@ _html
 			'Parser.parse_html should split plural item labels'
 		)
 		assert_equal(
-			['tQux','tQux','tQux','tQux'],
+			['tQux', 'tQux', 'tQux', 'tQux'],
 			Runo::I18n.msg['tQux'],
 			'Parser.parse_html should repeat a singular label to fill all possible plural forms'
 		)
@@ -697,7 +697,7 @@ _tmpl
 _html
 		assert_equal(
 			{
-				'title' => {:klass => 'text',:tokens => ['32']},
+				'title' => {:klass => 'text', :tokens => ['32']},
 				'foo'   => {
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
@@ -747,8 +747,8 @@ _tmpl
 
 	def test_gsub_block
 		match = nil
-		result = Runo::Parser.gsub_block('a<div class="foo">bar</div>c','foo') {|open,inner,close|
-			match = [open,inner,close]
+		result = Runo::Parser.gsub_block('a<div class="foo">bar</div>c', 'foo') {|open, inner, close|
+			match = [open, inner, close]
 			'b'
 		}
 		assert_equal(
@@ -757,13 +757,13 @@ _tmpl
 			'Parser.gsub_block should replace tag blocks of the matching class with the given value'
 		)
 		assert_equal(
-			['<div class="foo">','bar','</div>'],
+			['<div class="foo">', 'bar', '</div>'],
 			match,
 			'Parser.gsub_block should pass the matching element to its block'
 		)
 
-		result = Runo::Parser.gsub_block('<p><div class="foo">bar</div></p>','foo') {|open,inner,close|
-			match = [open,inner,close]
+		result = Runo::Parser.gsub_block('<p><div class="foo">bar</div></p>', 'foo') {|open, inner, close|
+			match = [open, inner, close]
 			'b'
 		}
 		assert_equal(
@@ -772,13 +772,13 @@ _tmpl
 			'Parser.gsub_block should replace tag blocks of the matching class with the given value'
 		)
 		assert_equal(
-			['<div class="foo">','bar','</div>'],
+			['<div class="foo">', 'bar', '</div>'],
 			match,
 			'Parser.gsub_block should pass the matching element to its block'
 		)
 
-		result = Runo::Parser.gsub_block('a<p><div class="foo">bar</div></p>c','foo') {|open,inner,close|
-			match = [open,inner,close]
+		result = Runo::Parser.gsub_block('a<p><div class="foo">bar</div></p>c', 'foo') {|open, inner, close|
+			match = [open, inner, close]
 			'b'
 		}
 		assert_equal(
@@ -787,7 +787,7 @@ _tmpl
 			'Parser.gsub_block should replace tag blocks of the matching class with the given value'
 		)
 		assert_equal(
-			['<div class="foo">','bar','</div>'],
+			['<div class="foo">', 'bar', '</div>'],
 			match,
 			'Parser.gsub_block should pass the matching element to its block'
 		)
@@ -795,17 +795,17 @@ _tmpl
 
 	def _test_gsub_action_tmpl(html)
 		result = {}
-		html = Runo::Parser.gsub_action_tmpl(html) {|id,action,*tmpl|
+		html = Runo::Parser.gsub_action_tmpl(html) {|id, action, *tmpl|
 			result[:id]     = id
 			result[:action] = action
 			result[:tmpl]   = tmpl.join
 			'b'
 		}
-		[result,html]
+		[result, html]
 	end
 
 	def test_gsub_action_tmpl
-		result,html = _test_gsub_action_tmpl 'a<div class="foo-navi">Foo</div>c'
+		result, html = _test_gsub_action_tmpl 'a<div class="foo-navi">Foo</div>c'
 		assert_equal(
 			{
 				:id     => 'foo',
@@ -821,7 +821,7 @@ _tmpl
 			'Parser.gsub_action_tmpl should replace the action template with a value from the block'
 		)
 
-		result,html = _test_gsub_action_tmpl 'a<div class="bar foo-navi">Foo</div>c'
+		result, html = _test_gsub_action_tmpl 'a<div class="bar foo-navi">Foo</div>c'
 		assert_equal(
 			{
 				:id     => 'foo',
@@ -832,7 +832,7 @@ _tmpl
 			'Parser.gsub_action_tmpl should yield action templates'
 		)
 
-		result,html = _test_gsub_action_tmpl 'a<div class="bar foo-navi baz">Foo</div>c'
+		result, html = _test_gsub_action_tmpl 'a<div class="bar foo-navi baz">Foo</div>c'
 		assert_equal(
 			{
 				:id     => 'foo',
@@ -843,7 +843,7 @@ _tmpl
 			'Parser.gsub_action_tmpl should yield action templates'
 		)
 
-		result,html = _test_gsub_action_tmpl 'a<div class="bar foo-done baz">Foo</div>c'
+		result, html = _test_gsub_action_tmpl 'a<div class="bar foo-done baz">Foo</div>c'
 		assert_equal(
 			{
 				:id     => 'foo',
@@ -856,7 +856,7 @@ _tmpl
 	end
 
 	def test_gsub_action_tmpl_with_empty_id
-		result,html = _test_gsub_action_tmpl 'a<div class="navi">Foo</div>c'
+		result, html = _test_gsub_action_tmpl 'a<div class="navi">Foo</div>c'
 		assert_equal(
 			{
 				:id     => nil,
@@ -867,7 +867,7 @@ _tmpl
 			'Parser.gsub_action_tmpl should yield action templates'
 		)
 
-		result,html = _test_gsub_action_tmpl 'a<div class="foo navi">Foo</div>c'
+		result, html = _test_gsub_action_tmpl 'a<div class="foo navi">Foo</div>c'
 		assert_equal(
 			{
 				:id     => nil,
@@ -878,7 +878,7 @@ _tmpl
 			'Parser.gsub_action_tmpl should yield action templates'
 		)
 
-		result,html = _test_gsub_action_tmpl 'a<div class="foo navi baz">Foo</div>c'
+		result, html = _test_gsub_action_tmpl 'a<div class="foo navi baz">Foo</div>c'
 		assert_equal(
 			{
 				:id     => nil,
@@ -891,14 +891,14 @@ _tmpl
 	end
 
 	def test_gsub_action_tmpl_with_ambiguous_klass
-		result,html = _test_gsub_action_tmpl 'a<div class="not_navi">Foo</div>c'
+		result, html = _test_gsub_action_tmpl 'a<div class="not_navi">Foo</div>c'
 		assert_equal(
 			{},
 			result,
 			'Parser.gsub_action_tmpl should ignore classes other than action, view, navi or submit'
 		)
 
-		result,html = _test_gsub_action_tmpl 'a<div class="navi_bar">Foo</div>c'
+		result, html = _test_gsub_action_tmpl 'a<div class="navi_bar">Foo</div>c'
 		assert_equal(
 			{
 				:id     => nil,

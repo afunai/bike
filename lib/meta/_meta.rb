@@ -5,7 +5,7 @@
 
 module Runo::Meta
 
-	def post(action,v = nil)
+	def post(action, v = nil)
 		super
 		my[:parent][klass_id] = val if my[:parent]
 		self

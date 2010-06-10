@@ -27,7 +27,7 @@ _html
 	alias :_g_update :_g_create
 
 	def val_cast(v)
-		v.to_s.gsub(/\r\n?/,"\n")
+		v.to_s.gsub(/\r\n?/, "\n")
 	end
 
 end

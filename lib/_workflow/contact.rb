@@ -8,7 +8,7 @@ class Runo::Workflow::Contact < Runo::Workflow
 	DEFAULT_META = {
 		:p_size     => 10,
 		:conds      => {:p => 'last'},
-		:item_label => Runo::I18n.n_('item','items',1),
+		:item_label => Runo::I18n.n_('item', 'items', 1),
 	}
 
 	DEFAULT_SUB_ITEMS = {}

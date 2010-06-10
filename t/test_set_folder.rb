@@ -25,7 +25,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 	end
 
 	def test_initialize
-		folder = Runo::Set::Static::Folder.new(:id => 'foo',:parent => nil)
+		folder = Runo::Set::Static::Folder.new(:id => 'foo', :parent => nil)
 		assert_match(
 			/^<html>/,
 			folder[:html],
@@ -46,7 +46,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 			"Folder#meta_html_dir should return meta_dir if there is 'index.html'"
 		)
 
-		folder = Runo::Set::Static::Folder.root.item('foo','bar')
+		folder = Runo::Set::Static::Folder.root.item('foo', 'bar')
 		assert_equal(
 			'/foo',
 			folder[:html_dir],
@@ -74,7 +74,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 	end
 
 	def test_default_items
-		folder = Runo::Set::Static::Folder.new(:id => 'foo',:parent => nil)
+		folder = Runo::Set::Static::Folder.new(:id => 'foo', :parent => nil)
 		assert_instance_of(
 			Runo::Text,
 			folder.item('_label'),
@@ -93,7 +93,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 	end
 
 	def test_child_folder
-		folder = Runo::Set::Static::Folder.new(:id => 'foo',:parent => nil)
+		folder = Runo::Set::Static::Folder.new(:id => 'foo', :parent => nil)
 		child  = folder.item('bar')
 		assert_instance_of(
 			Runo::Set::Static::Folder,
@@ -116,7 +116,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 		folder = Runo::Set::Static::Folder.root.item('foo')
 		assert_instance_of(
 			Runo::Set::Static,
-			folder.item('main','20091120_0001'),
+			folder.item('main', '20091120_0001'),
 			'Folder#item should work just like any other sets'
 		)
 		assert_instance_of(
@@ -211,7 +211,7 @@ class TC_Set_Folder < Test::Unit::TestCase
 				:tmpl => '<html>$(main)</html>',
 				:tmpl_summary => '<html class ="s">$(main)</html>',
 			},
-			folder.send(:merge_meta,index,summary,:summary),
+			folder.send(:merge_meta, index, summary, :summary),
 			'Folder#merge_meta should merge parsed metas'
 		)
 	end
@@ -332,7 +332,7 @@ _html
 			folder.get(
 				:action => :read,
 				:sub_action => :detail,
-				'main' => {:action => :read,:sub_action => :detail,:conds => {:p => 1}}
+				'main' => {:action => :read, :sub_action => :detail, :conds => {:p => 1}}
 			),
 			'Set#get should not use [:tmpl_summary] for :read -> :detail'
 		)
@@ -362,7 +362,7 @@ _html
 			folder.get(
 				:action => :read,
 				:sub_action => :detail,
-				'main' => {:action => :update,:sub_action => nil,:conds => {:p => 1}}
+				'main' => {:action => :update, :sub_action => nil, :conds => {:p => 1}}
 			),
 			'Set#get should not use [:tmpl_summary] for :update'
 		)

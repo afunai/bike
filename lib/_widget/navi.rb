@@ -13,7 +13,7 @@ class Runo::Set::Dynamic
 
 		div = my[:tmpl_navi] || '<div class="navi">$(.navi_prev) | $(.navi_p)$(.navi_next)</div>'
 		div.gsub(/\$\(\.(navi_prev|navi_next|navi_p|uri_prev|uri_next)\)/) {
-			__send__("_g_#{$1}",arg)
+			__send__("_g_#{$1}", arg)
 		}
 	end
 
@@ -33,17 +33,17 @@ class Runo::Set::Dynamic
 
 		item_tmpl = nil
 		div = my[:tmpl_navi_p] || '<span class="item">$() </span> | '
-		div = Runo::Parser.gsub_block(div,'item') {|open,inner,close|
+		div = Runo::Parser.gsub_block(div, 'item') {|open, inner, close|
 			item_tmpl = open + inner + close
 			'$(.items)'
 		}
 		div.gsub('$(.items)') {
 			uris.collect {|uri|
-				p = uri[/p=(\d+)/,1] || '1'
+				p = uri[/p=(\d+)/, 1] || '1'
 				if arg[:conds][:p] == p
-					item_tmpl.gsub('$()',p)
+					item_tmpl.gsub('$()', p)
 				else
-					item_tmpl.gsub('$()',"<a href=\"#{my[:path]}/#{uri}\">#{p}</a>")
+					item_tmpl.gsub('$()', "<a href=\"#{my[:path]}/#{uri}\">#{p}</a>")
 				end
 			}.join
 		}
@@ -66,7 +66,7 @@ class Runo::Set::Dynamic
 			base_conds.delete :p
 			conds = arg[:navi][:sibs].values.first
 			if p = arg[:conds][:p]
-				range = ['1',conds.last] + ((p.to_i - 5)..(p.to_i + 5)).to_a.collect {|i| i.to_s }
+				range = ['1', conds.last] + ((p.to_i - 5)..(p.to_i + 5)).to_a.collect {|i| i.to_s }
 				conds = conds & range
 			end
 			conds.collect {|cond|

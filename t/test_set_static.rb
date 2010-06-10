@@ -28,7 +28,7 @@ class TC_Set_Static < Test::Unit::TestCase
 _html
 		assert_equal(
 			{
-				'title' => {:klass => 'text',:tokens => ['32']},
+				'title' => {:klass => 'text', :tokens => ['32']},
 				'foo'   => {
 					:klass    => 'set-dynamic',
 					:workflow => 'blog',
@@ -165,7 +165,7 @@ _html
 		)
 		ss.item('comment').load 'bar'
 		assert_equal(
-			{'name' => 'foo','comment' => 'bar'},
+			{'name' => 'foo', 'comment' => 'bar'},
 			ss.val,
 			'Set::Static#val should not include the value of the empty item'
 		)
@@ -192,7 +192,7 @@ _html
 		def comment._g_foo(arg)
 			'foo foo'
 		end
-		assert_equal('foo foo',ss.item('comment').get(:action => 'foo'))
+		assert_equal('foo foo', ss.item('comment').get(:action => 'foo'))
 		assert_equal(
 			<<'_html',
 <li>
@@ -209,20 +209,20 @@ _html
 		ss.item('foo').load 'hello'
 		assert_equal(
 			'foo hello foo',
-			ss.send(:_get_by_tmpl,{},'foo $() foo'),
+			ss.send(:_get_by_tmpl, {}, 'foo $() foo'),
 			'Set#_get_by_tmpl should replace %() with @val'
 		)
 
 		ss[:baz] = 1234
 		assert_equal(
 			'foo 1234 foo',
-			ss.send(:_get_by_tmpl,{},'foo @(baz) foo'),
+			ss.send(:_get_by_tmpl, {}, 'foo @(baz) foo'),
 			'Set#_get_by_tmpl should replace @(...) with @meta[...]'
 		)
 
 		assert_equal(
 			'foo baz foo',
-			ss.send(:_get_by_tmpl,{},'foo _(baz) foo'),
+			ss.send(:_get_by_tmpl, {}, 'foo _(baz) foo'),
 			'Set#_get_by_tmpl should evaluate _(...)'
 		)
 	end
@@ -239,7 +239,7 @@ _html
 	end
 
 	def test_g_a_update
-		ss = Runo::Set::Static.new(:html => '$(.a_update)',:parent => Runo::Set::Static.new)
+		ss = Runo::Set::Static.new(:html => '$(.a_update)', :parent => Runo::Set::Static.new)
 
 		def ss.permit_get?(arg)
 			true
@@ -286,7 +286,7 @@ _html
 	$(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
 _html
-		ss.post(:create,'name' => 'carl')
+		ss.post(:create, 'name' => 'carl')
 		assert_equal(
 			:create,
 			ss.action,
@@ -300,7 +300,7 @@ _html
 			'Set::Static#commit should set @result'
 		)
 
-		ss.post(:update,'name' => 'carl')
+		ss.post(:update, 'name' => 'carl')
 		assert_nil(
 			ss.result,
 			'Set::Static#post should reset @result'
@@ -338,15 +338,15 @@ _html
 			ss.val,
 			'Set::Static#load should not touch the item for which value is not given'
 		)
-		ss.load('name' => 'frank','comment' => 'cut the schmuck some slack.')
+		ss.load('name' => 'frank', 'comment' => 'cut the schmuck some slack.')
 		assert_equal(
-			{'name' => 'frank','comment' => 'cut the schmuck some slack.'},
+			{'name' => 'frank', 'comment' => 'cut the schmuck some slack.'},
 			ss.val,
 			'Set::Static#load should load the items at once'
 		)
 		ss.load('name' => 'carl')
 		assert_equal(
-			{'name' => 'carl','comment' => 'cut the schmuck some slack.'},
+			{'name' => 'carl', 'comment' => 'cut the schmuck some slack.'},
 			ss.val,
 			'Set::Static#load should not touch the item for which value is not given'
 		)
@@ -378,15 +378,15 @@ _html
 			ss.val,
 			'Set::Static#update should not touch the item for which value is not given'
 		)
-		ss.update('name' => 'frank','comment' => 'cut the schmuck some slack.')
+		ss.update('name' => 'frank', 'comment' => 'cut the schmuck some slack.')
 		assert_equal(
-			{'name' => 'frank','comment' => 'cut the schmuck some slack.'},
+			{'name' => 'frank', 'comment' => 'cut the schmuck some slack.'},
 			ss.val,
 			'Set::Static#udpate should load the items at once'
 		)
 		ss.update('name' => 'carl')
 		assert_equal(
-			{'name' => 'carl','comment' => 'cut the schmuck some slack.'},
+			{'name' => 'carl', 'comment' => 'cut the schmuck some slack.'},
 			ss.val,
 			'Set::Static#update should not touch the item for which value is not given'
 		)

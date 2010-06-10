@@ -113,7 +113,7 @@ class TC_Runo < Test::Unit::TestCase
 				'foo-bar.conds-id'  => '1234',
 				'foo-bar.conds-p'   => ['42'],
 				'foo-bar.action'    => 'update',
-				'foo-baz'           => ['boo','bee'],
+				'foo-baz'           => ['boo', 'bee'],
 				'foo'               => 'oops',
 				'qux.action-create' => 'submit',
 				'qux.status-public' => 'oops'
@@ -130,7 +130,7 @@ class TC_Runo < Test::Unit::TestCase
 							:p  => ['42'],
 						},
 					},
-					'baz' => ['boo','bee'],
+					'baz' => ['boo', 'bee'],
 				},
 				'qux' => {
 					:action => :create,
@@ -144,12 +144,12 @@ class TC_Runo < Test::Unit::TestCase
 
 	def test_steps_of
 		assert_equal(
-			['foo','bar'],
+			['foo', 'bar'],
 			Runo::Path.steps_of('/foo/bar/'),
 			'Runo::Path.steps_of should be able to extract item steps from path_info'
 		)
 		assert_equal(
-			['foo','bar'],
+			['foo', 'bar'],
 			Runo::Path.steps_of('/foo/bar/create.html'),
 			'Runo::Path.steps_of should ignore the pseudo-filename'
 		)
@@ -159,12 +159,12 @@ class TC_Runo < Test::Unit::TestCase
 			'Runo::Path.steps_of should ignore the last step without a following slash'
 		)
 		assert_equal(
-			['foo','bar'],
+			['foo', 'bar'],
 			Runo::Path.steps_of('/foo//bar/baz=123/'),
 			'Runo::Path.steps_of should distinguish item steps from conds'
 		)
 		assert_equal(
-			['foo','bar'],
+			['foo', 'bar'],
 			Runo::Path.steps_of('/1234567890.123456/foo/bar/'),
 			'Runo::Path.steps_of should distinguish item steps from a tid'
 		)
@@ -190,17 +190,17 @@ class TC_Runo < Test::Unit::TestCase
 
 	def test_steps_of_with_cond_d
 		assert_equal(
-			['foo','bar'],
+			['foo', 'bar'],
 			Runo::Path.steps_of('/foo/bar/2009/'),
 			'Runo::Path.steps_of should distinguish item steps from ambiguous conds[:d]'
 		)
 		assert_equal(
-			['foo','bar'],
+			['foo', 'bar'],
 			Runo::Path.steps_of('/foo/bar/1970/'),
 			'Runo::Path.steps_of should distinguish item steps from ambiguous conds[:d]'
 		)
 		assert_equal(
-			['foo','bar','3001'],
+			['foo', 'bar', '3001'],
 			Runo::Path.steps_of('/foo/bar/3001/'),
 			'Runo::Path.steps_of should be patched in the next millennium :-)'
 		)
@@ -277,7 +277,7 @@ class TC_Runo < Test::Unit::TestCase
 
 	def test_conds_of_with_cond_id
 		assert_equal(
-			['foo','bar'],
+			['foo', 'bar'],
 			Runo::Path.steps_of('/foo/bar/20091205/9/baz=1234/qux=4567/'),
 			'Runo::Path.steps_of should ignore conds[:id]'
 		)
@@ -384,7 +384,7 @@ class TC_Runo < Test::Unit::TestCase
 		)
 		assert_equal(
 			'20091224/123/',
-			Runo::Path.path_of(:d => '2009',:id => '20091224_0123'),
+			Runo::Path.path_of(:d => '2009', :id => '20091224_0123'),
 			'Runo::Path.path_of should ignore the other conds if there is conds[:id]'
 		)
 
@@ -395,7 +395,7 @@ class TC_Runo < Test::Unit::TestCase
 		)
 		assert_equal(
 			'id=20091224_0123,20100222_1234/',
-			Runo::Path.path_of(:id => ['20091224_0123','20100222_1234']),
+			Runo::Path.path_of(:id => ['20091224_0123', '20100222_1234']),
 			'Runo::Path.path_of should return multiple ids as a comma-separated form'
 		)
 		assert_equal(
@@ -411,7 +411,7 @@ class TC_Runo < Test::Unit::TestCase
 		)
 		assert_equal(
 			'id=20091224_0123,carl/',
-			Runo::Path.path_of(:id => ['20091224_0123','00000000_carl']),
+			Runo::Path.path_of(:id => ['20091224_0123', '00000000_carl']),
 			"Runo::Path.path_of should use short ids in a comma-separated form"
 		)
 
@@ -422,18 +422,18 @@ class TC_Runo < Test::Unit::TestCase
 		)
 		assert_equal(
 			'foo=bar/p=123/',
-			Runo::Path.path_of(:p => 123,:foo => 'bar'),
+			Runo::Path.path_of(:p => 123, :foo => 'bar'),
 			'Runo::Path.path_of should return the step for conds[:p] at the tail end'
 		)
 		assert_equal(
 			'foo=bar/order=desc/p=123/',
-			Runo::Path.path_of(:p => 123,:order =>'desc',:foo => 'bar'),
+			Runo::Path.path_of(:p => 123, :order =>'desc', :foo => 'bar'),
 			'Runo::Path.path_of should return the step for conds[:order] at the tail end'
 		)
 
 		assert_equal(
 			'foo=bar/',
-			Runo::Path.path_of(:p => 1,:foo => 'bar'),
+			Runo::Path.path_of(:p => 1, :foo => 'bar'),
 			'Runo::Path.path_of should omit the step for conds[:p] when conds[:p] == 1'
 		)
 		assert_equal(
@@ -444,7 +444,7 @@ class TC_Runo < Test::Unit::TestCase
 
 		assert_equal(
 			'foo=1,2,3/',
-			Runo::Path.path_of(:foo => [1,2,3]),
+			Runo::Path.path_of(:foo => [1, 2, 3]),
 			'Runo::Path.path_of should return multiple values as a comma-separated form'
 		)
 	end
@@ -545,7 +545,7 @@ class TC_Runo < Test::Unit::TestCase
 				:action     => nil,
 				:sub_action => nil,
 				'acorn'     => 'round',
-				'some'      => {'doors' => 'open',:action => :open},
+				'some'      => {'doors' => 'open', :action => :open},
 			},
 			params,
 			'Runo#params_from_request should build params from req.path_info and req.params'
@@ -626,8 +626,8 @@ class TC_Runo < Test::Unit::TestCase
 		Runo.client = nil
 		res = Runo.new.send(
 			:login,
-			Runo::Set::Static::Folder.root.item('foo','main'),
-			{'id' => 'test','pw' => 'test',:conds => {:id => '20100222_0123'},'dest_action' => 'update'}
+			Runo::Set::Static::Folder.root.item('foo', 'main'),
+			{'id' => 'test', 'pw' => 'test', :conds => {:id => '20100222_0123'}, 'dest_action' => 'update'}
 		)
 		assert_equal(
 			'test',
@@ -645,8 +645,8 @@ class TC_Runo < Test::Unit::TestCase
 		Runo.client = nil
 		res = Runo.new.send(
 			:login,
-			Runo::Set::Static::Folder.root.item('foo','main'),
-			{'id' => 'test','pw' => 'test',:conds => {:id => '20100222_0123'}}
+			Runo::Set::Static::Folder.root.item('foo', 'main'),
+			{'id' => 'test', 'pw' => 'test', :conds => {:id => '20100222_0123'}}
 		)
 		assert_match(
 			%r{/foo/20100222/123/index.html},
@@ -664,8 +664,8 @@ class TC_Runo < Test::Unit::TestCase
 		) {
 			Runo.new.send(
 				:login,
-				Runo::Set::Static::Folder.root.item('foo','main'),
-				{'id' => 'non-existent','pw' => 'test'}
+				Runo::Set::Static::Folder.root.item('foo', 'main'),
+				{'id' => 'non-existent', 'pw' => 'test'}
 			)
 		}
 		assert_equal(
@@ -680,8 +680,8 @@ class TC_Runo < Test::Unit::TestCase
 		) {
 			Runo.new.send(
 				:login,
-				Runo::Set::Static::Folder.root.item('foo','main'),
-				{'id' => 'test','pw' => nil}
+				Runo::Set::Static::Folder.root.item('foo', 'main'),
+				{'id' => 'test', 'pw' => nil}
 			)
 		}
 		assert_equal(
@@ -696,7 +696,7 @@ class TC_Runo < Test::Unit::TestCase
 		) {
 			res = Runo.new.send(
 				:login,
-				Runo::Set::Static::Folder.root.item('foo','main'),
+				Runo::Set::Static::Folder.root.item('foo', 'main'),
 				{
 					'id' => 'test',
 					'pw' => 'wrong',
@@ -716,8 +716,8 @@ class TC_Runo < Test::Unit::TestCase
 		Runo.client = 'frank'
 		res = Runo.new.send(
 			:logout,
-			Runo::Set::Static::Folder.root.item('foo','main'),
-			{'id' => 'test','pw' => 'test',:conds => {:id => '20100222_0123'}}
+			Runo::Set::Static::Folder.root.item('foo', 'main'),
+			{'id' => 'test', 'pw' => 'test', :conds => {:id => '20100222_0123'}}
 		)
 		assert_equal(
 			'nobody',

@@ -20,7 +20,7 @@ class Runo::Meta::Timestamp < Runo::Field
 		if @date_str.nil?
 			[]
 		elsif @date_str =~ REX_DATE
-			(Time.local($1,$2,$3,$4,$5,$6) rescue nil) ? [] : ['out of range']
+			(Time.local($1, $2, $3, $4, $5, $6) rescue nil) ? [] : ['out of range']
 		else
 			['wrong format']
 		end
@@ -66,7 +66,7 @@ _html
 		end
 	end
 
-	def _post(action,v)
+	def _post(action, v)
 		case action
 			when :load
 				@val = val_cast v
@@ -101,7 +101,7 @@ _html
 			{'published' => :same_as_updated}
 		elsif v.is_a?(::String) && !v.empty?
 			@date_str = v
-			(v =~ REX_DATE && t = (Time.local($1,$2,$3,$4,$5,$6) rescue nil)) ? {'published' => t} : {}
+			(v =~ REX_DATE && t = (Time.local($1, $2, $3, $4, $5, $6) rescue nil)) ? {'published' => t} : {}
 		else
 			{}
 		end

@@ -7,7 +7,7 @@ class Runo::Set::Dynamic < Runo::Field
 
 	include Runo::Set
 
-	attr_reader :storage,:workflow
+	attr_reader :storage, :workflow
 
 	def initialize(meta = {})
 		@meta        = meta
@@ -19,7 +19,7 @@ class Runo::Set::Dynamic < Runo::Field
 		my[:item] ||= {
 			'default' => {:item => {}}
 		}
-		my[:item].each {|type,item_meta|
+		my[:item].each {|type, item_meta|
 			item_meta[:item] = @workflow.default_sub_items.merge item_meta[:item]
 		}
 
@@ -43,7 +43,7 @@ class Runo::Set::Dynamic < Runo::Field
 	end
 
 	def meta_path
-		(my[:name] == 'main') ? my[:dir] : "#{my[:dir]}/#{my[:name].sub(/^main-?/,'').gsub('-','/')}"
+		(my[:name] == 'main') ? my[:dir] : "#{my[:dir]}/#{my[:name].sub(/^main-?/, '').gsub('-', '/')}"
 	end
 
 	def meta_base_path
@@ -61,13 +61,13 @@ class Runo::Set::Dynamic < Runo::Field
 		@workflow.before_commit
 
 		items = pending_items
-		items.each {|id,item|
+		items.each {|id, item|
 			item.commit(:temp) || next
 			case type
 				when :temp
-					store(id,item) if @storage.is_a? Runo::Storage::Temp
+					store(id, item) if @storage.is_a? Runo::Storage::Temp
 				when :persistent
-					store(id,item)
+					store(id, item)
 					item.commit :persistent
 			end
 		}
@@ -89,7 +89,7 @@ class Runo::Set::Dynamic < Runo::Field
 		(@workflow._get(arg) || super) unless @workflow._hide? arg
 	end
 
-	def _get_by_tmpl(arg,tmpl = '')
+	def _get_by_tmpl(arg, tmpl = '')
 		if arg[:action] == :read || self != Runo.base
 			super
 		else
@@ -111,41 +111,41 @@ _html
 		permit?(arg[:action]) || collect_item(arg[:conds] || {}).all? {|item|
 			item[:id][Runo::REX::ID_NEW] ?
 				item.permit?(:create) :
-				item.send(:permit_get?,:action => arg[:action])
+				item.send(:permit_get?, :action => arg[:action])
 		}
 	end
 
-	def _post(action,v = nil)
+	def _post(action, v = nil)
 		if action == :create
 			@storage.build({})
 			@item_object.clear
 		end
 
 		case action
-			when :create,:update
+			when :create, :update
 				v.each_key.sort_by {|id| id.to_s }.each {|id|
 					next unless id.is_a? ::String
 
 					v[id][:action] ||= id[Runo::REX::ID_NEW] ? :create : :update
-					item_instance(id).post(v[id][:action],v[id])
+					item_instance(id).post(v[id][:action], v[id])
 				}
-			when :load,:load_default
+			when :load, :load_default
 				@storage.build v
 		end
 
 		!pending_items.empty? || action == :delete
 	end
 
-	def store(id,item)
+	def store(id, item)
 		case item.action
 			when :create
 				return if id[Runo::REX::ID] || item.empty?
-				new_id = @storage.store(:new_id,item.val)
+				new_id = @storage.store(:new_id, item.val)
 				item[:id] = new_id
 				@item_object.delete id
 				@item_object[item[:id]] = item
-			when :update,nil
-				new_id = @storage.store(item[:id],item.val)
+			when :update, nil
+				new_id = @storage.store(item[:id], item.val)
 				if new_id != item[:id]
 					@item_object[new_id] = @item_object.delete item[:id]
 					item[:id] = new_id
@@ -156,14 +156,14 @@ _html
 		end
 	end
 
-	def collect_item(conds = {},&block)
+	def collect_item(conds = {}, &block)
 		@storage.select(conds).collect {|id|
 			item = item_instance id
 			block ? block.call(item) : item
 		}
 	end
 
-	def item_instance(id,type = 'default')
+	def item_instance(id, type = 'default')
 		unless @item_object[id]
 			item_meta = my[:item][type] || my[:item]['default']
 			@item_object[id] = Runo::Field.instance(

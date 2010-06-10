@@ -46,8 +46,8 @@ _html
 		find_ancestor {|i| i[:id] =~ Runo::REX::ID_NEW } ? true : false
 	end
 
-	def _post(action,v)
-		if action == :load || ([:create,:update].include?(action) && new_id?)
+	def _post(action, v)
+		if action == :load || ([:create, :update].include?(action) && new_id?)
 			@val = val_cast v
 		end
 	end

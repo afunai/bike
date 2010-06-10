@@ -9,7 +9,7 @@ class TC_Textarea < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Runo::Parser.gsub_scalar('$(foo textarea 76*8 1..1024)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo textarea 76*8 1..1024)') {|id, m|
 			meta = m
 			''
 		}

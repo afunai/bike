@@ -82,7 +82,7 @@ class TC_Runo_Call < Test::Unit::TestCase
 
 	def test_get_contact
 		Runo.client = nil
-		Runo::Set::Static::Folder.root.item('t_contact','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_contact', 'main').storage.clear
 
 		res = Rack::MockRequest.new(@runo).get(
 			'http://example.com/1234567890.0123/t_contact/'
@@ -117,8 +117,8 @@ _html
 
 	def test_get_contact_forbidden
 		Runo.client = nil
-		Runo::Set::Static::Folder.root.item('t_contact','main').storage.build(
-			'20100425_1234' => {'name' => 'cz','comment' => 'howdy.'}
+		Runo::Set::Static::Folder.root.item('t_contact', 'main').storage.build(
+			'20100425_1234' => {'name' => 'cz', 'comment' => 'howdy.'}
 		)
 
 		res = Rack::MockRequest.new(@runo).get(
@@ -241,7 +241,7 @@ _html
 		res = Rack::MockRequest.new(@runo).get(
 			"http://example.com/t_summary/p=1/update.html"
 		)
-		tid = res.body[%r{/(#{Runo::REX::TID})/},1]
+		tid = res.body[%r{/(#{Runo::REX::TID})/}, 1]
 		assert_equal(
 			<<"_html",
 <html>
@@ -375,7 +375,7 @@ _html
 
 	def test_post_simple_create
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_store','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_store', 'main').storage.clear
 
 		res = Rack::MockRequest.new(@runo).post(
 			'http://example.com/t_store/main/update.html',
@@ -395,9 +395,9 @@ _html
 		)
 
 		res.headers['Location'] =~ Runo::REX::PATH_ID
-		new_id = sprintf('%.8d_%.4d',$1,$2)
+		new_id = sprintf('%.8d_%.4d', $1, $2)
 
-		val = Runo::Set::Static::Folder.root.item('t_store','main',new_id).val
+		val = Runo::Set::Static::Folder.root.item('t_store', 'main', new_id).val
 		assert_instance_of(
 			::Hash,
 			val,
@@ -405,7 +405,7 @@ _html
 		)
 		val.delete '_timestamp'
 		assert_equal(
-			{'_owner' => 'root','name' => 'fz','comment' => 'hi.'},
+			{'_owner' => 'root', 'name' => 'fz', 'comment' => 'hi.'},
 			val,
 			'Runo#call with post method should store the item in the storage'
 		)
@@ -413,7 +413,7 @@ _html
 
 	def test_post_invalid_create
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_store','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_store', 'main').storage.clear
 
 		res = Rack::MockRequest.new(@runo).post(
 			"http://example.com/t_store/main/update.html",
@@ -421,7 +421,7 @@ _html
 				:input => "_1-name=tooooooooooooloooooooooooooooooooooooooooong&_1-comment=hi.&.status-public=create&_token=#{Runo.token}"
 			}
 		)
-		tid = res.body[%r{/(#{Runo::REX::TID})/},1]
+		tid = res.body[%r{/(#{Runo::REX::TID})/}, 1]
 
 		assert_equal(
 			422,
@@ -437,7 +437,7 @@ _html
 
 	def test_post_empty_create
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_store','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_store', 'main').storage.clear
 
 		res = Rack::MockRequest.new(@runo).post(
 			'http://example.com/t_store/main/update.html',
@@ -462,7 +462,7 @@ _html
 			}
 		)
 		res.headers['Location'] =~ Runo::REX::PATH_ID
-		new_id   = sprintf('%.8d_%.4d',$1,$2)
+		new_id   = sprintf('%.8d_%.4d', $1, $2)
 
 		res = Rack::MockRequest.new(@runo).post(
 			'http://example.com/t_store/main/update.html',
@@ -551,7 +551,7 @@ _html
 
 	def test_post_with_attachment
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_attachment','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_attachment', 'main').storage.clear
 
 		# post an attachment
 		res = Rack::MockRequest.new(@runo).post(
@@ -567,7 +567,7 @@ _html
 		)
 		assert_equal(
 			{},
-			Runo::Set::Static::Folder.root.item('t_attachment','main').val,
+			Runo::Set::Static::Folder.root.item('t_attachment', 'main').val,
 			'Runo#call without the root status should not update the persistent storage'
 		)
 
@@ -592,13 +592,13 @@ _html
 		)
 		assert_not_equal(
 			{},
-			Runo::Set::Static::Folder.root.item('t_attachment','main').val,
+			Runo::Set::Static::Folder.root.item('t_attachment', 'main').val,
 			'Runo#call with the root status should update the persistent storage'
 		)
 
 		res.headers['Location'] =~ Runo::REX::PATH_ID
-		new_id   = sprintf('%.8d_%.4d',$1,$2)
-		new_item = Runo::Set::Static::Folder.root.item('t_attachment','main',new_id)
+		new_id   = sprintf('%.8d_%.4d', $1, $2)
+		new_item = Runo::Set::Static::Folder.root.item('t_attachment', 'main', new_id)
 		assert_not_equal(
 			{},
 			new_item.val,
@@ -622,7 +622,7 @@ _html
 				:input => "_001-reply=wow.&.status-public=create&_token=#{Runo.token}"
 			}
 		)
-		assert_equal(303,res.status)
+		assert_equal(303, res.status)
 		assert_match(
 			%r{/#{Runo::REX::TID}/t_attachment/#{new_id}/replies/read_detail.html},
 			res.headers['Location'],
@@ -630,14 +630,14 @@ _html
 		)
 		assert_not_equal(
 			{},
-			Runo::Set::Static::Folder.root.item('t_attachment','main',new_id,'replies').val,
+			Runo::Set::Static::Folder.root.item('t_attachment', 'main', new_id, 'replies').val,
 			'Runo#call with a sub-app status should update the persistent storage'
 		)
 	end
 
 	def test_post_only_attachment
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_attachment','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_attachment', 'main').storage.clear
 
 		# post an item
 		res = Rack::MockRequest.new(@runo).post(
@@ -647,7 +647,7 @@ _html
 			}
 		)
 		res.headers['Location'] =~ Runo::REX::PATH_ID
-		new_id = sprintf('%.8d_%.4d',$1,$2)
+		new_id = sprintf('%.8d_%.4d', $1, $2)
 
 		# post an attachment
 		tid = '1234567890.1234'
@@ -657,7 +657,7 @@ _html
 				:input => "#{new_id}-files-_1-file=boo.jpg&#{new_id}-files-_1.action-create=create&_token=#{Runo.token}"
 			}
 		)
-		attachment_id = Runo.transaction[tid].item(new_id,'files').val.keys.first
+		attachment_id = Runo.transaction[tid].item(new_id, 'files').val.keys.first
 		res = Rack::MockRequest.new(@runo).post(
 			"http://example.com/#{tid}/update.html",
 			{
@@ -666,14 +666,14 @@ _html
 		)
 
 		assert_not_nil(
-			Runo::Set::Static::Folder.root.item('t_attachment','main',new_id).val['files'],
+			Runo::Set::Static::Folder.root.item('t_attachment', 'main', new_id).val['files'],
 			'Runo#call should treat the post with only an attachement nicely'
 		)
 	end
 
 	def test_post_with_invalid_attachment
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_attachment','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_attachment', 'main').storage.clear
 
 		# post an invalid empty attachment
 		res = Rack::MockRequest.new(@runo).post(
@@ -698,7 +698,7 @@ _html
 		)
 		assert_not_equal(
 			{},
-			Runo::Set::Static::Folder.root.item('t_attachment','main').val,
+			Runo::Set::Static::Folder.root.item('t_attachment', 'main').val,
 			'Runo#call with the root status should ignore the invalid empty attachment'
 		)
 
@@ -727,7 +727,7 @@ _html
 
 	def test_post_preview_update
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_store','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_store', 'main').storage.clear
 		base_uri = ''
 
 		res = Rack::MockRequest.new(@runo).post(
@@ -800,9 +800,9 @@ _html
 		)
 
 		res.headers['Location'] =~ Runo::REX::PATH_ID
-		new_id = sprintf('%.8d_%.4d',$1,$2)
+		new_id = sprintf('%.8d_%.4d', $1, $2)
 
-		val = Runo::Set::Static::Folder.root.item('t_store','main',new_id).val
+		val = Runo::Set::Static::Folder.root.item('t_store', 'main', new_id).val
 		assert_instance_of(
 			::Hash,
 			val,
@@ -810,7 +810,7 @@ _html
 		)
 		val.delete '_timestamp'
 		assert_equal(
-			{'_owner' => 'root','name' => 'fz','comment' => 'howdy.'},
+			{'_owner' => 'root', 'name' => 'fz', 'comment' => 'howdy.'},
 			val,
 			'Runo#call with post method should store the item in the storage'
 		)
@@ -836,7 +836,7 @@ _html
 			'Runo#call with :preview action & malformed input should return :update'
 		)
 
-		tid = res.body[%r{/(#{Runo::REX::TID})/},1]
+		tid = res.body[%r{/(#{Runo::REX::TID})/}, 1]
 		assert_instance_of(
 			Runo::Set::Dynamic,
 			Runo.transaction[tid],
@@ -846,7 +846,7 @@ _html
 
 	def test_post_contact
 		Runo.client = nil
-		Runo::Set::Static::Folder.root.item('t_contact','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_contact', 'main').storage.clear
 
 		res = Rack::MockRequest.new(@runo).post(
 			'http://example.com/t_contact/main/update.html',
@@ -888,8 +888,8 @@ _html
 
 	def test_post_contact_forbidden
 		Runo.client = nil
-		Runo::Set::Static::Folder.root.item('t_contact','main').storage.build(
-			'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}
+		Runo::Set::Static::Folder.root.item('t_contact', 'main').storage.build(
+			'20100425_1234' => {'_owner' => 'nobody', 'name' => 'cz', 'comment' => 'howdy.'}
 		)
 
 		res = Rack::MockRequest.new(@runo).post(
@@ -904,8 +904,8 @@ _html
 			'Runo#call should not allow nobody to update an existing contact'
 		)
 		assert_equal(
-			{'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}},
-			Runo::Set::Static::Folder.root.item('t_contact','main').storage.val,
+			{'20100425_1234' => {'_owner' => 'nobody', 'name' => 'cz', 'comment' => 'howdy.'}},
+			Runo::Set::Static::Folder.root.item('t_contact', 'main').storage.val,
 			'Runo#call should not allow nobody to update an existing contact'
 		)
 
@@ -921,8 +921,8 @@ _html
 			'Runo#call should not allow nobody to update an existing contact'
 		)
 		assert_equal(
-			{'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}},
-			Runo::Set::Static::Folder.root.item('t_contact','main').storage.val,
+			{'20100425_1234' => {'_owner' => 'nobody', 'name' => 'cz', 'comment' => 'howdy.'}},
+			Runo::Set::Static::Folder.root.item('t_contact', 'main').storage.val,
 			'Runo#call should not allow nobody to update an existing contact'
 		)
 
@@ -938,8 +938,8 @@ _html
 			'Runo#call should not allow nobody to update an existing contact'
 		)
 		assert_equal(
-			{'20100425_1234' => {'_owner' => 'nobody','name' => 'cz','comment' => 'howdy.'}},
-			Runo::Set::Static::Folder.root.item('t_contact','main').storage.val,
+			{'20100425_1234' => {'_owner' => 'nobody', 'name' => 'cz', 'comment' => 'howdy.'}},
+			Runo::Set::Static::Folder.root.item('t_contact', 'main').storage.val,
 			'Runo#call should not allow nobody to update an existing contact'
 		)
 	end
@@ -1083,7 +1083,7 @@ _html
 
 	def test_message_notice
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_store','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_store', 'main').storage.clear
 
 		res = Rack::MockRequest.new(@runo).post(
 			'http://example.com/t_store/main/update.html',
@@ -1119,7 +1119,7 @@ _html
 		)
 
 		res.headers['Location'] =~ Runo::REX::PATH_ID
-		new_id = sprintf('%.8d_%.4d',$1,$2)
+		new_id = sprintf('%.8d_%.4d', $1, $2)
 		res = Rack::MockRequest.new(@runo).post(
 			'http://example.com/t_store/main/update.html',
 			{
@@ -1185,7 +1185,7 @@ _html
 
 	def test_message_error
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_store','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_store', 'main').storage.clear
 
 		res = Rack::MockRequest.new(@runo).post(
 			'http://example.com/t_store/main/update.html',
@@ -1202,13 +1202,13 @@ _html
 
 	def test_message_i18n
 		Runo.client = 'root'
-		Runo::Set::Static::Folder.root.item('t_store','main').storage.clear
+		Runo::Set::Static::Folder.root.item('t_store', 'main').storage.clear
 
 		res = Rack::MockRequest.new(@runo).post(
 			'http://example.com/t_store/main/update.html',
 			{
 				:input                 => "_3-name=&.status-public=create&_token=#{Runo.token}",
-				'HTTP_ACCEPT_LANGUAGE' => 'en,de',
+				'HTTP_ACCEPT_LANGUAGE' => 'en, de',
 			}
 		)
 		assert_match(
@@ -1221,7 +1221,7 @@ _html
 			'http://example.com/t_store/main/update.html',
 			{
 				:input                 => "_3-name=&.status-public=create&_token=#{Runo.token}",
-				'HTTP_ACCEPT_LANGUAGE' => 'en-US,de',
+				'HTTP_ACCEPT_LANGUAGE' => 'en-US, de',
 			}
 		)
 		assert_match(
@@ -1234,7 +1234,7 @@ _html
 			'http://example.com/t_store/main/update.html',
 			{
 				:input                 => "_3-name=&.status-public=create&_token=#{Runo.token}",
-				'HTTP_ACCEPT_LANGUAGE' => 'de,en',
+				'HTTP_ACCEPT_LANGUAGE' => 'de, en',
 			}
 		)
 		assert_match(

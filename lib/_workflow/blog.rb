@@ -7,9 +7,9 @@ class Runo::Workflow::Blog < Runo::Workflow
 
 	DEFAULT_META = {
 		:p_size     => 10,
-		:conds      => {:d => '999999',:p => 'last'},
+		:conds      => {:d => '999999', :p => 'last'},
 		:order      => '-id',
-		:item_label => Runo::I18n.n_('entry','entries',1),
+		:item_label => Runo::I18n.n_('entry', 'entries', 1),
 	}
 
 	DEFAULT_SUB_ITEMS = {

@@ -7,7 +7,7 @@ class Runo::Workflow::Forum < Runo::Workflow
 
 	DEFAULT_META = {
 		:p_size     => 10,
-		:item_label => Runo::I18n.n_('post','posts',1),
+		:item_label => Runo::I18n.n_('post', 'posts', 1),
 	}
 
 	DEFAULT_SUB_ITEMS = {

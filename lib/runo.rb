@@ -8,7 +8,7 @@ class Runo
 	lib_dir = ::File.dirname __FILE__
 
 	require "#{lib_dir}/_i18n.rb"
-	I18n.bindtextdomain('index',::File.expand_path('../locale',lib_dir))
+	I18n.bindtextdomain('index', ::File.expand_path('../locale', lib_dir))
 
 	Dir["#{lib_dir}/_*.rb"].sort.each {|file| require file }
 	Dir["#{lib_dir}/[a-z]*/*.rb"].sort.each {|file| require file }
@@ -69,9 +69,9 @@ class Runo
 		if response.first == 404
 			until ::File.readable? ::File.join(
 				Runo['skin_dir'],
-				env['PATH_INFO'].sub(%r{(/#{Runo::REX::DIR_STATIC}/).*},'\\1')
+				env['PATH_INFO'].sub(%r{(/#{Runo::REX::DIR_STATIC}/).*}, '\\1')
 			)
-				env['PATH_INFO'].sub!(%r{/[^/]+(?=/#{Runo::REX::DIR_STATIC}/)},'') || break
+				env['PATH_INFO'].sub!(%r{/[^/]+(?=/#{Runo::REX::DIR_STATIC}/)}, '') || break
 			end
 			@static.call env
 		else
@@ -96,7 +96,7 @@ class Runo
 		Runo.current[:session] = env['rack.session']
 
 		if Runo.transaction[tid].is_a? Runo::Field
-			base = Runo.transaction[tid].item(Runo::Path.steps_of path.sub(/\A.*#{Runo::REX::TID}/,''))
+			base = Runo.transaction[tid].item(Runo::Path.steps_of path.sub(/\A.*#{Runo::REX::TID}/, ''))
 		else
 			base = Runo::Path.base_of path
 		end
@@ -108,20 +108,20 @@ class Runo
 
 		begin
 			if params[:action] == :logout && params[:token] == Runo.token
-				logout(base,params)
+				logout(base, params)
 			elsif method == 'get'
-				get(base,params)
+				get(base, params)
 			elsif params[:action] == :login
-				login(base,params)
+				login(base, params)
 			elsif params[:action] == :preview
-				preview(base,params)
+				preview(base, params)
 			elsif params[:token] != Runo.token
 				response_forbidden(:body => 'invalid token')
 			elsif Runo.transaction[tid] && !Runo.transaction[tid].is_a?(Runo::Field)
 				response_unprocessable_entity(:body => 'transaction expired')
 			else
 				begin
-					post(base,params)
+					post(base, params)
 				rescue Runo::Error::Forbidden
 					response_forbidden
 				end
@@ -131,15 +131,15 @@ class Runo
 				params[:dest_action] = (method == 'post') ? :index : params[:action]
 				params[:action] = :login
 			end
-			response_unprocessable_entity(:body => _get(base,params)) rescue response_forbidden
+			response_unprocessable_entity(:body => _get(base, params)) rescue response_forbidden
 # TODO: rescue Error::System etc.
 		end
 	end
 
 	private
 
-	def login(base,params)
-		user = Runo::Set::Static::Folder.root.item('_users','main',params['id'].to_s)
+	def login(base, params)
+		user = Runo::Set::Static::Folder.root.item('_users', 'main', params['id'].to_s)
 		if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
 			Runo.client = params['id']
 		else
@@ -153,7 +153,7 @@ class Runo
 		)
 	end
 
-	def logout(base,params)
+	def logout(base, params)
 		Runo.client = nil
 		path = Runo::Path.path_of params[:conds]
 		response_see_other(
@@ -161,7 +161,7 @@ class Runo
 		)
 	end
 
-	def get(base,params)
+	def get(base, params)
 		if base.is_a? Runo::File
 			response_ok(
 				:headers => {
@@ -171,16 +171,16 @@ class Runo
 				:body    => (params[:sub_action] == :small) ? base.thumbnail : base.body
 			)
 		else
-			response_ok :body => _get(base,params)
+			response_ok :body => _get(base, params)
 		end
 	end
 
-	def preview(base,params)
+	def preview(base, params)
 		Runo.transaction[base[:tid]] ||= base if base[:tid] =~ Runo::REX::TID
 
 		base.update params
 		if base.commit(:temp) || params[:sub_action] == :delete
-			id_step = result_step(base,params)
+			id_step = result_step(base, params)
 			action = "preview_#{params[:sub_action]}"
 			response_see_other(
 				:location => "#{base[:uri]}/#{base[:tid]}/#{id_step}#{action}.html"
@@ -188,11 +188,11 @@ class Runo
 		else
 			params = {:action => :update}
 			params[:conds] = {:id => base.errors.keys}
-			return response_unprocessable_entity(:body => _get(base,params))
+			return response_unprocessable_entity(:body => _get(base, params))
 		end
 	end
 
-	def post(base,params)
+	def post(base, params)
 		Runo.transaction[base[:tid]] ||= base if base[:tid] =~ Runo::REX::TID
 
 		base.update params
@@ -200,18 +200,18 @@ class Runo
 			if base[:folder].commit :persistent
 				Runo.transaction[base[:tid]] = result_summary base
 				action = base.workflow.next_action base
-				id_step = result_step(base,params) if base[:parent] == base[:folder] && action != :done
+				id_step = result_step(base, params) if base[:parent] == base[:folder] && action != :done
 				response_see_other(
 					:location => "#{base[:uri]}/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
 				)
 			else
 				params = {:action => :update}
 				params[:conds] = {:id => base.errors.keys}
-				response_unprocessable_entity :body => _get(base,params)
+				response_unprocessable_entity :body => _get(base, params)
 			end
 		else
 			base.commit :temp
-			id_step = result_step(base,params)
+			id_step = result_step(base, params)
 			response_see_other(
 				:location => "#{base[:uri]}/#{base[:tid]}/#{id_step}update.html"
 			)
@@ -219,14 +219,14 @@ class Runo
 	end
 
 	def result_summary(base)
-		(base.result || {}).values.inject({}) {|summary,item|
+		(base.result || {}).values.inject({}) {|summary, item|
 			item_result = item.result.is_a?(::Symbol) ? item.result : :update
 			summary[item_result] = summary[item_result].to_i + 1
 			summary
 		}
 	end
 
-	def result_step(base,params)
+	def result_step(base, params)
 		if base.result
 			id = base.result.values.collect {|item| item[:id] }
 		else
@@ -237,12 +237,12 @@ class Runo
 		Runo::Path.path_of(:id => id)
 	end
 
-	def _get(f,params)
+	def _get(f, params)
 		params[:action] ||= f.default_action
 		until f.is_a? Runo::Set::Static::Folder
 			params = {
 				:action     => (f.default_action == :read) ? :read : nil,
-				:sub_action => f.send(:summary?,params) ? nil : :detail,
+				:sub_action => f.send(:summary?, params) ? nil : :detail,
 				f[:id]      => params,
 			}
 			params[:conds] = {:id => f[:id]} if f[:parent].is_a? Runo::Set::Dynamic
@@ -266,21 +266,21 @@ class Runo
 	end
 
 	def rebuild_params(src)
-		src.each_key.sort.reverse.inject({}) {|params,key|
-			name,special = key.split('.',2)
+		src.each_key.sort.reverse.inject({}) {|params, key|
+			name, special = key.split('.', 2)
 			steps = name.split '-'
 
 			if special
-				special_id,special_val = special.split('-',2)
+				special_id, special_val = special.split('-', 2)
 			else
 				item_id = steps.pop
 			end
 
-			hash = steps.inject(params) {|v,k| v[k] ||= {} }
+			hash = steps.inject(params) {|v, k| v[k] ||= {} }
 			val  = src[key]
 
 			if special_id == 'action'
-				action,sub_action = (special_val || val).split('_',2)
+				action, sub_action = (special_val || val).split('_', 2)
 				hash[:action] = action.intern
 				hash[:sub_action] = sub_action.intern if sub_action
 			elsif special_id == 'status'

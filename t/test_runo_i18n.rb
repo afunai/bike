@@ -41,24 +41,24 @@ class TC_Runo_I18n < Test::Unit::TestCase
 	end
 
 	def test_multiple_lang
-		Runo::I18n.lang = 'ja,de;q=0.5,en;q=0.8'
+		Runo::I18n.lang = 'ja, de;q=0.5, en;q=0.8'
 		assert_equal(
-			['ja','en','de'],
+			['ja', 'en', 'de'],
 			Runo::I18n.lang,
 			'Runo::I18n.lang should sort the language-ranges by their quality values'
 		)
 	end
 
 	def test_same_qvalues
-		Runo::I18n.lang = 'ja,de;q=0.5,en;q=0.5'
+		Runo::I18n.lang = 'ja, de;q=0.5, en;q=0.5'
 		assert_equal(
-			['ja','de','en'],
+			['ja', 'de', 'en'],
 			Runo::I18n.lang,
 			'Runo::I18n.lang should be sorted by their original order if the qvalues are same'
 		)
-		Runo::I18n.lang = 'ja,de,en'
+		Runo::I18n.lang = 'ja, de, en'
 		assert_equal(
-			['ja','de','en'],
+			['ja', 'de', 'en'],
 			Runo::I18n.lang,
 			'Runo::I18n.lang should be sorted by their original order if the qvalues are same'
 		)
@@ -83,7 +83,7 @@ class TC_Runo_I18n < Test::Unit::TestCase
 	end
 
 	def test_bindtextdomain
-		Runo::I18n.bindtextdomain('foo','bar/baz')
+		Runo::I18n.bindtextdomain('foo', 'bar/baz')
 		assert_equal(
 			'foo',
 			Runo::I18n.domain,
@@ -104,8 +104,8 @@ class TC_Runo_I18n < Test::Unit::TestCase
 			'Runo::I18n.msg should return a hash'
 		)
 		assert_equal(
-			{'color' => '色','one color' =>['%{n}色']},
-			Runo::I18n.msg.reject {|k,v| k == :plural },
+			{'color' => '色', 'one color' =>['%{n}色']},
+			Runo::I18n.msg.reject {|k, v| k == :plural },
 			'Runo::I18n.msg should return a hash containing {msgid => msgstr}'
 		)
 		assert_instance_of(
@@ -124,7 +124,7 @@ class TC_Runo_I18n < Test::Unit::TestCase
 
 	def test_merge_msg!
 		Runo::I18n.lang = 'no'
-		assert_equal({},Runo::I18n.msg)
+		assert_equal({}, Runo::I18n.msg)
 
 		Runo::I18n.merge_msg!('color' => 'farge')
 		assert_equal(
@@ -219,36 +219,36 @@ _eos
 		Runo::I18n.lang = 'ja'
 		assert_equal(
 			'%{n}色',
-			n_('one color','%{n} colors',1),
+			n_('one color', '%{n} colors', 1),
 			'Runo::I18n#n_() should return a string according to the msgid and the n'
 		)
 		assert_equal(
 			'%{n}色',
-			n_('one color','%{n} colors',2),
+			n_('one color', '%{n} colors', 2),
 			'Runo::I18n#n_() should return a string according to the msgid and the n'
 		)
 
 		Runo::I18n.lang = 'en-GB'
 		assert_equal(
 			'one colour',
-			n_('one color','%{n} colors',1),
+			n_('one color', '%{n} colors', 1),
 			'Runo::I18n#n_() should return a string according to the msgid and the n'
 		)
 		assert_equal(
 			'%{n} colours',
-			n_('one color','%{n} colors',2),
+			n_('one color', '%{n} colors', 2),
 			'Runo::I18n#n_() should return a string according to the msgid and the n'
 		)
 
 		Runo::I18n.lang = 'no'
 		assert_equal(
 			'one color',
-			n_('one color','%{n} colors',1),
+			n_('one color', '%{n} colors', 1),
 			'Runo::I18n#_() should return a msgid if the msgid is not existed in the msg'
 		)
 		assert_equal(
 			'%{n} colors',
-			n_('one color','%{n} colors',2),
+			n_('one color', '%{n} colors', 2),
 			'Runo::I18n#_() should return a msgid if the msgid is not existed in the msg'
 		)
 	end
@@ -271,7 +271,7 @@ _eos
 			'Runo::I18n#_() should return a instance of Runo::I18n::Msgstr'
 		)
 
-		s = n_('one color','%{n} colors',2)
+		s = n_('one color', '%{n} colors', 2)
 		assert_instance_of(
 			Runo::I18n::Msgstr,
 			s,
@@ -293,7 +293,7 @@ _eos
 			"Runo::I18n::Msgstr#% should regard %{...} as '%s' if given a scalar"
 		)
 
-		s = n_('one color','%{n} colors',1)
+		s = n_('one color', '%{n} colors', 1)
 		assert_instance_of(
 			Runo::I18n::Msgstr,
 			s,

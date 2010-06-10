@@ -12,11 +12,11 @@ class Runo::File < Runo::Field
 	end
 
 	def meta_path
-		my[:full_name].gsub('-','/')
+		my[:full_name].gsub('-', '/')
 	end
 
 	def meta_tmp_path
-		"#{Runo.base[:path]}/#{Runo.base[:tid]}/#{my[:short_name].gsub('-','/')}" if Runo.base
+		"#{Runo.base[:path]}/#{Runo.base[:tid]}/#{my[:short_name].gsub('-', '/')}" if Runo.base
 	end
 
 	def meta_persistent_sd
@@ -48,7 +48,7 @@ class Runo::File < Runo::Field
 			val['basename'] &&
 			my[:options].is_a?(::Array) &&
 			!my[:options].empty? &&
-			!my[:options].include?(val['basename'].to_s[/\.([\w\.]+)$/i,1].downcase)
+			!my[:options].include?(val['basename'].to_s[/\.([\w\.]+)$/i, 1].downcase)
 		)
 			[_('wrong file type: should be %{types}') % {:types => my[:options].join('/')}]
 		elsif (my[:max].to_i > 0) && (val['size'].to_i > my[:max])
@@ -68,11 +68,11 @@ class Runo::File < Runo::Field
 			@body = nil
 		elsif type == :persistent && ps = my[:persistent_sd]
 			case @action
-				when :create,:update,nil
+				when :create, :update, nil
 					ps.storage.store(
 						my[:persistent_name],
 						@body,
-						val['basename'][/\.([\w\.]+)$/,1] || 'bin'
+						val['basename'][/\.([\w\.]+)$/, 1] || 'bin'
 					) if @body && valid?
 				when :delete
 					ps.storage.delete my[:persistent_name]
@@ -100,7 +100,7 @@ _html
 			!val.empty? &&
 			my[:min].to_i == 0 &&
 			my[:parent].is_a?(Runo::Set::Static) &&
-			my[:parent][:item].find {|id,meta| id != my[:id] && meta[:klass] !~ /^meta-/ }
+			my[:parent][:item].find {|id, meta| id != my[:id] && meta[:klass] !~ /^meta-/ }
 		)
 			delete = <<_html
 	<input type="submit" name="#{my[:short_name]}.action-delete" value="#{_ 'delete'}" />
@@ -119,7 +119,7 @@ _html
 
 	def _path(action)
 		(Runo.base ? Runo.base[:uri].to_s : '') +
-		([:read,nil].include?(action) ? my[:path] : my[:tmp_path])
+		([:read, nil].include?(action) ? my[:path] : my[:tmp_path])
 	end
 
 	def val_cast(v)

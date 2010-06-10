@@ -9,7 +9,7 @@ class TC_Id < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Runo::Parser.gsub_scalar('$(foo meta-id 3 1..5)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo meta-id 3 1..5)') {|id, m|
 			meta = m
 			''
 		}
@@ -183,27 +183,27 @@ class TC_Id < Test::Unit::TestCase
 
 	def test_errors_duplicate_id
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('_users','main')
+		sd = Runo::Set::Static::Folder.root.item('_users', 'main')
 
 		sd.update(
-			'_001' => {:action => :create,'_id' => 'test'}
+			'_001' => {:action => :create, '_id' => 'test'}
 		)
 		assert_equal(
 			['duplicate id: test'],
-			sd.item('_001','_id').errors,
+			sd.item('_001', '_id').errors,
 			'Meta::Id#errors should return an error if the current val is duplicated in the sd'
 		)
 
 		sd.update(
-			'_001' => {:action => :create,'_id' => 'frank'}
+			'_001' => {:action => :create, '_id' => 'frank'}
 		)
 		assert_equal(
 			[],
-			sd.item('_001','_id').errors,
+			sd.item('_001', '_id').errors,
 			'Meta::Id#errors should return no error if the current val is unique in the sd'
 		)
 
-		f = Runo::Set::Static::Folder.root.item('_users','main','test','_id')
+		f = Runo::Set::Static::Folder.root.item('_users', 'main', 'test', '_id')
 		f.update 'test'
 		assert_equal(
 			[],

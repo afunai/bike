@@ -9,7 +9,7 @@ class TC_Checkbox < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Runo::Parser.gsub_scalar("$(foo checkbox bar,baz,qux :'baz' mandatory)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo checkbox bar, baz, qux :'baz' mandatory)") {|id, m|
 			meta = m
 			''
 		}
@@ -21,7 +21,7 @@ class TC_Checkbox < Test::Unit::TestCase
 
 	def test_meta
 		assert_equal(
-			['bar','baz','qux'],
+			['bar', 'baz', 'qux'],
 			@f[:options],
 			'Checkbox#initialize should set :options from the csv token'
 		)
@@ -39,7 +39,7 @@ class TC_Checkbox < Test::Unit::TestCase
 
 	def test_meta_single_option
 		meta = nil
-		Runo::Parser.gsub_scalar("$(foo checkbox baz :on mandatory)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo checkbox baz :on mandatory)") {|id, m|
 			meta = m
 			''
 		}
@@ -64,7 +64,7 @@ class TC_Checkbox < Test::Unit::TestCase
 
 	def test_meta_no_options
 		meta = nil
-		Runo::Parser.gsub_scalar("$(foo checkbox :yes mandatory)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo checkbox :yes mandatory)") {|id, m|
 			meta = m
 			''
 		}
@@ -101,9 +101,9 @@ class TC_Checkbox < Test::Unit::TestCase
 			'Checkbox#val_cast should cast the given val to String'
 		)
 
-		@f.load ['',123,456]
+		@f.load ['', 123, 456]
 		assert_equal(
-			['123','456'],
+			['123', '456'],
 			@f.val,
 			'Checkbox#val_cast should ignore empty vals'
 		)
@@ -136,7 +136,7 @@ _html
 			'Checkbox#get should return proper string'
 		)
 
-		@f.load ['baz','qux']
+		@f.load ['baz', 'qux']
 		assert_equal(
 			'baz, qux',
 			@f.get,
@@ -187,7 +187,7 @@ _html
 
 	def test_get_single_option
 		meta = nil
-		Runo::Parser.gsub_scalar("$(foo checkbox 'ok?' mandatory)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo checkbox 'ok?' mandatory)") {|id, m|
 			meta = m
 			''
 		}
@@ -214,7 +214,7 @@ _html
 
 	def test_get_no_options
 		meta = nil
-		Runo::Parser.gsub_scalar("$(foo checkbox :yes mandatory)") {|id,m|
+		Runo::Parser.gsub_scalar("$(foo checkbox :yes mandatory)") {|id, m|
 			meta = m
 			''
 		}

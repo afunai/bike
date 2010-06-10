@@ -27,7 +27,7 @@ class Runo::Storage::Sequel < Runo::Storage
 			Blob   :binary_body
 			primary_key :full_name
 		} unless @db.table_exists? :runo_main
-		Runo::Storage::File.traverse('/',Runo['skin_dir']) {|entry|
+		Runo::Storage::File.traverse('/', Runo['skin_dir']) {|entry|
 			@db[:runo_main].insert(
 				:full_name => entry[:full_name],
 				:ext       => entry[:ext],
@@ -52,7 +52,7 @@ class Runo::Storage::Sequel < Runo::Storage
 			load id
 		else
 			# this could be HUGE.
-			_select_all({}).inject({}) {|v,id|
+			_select_all({}).inject({}) {|v, id|
 				v[id] = load id
 				v
 			}
@@ -61,27 +61,27 @@ class Runo::Storage::Sequel < Runo::Storage
 
 	def build(v)
 		clear
-		v.each {|id,v| store(id,v) } if v
+		v.each {|id, v| store(id, v) } if v
 		self
 	end
 
 	def clear
-		@dataset.grep(:full_name,_full_name('%')).delete
+		@dataset.grep(:full_name, _full_name('%')).delete
 		self
 	end
 
-	def store(id,v,ext = nil)
-		save(id,v,ext)
+	def store(id, v, ext = nil)
+		save(id, v, ext)
 	end
 
 	def delete(id)
 		@dataset.filter(_conds id).delete &&
-		@dataset.grep(:full_name,_full_name("#{id}-%")).and(~:ext => 'yaml').delete &&
+		@dataset.grep(:full_name, _full_name("#{id}-%")).and(~:ext => 'yaml').delete &&
 		id
 	end
 
-	def move(old_id,new_id)
-		rename(old_id,new_id) && new_id
+	def move(old_id, new_id)
+		rename(old_id, new_id) && new_id
 	end
 
 	private
@@ -92,14 +92,14 @@ class Runo::Storage::Sequel < Runo::Storage
 
 	def _select_by_d(conds)
 		@dataset.
-			grep(:full_name,_full_name("#{conds[:d]}%")).
+			grep(:full_name, _full_name("#{conds[:d]}%")).
 			and(:ext => 'yaml').
 			collect {|v| _id v[:full_name] }
 	end
 
 	def _select_all(conds)
 		@dataset.
-			grep(:full_name,_full_name('%')).
+			grep(:full_name, _full_name('%')).
 			and(:ext => 'yaml').
 			collect {|v| _id v[:full_name] }
 	end
@@ -115,7 +115,7 @@ class Runo::Storage::Sequel < Runo::Storage
 	end
 
 	def _id(full_name)
-		full_name.sub("#{@dirname}-",'')
+		full_name.sub("#{@dirname}-", '')
 	end
 
 	def load(id)
@@ -124,9 +124,9 @@ class Runo::Storage::Sequel < Runo::Storage
 		(v[:ext] == 'yaml' ? YAML.load(v[:body]) : v[:binary_body]) if v
 	end
 
-	def save(id,v,ext)
+	def save(id, v, ext)
 		Runo::Storage::Sequel.db.transaction {
-			if new_id?(id,v)
+			if new_id?(id, v)
 				old_id = id
 				id = new_id v
 			end
@@ -151,7 +151,7 @@ class Runo::Storage::Sequel < Runo::Storage
 
 			if old_id
 				return if @dataset[:full_name => full_name] # duplicate id
-				move(old_id,id) unless old_id == :new_id
+				move(old_id, id) unless old_id == :new_id
 			end
 			if @dataset[:full_name => full_name]
 				@dataset[:full_name => full_name] = val
@@ -162,10 +162,10 @@ class Runo::Storage::Sequel < Runo::Storage
 		}
 	end
 
-	def rename(old_id,new_id)
-		@dataset.grep(:full_name,_full_name("#{old_id}%")).each {|v|
+	def rename(old_id, new_id)
+		@dataset.grep(:full_name, _full_name("#{old_id}%")).each {|v|
 			@dataset[:full_name => v[:full_name]] = v.merge(
-				:full_name => v[:full_name].sub(_full_name(old_id),_full_name(new_id))
+				:full_name => v[:full_name].sub(_full_name(old_id), _full_name(new_id))
 			)
 		}
 	end

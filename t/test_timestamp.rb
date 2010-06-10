@@ -9,7 +9,7 @@ class TC_Timestamp < Test::Unit::TestCase
 
 	def setup
 		meta = nil
-		Runo::Parser.gsub_scalar('$(foo meta-timestamp 16)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo meta-timestamp 16)') {|id, m|
 			meta = m
 			''
 		}
@@ -21,7 +21,7 @@ class TC_Timestamp < Test::Unit::TestCase
 
 	def test_meta
 		meta = nil
-		Runo::Parser.gsub_scalar('$(foo meta-timestamp can_edit)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo meta-timestamp can_edit)') {|id, m|
 			meta = m
 			''
 		}
@@ -33,7 +33,7 @@ class TC_Timestamp < Test::Unit::TestCase
 		)
 
 		meta = nil
-		Runo::Parser.gsub_scalar('$(foo meta-timestamp can_update)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo meta-timestamp can_update)') {|id, m|
 			meta = m
 			''
 		}
@@ -49,66 +49,66 @@ class TC_Timestamp < Test::Unit::TestCase
 		v = nil
 		assert_equal(
 			{},
-			@f.send(:val_cast,v),
+			@f.send(:val_cast, v),
 			'Timestamp#val_cast should return an empty hash if the val is not a hash nor a string'
 		)
 
 		v = {
-			'created'   => Time.local(2010,4,1),
-			'updated'   => Time.local(2010,4,3),
-			'published' => Time.local(2010,4,2),
+			'created'   => Time.local(2010, 4, 1),
+			'updated'   => Time.local(2010, 4, 3),
+			'published' => Time.local(2010, 4, 2),
 		}
 		assert_equal(
 			v,
-			@f.send(:val_cast,v),
+			@f.send(:val_cast, v),
 			'Timestamp#val_cast should pass through if the val is a hash'
 		)
 
 		v = 'true'
 		assert_equal(
 			{'published' => :same_as_updated},
-			@f.send(:val_cast,v),
+			@f.send(:val_cast, v),
 			"Timestamp#val_cast should set v['published'] to :same_as_updated if the val is 'true'"
 		)
 
 		v = '2010/4/26'
 		assert_equal(
-			{'published' => Time.local(2010,4,26)},
-			@f.send(:val_cast,v),
+			{'published' => Time.local(2010, 4, 26)},
+			@f.send(:val_cast, v),
 			"Timestamp#val_cast should cast the val to v['published'] if the val represents a date"
 		)
 		v = '2010-4-26'
 		assert_equal(
-			{'published' => Time.local(2010,4,26)},
-			@f.send(:val_cast,v),
+			{'published' => Time.local(2010, 4, 26)},
+			@f.send(:val_cast, v),
 			"Timestamp#val_cast should cast the val to v['published'] if the val represents a date"
 		)
 		v = '2010-4-26 20:14'
 		assert_equal(
-			{'published' => Time.local(2010,4,26,20,14)},
-			@f.send(:val_cast,v),
+			{'published' => Time.local(2010, 4, 26, 20, 14)},
+			@f.send(:val_cast, v),
 			"Timestamp#val_cast should cast the val to v['published'] if the val represents a date"
 		)
 		v = '2010-4-26 20:14:45'
 		assert_equal(
-			{'published' => Time.local(2010,4,26,20,14,45)},
-			@f.send(:val_cast,v),
+			{'published' => Time.local(2010, 4, 26, 20, 14, 45)},
+			@f.send(:val_cast, v),
 			"Timestamp#val_cast should cast the val to v['published'] if the val represents a date"
 		)
 
 		v = '2010-4-89'
 		assert_equal(
 			{},
-			@f.send(:val_cast,v),
+			@f.send(:val_cast, v),
 			'Timestamp#val_cast should return an empty hash if the given date is out of range'
 		)
 	end
 
 	def test_get
 		@f.load(
-			'created'   => Time.local(2010,4,25),
-			'updated'   => Time.local(2010,4,27),
-			'published' => Time.local(2010,4,26,20,14,45)
+			'created'   => Time.local(2010, 4, 25),
+			'updated'   => Time.local(2010, 4, 27),
+			'published' => Time.local(2010, 4, 26, 20, 14, 45)
 		)
 		assert_equal(
 			'2010-04-26T20:14:45',
@@ -184,7 +184,7 @@ _html
 
 		@f[:can_edit]   = true
 		@f[:can_update] = nil
-		@f.load('published' => Time.local(2010,4,25))
+		@f.load('published' => Time.local(2010, 4, 25))
 		assert_equal(
 			'<input type="text" name="" value="2010-04-25 00:00:00" size="16" class="meta-timestamp" />',
 			@f.get(:action => :update),
@@ -245,15 +245,15 @@ _html
 
 	def test_load
 		@f.load(
-			'created'   => Time.local(2010,4,1),
-			'updated'   => Time.local(2010,4,3),
-			'published' => Time.local(2010,4,2)
+			'created'   => Time.local(2010, 4, 1),
+			'updated'   => Time.local(2010, 4, 3),
+			'published' => Time.local(2010, 4, 2)
 		)
 		assert_equal(
 			{
-				'created'   => Time.local(2010,4,1),
-				'updated'   => Time.local(2010,4,3),
-				'published' => Time.local(2010,4,2)
+				'created'   => Time.local(2010, 4, 1),
+				'updated'   => Time.local(2010, 4, 3),
+				'published' => Time.local(2010, 4, 2)
 			},
 			@f.val,
 			'Timestamp#load should load the given val like a normal field'
@@ -300,7 +300,7 @@ _html
 			'Timestamp#create should set the default vals'
 		)
 		assert_equal(
-			Time.local(2010,4,26),
+			Time.local(2010, 4, 26),
 			@f.val['published'],
 			"Timestamp#create should set @val['published'] if v['published'] is a date"
 		)
@@ -332,24 +332,24 @@ _html
 
 	def test_update
 		@f.load(
-			'created'   => Time.local(2010,4,1),
-			'updated'   => Time.local(2010,4,3),
-			'published' => Time.local(2010,4,2)
+			'created'   => Time.local(2010, 4, 1),
+			'updated'   => Time.local(2010, 4, 3),
+			'published' => Time.local(2010, 4, 2)
 		)
 
 		@f.update nil
 		assert_equal(
-			Time.local(2010,4,1),
+			Time.local(2010, 4, 1),
 			@f.val['created'],
 			"Timestamp#update should keep @val['created']"
 		)
 		assert_not_equal(
-			Time.local(2010,4,3),
+			Time.local(2010, 4, 3),
 			@f.val['updated'],
 			"Timestamp#update should updated @val['updated']"
 		)
 		assert_equal(
-			Time.local(2010,4,2),
+			Time.local(2010, 4, 2),
 			@f.val['published'],
 			"Timestamp#update should keep @val['published']"
 		)
@@ -366,24 +366,24 @@ _html
 	def test_update_with_date
 		@f[:can_edit] = true
 		@f.load(
-			'created'   => Time.local(2010,4,1),
-			'updated'   => Time.local(2010,4,3),
-			'published' => Time.local(2010,4,2)
+			'created'   => Time.local(2010, 4, 1),
+			'updated'   => Time.local(2010, 4, 3),
+			'published' => Time.local(2010, 4, 2)
 		)
 
 		@f.update '2010/4/26'
 		assert_equal(
-			Time.local(2010,4,1),
+			Time.local(2010, 4, 1),
 			@f.val['created'],
 			"Timestamp#update should keep @val['created']"
 		)
 		assert_not_equal(
-			Time.local(2010,4,3),
+			Time.local(2010, 4, 3),
 			@f.val['updated'],
 			"Timestamp#update should updated @val['updated']"
 		)
 		assert_equal(
-			Time.local(2010,4,26),
+			Time.local(2010, 4, 26),
 			@f.val['published'],
 			"Timestamp#update should set @val['published'] if v['published'] is a date"
 		)
@@ -401,14 +401,14 @@ _html
 	def test_update_can_not_edit
 		@f[:can_edit] = false
 		@f.load(
-			'created'   => Time.local(2010,4,1),
-			'updated'   => Time.local(2010,4,3),
-			'published' => Time.local(2010,4,2)
+			'created'   => Time.local(2010, 4, 1),
+			'updated'   => Time.local(2010, 4, 3),
+			'published' => Time.local(2010, 4, 2)
 		)
 
 		@f.update '2010/4/26'
 		assert_equal(
-			Time.local(2010,4,2),
+			Time.local(2010, 4, 2),
 			@f.val['published'],
 			"Timestamp#update should not set @val['published'] unless my[:can_edit]"
 		)
@@ -421,19 +421,19 @@ _html
 	def test_update_with_check
 		@f[:can_update] = true
 		@f.load(
-			'created'   => Time.local(2010,4,1),
-			'updated'   => Time.local(2010,4,3),
-			'published' => Time.local(2010,4,2)
+			'created'   => Time.local(2010, 4, 1),
+			'updated'   => Time.local(2010, 4, 3),
+			'published' => Time.local(2010, 4, 2)
 		)
 
 		@f.update 'true'
 		assert_equal(
-			Time.local(2010,4,1),
+			Time.local(2010, 4, 1),
 			@f.val['created'],
 			"Timestamp#update should keep @val['created']"
 		)
 		assert_not_equal(
-			Time.local(2010,4,3),
+			Time.local(2010, 4, 3),
 			@f.val['updated'],
 			"Timestamp#update should updated @val['updated']"
 		)

@@ -7,17 +7,17 @@ module Runo::Parser
 
 	module_function
 
-	def parse_html(html,action = :index)
+	def parse_html(html, action = :index)
 		item = {}
-		html = gsub_block(html,'runo-\w+') {|open,inner,close|
-			id = open[/id="(.+?)"/i,1] || 'main'
-			item[id] = parse_block(open,inner,close,action)
+		html = gsub_block(html, 'runo-\w+') {|open, inner, close|
+			id = open[/id="(.+?)"/i, 1] || 'main'
+			item[id] = parse_block(open, inner, close, action)
 			"$(#{id})"
 		}
-		html = gsub_action_tmpl(html) {|id,action,open,inner,close|
+		html = gsub_action_tmpl(html) {|id, action, open, inner, close|
 			id ||= 'main'
 			if item[id]
-				inner = gsub_action_tmpl(inner) {|i,a,*t|
+				inner = gsub_action_tmpl(inner) {|i, a, *t|
 					item[id]["tmpl_#{a}".intern] = t.join
 					"$(.#{a})"
 				}
@@ -27,22 +27,22 @@ module Runo::Parser
 				open + inner + close
 			end
 		}
-		html = gsub_scalar(html) {|id,meta|
+		html = gsub_scalar(html) {|id, meta|
 			item[id] = meta
 			"$(#{id})"
 		}
 
-		item.each {|id,meta|
+		item.each {|id, meta|
 			next unless meta[:klass] == 'set-dynamic'
 			tmpl = meta[:tmpl]
-			tmpl << '$(.navi)' unless _include_menu?(html,tmpl,id,'navi')
+			tmpl << '$(.navi)' unless _include_menu?(html, tmpl, id, 'navi')
 			next if meta[:workflow].downcase == 'attachment'
-			tmpl << '$(.submit)' unless _include_menu?(html,tmpl,id,'submit')
-			tmpl << '$(.action_create)' unless _include_menu?(html,tmpl,id,'action_create')
-			html.sub!("$(#{id})","$(#{id}.message)\\&") unless _include_menu?(html,tmpl,id,'message')
+			tmpl << '$(.submit)' unless _include_menu?(html, tmpl, id, 'submit')
+			tmpl << '$(.action_create)' unless _include_menu?(html, tmpl, id, 'action_create')
+			html.sub!("$(#{id})", "$(#{id}.message)\\&") unless _include_menu?(html, tmpl, id, 'message')
 		}
 
-		html.sub!(/\A((?:[^<]*<!--)?[^<]*<[^>]*title=")([^"]+)/,'\\1')
+		html.sub!(/\A((?:[^<]*<!--)?[^<]*<[^>]*title=")([^"]+)/, '\\1')
 		plural_msgs = $2.to_s.split(/,/).collect {|s| s.strip }
 		plural_msgs *= 4 if plural_msgs.size == 1
 		label = plural_msgs.first
@@ -55,29 +55,29 @@ module Runo::Parser
 		}
 	end
 
-	def _include_menu?(html,tmpl,id,action)
+	def _include_menu?(html, tmpl, id, action)
 		html.include?("$(#{id}.#{action})") || tmpl.include?("$(.#{action})")
 	end
 
-	def gsub_action_tmpl(html,&block)
+	def gsub_action_tmpl(html, &block)
 		rex_klass = /(?:\w+\-)?(?:action|view|navi|submit|done)\w*/
-		gsub_block(html,rex_klass) {|open,inner,close|
-			klass = open[/class=(?:"|"[^"]*?\s)(#{rex_klass})(?:"|\s)/,1]
-			id,action = (klass =~ /-/) ? klass.split('-',2) : [nil,klass]
-			block.call(id,action,open,inner,close)
+		gsub_block(html, rex_klass) {|open, inner, close|
+			klass = open[/class=(?:"|"[^"]*?\s)(#{rex_klass})(?:"|\s)/, 1]
+			id, action = (klass =~ /-/) ? klass.split('-', 2) : [nil, klass]
+			block.call(id, action, open, inner, close)
 		}
 	end
 
-	def gsub_block(html,class_name,&block)
+	def gsub_block(html, class_name, &block)
 		rex_open_tag = /\s*<(\w+)[^>]+?class=(?:"|"[^"]*?\s)#{class_name}(?:"|\s).*?>\n?/i 
 		out = ''
 		s = StringScanner.new html
 		until s.eos?
 			if s.scan rex_open_tag
 				open_tag = s[0]
-				inner_html,close_tag = scan_inner_html(s,s[1])
+				inner_html, close_tag = scan_inner_html(s, s[1])
 				close_tag << "\n" if s.scan /\n/
-				out << block.call(open_tag,inner_html,close_tag)
+				out << block.call(open_tag, inner_html, close_tag)
 			else
 				out << s.scan(/.+?(?=\t| |<|\z)/m)
 			end
@@ -85,12 +85,12 @@ module Runo::Parser
 		out
 	end
 
-	def gsub_scalar(html,&block)
+	def gsub_scalar(html, &block)
 		out = ''
 		s = StringScanner.new html
 		until s.eos?
 			if s.scan /\$\((\w+)(?:\s+|\s*=\s*)([\w\-]+)\s*/m
-				out << block.call(s[1],{:klass => s[2]}.merge(scan_tokens s))
+				out << block.call(s[1], {:klass => s[2]}.merge(scan_tokens s))
 			else
 				out << s.scan(/.+?(?=\$|\w|<|\z)/m)
 			end
@@ -98,13 +98,13 @@ module Runo::Parser
 		out
 	end
 
-	def parse_block(open_tag,inner_html,close_tag,action = :index)
-		open_tag.sub!(/id=".*?"/i,'id="@(name)"')
-		workflow = open_tag[/class=(?:"|".*?\s)runo-(\w+)/,1]
+	def parse_block(open_tag, inner_html, close_tag, action = :index)
+		open_tag.sub!(/id=".*?"/i, 'id="@(name)"')
+		workflow = open_tag[/class=(?:"|".*?\s)runo-(\w+)/, 1]
 
 		if inner_html =~ /<(\w+).+?class=(?:"|"[^"]*?\s)body(?:"|\s)/i
 			item_html = ''
-			sd_tmpl = gsub_block(inner_html,'body') {|open,inner,close|
+			sd_tmpl = gsub_block(inner_html, 'body') {|open, inner, close|
 				item_html = open + inner + close
 				'$()'
 			}
@@ -114,8 +114,8 @@ module Runo::Parser
 		end
 
 		action_tmpl = {}
-		sd_tmpl = gsub_action_tmpl(sd_tmpl) {|id,action,open,inner,close|
-			inner = gsub_action_tmpl(inner) {|i,a,*t|
+		sd_tmpl = gsub_action_tmpl(sd_tmpl) {|id, action, open, inner, close|
+			inner = gsub_action_tmpl(inner) {|i, a, *t|
 				action_tmpl["tmpl_#{a}".intern] = t.join
 				"$(.#{a})"
 			}
@@ -152,7 +152,7 @@ module Runo::Parser
 		(inner_html =~ /\A\s*<!--(.+?)-->/m) ? sd.merge(scan_tokens StringScanner.new($1)) : sd
 	end
 
-	def parse_token(prefix,token,meta = {})
+	def parse_token(prefix, token, meta = {})
 		case prefix
 			when ':'
 				meta[:default] = token
@@ -178,7 +178,7 @@ module Runo::Parser
 		meta
 	end
 
-	def scan_inner_html(s,name)
+	def scan_inner_html(s, name)
 		contents = ''
 		gen = 1
 		until s.eos? || (gen < 1)
@@ -186,9 +186,9 @@ module Runo::Parser
 			gen += 1 if s[2] == "<#{name}"
 			gen -= 1 if s[2] == "</#{name}>"
 		end
-		contents.gsub!(/\A\n+/,'')
-		contents.gsub!(/[\t ]*<\/#{name}>\z/,'')
-		[contents,$&]
+		contents.gsub!(/\A\n+/, '')
+		contents.gsub!(/[\t ]*<\/#{name}>\z/, '')
+		[contents, $&]
 	end
 
 	def scan_tokens(s)
@@ -203,7 +203,7 @@ module Runo::Parser
 			prefix ||= ',' if s.scan /(?=,)/ # 1st element of options
 			prefix ||= ';' if s.scan /(?=;)/ # 1st element of defaults
 
-			parse_token(prefix,token,meta)
+			parse_token(prefix, token, meta)
 			s.scan /\s+/
 		end
 		meta

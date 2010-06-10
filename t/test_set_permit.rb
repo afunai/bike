@@ -26,11 +26,11 @@ class TC_Set_Permit < Test::Unit::TestCase
 				:item => {'foo' => {:klass => 'text'}}
 			}
 		).load(
-			'20100228_0001' => {'_owner' => 'frank','foo' => 'abc'},
+			'20100228_0001' => {'_owner' => 'frank', 'foo' => 'abc'},
 			'20100228_0002' => {'_owner' => 'carl', 'foo' => 'def'}
 		)
 		@sd[:owner] = 'frank'
-		@sd.send(:item_instance,'_0001') # create a new pending item
+		@sd.send(:item_instance, '_0001') # create a new pending item
 	end
 
 	def teardown

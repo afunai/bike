@@ -15,7 +15,7 @@ class TC_Img < Test::Unit::TestCase
 		}
 
 		meta = nil
-		Runo::Parser.gsub_scalar('$(foo img 32*32 1..100000 jpg,gif,png crop)') {|id,m|
+		Runo::Parser.gsub_scalar('$(foo img 32*32 1..100000 jpg, gif, png crop)') {|id, m|
 			meta = m
 			''
 		}
@@ -34,7 +34,7 @@ class TC_Img < Test::Unit::TestCase
 			'Img#initialize should set :max from the range token'
 		)
 		assert_equal(
-			['jpg','gif','png'],
+			['jpg', 'gif', 'png'],
 			@f[:options],
 			'Img#initialize should set :options from the csv token'
 		)
@@ -72,7 +72,7 @@ _eos
 			'Img#val_cast should store the file body in @body'
 		)
 		assert_equal(
-			@f.send(:_thumbnail,@file),
+			@f.send(:_thumbnail, @file),
 			@f.thumbnail,
 			'Img#val_cast should store the thumbnail in @thumbnail'
 		)
@@ -117,7 +117,7 @@ _eos
 	def test_get
 		Runo.client = 'root'
 
-		@f[:parent] = Runo::Set::Static::Folder.root.item('t_img','main')
+		@f[:parent] = Runo::Set::Static::Folder.root.item('t_img', 'main')
 		Runo.current[:base] = @f[:parent]
 		tid = @f[:parent][:tid]
 
@@ -175,11 +175,11 @@ _html
 
 	def test_call_body
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_img','main')
+		sd = Runo::Set::Static::Folder.root.item('t_img', 'main')
 		sd.storage.clear
 
 		# post a multipart request
-		input = <<"_eos".gsub(/\r?\n/,"\r\n").sub('@img',@img)
+		input = <<"_eos".gsub(/\r?\n/, "\r\n").sub('@img', @img)
 ---foobarbaz
 Content-Disposition: form-data; name="_1-foo"; filename="foo.jpg"
 Content-Type: image/jpeg
@@ -211,7 +211,7 @@ _eos
 		)
 
 		res.headers['Location'] =~ Runo::REX::PATH_ID
-		new_id = sprintf('%.8d_%.4d',$1,$2)
+		new_id = sprintf('%.8d_%.4d', $1, $2)
 
 		res = Rack::MockRequest.new(Runo.new).get(
 			"http://example.com/t_img/#{new_id}/foo/foo.jpg"
@@ -237,7 +237,7 @@ _eos
 		)
 		@file.rewind
 		assert_equal(
-			@f.send(:_thumbnail,@file).size,
+			@f.send(:_thumbnail, @file).size,
 			res.body.size,
 			"Runo#call to 'file-small.*' should return the thumbnail of the file"
 		)

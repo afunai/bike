@@ -10,17 +10,17 @@ require 'fileutils'
 
 class Runo::Storage::File < Runo::Storage
 
-	def self.traverse(dir = '/',root = Runo['storage']['File']['data_dir'],&block)
-		::Dir.glob(::File.join root,dir,'*').sort.collect {|file|
+	def self.traverse(dir = '/', root = Runo['storage']['File']['data_dir'], &block)
+		::Dir.glob(::File.join root, dir, '*').sort.collect {|file|
 			ftype     = ::File.ftype file
 			base_name = ::File.basename file
-			id,ext    = base_name.split('.',2)
+			id, ext    = base_name.split('.', 2)
 			id = "main-#{id}" if id =~ Runo::REX::ID
-			full_name = ::File.join(dir,id).gsub(::File::SEPARATOR,'-')
+			full_name = ::File.join(dir, id).gsub(::File::SEPARATOR, '-')
 
-			if ftype == 'file' && id.sub(/^([^\d\-]+-)+/,'') =~ Runo::REX::ID
+			if ftype == 'file' && id.sub(/^([^\d\-]+-)+/, '') =~ Runo::REX::ID
 				val = nil
-				::File.open(file,'r') {|f|
+				::File.open(file, 'r') {|f|
 					f.flock ::File::LOCK_SH
 					val = f.read
 					f.flock ::File::LOCK_UN
@@ -33,19 +33,19 @@ class Runo::Storage::File < Runo::Storage
 					:val       => (ext == 'yaml' ? YAML.load(val) : val)
 				)
 			elsif ftype == 'directory' && base_name !~ /\A#{Runo::REX::DIR_STATIC}\z/
-				self.traverse(::File.join(dir,base_name),root,&block)
+				self.traverse(::File.join(dir, base_name), root, &block)
 			end
 		}.compact.flatten
 	end
 
 	def self.load_skel
-		self.traverse('/',Runo['skin_dir']) {|entry|
-			dir = ::File.join(Runo['storage']['File']['data_dir'],entry[:dir])
-			unless ::File.exists? ::File.join(dir,entry[:base_name])
+		self.traverse('/', Runo['skin_dir']) {|entry|
+			dir = ::File.join(Runo['storage']['File']['data_dir'], entry[:dir])
+			unless ::File.exists? ::File.join(dir, entry[:base_name])
 				::FileUtils.mkpath(dir) unless ::File.directory? dir
 				::FileUtils.cp(
-					::File.join(Runo['skin_dir'],entry[:dir],entry[:base_name]),
-					::File.join(dir,entry[:base_name]),
+					::File.join(Runo['skin_dir'], entry[:dir], entry[:base_name]),
+					::File.join(dir, entry[:base_name]),
 					{:preserve => true}
 				)
 			end
@@ -59,11 +59,11 @@ class Runo::Storage::File < Runo::Storage
 	def initialize(sd)
 		super
 		unless @@loaded ||= false
-			entries = ::Dir.glob ::File.join(Runo['storage']['File']['data_dir'],'*')
+			entries = ::Dir.glob ::File.join(Runo['storage']['File']['data_dir'], '*')
 			self.class.load_skel if entries.empty?
 			@@loaded = true
 		end
-		@dir = ::File.join(Runo['storage']['File']['data_dir'],@sd[:folder][:dir])
+		@dir = ::File.join(Runo['storage']['File']['data_dir'], @sd[:folder][:dir])
 		::FileUtils.mkpath(@dir) unless ::File.directory? @dir
 	end
 
@@ -72,7 +72,7 @@ class Runo::Storage::File < Runo::Storage
 			load id
 		else
 			# this could be HUGE.
-			_select_all({}).inject({}) {|v,id|
+			_select_all({}).inject({}) {|v, id|
 				v[id] = load id
 				v
 			}
@@ -81,25 +81,25 @@ class Runo::Storage::File < Runo::Storage
 
 	def build(v)
 		clear
-		v.each {|id,v| store(id,v) }
+		v.each {|id, v| store(id, v) }
 		self
 	end
 
 	def clear
-		glob.each {|file| ::File.unlink ::File.join(@dir,file) }
+		glob.each {|file| ::File.unlink ::File.join(@dir, file) }
 		self
 	end
 
-	def store(id,v,ext = nil)
-		save(id,v,ext)
+	def store(id, v, ext = nil)
+		save(id, v, ext)
 	end
 
 	def delete(id)
 		remove_file(id) && id
 	end
 
-	def move(old_id,new_id)
-		rename_file(old_id,new_id) && new_id
+	def move(old_id, new_id)
+		rename_file(old_id, new_id) && new_id
 	end
 
 	private
@@ -122,7 +122,7 @@ class Runo::Storage::File < Runo::Storage
 	end
 
 	def file_prefix
-		(@sd[:name] == 'main') ? '' : @sd[:name].sub(/^main-/,'') + '-'
+		(@sd[:name] == 'main') ? '' : @sd[:name].sub(/^main-/, '') + '-'
 	end
 
 	def pattern_for(id)
@@ -138,7 +138,7 @@ class Runo::Storage::File < Runo::Storage
 	def load(id)
 		v = nil
 		file = glob(id.to_a).sort.first
-		::File.open(::File.join(@dir,file),'r') {|f|
+		::File.open(::File.join(@dir, file), 'r') {|f|
 			f.flock ::File::LOCK_SH
 			v = f.read
 			f.flock ::File::LOCK_UN
@@ -146,8 +146,8 @@ class Runo::Storage::File < Runo::Storage
 		(file[/\.yaml$/] ? YAML.load(v) : v) if v
 	end
 
-	def save(id,v,ext)
-		if new_id?(id,v)
+	def save(id, v, ext)
+		if new_id?(id, v)
 			old_id = id
 			id = new_id v
 		end
@@ -162,11 +162,11 @@ class Runo::Storage::File < Runo::Storage
 		end
 
 		file = "#{file_prefix}#{id}.#{ext}"
-		if old_id && f = ::File.open(::File.join(@dir,file),'a')
+		if old_id && f = ::File.open(::File.join(@dir, file), 'a')
 			return if f.pos != 0 # duplicate id
-			move(old_id,id) unless old_id == :new_id
+			move(old_id, id) unless old_id == :new_id
 		end
-		::File.open(::File.join(@dir,file),'a') {|f|
+		::File.open(::File.join(@dir, file), 'a') {|f|
 			f.flock ::File::LOCK_EX
 			f.seek 0
 			f.truncate 0
@@ -180,17 +180,17 @@ class Runo::Storage::File < Runo::Storage
 		glob_pattern = "#{file_prefix}#{pattern_for id.to_a}[.-]*"
 		files = ::Dir.chdir(@dir) { ::Dir.glob glob_pattern } # may include child files
 		files.each {|file|
-			::File.unlink ::File.join(@dir,file)
+			::File.unlink ::File.join(@dir, file)
 		}
 	end
 
-	def rename_file(old_id,new_id)
+	def rename_file(old_id, new_id)
 		glob_pattern = "#{file_prefix}#{pattern_for old_id.to_a}*"
 		files = ::Dir.chdir(@dir) { ::Dir.glob glob_pattern } # may include child files
 		rex = /^\A#{file_prefix}#{old_id}/
 		files.each {|file|
-			to_file = file.sub(rex,"#{file_prefix}#{new_id}")
-			::File.rename(::File.join(@dir,file),::File.join(@dir,to_file))
+			to_file = file.sub(rex, "#{file_prefix}#{new_id}")
+			::File.rename(::File.join(@dir, file), ::File.join(@dir, to_file))
 		}
 	end
 

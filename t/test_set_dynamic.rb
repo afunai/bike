@@ -12,7 +12,7 @@ class TC_Set_Dynamic < Test::Unit::TestCase
 			:id       => 'foo',
 			:klass    => 'set-dynamic',
 			:workflow => 'blog',
-			:group    => ['roy','don'],
+			:group    => ['roy', 'don'],
 			:tmpl     => <<'_tmpl'.chomp,
 <ul id="foo" class="runo-blog">
 $()</ul>
@@ -63,7 +63,7 @@ _html
 			'Set::Dynamic#[] should look for the default value in the workflow'
 		)
 
-		sd = Runo::Set::Dynamic.new(:workflow  => 'default_meta',:foo => 'BAR')
+		sd = Runo::Set::Dynamic.new(:workflow  => 'default_meta', :foo => 'BAR')
 		assert_equal(
 			'BAR',
 			sd[:foo],
@@ -101,16 +101,16 @@ _html
 	end
 
 	def test_meta_base_path
-		item = Runo::Set::Static::Folder.root.item('foo','main')
+		item = Runo::Set::Static::Folder.root.item('foo', 'main')
 
-		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo','bar','sub')
+		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo', 'bar', 'sub')
 		assert_equal(
 			'/foo/bar/sub',
 			item[:base_path],
 			'Field#[:base_path] should return the path name of the base SD'
 		)
 
-		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		assert_equal(
 			'/foo/bar',
 			item[:base_path],
@@ -197,7 +197,7 @@ _html
 
 	def test_get
 		@sd.load(
-			'20100131_1234' => {'name' => 'frank','comment' => 'bar'},
+			'20100131_1234' => {'name' => 'frank', 'comment' => 'bar'},
 			'20100131_1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
 		@sd[:tmpl_navi] = ''
@@ -236,14 +236,14 @@ _html
 </ul>
 [foo-update]
 _html
-			@sd.get(:conds => {:id => '20100131_1235'},:action => :update),
+			@sd.get(:conds => {:id => '20100131_1235'}, :action => :update),
 			'Set::Dynamic#get should pass the given action to lower items'
 		)
 	end
 
 	def test_get_create
 		@sd.load(
-			'1234' => {'name' => 'frank','comment' => 'bar'},
+			'1234' => {'name' => 'frank', 'comment' => 'bar'},
 			'1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
 		result = @sd.get(:action => :create)
@@ -288,7 +288,7 @@ _html
 	def test_get_preview
 		Runo.current[:base] = nil
 		@sd.load(
-			'20100330_1234' => {'name' => 'frank','comment' => 'bar'},
+			'20100330_1234' => {'name' => 'frank', 'comment' => 'bar'},
 			'20100330_1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
 		assert_equal(
@@ -298,7 +298,7 @@ _html
 </ul>
 [foo-preview.howdy]
 _html
-			@sd.get(:action => :preview,:sub_action => :howdy,:conds => {:id => '20100330_1234'}),
+			@sd.get(:action => :preview, :sub_action => :howdy, :conds => {:id => '20100330_1234'}),
 			'Set::Dynamic#_g_preview should return _g_read + _g_submit'
 		)
 	end
@@ -403,26 +403,26 @@ _html
 	def test_get_uri_prev_next
 		@sd[:p_size] = 2
 		@sd.load(
-			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091129_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091201_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091202_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091203_0001' => {'name' => 'frank','comment' => 'bar'}
+			'20091128_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091202_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091203_0001' => {'name' => 'frank', 'comment' => 'bar'}
 		)
 
 		assert_equal(
 			'200912/',
 			@sd.send(
 				:_g_uri_prev,
-				:conds => {:d => '200912',:p => '2'}
+				:conds => {:d => '200912', :p => '2'}
 			),
 			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
 		)
 		assert_nil(
 			@sd.send(
 				:_g_uri_next,
-				:conds => {:d => '200912',:p => '2'}
+				:conds => {:d => '200912', :p => '2'}
 			),
 			'Set::Dynamic#_g_uri_next should return nil if there is no next conds'
 		)
@@ -431,7 +431,7 @@ _html
 			'200911/p=2/',
 			@sd.send(
 				:_g_uri_prev,
-				:conds => {:d => '200912',:p => '1'}
+				:conds => {:d => '200912', :p => '1'}
 			),
 			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
 		)
@@ -439,7 +439,7 @@ _html
 			'200911/',
 			@sd.send(
 				:_g_uri_prev,
-				:conds => {:d => '200911',:p => '2'}
+				:conds => {:d => '200911', :p => '2'}
 			),
 			'Set::Dynamic#_g_uri_prev should return the previous uri for the given conds'
 		)
@@ -447,14 +447,14 @@ _html
 			'200912/',
 			@sd.send(
 				:_g_uri_next,
-				:conds => {:d => '200911',:p => '2'}
+				:conds => {:d => '200911', :p => '2'}
 			),
 			'Set::Dynamic#_g_uri_next should return the next uri for the given conds'
 		)
 		assert_nil(
 			@sd.send(
 				:_g_uri_prev,
-				:conds => {:d => '200911',:p => '1'}
+				:conds => {:d => '200911', :p => '1'}
 			),
 			'Set::Dynamic#_g_uri_prev should return nil if there is no previous conds'
 		)
@@ -465,7 +465,7 @@ _html
 			@sd.send(
 				:_get_by_self_reference,
 				:action      => :navi,
-				:conds       => {:d => '200911',:p => '2'},
+				:conds       => {:d => '200911', :p => '2'},
 				:orig_action => :read
 			),
 			'Set::Dynamic#_g_navi should pass the conds to the subsequent calls to _g_*()'
@@ -474,8 +474,8 @@ _html
 
 	def test_recurring_action_tmpl
 		@sd.load(
-			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091129_0001' => {'name' => 'frank','comment' => 'bar'}
+			'20091128_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank', 'comment' => 'bar'}
 		)
 		@sd[:tmpl_navi] = '$(.navi)'
 
@@ -554,7 +554,7 @@ _html
 			@sd.send(
 				:item_arg,
 				root_arg,
-				['foo','bar']
+				['foo', 'bar']
 			),
 			'Set#item_arg should dig into multiple steps'
 		)
@@ -579,7 +579,7 @@ _html
 			@sd.send(
 				:item_arg,
 				root_arg,
-				['baz','qux']
+				['baz', 'qux']
 			),
 			'Set#item_arg should supplement item_arg[:p_action]'
 		)
@@ -591,7 +591,7 @@ _html
 			@sd.send(
 				:item_arg,
 				root_arg,
-				['baz','non-existent']
+				['baz', 'non-existent']
 			),
 			'Set#item_arg should supplement item_arg[:action] & item_arg[:p_action]'
 		)
@@ -599,18 +599,18 @@ _html
 
 	def test_uri_p
 		@sd.load(
-			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091129_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091201_0001' => {'name' => 'frank','comment' => 'bar'}
+			'20091128_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank', 'comment' => 'bar'}
 		)
 
 		@sd[:p_size] = 2
 		assert_equal(
-			['200911/','200911/p=2/'],
+			['200911/', '200911/p=2/'],
 			@sd.send(
 				:_uri_p,
-				:conds => {:d => '200911',:p => '1'}
+				:conds => {:d => '200911', :p => '1'}
 			),
 			'Set::Dynamic#_uri_p should return the array of the sibling conds'
 		)
@@ -628,14 +628,14 @@ _html
 		assert_nil(
 			@sd.send(
 				:_uri_p,
-				:conds => {:d => '200911',:id => '20091129_0001'}
+				:conds => {:d => '200911', :id => '20091129_0001'}
 			),
 			'Set::Dynamic#_uri_p should return nil if the siblings are not :p'
 		)
 		assert_nil(
 			@sd.send(
 				:_uri_p,
-				:conds => {:d => '200911',:p => '1',:id => '20091129_0001'}
+				:conds => {:d => '200911', :p => '1', :id => '20091129_0001'}
 			),
 			'Set::Dynamic#_uri_p should return nil if the siblings are not :p'
 		)
@@ -644,11 +644,11 @@ _html
 	def test_g_view_ym
 		@sd[:order] = 'id'
 		@sd.load(
-			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091129_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091201_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20100111_0001' => {'name' => 'frank','comment' => 'bar'}
+			'20091128_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20100111_0001' => {'name' => 'frank', 'comment' => 'bar'}
 		)
 		assert_equal(
 			<<'_html',
@@ -675,11 +675,11 @@ _html
 
 		@sd[:order] = '-id'
 		@sd.load(
-			'20091128_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091129_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091130_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20091201_0001' => {'name' => 'frank','comment' => 'bar'},
-			'20100111_0001' => {'name' => 'frank','comment' => 'bar'}
+			'20091128_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091129_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091130_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20091201_0001' => {'name' => 'frank', 'comment' => 'bar'},
+			'20100111_0001' => {'name' => 'frank', 'comment' => 'bar'}
 		)
 		assert_equal(
 			<<'_html',
@@ -741,12 +741,12 @@ _html
 _html
 			}
 		).load(
-			'_001'          => {'name' => 'frank','comment' => 'bar'},
-			'20100401_0001' => {'name' => 'frank','comment' => 'bar'}
+			'_001'          => {'name' => 'frank', 'comment' => 'bar'},
+			'20100401_0001' => {'name' => 'frank', 'comment' => 'bar'}
 		)
 		wf = @sd.workflow
 
-		def wf.permit?(roles,action)
+		def wf.permit?(roles, action)
 			true
 		end
 		@sd[:preview] = nil
@@ -757,7 +757,7 @@ _html
 	<input name=".status-public" type="submit" value="create" />
 </div>
 _html
-			@sd.get(:action => :update,:conds => {:id => '_001'}),
+			@sd.get(:action => :update, :conds => {:id => '_001'}),
 			'Set#_g_submit should not return preview_delete when there is only new items'
 		)
 		@sd[:preview] = nil
@@ -768,7 +768,7 @@ _html
 	<input name=".action-preview_delete" type="submit" value="delete..." />
 </div>
 _html
-			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
+			@sd.get(:action => :update, :conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		@sd[:preview] = :optional
@@ -780,7 +780,7 @@ _html
 	<input name=".action-preview_delete" type="submit" value="delete..." />
 </div>
 _html
-			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
+			@sd.get(:action => :update, :conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		@sd[:preview] = :mandatory
@@ -791,7 +791,7 @@ _html
 	<input name=".action-preview_delete" type="submit" value="delete..." />
 </div>
 _html
-			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
+			@sd.get(:action => :update, :conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		assert_equal(
@@ -800,7 +800,7 @@ _html
 	<input name=".status-public" type="submit" value="update" />
 </div>
 _html
-			@sd.get(:action => :preview,:sub_action => :update),
+			@sd.get(:action => :preview, :sub_action => :update),
 			'Set#_g_submit should not show preview buttons when the orig_action is :preview'
 		)
 		assert_equal(
@@ -809,11 +809,11 @@ _html
 	<input name=".status-public" type="submit" value="delete" />
 </div>
 _html
-			@sd.get(:action => :preview,:sub_action => :delete),
+			@sd.get(:action => :preview, :sub_action => :delete),
 			'Set#_g_submit should not show preview buttons when the orig_action is :preview'
 		)
 
-		def wf.permit?(roles,action)
+		def wf.permit?(roles, action)
 			true unless action == :delete
 		end
 		@sd[:preview] = nil
@@ -823,7 +823,7 @@ _html
 	<input name=".status-public" type="submit" value="update" />
 </div>
 _html
-			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
+			@sd.get(:action => :update, :conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		@sd[:preview] = :optional
@@ -834,7 +834,7 @@ _html
 	<input name=".action-preview_update" type="submit" value="preview" />
 </div>
 _html
-			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
+			@sd.get(:action => :update, :conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		@sd[:preview] = :mandatory
@@ -844,7 +844,7 @@ _html
 	<input name=".action-preview_update" type="submit" value="preview" />
 </div>
 _html
-			@sd.get(:action => :update,:conds => {:id => '20100401_0001'}),
+			@sd.get(:action => :update, :conds => {:id => '20100401_0001'}),
 			'Set#_g_submit should return buttons according to the permission, meta and orig_action'
 		)
 		assert_equal(
@@ -853,11 +853,11 @@ _html
 	<input name=".status-public" type="submit" value="update" />
 </div>
 _html
-			@sd.get(:action => :preview,:sub_action => :update),
+			@sd.get(:action => :preview, :sub_action => :update),
 			'Set#_g_submit should not show preview buttons when the orig_action is :preview'
 		)
 
-		def wf.permit?(roles,action)
+		def wf.permit?(roles, action)
 			true unless action == :update
 		end
 		@sd[:preview] = nil
@@ -867,13 +867,13 @@ _html
 	<input name=".status-public" type="submit" value="delete" />
 </div>
 _html
-			@sd.get(:action => :preview,:sub_action => :delete),
+			@sd.get(:action => :preview, :sub_action => :delete),
 			'Set#_g_submit should not show preview buttons when the orig_action is :preview'
 		)
 	end
 
 	def test_post
-		@sd.post(:create,'1234' => {'name' => 'carl'})
+		@sd.post(:create, '1234' => {'name' => 'carl'})
 		assert_equal(
 			:create,
 			@sd.action,
@@ -887,7 +887,7 @@ _html
 			'Set::Dynamic#commit should set @result'
 		)
 
-		@sd.post(:update,'1234' => {'name' => 'frank'})
+		@sd.post(:update, '1234' => {'name' => 'frank'})
 		assert_nil(
 			@sd.result,
 			'Set::Dynamic#post should reset @result'
@@ -896,13 +896,13 @@ _html
 
 	def test_post_multiple_attachments
 		Runo.client = 'root'
-		sd = Runo::Set::Static::Folder.root.item('t_attachment','main')
+		sd = Runo::Set::Static::Folder.root.item('t_attachment', 'main')
 		sd.storage.clear
 
 		# create an attachment item
 		sd.update(
 			'_1' => {
-				'files' => {'_1' => {:action => :create,'file' => 'foo'}},
+				'files' => {'_1' => {:action => :create, 'file' => 'foo'}},
 			}
 		)
 		sd.commit :temp
@@ -918,7 +918,7 @@ _html
 		# create the second attachment
 		sd.update(
 			'_1' => {
-				'files' => {'_1' => {:action => :create,'file' => 'bar'}},
+				'files' => {'_1' => {:action => :create, 'file' => 'bar'}},
 			}
 		)
 		sd.commit :temp
@@ -941,14 +941,14 @@ _html
 		sd.commit :persistent
 		baz_id = sd.result.values.first[:id]
 
-		item = Runo::Set::Static::Folder.root.item('t_attachment','main',baz_id,'files',first_id,'file')
+		item = Runo::Set::Static::Folder.root.item('t_attachment', 'main', baz_id, 'files', first_id, 'file')
 		assert_equal(
 			'foo',
 			item.val,
 			'Workflow::Attachment should store the body of the first file item'
 		)
 
-		item = Runo::Set::Static::Folder.root.item('t_attachment','main',baz_id,'files',second_id,'file')
+		item = Runo::Set::Static::Folder.root.item('t_attachment', 'main', baz_id, 'files', second_id, 'file')
 		assert_equal(
 			'bar',
 			item.val,
@@ -990,20 +990,20 @@ _html
 
 		@sd.create('_1235' => {'name' => 'carl'})
 		assert_equal(
-			{'_owner' => 'root','name' => 'carl','comment' => 'hi.'},
+			{'_owner' => 'root', 'name' => 'carl', 'comment' => 'hi.'},
 			@sd.item('_1235').val,
 			'Set::Dynamic#create should create the new items in the empty storage'
 		)
 		@sd.commit
 		assert_equal(
-			{'1' => {'_owner' => 'root','name' => 'carl','comment' => 'hi.'}},
+			{'1' => {'_owner' => 'root', 'name' => 'carl', 'comment' => 'hi.'}},
 			@sd.val,
 			'Set::Dynamic#create should create the new items in the empty storage'
 		)
 
 		@sd.create('_1234' => {'name' => 'frank'})
 		assert_equal(
-			{'_owner' => 'root','name' => 'frank','comment' => 'hi.'},
+			{'_owner' => 'root', 'name' => 'frank', 'comment' => 'hi.'},
 			@sd.item('_1234').val,
 			'Set::Dynamic#create should create the new items in the empty storage'
 		)
@@ -1014,12 +1014,12 @@ _html
 		)
 		@sd.commit
 		assert_equal(
-			{'2' => {'_owner' => 'root','name' => 'frank','comment' => 'hi.'}},
+			{'2' => {'_owner' => 'root', 'name' => 'frank', 'comment' => 'hi.'}},
 			@sd.val,
 			'Set::Dynamic#create should overwrite all items in the storage'
 		)
 
-		@sd.create('_2' => {'name' => 'frank'},'_1' => {'name' => 'bobby'})
+		@sd.create('_2' => {'name' => 'frank'}, '_1' => {'name' => 'bobby'})
 		assert_equal(
 			{},
 			@sd.val,
@@ -1028,8 +1028,8 @@ _html
 		@sd.commit
 		assert_equal(
 			{
-				'4' => {'_owner' => 'root','name' => 'frank','comment' => 'hi.'},
-				'3' => {'_owner' => 'root','name' => 'bobby','comment' => 'hi.'},
+				'4' => {'_owner' => 'root', 'name' => 'frank', 'comment' => 'hi.'},
+				'3' => {'_owner' => 'root', 'name' => 'bobby', 'comment' => 'hi.'},
 			},
 			@sd.val,
 			'Set::Dynamic#create should create multiple items in the empty storage'
@@ -1038,7 +1038,7 @@ _html
 
 	def test_update
 		@sd.load(
-			'20091122_1234' => {'name' => 'frank','comment' => 'bar'},
+			'20091122_1234' => {'name' => 'frank', 'comment' => 'bar'},
 			'20091122_1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
 		s = @sd.storage
@@ -1049,7 +1049,7 @@ _html
 		# update an item
 		@sd.update('20091122_1234' => {'comment' => 'qux'})
 		assert_equal(
-			{'name' => 'frank','comment' => 'qux'},
+			{'name' => 'frank', 'comment' => 'qux'},
 			@sd.item('20091122_1234').val,
 			'Set::Dynamic#update should update the values of the item instance'
 		)
@@ -1060,19 +1060,19 @@ _html
 		)
 		assert_equal(
 			nil,
-			@sd.item('20091122_1234','name').action,
+			@sd.item('20091122_1234', 'name').action,
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 		assert_equal(
 			:update,
-			@sd.item('20091122_1234','comment').action,
+			@sd.item('20091122_1234', 'comment').action,
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 
 		# create an item
 		@sd.update('_1236' => {'name' => 'roy'})
 		assert_equal(
-			{'_owner' => 'root','name' => 'roy','comment' => 'hi.'},
+			{'_owner' => 'root', 'name' => 'roy', 'comment' => 'hi.'},
 			@sd.item('_1236').val,
 			'Set::Dynamic#update should update the values of the item instance'
 		)
@@ -1083,19 +1083,19 @@ _html
 		)
 		assert_equal(
 			:create,
-			@sd.item('_1236','name').action,
+			@sd.item('_1236', 'name').action,
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 		assert_equal(
 			nil,
-			@sd.item('_1236','comment').action,
+			@sd.item('_1236', 'comment').action,
 			'Set::Dynamic#update should set a proper action on the item'
 		)
 
 		# delete an item
 		@sd.update('20091122_1235' => {:action => :delete})
 		assert_equal(
-			{'name' => 'carl','comment' => 'baz'},
+			{'name' => 'carl', 'comment' => 'baz'},
 			@sd.item('20091122_1235').val,
 			'Set::Dynamic#update should not update the values of the item when deleting'
 		)
@@ -1117,7 +1117,7 @@ _html
 		)
 		assert_equal(
 			{
-				'20091122_1234' => {'name' => 'frank','comment' => 'bar'},
+				'20091122_1234' => {'name' => 'frank', 'comment' => 'bar'},
 				'20091122_1235' => {'name' => 'carl', 'comment' => 'baz'},
 			},
 			@sd.val,
@@ -1133,8 +1133,8 @@ _html
 		)
 		assert_equal(
 			{
-				'20091122_1234' => {'name' => 'frank','comment' => 'qux'},
-				'new!'          => {'name' => 'roy',  'comment' => 'hi.','_owner' => 'root'},
+				'20091122_1234' => {'name' => 'frank', 'comment' => 'qux'},
+				'new!'          => {'name' => 'roy',  'comment' => 'hi.', '_owner' => 'root'},
 			},
 			@sd.val,
 			'Set::Dynamic#commit should update the original values in the storage'
@@ -1149,7 +1149,7 @@ _html
 			'Set::Dynamic#result should return a hash of the committed items when :update'
 		) if nil
 		assert_equal(
-			{'comment' => @sd.item('20091122_1234','comment')},
+			{'comment' => @sd.item('20091122_1234', 'comment')},
 			@sd.item('20091122_1234').result,
 			'Set::Static#result should return a hash of the committed items when :update'
 		)
@@ -1167,7 +1167,7 @@ _html
 
 	def test_update_with_eclectic_val
 		@sd.load(
-			'20091122_1234' => {'name' => 'frank','comment' => 'bar'},
+			'20091122_1234' => {'name' => 'frank', 'comment' => 'bar'},
 			'20091122_1235' => {'name' => 'carl', 'comment' => 'baz'}
 		)
 		s = @sd.storage
@@ -1175,10 +1175,10 @@ _html
 		assert_nothing_raised(
 			'Set::Dynamic#update should work with values other than sub-items'
 		) {
-			@sd.update('20091122_1234' => {'comment' => 'qux'},:conds => {},:action => nil)
+			@sd.update('20091122_1234' => {'comment' => 'qux'}, :conds => {}, :action => nil)
 		}
 		assert_equal(
-			{'name' => 'frank','comment' => 'qux'},
+			{'name' => 'frank', 'comment' => 'qux'},
 			@sd.item('20091122_1234').val,
 			'Set::Dynamic#update should update the values of the item instance'
 		)
@@ -1195,7 +1195,7 @@ _html
 
 	def test_delete_invalid_item
 		@sd.load(
-			'20091122_1234' => {'name' => 'frank','comment' => 'bar'}
+			'20091122_1234' => {'name' => 'frank', 'comment' => 'bar'}
 		)
 
 		# update with invalid value
@@ -1228,12 +1228,12 @@ _html
 
 	def test_get_by_nobody
 		@sd.load(
-			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
 		Runo.client = nil
 
-		arg = {:action => :update,:conds => {:d => '2009'}}
+		arg = {:action => :update, :conds => {:d => '2009'}}
 		assert_raise(
 			Runo::Error::Forbidden,
 			'Set::Dynamic#get should raise Error::Forbidden when sd[:client] is nobody'
@@ -1244,7 +1244,7 @@ _html
 
 	def test_post_by_nobody
 		@sd.load(
-			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
 		Runo.client = nil
@@ -1271,7 +1271,7 @@ _html
 
 	def test_get_by_carl
 		@sd.load(
-			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
 		Runo.client = 'carl' # carl is not the member of the group
@@ -1292,7 +1292,7 @@ _html
 			@sd.get arg
 		}
 
-		arg = {:action => :update,:conds => {:d => '2009'}}
+		arg = {:action => :update, :conds => {:d => '2009'}}
 		assert_raise(
 			Runo::Error::Forbidden,
 			'Set::Dynamic#get should not keep the partially-permitted action'
@@ -1300,7 +1300,7 @@ _html
 			@sd.get arg
 		}
 
-		arg = {:action => :update,:conds => {:id => '20091122_0002'}}
+		arg = {:action => :update, :conds => {:id => '20091122_0002'}}
 		@sd.get arg
 		assert_equal(
 			:update,
@@ -1311,7 +1311,7 @@ _html
 
 	def test_post_by_carl
 		@sd.load(
-			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
 		Runo.client = 'carl' # carl is not the member of the group
@@ -1343,7 +1343,7 @@ _html
 
 	def test_get_by_roy
 		@sd.load(
-			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
 		Runo.client = 'roy' # roy belongs to the group
@@ -1356,7 +1356,7 @@ _html
 			'Set::Dynamic#get should keep the permitted action'
 		)
 
-		arg = {:action => :delete,:conds => {:d => '2009'}}
+		arg = {:action => :delete, :conds => {:d => '2009'}}
 		assert_raise(
 			Runo::Error::Forbidden,
 			'Set::Dynamic#get should raise Error::Forbidden when an action is given but forbidden'
@@ -1367,7 +1367,7 @@ _html
 
 	def test_post_by_roy
 		@sd.load(
-			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
 		Runo.client = 'roy' # roy belongs to the group
@@ -1393,12 +1393,12 @@ _html
 
 	def test_get_by_root
 		@sd.load(
-			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
 		Runo.client = 'root' # root is the admin
 
-		arg = {:action => :create,:db => 1}
+		arg = {:action => :create, :db => 1}
 		@sd.get arg
 		assert_equal(
 			:create,
@@ -1406,7 +1406,7 @@ _html
 			'Set::Dynamic#get should keep the permitted action'
 		)
 
-		arg = {:action => :delete,:conds => {:d => '2009'}}
+		arg = {:action => :delete, :conds => {:d => '2009'}}
 		@sd.get arg
 		assert_equal(
 			:delete,
@@ -1417,7 +1417,7 @@ _html
 
 	def test_post_by_root
 		@sd.load(
-			'20091122_0001' => {'_owner' => 'frank','comment' => 'bar'},
+			'20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
 			'20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
 		)
 		Runo.client = 'root' # root is the admin

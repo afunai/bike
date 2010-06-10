@@ -48,7 +48,7 @@ class TC_Field < Test::Unit::TestCase
 
 	def test_meta
 		assert_equal(
-			{:klass => 'foo-bar',:baz => 1234,:default => 'bar bar'},
+			{:klass => 'foo-bar', :baz => 1234, :default => 'bar bar'},
 			@f.instance_variable_get(:@meta),
 			'Field#instance should load @meta of the instance'
 		)
@@ -63,13 +63,13 @@ class TC_Field < Test::Unit::TestCase
 	end
 
 	def test_meta_name
-		item = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		item = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		assert_equal(
 			'main',
 			item[:name],
 			'Field#[:name] should return the path name from the nearest folder'
 		)
-		item = Runo::Set::Static::Folder.root.item('foo','bar')
+		item = Runo::Set::Static::Folder.root.item('foo', 'bar')
 		assert_equal(
 			'bar',
 			item[:name],
@@ -78,13 +78,13 @@ class TC_Field < Test::Unit::TestCase
 	end
 
 	def test_meta_full_name
-		item = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		item = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		assert_equal(
 			'-foo-bar-main',
 			item[:full_name],
 			'Field#[:full_name] should return the path name from the root folder'
 		)
-		item = Runo::Set::Static::Folder.root.item('foo','bar')
+		item = Runo::Set::Static::Folder.root.item('foo', 'bar')
 		assert_equal(
 			'-foo-bar',
 			item[:full_name],
@@ -94,7 +94,7 @@ class TC_Field < Test::Unit::TestCase
 
 	def test_meta_short_name
 		item = Runo::Set::Static::Folder.root.item(
-			'foo','bar','main','20091120_0001','replies','20091208_0001','reply'
+			'foo', 'bar', 'main', '20091120_0001', 'replies', '20091208_0001', 'reply'
 		)
 
 		Runo.current[:base] = nil
@@ -104,7 +104,7 @@ class TC_Field < Test::Unit::TestCase
 			'Field#[:short_name] should return [:id] if no base SD is defined'
 		)
 
-		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		assert_equal(
 			'20091120_0001-replies-20091208_0001-reply',
 			item[:short_name],
@@ -112,7 +112,7 @@ class TC_Field < Test::Unit::TestCase
 		)
 
 		Runo.current[:base] = Runo::Set::Static::Folder.root.item(
-			'foo','bar','main','20091120_0001','replies'
+			'foo', 'bar', 'main', '20091120_0001', 'replies'
 		)
 		assert_equal(
 			'20091208_0001-reply',
@@ -120,16 +120,16 @@ class TC_Field < Test::Unit::TestCase
 			'Field#[:short_name] should return the path name from the base SD'
 		)
 
-		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		assert_equal(
 			'',
-			Runo::Set::Static::Folder.root.item('foo','bar','main')[:short_name],
+			Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')[:short_name],
 			'Field#[:short_name] should return empty string for the base SD itself'
 		)
 	end
 
 	def test_meta_sd
-		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		sd = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		assert_equal(
 			sd,
 			sd[:sd],
@@ -142,7 +142,7 @@ class TC_Field < Test::Unit::TestCase
 		)
 		assert_equal(
 			sd,
-			sd.item('20091120_0001','name')[:sd],
+			sd.item('20091120_0001', 'name')[:sd],
 			'Field#[:sd] should return the nearest set_dynamic'
 		)
 		assert_nil(
@@ -182,7 +182,7 @@ class TC_Field < Test::Unit::TestCase
 			'Field#[] should look for the default value in DEFAULT_META'
 		)
 
-		f = Runo::Field.instance(:klass => 'foo',:foo => 'bar')
+		f = Runo::Field.instance(:klass => 'foo', :foo => 'bar')
 		assert_equal(
 			'bar',
 			f[:foo],
@@ -201,7 +201,7 @@ class TC_Field < Test::Unit::TestCase
 	end
 
 	def test_get
-		@f.instance_variable_set(:@val,'hello')
+		@f.instance_variable_set(:@val, 'hello')
 		assert_equal(
 			'hello',
 			@f.get,
@@ -223,7 +223,7 @@ class TC_Field < Test::Unit::TestCase
 	end
 
 	def test_post
-		@f.post(:create,999)
+		@f.post(:create, 999)
 		assert_equal(
 			999,
 			@f.val,
@@ -242,7 +242,7 @@ class TC_Field < Test::Unit::TestCase
 			'Field#commit should set @result'
 		)
 
-		@f.post(:update,111)
+		@f.post(:update, 111)
 		assert_nil(
 			@f.result,
 			'Field#post should reset @result'

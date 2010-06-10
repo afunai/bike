@@ -18,7 +18,7 @@ class Runo::Set::Static < Runo::Field
 
 	def commit(type = :temp)
 		items = pending_items
-		items.each {|id,item| item.commit type }
+		items.each {|id, item| item.commit type }
 		if valid?
 			@result = (@action == :update) ? items : @action
 			@action = nil if type == :persistent
@@ -29,7 +29,7 @@ class Runo::Set::Static < Runo::Field
 	private
 
 	def _val
-		inject({}) {|v,item|
+		inject({}) {|v, item|
 			v[item[:id]] = item.val unless item.empty?
 			v
 		}
@@ -68,24 +68,24 @@ _html
 		end
 	end
 
-	def _post(action,v = {})
+	def _post(action, v = {})
 		each {|item|
 			id = item[:id]
 			item_action = (item.is_a?(Runo::Set) && action == :create) ? :update : action
 			item_action = v[id][:action] if v[id].is_a?(::Hash) && v[id][:action]
-			if [:load_default,:delete].include?(item_action) || v.key?(id) || item(id).is_a?(Runo::Meta)
-				item.post(item_action,v[id])
+			if [:load_default, :delete].include?(item_action) || v.key?(id) || item(id).is_a?(Runo::Meta)
+				item.post(item_action, v[id])
 			end
 		}
 		!pending_items.empty? || action == :delete
 	end
 
-	def collect_item(conds = {},&block)
+	def collect_item(conds = {}, &block)
 		items = my[:item].keys
 		items &= conds[:id].to_a if conds[:id] # select item(s) by id
 		items.collect {|id|
 			item = @item_object[id] ||= Runo::Field.instance(
-				my[:item][id].merge(:id => id,:parent => self)
+				my[:item][id].merge(:id => id, :parent => self)
 			)
 			block ? block.call(item) : item
 		}

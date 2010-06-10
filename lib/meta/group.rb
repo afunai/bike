@@ -9,7 +9,7 @@ class Runo::Meta::Group < Runo::Field
 
 	private
 
-	def _post(action,v)
+	def _post(action, v)
 		if action == :load
 			@val = val_cast v
 		end

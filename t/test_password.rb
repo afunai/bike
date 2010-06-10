@@ -19,7 +19,7 @@ class TC_Password < Test::Unit::TestCase
 	end
 
 	def test_get
-		@f.instance_variable_set(:@val,'hello')
+		@f.instance_variable_set(:@val, 'hello')
 
 		assert_equal(
 			'*****',

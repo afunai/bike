@@ -37,12 +37,12 @@ _html
 	end
 	alias :_g_create :_g_update
 
-	def _post(action,v)
+	def _post(action, v)
 		case action
 			when :load
 				@size = nil
 				@val = v
-			when :create,:update
+			when :create, :update
 				if v.is_a?(::String) && !v.empty?
 					salt = ('a'..'z').to_a[rand 26] + ('a'..'z').to_a[rand 26]
 					@size = v.size

@@ -29,7 +29,7 @@ class TC_Workflow < Test::Unit::TestCase
 			Runo::Workflow.instance(sd),
 			'Runo::Workflow.instance should return a Workflow instance if sd[:workflow] is nil'
 		)
-		sd = Runo::Set::Static::Folder.root.item('foo','main')
+		sd = Runo::Set::Static::Folder.root.item('foo', 'main')
 		assert_instance_of(
 			Runo::Workflow::Blog,
 			Runo::Workflow.instance(sd),
@@ -46,19 +46,19 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_guest?
 		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			!wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:create),
+			!wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:read),
+			wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:update),
+			!wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:delete),
+			!wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
@@ -66,19 +66,19 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_owner?
 		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			!wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:create),
+			!wf.send(:'permit?', Runo::Workflow::ROLE_OWNER, :create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:read),
+			wf.send(:'permit?', Runo::Workflow::ROLE_OWNER, :read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:update),
+			wf.send(:'permit?', Runo::Workflow::ROLE_OWNER, :update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:delete),
+			!wf.send(:'permit?', Runo::Workflow::ROLE_OWNER, :delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
@@ -86,19 +86,19 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_group?
 		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:create),
+			wf.send(:'permit?', Runo::Workflow::ROLE_GROUP, :create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:read),
+			wf.send(:'permit?', Runo::Workflow::ROLE_GROUP, :read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			!wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:update),
+			!wf.send(:'permit?', Runo::Workflow::ROLE_GROUP, :update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:delete),
+			wf.send(:'permit?', Runo::Workflow::ROLE_GROUP, :delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
@@ -106,19 +106,19 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_admin?
 		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:create),
+			wf.send(:'permit?', Runo::Workflow::ROLE_ADMIN, :create),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:read),
+			wf.send(:'permit?', Runo::Workflow::ROLE_ADMIN, :read),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:update),
+			wf.send(:'permit?', Runo::Workflow::ROLE_ADMIN, :update),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:delete),
+			wf.send(:'permit?', Runo::Workflow::ROLE_ADMIN, :delete),
 			'Set::Workflow#permit? should return whether it permits the client the action or not'
 		)
 	end
@@ -126,19 +126,19 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_login_action?
 		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_GUEST,:login),
+			wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :login),
 			'Set::Workflow#permit? should always permit :login'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_OWNER,:login),
+			wf.send(:'permit?', Runo::Workflow::ROLE_OWNER, :login),
 			'Set::Workflow#permit? should always permit :login'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_GROUP,:login),
+			wf.send(:'permit?', Runo::Workflow::ROLE_GROUP, :login),
 			'Set::Workflow#permit? should always permit :login'
 		)
 		assert(
-			wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:login),
+			wf.send(:'permit?', Runo::Workflow::ROLE_ADMIN, :login),
 			'Set::Workflow#permit? should always permit :login'
 		)
 	end
@@ -146,13 +146,13 @@ class TC_Workflow < Test::Unit::TestCase
 	def test_wf_permit_abnormal_action?
 		wf = Runo::Workflow::Foo.new(nil)
 		assert(
-			!wf.send(:'permit?',Runo::Workflow::ROLE_ADMIN,:'non-exist'),
+			!wf.send(:'permit?', Runo::Workflow::ROLE_ADMIN, :'non-exist'),
 			'Set::Workflow#permit? should always return false for non-exist actions'
 		)
 	end
 
 	def test_permit_nobody?
-		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		sd = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		Runo.client = nil
 		assert(
 			!sd.permit?(:create),
@@ -173,7 +173,7 @@ class TC_Workflow < Test::Unit::TestCase
 	end
 
 	def test_permit_don?
-		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		sd = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		Runo.client = 'don' # don belongs to the group of foo/bar/
 		assert(
 			sd.permit?(:create),
@@ -194,7 +194,7 @@ class TC_Workflow < Test::Unit::TestCase
 	end
 
 	def test_permit_carl?
-		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		sd = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		Runo.client = 'carl' # carl belongs to the group of foo/bar/, and the owner of the item #0001
 		assert(
 			sd.permit?(:create),
@@ -215,7 +215,7 @@ class TC_Workflow < Test::Unit::TestCase
 	end
 
 	def test_permit_frank?
-		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		sd = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		Runo.client = 'frank' # frank is an admin of foo/bar/
 		assert(
 			sd.permit?(:create),
@@ -236,7 +236,7 @@ class TC_Workflow < Test::Unit::TestCase
 	end
 
 	def test_permit_abnormal_action?
-		sd = Runo::Set::Static::Folder.root.item('foo','bar','main')
+		sd = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
 		Runo.client = 'frank'
 		assert(
 			!sd.permit?(:'****'),
@@ -269,7 +269,7 @@ class TC_Workflow < Test::Unit::TestCase
 			'20091122_0002' => {'_owner' => 'frank'}
 		)
 		assert_equal('carl', sd.item('20091122_0001')[:owner])
-		assert_equal('frank',sd.item('20091122_0002')[:owner])
+		assert_equal('frank', sd.item('20091122_0002')[:owner])
 
 		Runo.client = nil
 		assert_equal(
@@ -325,7 +325,7 @@ class TC_Workflow < Test::Unit::TestCase
 			:item     => {
 				'default' => {
 					:item => {
-						'_timestamp' => {:klass => 'meta-timestamp',:can_update => true},
+						'_timestamp' => {:klass => 'meta-timestamp', :can_update => true},
 						'foo'        => {:klass => 'text'},
 					},
 				},
@@ -333,7 +333,7 @@ class TC_Workflow < Test::Unit::TestCase
 		)
 		assert_equal(
 			{
-				'_timestamp' => {:klass => 'meta-timestamp',:can_update => true},
+				'_timestamp' => {:klass => 'meta-timestamp', :can_update => true},
 				'foo'        => {:klass => 'text'},
 			},
 			sd[:item]['default'][:item],

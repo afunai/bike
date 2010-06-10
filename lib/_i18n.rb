@@ -10,7 +10,7 @@ module Runo::I18n
 			if args.first.is_a? ::Hash
 				self.gsub(/%\{(\w+)\}/) { args.first[$1.intern].to_s }
 			else
-				::String.new(self.gsub(/%\{(\w+)\}/,'%s')) % args
+				::String.new(self.gsub(/%\{(\w+)\}/, '%s')) % args
 			end
 		end
 	end
@@ -58,14 +58,14 @@ module Runo::I18n
 	end
 
 	def self.po_dir
-		@@po_dir ||= ::File.expand_path('../locale',::File.dirname(__FILE__))
+		@@po_dir ||= ::File.expand_path('../locale', ::File.dirname(__FILE__))
 	end
 
 	def self.po_dir=(po_dir)
 		@@po_dir = po_dir
 	end
 
-	def self.bindtextdomain(domain,po_dir)
+	def self.bindtextdomain(domain, po_dir)
 		self.domain = domain
 		self.po_dir = po_dir
 	end
@@ -80,9 +80,9 @@ module Runo::I18n
 		lang.each {|range|
 			[
 				range,
-				range.sub(/-.*/,''),
+				range.sub(/-.*/, ''),
 			].uniq.each {|r|
-				po_file = ::File.join(self.po_dir,r,"#{self.domain}.po")
+				po_file = ::File.join(self.po_dir, r, "#{self.domain}.po")
 				return open(po_file) {|f| self.parse_msg f } if ::File.readable? po_file
 				return {} if r == 'en' # default
 			}
@@ -126,8 +126,8 @@ module Runo::I18n
 		Runo::I18n::Msgstr.new(Runo::I18n.msg[msgid].to_a.first || msgid)
 	end
 
-	def n_(msgid,msgid_plural,n)
-		msgstrs = Runo::I18n.msg[msgid] || [msgid,msgid_plural]
+	def n_(msgid, msgid_plural, n)
+		msgstrs = Runo::I18n.msg[msgid] || [msgid, msgid_plural]
 		case v = Runo::I18n.msg[:plural] ? Runo::I18n.msg[:plural].call(n) : (n != 1)
 			when true
 				Runo::I18n::Msgstr.new msgstrs[1]

@@ -28,12 +28,12 @@ class Runo::Storage::Temp < Runo::Storage
 		self
 	end
 
-	def store(id,v,ext = :unused)
-		if new_id?(id,v)
+	def store(id, v, ext = :unused)
+		if new_id?(id, v)
 			old_id = id
 			id = new_id v
 			return if val[id] # duplicate id
-			move(old_id,id) unless old_id == :new_id
+			move(old_id, id) unless old_id == :new_id
 		end
 		val[id] = v
 		id
@@ -44,11 +44,11 @@ class Runo::Storage::Temp < Runo::Storage
 		id
 	end
 
-	def move(old_id,new_id)
+	def move(old_id, new_id)
 		rex = /\A#{old_id}/
 		val.keys.each {|id|
 			if id =~ rex
-				to_id = id.sub(rex,new_id)
+				to_id = id.sub(rex, new_id)
 				@val[to_id] = @val.delete id
 			end
 		}

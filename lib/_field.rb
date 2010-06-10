@@ -15,7 +15,7 @@ class Runo::Field
 	DEFAULT_META = {}
 
 	def self.instance(meta = {})
-		k = meta[:klass].to_s.split(/-/).inject(Runo) {|c,name|
+		k = meta[:klass].to_s.split(/-/).inject(Runo) {|c, name|
 			name = name.capitalize
 			c.const_get(name)
 		}
@@ -26,7 +26,7 @@ class Runo::Field
 		Rack::Utils.escape_html val.to_s
 	end
 
-	attr_reader :action,:result
+	attr_reader :action, :result
 
 	def initialize(meta = {})
 		@meta = self.class.const_get(:DEFAULT_META).merge meta
@@ -37,11 +37,11 @@ class Runo::Field
 		caller.grep(/`inspect'/).empty? ? super : "<#{self.class} name=\"#{my[:name]}\">"
 	end
 
-	def [](id,*arg)
-		respond_to?("meta_#{id}") ? __send__("meta_#{id}",*arg) : @meta[id]
+	def [](id, *arg)
+		respond_to?("meta_#{id}") ? __send__("meta_#{id}", *arg) : @meta[id]
 	end
 
-	def []=(id,v)
+	def []=(id, v)
 		@meta[id] = v
 	end
 
@@ -114,14 +114,14 @@ class Runo::Field
 	def permit?(action)
 		return false if action == :create && @result == :load
 		return true unless my[:sd]
-		return true if my[:sd].workflow.permit?(my[:roles],action)
+		return true if my[:sd].workflow.permit?(my[:roles], action)
 		return true if find_ancestor {|f| f[:id] =~ Runo::REX::ID_NEW } # descendant of a new item
 	end
 
 	def default_action
 		return :read unless my[:sd]
-		actions = my[:sd].workflow.class.const_get(:PERM).keys - [:read,:create,:update]
-		([:read,:create,:update] + actions).find {|action| permit? action }
+		actions = my[:sd].workflow.class.const_get(:PERM).keys - [:read, :create, :update]
+		([:read, :create, :update] + actions).find {|action| permit? action }
 	end
 
 	def get(arg = {})
@@ -142,25 +142,25 @@ class Runo::Field
 	end
 
 	def load(v = nil)
-		post :load,v
+		post :load, v
 	end
 
 	def create(v = nil)
-		post :create,v
+		post :create, v
 	end
 
 	def update(v = nil)
-		post :update,v
+		post :update, v
 	end
 
 	def delete
 		post :delete
 	end
 
-	def post(action,v = nil)
-		raise Runo::Error::Forbidden unless permit_post?(action,v)
+	def post(action, v = nil)
+		raise Runo::Error::Forbidden unless permit_post?(action, v)
 
-		if _post action,val_cast(v)
+		if _post action, val_cast(v)
 			@result = (action == :load || action == :load_default) ? action : nil
 			@action = (action == :load || action == :load_default) ? nil : action
 		else
@@ -205,7 +205,7 @@ class Runo::Field
 
 	def _get_by_method(arg)
 		m = "_g_#{arg[:action]}"
-		respond_to?(m,true) ? __send__(m,arg) : _g_default(arg)
+		respond_to?(m, true) ? __send__(m, arg) : _g_default(arg)
 	end
 	alias :_get_by_self_reference :_get_by_method
 
@@ -226,7 +226,7 @@ _html
 	end
 
 	def _g_class(arg)
-		c = self.class.to_s.sub('Runo::','').gsub('::','-').downcase
+		c = self.class.to_s.sub('Runo::', '').gsub('::', '-').downcase
 		_g_valid?(arg) ? c : "#{c} error"
 	end
 
@@ -234,11 +234,11 @@ _html
 		valid? || (arg[:action] == :create && !item.pending?)
 	end
 
-	def _post(action,v)
+	def _post(action, v)
 		case action
 			when :load_default
 				@val = val_cast(my[:defaults] || my[:default])
-			when :load,:create,:update
+			when :load, :create, :update
 				@val = v if @val != v
 			when :delete
 				true
@@ -249,7 +249,7 @@ _html
 		permit? arg[:action]
 	end
 
-	def permit_post?(action,v)
+	def permit_post?(action, v)
 		action == :load || action == :load_default || permit?(action)
 	end
 

@@ -26,33 +26,33 @@ class TC_Role < Test::Unit::TestCase
 		)
 		assert_equal(
 			'frank',
-			Runo::Set::Static::Folder.root.item('foo','main')[:owner],
+			Runo::Set::Static::Folder.root.item('foo', 'main')[:owner],
 			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
 		)
 		assert_equal(
 			'frank',
-			Runo::Set::Static::Folder.root.item('foo','main','20091120_0001')[:owner],
+			Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:owner],
 			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
 		)
 
 		assert_equal(
 			'frank',
-			Runo::Set::Static::Folder.root.item('foo','bar')[:owner],
+			Runo::Set::Static::Folder.root.item('foo', 'bar')[:owner],
 			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
 		)
 		assert_equal(
 			'frank',
-			Runo::Set::Static::Folder.root.item('foo','bar','main')[:owner],
+			Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')[:owner],
 			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
 		)
 		assert_equal(
 			'carl',
-			Runo::Set::Static::Folder.root.item('foo','bar','main','20091120_0001')[:owner],
+			Runo::Set::Static::Folder.root.item('foo', 'bar', 'main', '20091120_0001')[:owner],
 			'Field#[:owner] should return @meta[:owner] if available'
 		)
 		assert_equal(
 			'carl',
-			Runo::Set::Static::Folder.root.item('foo','bar','main','20091120_0001','name')[:owner],
+			Runo::Set::Static::Folder.root.item('foo', 'bar', 'main', '20091120_0001', 'name')[:owner],
 			'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
 		)
 	end
@@ -64,18 +64,18 @@ class TC_Role < Test::Unit::TestCase
 			"Field#[:owners] should return ['root'] for the root folder"
 		)
 		assert_equal(
-			['root','frank'],
+			['root', 'frank'],
 			Runo::Set::Static::Folder.root.item('foo')[:owners],
 			'Field#[:owners] should return all the owners of the ancestor fields'
 		)
 		assert_equal(
-			['root','frank'],
-			Runo::Set::Static::Folder.root.item('foo','main')[:owners],
+			['root', 'frank'],
+			Runo::Set::Static::Folder.root.item('foo', 'main')[:owners],
 			'Field#[:owners] should return all the owners of the ancestor fields'
 		)
 		assert_equal(
-			['root','frank','carl'],
-			Runo::Set::Static::Folder.root.item('foo','bar','main','20091120_0001')[:owners],
+			['root', 'frank', 'carl'],
+			Runo::Set::Static::Folder.root.item('foo', 'bar', 'main', '20091120_0001')[:owners],
 			'Field#[:owners] should return all the owners of the ancestor fields'
 		)
 	end
@@ -92,34 +92,34 @@ class TC_Role < Test::Unit::TestCase
 			'Field#[:admins] should return @meta[:admins] if available'
 		)
 		assert_equal(
-			['root','frank'],
-			Runo::Set::Static::Folder.root.item('foo','main')[:admins],
+			['root', 'frank'],
+			Runo::Set::Static::Folder.root.item('foo', 'main')[:admins],
 			'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
 		)
 		assert_equal(
-			['root','frank'],
-			Runo::Set::Static::Folder.root.item('foo','main','20091120_0001')[:admins],
+			['root', 'frank'],
+			Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:admins],
 			'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
 		)
 
 		assert_equal(
-			['root','frank'],
-			Runo::Set::Static::Folder.root.item('foo','bar')[:admins],
+			['root', 'frank'],
+			Runo::Set::Static::Folder.root.item('foo', 'bar')[:admins],
 			'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
 		)
 		assert_equal(
-			['root','frank'],
-			Runo::Set::Static::Folder.root.item('foo','bar','main')[:admins],
+			['root', 'frank'],
+			Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')[:admins],
 			'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
 		)
 		assert_equal(
-			['root','frank'],
-			Runo::Set::Static::Folder.root.item('foo','bar','main','20091120_0001')[:admins],
+			['root', 'frank'],
+			Runo::Set::Static::Folder.root.item('foo', 'bar', 'main', '20091120_0001')[:admins],
 			'Field#[:admins] should return @meta[:admins] if available'
 		)
 		assert_equal(
-			['root','frank'],
-			Runo::Set::Static::Folder.root.item('foo','bar','main','20091120_0001','name')[:admins],
+			['root', 'frank'],
+			Runo::Set::Static::Folder.root.item('foo', 'bar', 'main', '20091120_0001', 'name')[:admins],
 			'Field#[:admins] should return @meta[:admins] if available'
 		)
 	end
@@ -131,29 +131,29 @@ class TC_Role < Test::Unit::TestCase
 			"Field#[:group] should return [] for the root folder"
 		)
 		assert_equal(
-			['roy','jim'],
+			['roy', 'jim'],
 			Runo::Set::Static::Folder.root.item('foo')[:group],
 			'Field#[:group] should return @meta[:group] if available'
 		)
 		assert_equal(
-			['roy','jim'],
-			Runo::Set::Static::Folder.root.item('foo','main')[:group],
+			['roy', 'jim'],
+			Runo::Set::Static::Folder.root.item('foo', 'main')[:group],
 			'Field#[:group] should return @meta[:group] of the nearest folder'
 		)
 		assert_equal(
-			['roy','jim'],
-			Runo::Set::Static::Folder.root.item('foo','main','20091120_0001')[:group],
+			['roy', 'jim'],
+			Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:group],
 			'Field#[:group] should return @meta[:group] of the nearest folder'
 		)
 
 		assert_equal(
-			['carl','don'],
-			Runo::Set::Static::Folder.root.item('foo','bar')[:group],
+			['carl', 'don'],
+			Runo::Set::Static::Folder.root.item('foo', 'bar')[:group],
 			'Field#[:group] should return @meta[:group] if available'
 		)
 		assert_equal(
-			['carl','don'],
-			Runo::Set::Static::Folder.root.item('foo','bar','main')[:group],
+			['carl', 'don'],
+			Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')[:group],
 			'Field#[:group] should return @meta[:group] of the nearest folder'
 		)
 	end
@@ -172,17 +172,17 @@ class TC_Role < Test::Unit::TestCase
 		)
 		assert_equal(
 			0b0001,
-			Runo::Set::Static::Folder.root.item('foo','main')[:roles],
+			Runo::Set::Static::Folder.root.item('foo', 'main')[:roles],
 			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
 			0b0001,
-			Runo::Set::Static::Folder.root.item('foo','main','20091120_0001')[:roles],
+			Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:roles],
 			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
 			0b0001,
-			Runo::Set::Static::Folder.root.item('foo','bar')[:roles],
+			Runo::Set::Static::Folder.root.item('foo', 'bar')[:roles],
 			'Field#[:roles] should return the roles of the client on the field'
 		)
 	end
@@ -201,17 +201,17 @@ class TC_Role < Test::Unit::TestCase
 		)
 		assert_equal(
 			0b1010,
-			Runo::Set::Static::Folder.root.item('foo','main')[:roles],
+			Runo::Set::Static::Folder.root.item('foo', 'main')[:roles],
 			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
 			0b1010,
-			Runo::Set::Static::Folder.root.item('foo','main','20091120_0001')[:roles],
+			Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:roles],
 			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
 			0b1010,
-			Runo::Set::Static::Folder.root.item('foo','bar')[:roles],
+			Runo::Set::Static::Folder.root.item('foo', 'bar')[:roles],
 			'Field#[:roles] should return the roles of the client on the field'
 		)
 	end
@@ -230,17 +230,17 @@ class TC_Role < Test::Unit::TestCase
 		)
 		assert_equal(
 			0b0100,
-			Runo::Set::Static::Folder.root.item('foo','main')[:roles],
+			Runo::Set::Static::Folder.root.item('foo', 'main')[:roles],
 			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
 			0b0100,
-			Runo::Set::Static::Folder.root.item('foo','main','20091120_0001')[:roles],
+			Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:roles],
 			'Field#[:roles] should return the roles of the client on the field'
 		)
 		assert_equal(
 			0b0001,
-			Runo::Set::Static::Folder.root.item('foo','bar')[:roles],
+			Runo::Set::Static::Folder.root.item('foo', 'bar')[:roles],
 			'Field#[:roles] should return the roles of the client on the field'
 		)
 	end

@@ -193,7 +193,7 @@ _html
     @f.update '2010-4-89'
     assert_equal(
       <<'_html',
-<input type="text" name="" value="2010-4-89" size="16" class="meta-timestamp error" /><span class="error">out of range</span>
+<input type="text" name="" value="2010-4-89" size="16" class="meta-timestamp error" /><span class="error_message">out of range</span>
 _html
       @f.get(:action => :update),
       'Timestamp#_g_update should return proper string'
@@ -202,7 +202,7 @@ _html
     @f.update '<2010-4-9>'
     assert_equal(
       <<'_html',
-<input type="text" name="" value="&lt;2010-4-9&gt;" size="16" class="meta-timestamp error" /><span class="error">wrong format</span>
+<input type="text" name="" value="&lt;2010-4-9&gt;" size="16" class="meta-timestamp error" /><span class="error_message">wrong format</span>
 _html
       @f.get(:action => :update),
       'Timestamp#_g_update should escape the special chars'

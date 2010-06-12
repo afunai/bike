@@ -116,7 +116,7 @@ class TC_Id < Test::Unit::TestCase
     @f[:parent] = Runo::Set::Static.new(:id => '_001')
     @f.load '<bar>'
     assert_equal(
-      '<input type="text" name="" value="&lt;bar&gt;" size="3" class="meta-id error" /><span class="error">malformatted id</span>' + "\n",
+      '<input type="text" name="" value="&lt;bar&gt;" size="3" class="meta-id error" /><span class="error_message">malformatted id</span>' + "\n",
       @f.get(:action => :update),
       'Meta::Id#get should escape the special characters'
     )

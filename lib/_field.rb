@@ -221,7 +221,7 @@ class Runo::Field
 
   def _g_errors(arg)
     <<_html unless _g_valid? arg
-<span class="error">#{errors.join "<br/>\n"}</span>
+<span class="error_message">#{errors.join "<br/>\n"}</span>
 _html
   end
 

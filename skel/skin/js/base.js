@@ -1,26 +1,24 @@
 $(document).ready(function() {
   $(':input').hover(
     function(){
-      $('+ span.error',this).fadeIn(150);
+      $('+ span.error_message',this).fadeIn(150);
     },
     function(){
-      if ($(this).is(':not(.focused)')) $('+ span.error',this).fadeOut(100);
+      if ($(this).is(':not(.focused)')) $('+ span.error_message',this).fadeOut(100);
     }
-  );
-  $(':input').focus(
+  ).focus(
     function(){
       $(this).addClass('focused');
-      $('+ span.error',this).fadeIn(150);
+      $('+ span.error_message',this).fadeIn(150);
     }
-  );
-  $(':input').blur(
+  ).blur(
     function(){
       $(this).removeClass('focused');
-      $('+ span.error',this).fadeOut(100);
+      $('+ span.error_message',this).fadeOut(100);
     }
   );
 
-  $('span.error').hide().css({
+  $('span.error_message').hide().css({
     'color':              'white',
     'background':         'red',
     'opacity':            '0.5',

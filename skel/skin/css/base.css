@@ -9,7 +9,7 @@ ul.message li { padding: 0.5em; }
 ul.notice { border: 2px solid blue; }
 ul.alert { border: 2px solid orange; }
 ul.error { border: 2px solid red; }
-span.error {
+span.error_message {
   display: block;
   color: red;
   background: transparent;

@@ -107,12 +107,13 @@ _html
 _html
     end
     update = <<_html
-  <input type="file" name="#{my[:short_name]}" size="#{my[:size]}" class="#{_g_class arg}" />
+  <input type="file" name="#{my[:short_name]}" size="#{my[:size]}" class="file" />
 _html
     <<_html.chomp
+<div class="#{_g_class arg}">
 #{_g_default arg}
-<span class="file">
-#{hidden}#{update}#{delete}#{_g_errors arg}</span>
+#{hidden}#{update}#{delete}</div>
+#{_g_errors arg}
 _html
   end
   alias :_g_create :_g_update

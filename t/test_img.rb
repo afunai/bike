@@ -145,13 +145,13 @@ _html
       'Img#get should return proper string'
     )
     assert_equal(
-      <<"_html".chomp,
+      <<"_html",
+<div class="img">
 <span class="img">
   <a href="/t_img/#{tid}/foo/baz.jpg"><img src="/t_img/#{tid}/foo/baz_small.jpg" alt="baz.jpg" /></a>
 </span>
-<span class="file">
-  <input type="file" name="foo" size="" class="img" />
-</span>
+  <input type="file" name="foo" size="" class="file" />
+</div>
 _html
       @f.get(:action => :update),
       'Img#get should return proper string'

@@ -18,10 +18,10 @@ class Runo::Workflow::Register < Runo::Workflow
   }
 
   PERM = {
-    :create => 0b1101,
-    :read   => 0b1110,
-    :update => 0b1110,
-    :delete => 0b1110,
+    :create => 0b11001,
+    :read   => 0b11100,
+    :update => 0b11100,
+    :delete => 0b11100,
   }
 
   def before_commit

@@ -161,27 +161,27 @@ class TC_Role < Test::Unit::TestCase
   def test_roles_of_nobody
     Runo.client = nil
     assert_equal(
-      0b0001,
+      0b00001,
       Runo::Set::Static::Folder.root[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b0001,
+      0b00001,
       Runo::Set::Static::Folder.root.item('foo')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b0001,
+      0b00001,
       Runo::Set::Static::Folder.root.item('foo', 'main')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b0001,
+      0b00001,
       Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b0001,
+      0b00001,
       Runo::Set::Static::Folder.root.item('foo', 'bar')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
@@ -190,27 +190,27 @@ class TC_Role < Test::Unit::TestCase
   def test_roles_of_frank
     Runo.client = 'frank'
     assert_equal(
-      0b0001,
+      0b00010,
       Runo::Set::Static::Folder.root[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b0010,
+      0b00110,
       Runo::Set::Static::Folder.root.item('foo')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b1010,
+      0b10110,
       Runo::Set::Static::Folder.root.item('foo', 'main')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b1010,
+      0b10110,
       Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b1010,
+      0b10110,
       Runo::Set::Static::Folder.root.item('foo', 'bar')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
@@ -219,27 +219,27 @@ class TC_Role < Test::Unit::TestCase
   def test_roles_of_roy
     Runo.client = 'roy'
     assert_equal(
-      0b0001,
+      0b00010,
       Runo::Set::Static::Folder.root[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b0100,
+      0b01010,
       Runo::Set::Static::Folder.root.item('foo')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b0100,
+      0b01010,
       Runo::Set::Static::Folder.root.item('foo', 'main')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b0100,
+      0b01010,
       Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b0001,
+      0b00010,
       Runo::Set::Static::Folder.root.item('foo', 'bar')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )

@@ -18,10 +18,10 @@ class TC_Set_Complex < Test::Unit::TestCase
       '_owner' => {:klass => 'meta-owner'},
     }
     PERM = {
-      :create    => 0b1100,
-      :read      => 0b1111,
-      :update    => 0b1110,
-      :delete    => 0b1010,
+      :create    => 0b11000,
+      :read      => 0b11110,
+      :update    => 0b11100,
+      :delete    => 0b10100,
     }
     def _g_submit(arg)
       '[pipco]'

@@ -12,17 +12,17 @@ class Runo::Workflow
   }
   DEFAULT_SUB_ITEMS = {}
 
-  ROLE_ADMIN = 0b1000
-  ROLE_GROUP = 0b0100
-  ROLE_OWNER = 0b0010
-  ROLE_GUEST = 0b0001
-  ROLE_NONE  = 0b0000
+  ROLE_ADMIN = 0b10000
+  ROLE_GROUP = 0b01000
+  ROLE_OWNER = 0b00100
+  ROLE_USER  = 0b00010
+  ROLE_NONE  = 0b00001
 
   PERM = {
-    :create => 0b1111,
-    :read   => 0b1111,
-    :update => 0b1111,
-    :delete => 0b1111,
+    :create => 0b11111,
+    :read   => 0b11111,
+    :update => 0b11111,
+    :delete => 0b11111,
   }
 
   def self.instance(sd)

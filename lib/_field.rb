@@ -103,11 +103,11 @@ class Runo::Field
   end
 
   def meta_roles
-    roles  = Runo::Workflow::ROLE_NONE
+    roles  = 0
     roles |= Runo::Workflow::ROLE_ADMIN if my[:admins].include? my[:client]
     roles |= Runo::Workflow::ROLE_GROUP if my[:group].include? my[:client]
     roles |= Runo::Workflow::ROLE_OWNER if my[:owner] == my[:client]
-    roles |= Runo::Workflow::ROLE_GUEST if roles == Runo::Workflow::ROLE_NONE
+    roles |= (Runo.client == 'nobody') ? Runo::Workflow::ROLE_NONE : Runo::Workflow::ROLE_USER
     roles
   end
 

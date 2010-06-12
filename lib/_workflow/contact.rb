@@ -14,10 +14,10 @@ class Runo::Workflow::Contact < Runo::Workflow
   DEFAULT_SUB_ITEMS = {}
 
   PERM = {
-    :create => 0b0001,
-    :read   => 0b1100,
-    :update => 0b0000,
-    :delete => 0b1100,
+    :create => 0b00011,
+    :read   => 0b11000,
+    :update => 0b00000,
+    :delete => 0b11000,
   }
 
 end

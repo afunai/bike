@@ -9,10 +9,10 @@ class TC_Workflow < Test::Unit::TestCase
 
   class Runo::Workflow::Foo < Runo::Workflow
     PERM = {
-      :create => 0b1100,
-      :read   => 0b1111,
-      :update => 0b1010,
-      :delete => 0b1100,
+      :create => 0b11000,
+      :read   => 0b11110,
+      :update => 0b10100,
+      :delete => 0b11000,
     }
   end
 
@@ -46,19 +46,19 @@ class TC_Workflow < Test::Unit::TestCase
   def test_wf_permit_guest?
     wf = Runo::Workflow::Foo.new(nil)
     assert(
-      !wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :create),
+      !wf.send(:'permit?', Runo::Workflow::ROLE_USER, :create),
       'Set::Workflow#permit? should return whether it permits the client the action or not'
     )
     assert(
-      wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :read),
+      wf.send(:'permit?', Runo::Workflow::ROLE_USER, :read),
       'Set::Workflow#permit? should return whether it permits the client the action or not'
     )
     assert(
-      !wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :update),
+      !wf.send(:'permit?', Runo::Workflow::ROLE_USER, :update),
       'Set::Workflow#permit? should return whether it permits the client the action or not'
     )
     assert(
-      !wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :delete),
+      !wf.send(:'permit?', Runo::Workflow::ROLE_USER, :delete),
       'Set::Workflow#permit? should return whether it permits the client the action or not'
     )
   end
@@ -126,7 +126,7 @@ class TC_Workflow < Test::Unit::TestCase
   def test_wf_permit_login_action?
     wf = Runo::Workflow::Foo.new(nil)
     assert(
-      wf.send(:'permit?', Runo::Workflow::ROLE_GUEST, :login),
+      wf.send(:'permit?', Runo::Workflow::ROLE_USER, :login),
       'Set::Workflow#permit? should always permit :login'
     )
     assert(
@@ -250,10 +250,10 @@ class TC_Workflow < Test::Unit::TestCase
       '_group' => {:klass => 'meta-group'},
     }
     PERM = {
-      :create => 0b1100,
-      :read   => 0b1000,
-      :update => 0b1110,
-      :foo    => 0b1111,
+      :create => 0b11000,
+      :read   => 0b10000,
+      :update => 0b11100,
+      :foo    => 0b11110,
     }
   end
   def test_default_action
@@ -273,7 +273,7 @@ class TC_Workflow < Test::Unit::TestCase
 
     Runo.client = nil
     assert_equal(
-      :foo,
+      nil,
       sd.default_action,
       'Workflow#default_action should return a permitted action for the client'
     )

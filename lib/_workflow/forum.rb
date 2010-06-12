@@ -16,10 +16,10 @@ class Runo::Workflow::Forum < Runo::Workflow
   }
 
   PERM = {
-    :create => 0b1111,
-    :read   => 0b1111,
-    :update => 0b1100,
-    :delete => 0b1100,
+    :create => 0b11110,
+    :read   => 0b11111,
+    :update => 0b11000,
+    :delete => 0b11000,
   }
 
 end

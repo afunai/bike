@@ -12,10 +12,10 @@ class TC_Set_Permit < Test::Unit::TestCase
       '_owner'   => {:klass => 'meta-owner'},
     }
     PERM = {
-      :create => 0b1111,
-      :read   => 0b1110,
-      :update => 0b1110,
-      :delete => 0b1110,
+      :create => 0b11110,
+      :read   => 0b11100,
+      :update => 0b11100,
+      :delete => 0b11100,
     }
   end
 
@@ -39,9 +39,9 @@ class TC_Set_Permit < Test::Unit::TestCase
   def test_permit_get_by_frank
     Runo.client = 'frank'
     assert_equal(
-      0b0010,
+      0b00110,
       @sd[:roles],
-      'frank should be the owner of the set'
+      'frank should be the owner of the set and a logged-in user'
     )
     assert(
       @sd.send(
@@ -87,9 +87,9 @@ class TC_Set_Permit < Test::Unit::TestCase
   def test_permit_get_by_carl
     Runo.client = 'carl'
     assert_equal(
-      0b0001,
+      0b00010,
       @sd[:roles],
-      'carl should be an guest of the set'
+      'carl should be a logged-in user'
     )
     assert(
       !@sd.send(
@@ -145,9 +145,9 @@ class TC_Set_Permit < Test::Unit::TestCase
   def test_permit_post_by_frank
     Runo.client = 'frank'
     assert_equal(
-      0b0010,
+      0b00110,
       @sd[:roles],
-      'frank should be the owner of the set'
+      'frank should be the owner of the set and a logged-in user'
     )
     assert(
       @sd.send(
@@ -187,9 +187,9 @@ class TC_Set_Permit < Test::Unit::TestCase
   def test_permit_post_by_carl
     Runo.client = 'carl'
     assert_equal(
-      0b0001,
+      0b00010,
       @sd[:roles],
-      'carl should be a guest of the set'
+      'carl should be a logged-in user'
     )
     assert(
       !@sd.send(

@@ -11,10 +11,10 @@ class Runo::Workflow::Attachment < Runo::Workflow
   }
 
   PERM = {
-    :create => 0b0000,
-    :read   => 0b0000,
-    :update => 0b0000,
-    :delete => 0b0000,
+    :create => 0b00000,
+    :read   => 0b00000,
+    :update => 0b00000,
+    :delete => 0b00000,
   }
 
   def permit?(roles, action)

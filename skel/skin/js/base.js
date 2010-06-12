@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $(':input').hover(
+  $('.error').hover(
     function(){
       $('+ span.error_message',this).fadeIn(150);
     },

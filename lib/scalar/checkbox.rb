@@ -43,15 +43,17 @@ _html
       options = my[:options].collect {|opt|
         checked = (val.include? opt) ? ' checked' : ''
         <<_html
-<span class="#{_g_class arg}">
-  <input type="checkbox" id="checkbox_#{my[:short_name]}-#{opt}" name="#{my[:short_name]}[]" value="#{opt}"#{checked} />
-  <label for="checkbox_#{my[:short_name]}-#{opt}">#{opt}</label>
-</span>
+  <span class="checkbox">
+    <input type="checkbox" id="checkbox_#{my[:short_name]}-#{opt}" name="#{my[:short_name]}[]" value="#{opt}"#{checked} />
+    <label for="checkbox_#{my[:short_name]}-#{opt}">#{opt}</label>
+  </span>
 _html
       }.join
-      <<_html.rstrip
-<input type="hidden" name="#{my[:short_name]}[]" value="" />
-#{options}#{_g_errors arg}
+      <<_html.chomp
+<div class="#{_g_class arg}">
+  <input type="hidden" name="#{my[:short_name]}[]" value="" />
+#{options}</div>
+#{_g_errors arg}
 _html
     end
   end

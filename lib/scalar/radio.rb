@@ -26,15 +26,17 @@ class Runo::Radio < Runo::Field
       checked = (opt == val) ? ' checked' : ''
       h_opt = Runo::Field.h opt
       <<_html
-<span class="#{_g_class arg}">
-  <input type="radio" id="radio_#{my[:short_name]}-#{h_opt}" name="#{my[:short_name]}" value="#{h_opt}"#{checked} />
-  <label for="radio_#{my[:short_name]}-#{h_opt}">#{h_opt}</label>
-</span>
+  <span class="radio">
+    <input type="radio" id="radio_#{my[:short_name]}-#{h_opt}" name="#{my[:short_name]}" value="#{h_opt}"#{checked} />
+    <label for="radio_#{my[:short_name]}-#{h_opt}">#{h_opt}</label>
+  </span>
 _html
     }.join
-    <<_html.rstrip
-<input type="hidden" name="#{my[:short_name]}" value="" />
-#{options}#{_g_errors arg}
+    <<_html.chomp
+<div class="#{_g_class arg}">
+  <input type="hidden" name="#{my[:short_name]}" value="" />
+#{options}</div>
+#{_g_errors arg}
 _html
   end
   alias :_g_create :_g_update

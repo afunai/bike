@@ -1,20 +1,47 @@
 $(document).ready(function() {
   $('.error').hover(
     function(){
-      $('+ span.error_message',this).fadeIn(150);
+      $('+ span.error_message', this).fadeIn(150);
     },
     function(){
-      if ($(this).is(':not(.focused)')) $('+ span.error_message',this).fadeOut(100);
+      if ($(this).is(':not(.focused)')) $('+ span.error_message', this).fadeOut(100);
     }
   ).focus(
     function(){
       $(this).addClass('focused');
-      $('+ span.error_message',this).fadeIn(150);
+      $('+ span.error_message', this).fadeIn(150);
     }
   ).blur(
     function(){
       $(this).removeClass('focused');
-      $('+ span.error_message',this).fadeOut(100);
+      $('+ span.error_message', this).fadeOut(100);
+    }
+  ).change(
+    function(){
+      $(this).removeClass('error');
+      $(this).removeClass('focused');
+      $('+ span.error_message', this).hide();
+    }
+  );
+
+  $(':checkbox, :radio', $('div.error')).focus(
+    function(){
+      var d = $(this).closest('div.error');
+      d.addClass('focused');
+      $('+ span.error_message', d).fadeIn(150);
+    }
+  ).blur(
+    function(){
+      var d = $(this).closest('div.error');
+      d.removeClass('focused');
+      $('+ span.error_message', d).fadeOut(100);
+    }
+  ).change(
+    function(){
+      var d = $(this).closest('div.error');
+      d.removeClass('error');
+      d.removeClass('focused');
+      $('+ span.error_message', d).hide();
     }
   );
 

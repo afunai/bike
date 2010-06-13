@@ -312,6 +312,45 @@ _html
     )
   end
 
+  def test_get_static_ambiguous
+    Runo.client = 'root'
+    res = Rack::MockRequest.new(@runo).get(
+      'http://example.com/foo/css/0123456789.1234/_001/img/bar.jpg'
+    )
+    assert_equal(
+      'Not Found', # from Runo#call
+      res.body,
+      'Runo#call should not look for a static file if the path includes a tid'
+    )
+
+    res = Rack::MockRequest.new(@runo).get(
+      'http://example.com/foo/css/20100613_1234/img/bar.jpg'
+    )
+    assert_equal(
+      'Not Found', # from Runo#call
+      res.body,
+      'Runo#call should not look for a static file if the path includes an id'
+    )
+
+    res = Rack::MockRequest.new(@runo).get(
+      'http://example.com/foo/css/0123456789.1234/20100613_1234/img/bar.jpg'
+    )
+    assert_equal(
+      'Not Found', # from Runo#call
+      res.body,
+      'Runo#call should not look for a static file if the path includes an id'
+    )
+
+    res = Rack::MockRequest.new(@runo).get(
+      'http://example.com/foo/css/20100613_1234/bar/id=img/'
+    )
+    assert_equal(
+      'Not Found', # from Runo#call
+      res.body,
+      'Runo#call should not look for a static file if the path includes an id'
+    )
+  end
+
   def test_get_static_forbidden
     Runo.client = 'root'
     res = Rack::MockRequest.new(@runo).get(

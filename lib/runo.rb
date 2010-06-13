@@ -87,7 +87,12 @@ class Runo
     path   = req.path_info
     tid    = Runo::Path.tid_of path
 
-    return Runo.static(env) if ::File.expand_path(path) =~ %r{/#{Runo::REX::DIR_STATIC}/}
+    static_path = ::File.expand_path path
+    return Runo.static(env) if (
+      static_path =~ %r{/#{Runo::REX::DIR_STATIC}/} &&
+      static_path !~ %r{/#{Runo::REX::TID}/} &&
+      static_path !~ %r{/#{Runo::REX::ID.to_s.sub('^','')}/}
+    )
 
     Runo::I18n.lang = env['HTTP_ACCEPT_LANGUAGE']
 

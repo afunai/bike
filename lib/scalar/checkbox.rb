@@ -44,7 +44,7 @@ _html
       options = my[:options].collect {|opt|
         checked = (val.include? opt) ? ' checked' : ''
         <<_html
-  <span class="checkbox">
+  <span class="item">
     <input type="checkbox" id="checkbox_#{my[:short_name]}-#{opt}" name="#{my[:short_name]}[]" value="#{opt}"#{checked} />
     <label for="checkbox_#{my[:short_name]}-#{opt}">#{opt}</label>
   </span>

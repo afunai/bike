@@ -26,7 +26,7 @@ class Runo::Radio < Runo::Field
       checked = (opt == val) ? ' checked' : ''
       h_opt = Runo::Field.h opt
       <<_html
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_#{my[:short_name]}-#{h_opt}" name="#{my[:short_name]}" value="#{h_opt}"#{checked} />
     <label for="radio_#{my[:short_name]}-#{h_opt}">#{h_opt}</label>
   </span>

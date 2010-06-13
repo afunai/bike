@@ -101,15 +101,15 @@ class TC_Radio < Test::Unit::TestCase
       <<_html,
 <span class="radio">
   <input type="hidden" name="" value="" />
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-bar" name="" value="bar" />
     <label for="radio_-bar">bar</label>
   </span>
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-baz" name="" value="baz" />
     <label for="radio_-baz">baz</label>
   </span>
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-qux" name="" value="qux" />
     <label for="radio_-qux">qux</label>
   </span>
@@ -129,15 +129,15 @@ _html
       <<_html,
 <span class="radio">
   <input type="hidden" name="" value="" />
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-bar" name="" value="bar" />
     <label for="radio_-bar">bar</label>
   </span>
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-baz" name="" value="baz" />
     <label for="radio_-baz">baz</label>
   </span>
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-qux" name="" value="qux" checked />
     <label for="radio_-qux">qux</label>
   </span>
@@ -152,15 +152,15 @@ _html
       <<_html,
 <span class="radio error">
   <input type="hidden" name="" value="" />
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-bar" name="" value="bar" />
     <label for="radio_-bar">bar</label>
   </span>
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-baz" name="" value="baz" />
     <label for="radio_-baz">baz</label>
   </span>
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-qux" name="" value="qux" />
     <label for="radio_-qux">qux</label>
   </span>
@@ -184,11 +184,11 @@ _html
       <<_html,
 <span class="radio">
   <input type="hidden" name="" value="" />
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-foo" name="" value="foo" />
     <label for="radio_-foo">foo</label>
   </span>
-  <span class="radio">
+  <span class="item">
     <input type="radio" id="radio_-&lt;bar&gt;" name="" value="&lt;bar&gt;" checked />
     <label for="radio_-&lt;bar&gt;">&lt;bar&gt;</label>
   </span>

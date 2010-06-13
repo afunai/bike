@@ -34,10 +34,11 @@ class Runo::Checkbox < Runo::Field
   def _g_update(arg)
     if my[:options] == ['_on']
       checked = (val.include? '_on') ? ' checked' : ''
-      <<_html.rstrip
-<input type="hidden" name="#{my[:short_name]}[]" value="" />
-<input type="checkbox" name="#{my[:short_name]}[]" value="_on" class="#{_g_class arg}" #{checked}/>
-#{_g_errors arg}
+      <<_html
+<span class="#{_g_class arg}">
+  <input type="hidden" name="#{my[:short_name]}[]" value="" />
+  <input type="checkbox" name="#{my[:short_name]}[]" value="_on" #{checked}/>
+#{_g_errors arg}</span>
 _html
     else
       options = my[:options].collect {|opt|
@@ -49,11 +50,10 @@ _html
   </span>
 _html
       }.join
-      <<_html.chomp
-<div class="#{_g_class arg}">
+      <<_html
+<span class="#{_g_class arg}">
   <input type="hidden" name="#{my[:short_name]}[]" value="" />
-#{options}</div>
-#{_g_errors arg}
+#{options}#{_g_errors arg}</span>
 _html
     end
   end

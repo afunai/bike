@@ -101,7 +101,7 @@ class TC_Runo_Call < Test::Unit::TestCase
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_contact/1234567890.0123/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
     <ul id="main" class="runo-contact">
-      <li><a><input type="text" name="_001-name" value="foo" size="32" class="text" /></a>: <input type="text" name="_001-comment" value="bar!" size="64" class="text" /></li>
+      <li><a><span class="text"><input type="text" name="_001-name" value="foo" size="32" /></span></a>: <span class="text"><input type="text" name="_001-comment" value="bar!" size="64" /></span></li>
     </ul>
 <div class="submit">
   <input name=".status-public" type="submit" value="create" />
@@ -251,7 +251,7 @@ _html
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_summary/#{tid}/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
 <ul id="main" class="runo-blog">
-  <li><a><input type="text" name="20100326_0001-name" value="frank" size="32" class="text" /></a>: <input type="text" name="20100326_0001-comment" value="hi." size="64" class="text" /></li>
+  <li><a><span class="text"><input type="text" name="20100326_0001-name" value="frank" size="32" /></span></a>: <span class="text"><input type="text" name="20100326_0001-comment" value="hi." size="64" /></span></li>
 </ul>
 <div class="submit">
   <input name=".status-public" type="submit" value="update" />

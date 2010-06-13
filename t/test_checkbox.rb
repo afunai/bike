@@ -118,7 +118,7 @@ class TC_Checkbox < Test::Unit::TestCase
     )
     assert_equal(
       <<_html,
-<div class="checkbox">
+<span class="checkbox">
   <input type="hidden" name="[]" value="" />
   <span class="checkbox">
     <input type="checkbox" id="checkbox_-bar" name="[]" value="bar" />
@@ -132,7 +132,7 @@ class TC_Checkbox < Test::Unit::TestCase
     <input type="checkbox" id="checkbox_-qux" name="[]" value="qux" />
     <label for="checkbox_-qux">qux</label>
   </span>
-</div>
+</span>
 _html
       @f.get(:action => :create),
       'Checkbox#get should return proper string'
@@ -146,7 +146,7 @@ _html
     )
     assert_equal(
       <<_html,
-<div class="checkbox">
+<span class="checkbox">
   <input type="hidden" name="[]" value="" />
   <span class="checkbox">
     <input type="checkbox" id="checkbox_-bar" name="[]" value="bar" />
@@ -160,7 +160,7 @@ _html
     <input type="checkbox" id="checkbox_-qux" name="[]" value="qux" checked />
     <label for="checkbox_-qux">qux</label>
   </span>
-</div>
+</span>
 _html
       @f.get(:action => :update),
       'Checkbox#get should return proper string'
@@ -169,7 +169,7 @@ _html
     @f.load 'non-exist'
     assert_equal(
       <<_html,
-<div class="checkbox error">
+<span class="checkbox error">
   <input type="hidden" name="[]" value="" />
   <span class="checkbox">
     <input type="checkbox" id="checkbox_-bar" name="[]" value="bar" />
@@ -183,8 +183,8 @@ _html
     <input type="checkbox" id="checkbox_-qux" name="[]" value="qux" />
     <label for="checkbox_-qux">qux</label>
   </span>
-</div>
 <span class=\"error_message\">no such option</span>
+</span>
 _html
       @f.get(:action => :update),
       'Checkbox#get should return proper string'
@@ -207,13 +207,13 @@ _html
     )
     assert_equal(
       <<_html,
-<div class="checkbox">
+<span class="checkbox">
   <input type="hidden" name="[]" value="" />
   <span class="checkbox">
     <input type="checkbox" id="checkbox_-ok?" name="[]" value="ok?" />
     <label for="checkbox_-ok?">ok?</label>
   </span>
-</div>
+</span>
 _html
       f.get(:action => :create),
       'Checkbox#get should not include the label if no options is defined'
@@ -235,9 +235,11 @@ _html
       'Checkbox#get should return proper string'
     )
     assert_equal(
-      <<_html.chomp,
-<input type="hidden" name="[]" value="" />
-<input type="checkbox" name="[]" value="_on" class="checkbox" />
+      <<_html,
+<span class="checkbox">
+  <input type="hidden" name="[]" value="" />
+  <input type="checkbox" name="[]" value="_on" />
+</span>
 _html
       f.get(:action => :create),
       'Checkbox#get should not include the label if no options is defined'

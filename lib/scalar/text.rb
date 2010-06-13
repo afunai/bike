@@ -26,7 +26,7 @@ class Runo::Text < Runo::Field
 
   def _g_update(arg)
     <<_html.chomp
-<input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
+<span class="#{_g_class arg}"><input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h val}" size="#{my[:size]}" />#{_g_errors arg}</span>
 _html
   end
   alias :_g_create :_g_update

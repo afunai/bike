@@ -276,7 +276,7 @@ _html
     assert_equal(
       <<'_html',
 <ul id="foo" class="runo-blog">
-  <li><input type="text" name="name" value="" size="16" class="text" />: <input type="text" name="comment" value="" size="64" class="text" /></li>
+  <li><span class="text"><input type="text" name="name" value="" size="16" /></span>: <span class="text"><input type="text" name="comment" value="" size="64" /></span></li>
 </ul>
 [foo-update]
 _html

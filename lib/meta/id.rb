@@ -37,7 +37,7 @@ class Runo::Meta::Id < Runo::Field
 
   def _g_create(arg)
     new_id? ? <<_html.chomp : _g_default(arg)
-<input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h val}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
+<span class="#{_g_class arg}"><input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h val}" size="#{my[:size]}" />#{_g_errors arg}</span>
 _html
   end
   alias :_g_update :_g_create

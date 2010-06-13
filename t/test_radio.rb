@@ -99,7 +99,7 @@ class TC_Radio < Test::Unit::TestCase
     )
     assert_equal(
       <<_html,
-<div class="radio">
+<span class="radio">
   <input type="hidden" name="" value="" />
   <span class="radio">
     <input type="radio" id="radio_-bar" name="" value="bar" />
@@ -113,7 +113,7 @@ class TC_Radio < Test::Unit::TestCase
     <input type="radio" id="radio_-qux" name="" value="qux" />
     <label for="radio_-qux">qux</label>
   </span>
-</div>
+</span>
 _html
       @f.get(:action => :create),
       'Radio#get should return proper string'
@@ -127,7 +127,7 @@ _html
     )
     assert_equal(
       <<_html,
-<div class="radio">
+<span class="radio">
   <input type="hidden" name="" value="" />
   <span class="radio">
     <input type="radio" id="radio_-bar" name="" value="bar" />
@@ -141,7 +141,7 @@ _html
     <input type="radio" id="radio_-qux" name="" value="qux" checked />
     <label for="radio_-qux">qux</label>
   </span>
-</div>
+</span>
 _html
       @f.get(:action => :update),
       'Radio#get should return proper string'
@@ -150,7 +150,7 @@ _html
     @f.load 'non-exist'
     assert_equal(
       <<_html,
-<div class="radio error">
+<span class="radio error">
   <input type="hidden" name="" value="" />
   <span class="radio">
     <input type="radio" id="radio_-bar" name="" value="bar" />
@@ -164,8 +164,8 @@ _html
     <input type="radio" id="radio_-qux" name="" value="qux" />
     <label for="radio_-qux">qux</label>
   </span>
-</div>
 <span class=\"error_message\">no such option</span>
+</span>
 _html
       @f.get(:action => :update),
       'Radio#get should return proper string'
@@ -182,7 +182,7 @@ _html
     )
     assert_equal(
       <<_html,
-<div class="radio">
+<span class="radio">
   <input type="hidden" name="" value="" />
   <span class="radio">
     <input type="radio" id="radio_-foo" name="" value="foo" />
@@ -192,7 +192,7 @@ _html
     <input type="radio" id="radio_-&lt;bar&gt;" name="" value="&lt;bar&gt;" checked />
     <label for="radio_-&lt;bar&gt;">&lt;bar&gt;</label>
   </span>
-</div>
+</span>
 _html
       @f.get(:action => :update),
       'Radio#get should escape the special characters'

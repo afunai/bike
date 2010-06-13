@@ -65,7 +65,11 @@ class TC_Textarea < Test::Unit::TestCase
       'Textarea#get should return proper string'
     )
     assert_equal(
-      '<textarea name="" cols="76" rows="8" class="textarea">bar</textarea>',
+      <<'_html',
+<span class="textarea">
+  <textarea name="" cols="76" rows="8">bar</textarea>
+</span>
+_html
       @f.get(:action => :update),
       'Textarea#get should return proper string'
     )
@@ -77,7 +81,11 @@ class TC_Textarea < Test::Unit::TestCase
       'Textarea#get should escape the special characters'
     )
     assert_equal(
-      '<textarea name="" cols="76" rows="8" class="textarea">&lt;bar&gt;</textarea>',
+      <<'_html',
+<span class="textarea">
+  <textarea name="" cols="76" rows="8">&lt;bar&gt;</textarea>
+</span>
+_html
       @f.get(:action => :update),
       'Textarea#get should escape the special characters'
     )

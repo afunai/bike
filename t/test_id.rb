@@ -73,7 +73,7 @@ class TC_Id < Test::Unit::TestCase
   def test_get
     @f[:parent] = Runo::Set::Static.new(:id => '_001')
     assert_equal(
-      '<input type="text" name="" value="" size="3" class="meta-id" />',
+      '<span class="meta-id"><input type="text" name="" value="" size="3" /></span>',
       @f.get(:action => :create),
       'Meta::Id#_g_create should return <input> if the ancestor is new'
     )
@@ -94,7 +94,7 @@ class TC_Id < Test::Unit::TestCase
 
     @f[:parent] = Runo::Set::Static.new(:id => '_001')
     assert_equal(
-      '<input type="text" name="" value="bar" size="3" class="meta-id" />',
+      '<span class="meta-id"><input type="text" name="" value="bar" size="3" /></span>',
       @f.get(:action => :update),
       'Meta::Id#_g_update should return <input> if the ancestor is new'
     )
@@ -116,7 +116,7 @@ class TC_Id < Test::Unit::TestCase
     @f[:parent] = Runo::Set::Static.new(:id => '_001')
     @f.load '<bar>'
     assert_equal(
-      '<input type="text" name="" value="&lt;bar&gt;" size="3" class="meta-id error" /><span class="error_message">malformatted id</span>' + "\n",
+      '<span class="meta-id error"><input type="text" name="" value="&lt;bar&gt;" size="3" /><span class="error_message">malformatted id</span>' + "\n</span>",
       @f.get(:action => :update),
       'Meta::Id#get should escape the special characters'
     )

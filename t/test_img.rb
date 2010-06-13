@@ -124,7 +124,7 @@ _eos
     @f.load({})
     assert_equal(
       <<'_html'.chomp,
-<span class="img" style="width: 32px; height: 32px;"></span>
+<span class="dummy_img" style="width: 32px; height: 32px;"></span>
 _html
       @f.get,
       'Img#get should return default span when the val is empty'
@@ -146,12 +146,12 @@ _html
     )
     assert_equal(
       <<"_html",
-<div class="img">
+<span class="img">
 <span class="img">
   <a href="/t_img/#{tid}/foo/baz.jpg"><img src="/t_img/#{tid}/foo/baz_small.jpg" alt="baz.jpg" /></a>
 </span>
   <input type="file" name="foo" size="" class="file" />
-</div>
+</span>
 _html
       @f.get(:action => :update),
       'Img#get should return proper string'

@@ -98,13 +98,15 @@ class TC_Select < Test::Unit::TestCase
       'Select#get should return proper string'
     )
     assert_equal(
-      <<_html.chomp,
-<select name="" class="select">
-  <option value="">please select</option>
-  <option>bar</option>
-  <option>baz</option>
-  <option>qux</option>
-</select>
+      <<_html,
+<span class="select">
+  <select name="">
+    <option value="">please select</option>
+    <option>bar</option>
+    <option>baz</option>
+    <option>qux</option>
+  </select>
+</span>
 _html
       @f.get(:action => :create),
       'Select#get should return proper string'
@@ -117,12 +119,14 @@ _html
       'Select#get should return proper string'
     )
     assert_equal(
-      <<_html.chomp,
-<select name="" class="select">
-  <option>bar</option>
-  <option>baz</option>
-  <option selected>qux</option>
-</select>
+      <<_html,
+<span class="select">
+  <select name="">
+    <option>bar</option>
+    <option>baz</option>
+    <option selected>qux</option>
+  </select>
+</span>
 _html
       @f.get(:action => :update),
       'Select#get should return proper string'
@@ -138,11 +142,13 @@ _html
       'Select#get should escape the special characters'
     )
     assert_equal(
-      <<_html.chomp,
-<select name="" class="select">
-  <option>foo</option>
-  <option selected>&lt;bar&gt;</option>
-</select>
+      <<_html,
+<span class="select">
+  <select name="">
+    <option>foo</option>
+    <option selected>&lt;bar&gt;</option>
+  </select>
+</span>
 _html
       @f.get(:action => :update),
       'Select#get should escape the special characters'

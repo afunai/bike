@@ -66,7 +66,7 @@ class Runo::Img < Runo::File
     s_basename = basename.sub(/\..+$/, '_small\\&')
     if val.empty?
       <<_html.chomp
-<span class="img" style="width: #{my[:width]}px; height: #{my[:height]}px;"></span>
+<span class="dummy_img" style="width: #{my[:width]}px; height: #{my[:height]}px;"></span>
 _html
     elsif arg[:sub_action] == :without_link
       <<_html.chomp

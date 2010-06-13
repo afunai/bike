@@ -32,11 +32,10 @@ class Runo::Radio < Runo::Field
   </span>
 _html
     }.join
-    <<_html.chomp
-<div class="#{_g_class arg}">
+    <<_html
+<span class="#{_g_class arg}">
   <input type="hidden" name="#{my[:short_name]}" value="" />
-#{options}</div>
-#{_g_errors arg}
+#{options}#{_g_errors arg}</span>
 _html
   end
   alias :_g_create :_g_update

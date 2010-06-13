@@ -179,10 +179,10 @@ _eos
     )
     assert_equal(
       <<"_html",
-<div class="file">
+<span class="file">
 <span class="file"><a href="/t_file/#{tid}/foo/baz.jpg">baz.jpg (12 bytes)</a></span>
   <input type="file" name="foo" size="" class="file" />
-</div>
+</span>
 _html
       @f.get(:action => :update),
       'File#get should return proper string'
@@ -215,21 +215,21 @@ _html
 
     assert_equal(
       <<'_html',
-<div class="file">
+<span class="file">
 
   <input type="file" name="_1-foo" size="" class="file" />
-</div>
+</span>
 _html
       sd.item('_1', 'foo').get(:action => :create),
       'File#get should not include a hidden input if the field is not required'
     )
     assert_equal(
       <<'_html',
-<div class="file">
+<span class="file">
 
   <input type="hidden" name="_1-baz-_1-qux" value="" />
   <input type="file" name="_1-baz-_1-qux" size="" class="file" />
-</div>
+</span>
 _html
       sd.item('_1', 'baz', '_1', 'qux').get(:action => :create),
       'File#get should include a hidden input to supplement an empty field'
@@ -255,10 +255,10 @@ _eos
     )
     assert_equal(
       <<"_html",
-<div class="file">
+<span class="file">
 <span class="file"><a href="/t_file/1234.567/_1/baz/_1/qux/qux.jpg">qux.jpg (#{@file.length} bytes)</a></span>
   <input type="file" name="_1-baz-_1-qux" size="" class="file" />
-</div>
+</span>
 _html
       sd.item('_1', 'baz', '_1', 'qux').get(:action => :update),
       'File#get should not include a hidden if the field is not empty'
@@ -280,10 +280,10 @@ _html
 
     assert_equal(
       <<'_html',
-<div class="file">
+<span class="file">
 
   <input type="file" name="_1-foo" size="" class="file" />
-</div>
+</span>
 _html
       sd.item('_1', 'foo').get(:action => :create),
       'File#get should not include a delete submit if the field is empty'
@@ -305,11 +305,11 @@ _eos
     )
     assert_equal(
       <<"_html",
-<div class="file">
+<span class="file">
 <span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
   <input type="file" name="_1-foo" size="" class="file" />
   <input type="submit" name="_1-foo.action-delete" value="delete" />
-</div>
+</span>
 _html
       sd.item('_1', 'foo').get(:action => :update),
       'File#get should include a delete submit if the field is not empty'
@@ -318,10 +318,10 @@ _html
     sd.item('_1', 'foo')[:min] = 1
     assert_equal(
       <<"_html",
-<div class="file">
+<span class="file">
 <span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
   <input type="file" name="_1-foo" size="" class="file" />
-</div>
+</span>
 _html
       sd.item('_1', 'foo').get(:action => :update),
       'File#get should not include a delete submit if the field is mandatory'

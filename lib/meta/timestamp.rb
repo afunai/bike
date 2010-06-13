@@ -47,7 +47,7 @@ class Runo::Meta::Timestamp < Runo::Field
 
   def _g_create(arg)
     <<_html.chomp if my[:can_edit]
-<input type="text" name="#{my[:short_name]}" value="" size="#{my[:size]}" class="#{_g_class arg}" />
+<span class="#{_g_class arg}"><input type="text" name="#{my[:short_name]}" value="" size="#{my[:size]}" /></span>
 _html
   end
 
@@ -56,12 +56,14 @@ _html
       v = @date_str
       v ||= val['published'].is_a?(::Time) ? val['published'].strftime('%Y-%m-%d %H:%M:%S') : ''
       <<_html.chomp
-<input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h v}" size="#{my[:size]}" class="#{_g_class arg}" />#{_g_errors arg}
+<span class="#{_g_class arg}"><input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h v}" size="#{my[:size]}" />#{_g_errors arg}</span>
 _html
     elsif my[:can_update] && !find_ancestor {|f| f[:id] =~ Runo::REX::ID_NEW }
-      <<_html.chomp
-<input type="checkbox" id="timestamp_#{my[:short_name]}" name="#{my[:short_name]}" value="true" class="#{_g_class arg}" />
-<label for="timestamp_#{my[:short_name]}">#{_ 'update the timestamp'}</label>#{_g_errors arg}
+      <<_html
+<span class="#{_g_class arg}">
+  <input type="checkbox" id="timestamp_#{my[:short_name]}" name="#{my[:short_name]}" value="true" />
+  <label for="timestamp_#{my[:short_name]}">#{_ 'update the timestamp'}</label>
+#{_g_errors arg}</span>
 _html
     end
   end

@@ -19,12 +19,14 @@ class Runo::Textarea < Runo::Field
 
   private
 
-  def _g_create(arg)
-    <<_html.chomp
-<textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}" class="#{_g_class arg}">#{Runo::Field.h val}</textarea>#{_g_errors arg}
+  def _g_update(arg)
+    <<_html
+<span class="#{_g_class arg}">
+  <textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}">#{Runo::Field.h val}</textarea>
+#{_g_errors arg}</span>
 _html
   end
-  alias :_g_update :_g_create
+  alias :_g_create :_g_update
 
   def val_cast(v)
     v.to_s.gsub(/\r\n?/, "\n")

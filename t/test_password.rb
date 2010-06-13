@@ -28,7 +28,7 @@ class TC_Password < Test::Unit::TestCase
     )
     assert_equal(
       <<'_html'.chomp,
-<input type="password" name="" value="" size="16" class="password" />
+<span class="password"><input type="password" name="" value="" size="16" /></span>
 _html
       @f.get(:action => :create),
       'Password#get(:action => :create) should return an empty form'
@@ -42,7 +42,7 @@ _html
     )
     assert_equal(
       <<'_html'.chomp,
-<input type="password" name="" value="" size="16" class="password" />
+<span class="password"><input type="password" name="" value="" size="16" /></span>
 _html
       @f.get(:action => :update),
       'Password#get(:action => :update) should return an empty form'

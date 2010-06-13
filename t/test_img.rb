@@ -137,9 +137,7 @@ _html
     )
     assert_equal(
       <<'_html'.chomp,
-<span class="img">
-  <a href="/t_img/main/foo/baz.jpg"><img src="/t_img/main/foo/baz_small.jpg" alt="baz.jpg" /></a>
-</span>
+<a href="/t_img/main/foo/baz.jpg"><img src="/t_img/main/foo/baz_small.jpg" alt="baz.jpg" /></a>
 _html
       @f.get,
       'Img#get should return proper string'
@@ -147,9 +145,7 @@ _html
     assert_equal(
       <<"_html",
 <span class="img">
-<span class="img">
   <a href="/t_img/#{tid}/foo/baz.jpg"><img src="/t_img/#{tid}/foo/baz_small.jpg" alt="baz.jpg" /></a>
-</span>
   <input type="file" name="foo" size="" class="file" />
 </span>
 _html
@@ -164,9 +160,7 @@ _html
     )
     assert_equal(
       <<'_html'.chomp,
-<span class="img">
-  <a href="/t_img/main/foo/&lt;baz&gt;.jpg"><img src="/t_img/main/foo/&lt;baz&gt;_small.jpg" alt="&lt;baz&gt;.jpg" /></a>
-</span>
+<a href="/t_img/main/foo/&lt;baz&gt;.jpg"><img src="/t_img/main/foo/&lt;baz&gt;_small.jpg" alt="&lt;baz&gt;.jpg" /></a>
 _html
       @f.get,
       'Img#get should escape the special characters in file information'

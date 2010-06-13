@@ -88,7 +88,7 @@ class Runo::File < Runo::Field
     basename = Runo::Field.h val['basename']
     type     = Runo::Field.h val['type']
     <<_html.chomp unless val.empty?
-<span class="file"><a href="#{path}/#{basename}">#{basename} (#{val['size']} bytes)</a></span>
+<a href="#{path}/#{basename}">#{basename} (#{val['size']} bytes)</a>
 _html
   end
 
@@ -111,7 +111,7 @@ _html
 _html
     <<_html
 <span class="#{_g_class arg}">
-#{_g_default arg}
+  #{_g_default arg}
 #{hidden}#{update}#{delete}#{_g_errors arg}</span>
 _html
   end

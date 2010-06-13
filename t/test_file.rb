@@ -173,14 +173,14 @@ _eos
       'size'     => 12
     )
     assert_equal(
-      '<span class="file"><a href="/t_file/main/foo/baz.jpg">baz.jpg (12 bytes)</a></span>',
+      '<a href="/t_file/main/foo/baz.jpg">baz.jpg (12 bytes)</a>',
       @f.get,
       'File#get should return proper string'
     )
     assert_equal(
       <<"_html",
 <span class="file">
-<span class="file"><a href="/t_file/#{tid}/foo/baz.jpg">baz.jpg (12 bytes)</a></span>
+  <a href="/t_file/#{tid}/foo/baz.jpg">baz.jpg (12 bytes)</a>
   <input type="file" name="foo" size="" class="file" />
 </span>
 _html
@@ -194,7 +194,7 @@ _html
       'size'     => 12
     )
     assert_equal(
-      '<span class="file"><a href="/t_file/main/foo/&lt;baz&gt;.jpg">&lt;baz&gt;.jpg (12 bytes)</a></span>',
+      '<a href="/t_file/main/foo/&lt;baz&gt;.jpg">&lt;baz&gt;.jpg (12 bytes)</a>',
       @f.get,
       'File#get should escape the special characters in file information'
     )
@@ -216,7 +216,7 @@ _html
     assert_equal(
       <<'_html',
 <span class="file">
-
+  
   <input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html
@@ -226,7 +226,7 @@ _html
     assert_equal(
       <<'_html',
 <span class="file">
-
+  
   <input type="hidden" name="_1-baz-_1-qux" value="" />
   <input type="file" name="_1-baz-_1-qux" size="" class="file" />
 </span>
@@ -256,7 +256,7 @@ _eos
     assert_equal(
       <<"_html",
 <span class="file">
-<span class="file"><a href="/t_file/1234.567/_1/baz/_1/qux/qux.jpg">qux.jpg (#{@file.length} bytes)</a></span>
+  <a href="/t_file/1234.567/_1/baz/_1/qux/qux.jpg">qux.jpg (#{@file.length} bytes)</a>
   <input type="file" name="_1-baz-_1-qux" size="" class="file" />
 </span>
 _html
@@ -281,7 +281,7 @@ _html
     assert_equal(
       <<'_html',
 <span class="file">
-
+  
   <input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html
@@ -306,7 +306,7 @@ _eos
     assert_equal(
       <<"_html",
 <span class="file">
-<span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
+  <a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a>
   <input type="file" name="_1-foo" size="" class="file" />
   <input type="submit" name="_1-foo.action-delete" value="delete" />
 </span>
@@ -319,7 +319,7 @@ _html
     assert_equal(
       <<"_html",
 <span class="file">
-<span class="file"><a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a></span>
+  <a href="/t_file/1234.567/_1/foo/foo.jpg">foo.jpg (#{@file.length} bytes)</a>
   <input type="file" name="_1-foo" size="" class="file" />
 </span>
 _html

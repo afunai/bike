@@ -70,13 +70,11 @@ class Runo::Img < Runo::File
 _html
     elsif arg[:sub_action] == :without_link
       <<_html.chomp
-<span class="img"><img src="#{path}/#{s_basename}" alt="#{basename}" /></span>
+<img src="#{path}/#{s_basename}" alt="#{basename}" />
 _html
     else
       <<_html.chomp
-<span class="img">
-  <a href="#{path}/#{basename}"><img src="#{path}/#{s_basename}" alt="#{basename}" /></a>
-</span>
+<a href="#{path}/#{basename}"><img src="#{path}/#{s_basename}" alt="#{basename}" /></a>
 _html
     end
   end

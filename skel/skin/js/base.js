@@ -4,7 +4,7 @@ $(document).ready(function() {
       $('.error_message', this).fadeIn(150);
     },
     function(){
-      if ($(this).is(':not(.focused)')) $('.error_message', this).fadeOut(100);
+      if ($(this).is(':not(.focused)')) $('.error_message', this).fadeOut(50);
     }
   );
 
@@ -18,7 +18,7 @@ $(document).ready(function() {
     function(){
       var d = $(this).closest('span.error');
       d.removeClass('focused');
-      $('.error_message', d).fadeOut(100);
+      $('.error_message', d).fadeOut(50);
     }
   ).change(
     function(){
@@ -40,7 +40,7 @@ $(document).ready(function() {
     '-moz-border-radius': '.3em'
   });
 
-  if ($('.error').length > 0) {
+  if ($('span.error').length > 0) {
     $(':input:enabled:first', $('span.error:first')).focus().select();
   }
   else {

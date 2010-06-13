@@ -1,51 +1,35 @@
 $(document).ready(function() {
-  $('.error').hover(
+  $('span.error').hover(
     function(){
-      $('+ span.error_message', this).fadeIn(150);
+      $('.error_message', this).fadeIn(150);
     },
     function(){
-      if ($(this).is(':not(.focused)')) $('+ span.error_message', this).fadeOut(100);
-    }
-  ).focus(
-    function(){
-      $(this).addClass('focused');
-      $('+ span.error_message', this).fadeIn(150);
-    }
-  ).blur(
-    function(){
-      $(this).removeClass('focused');
-      $('+ span.error_message', this).fadeOut(100);
-    }
-  ).change(
-    function(){
-      $(this).removeClass('error');
-      $(this).removeClass('focused');
-      $('+ span.error_message', this).hide();
+      if ($(this).is(':not(.focused)')) $('.error_message', this).fadeOut(100);
     }
   );
 
-  $(':checkbox, :radio', $('div.error')).focus(
+  $(':input', $('span.error')).focus(
     function(){
-      var d = $(this).closest('div.error');
+      var d = $(this).closest('span.error');
       d.addClass('focused');
-      $('+ span.error_message', d).fadeIn(150);
+      $('.error_message', d).fadeIn(150);
     }
   ).blur(
     function(){
-      var d = $(this).closest('div.error');
+      var d = $(this).closest('span.error');
       d.removeClass('focused');
-      $('+ span.error_message', d).fadeOut(100);
+      $('.error_message', d).fadeOut(100);
     }
   ).change(
     function(){
-      var d = $(this).closest('div.error');
+      var d = $(this).closest('span.error');
       d.removeClass('error');
       d.removeClass('focused');
-      $('+ span.error_message', d).hide();
+      $('.error_message', d).hide();
     }
   );
 
-  $('span.error_message').hide().css({
+  $('.error_message').hide().css({
     'color':              'white',
     'background':         'red',
     'opacity':            '0.5',
@@ -57,7 +41,7 @@ $(document).ready(function() {
   });
 
   if ($('.error').length > 0) {
-    $('.error:input:enabled:first').focus().select();
+    $(':input:enabled:first', $('span.error:first')).focus().select();
   }
   else {
     $(':input:enabled:first').focus().select();

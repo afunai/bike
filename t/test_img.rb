@@ -167,6 +167,24 @@ _html
     )
   end
 
+  def test_get_not_image
+    @f.create(
+      :type     => 'text/plain',
+      :tempfile => @file,
+      :head     => <<'_eos',
+Content-Disposition: form-data; name="t_img"; filename="baz.txt"
+Content-Type: text/plain
+_eos
+      :filename => 'baz.txt',
+      :name     => 't_img'
+    )
+    assert_equal(
+      '<a href="foo/baz.txt">baz.txt (3535 bytes)</a>',
+      @f.get,
+      'Img#get should fall back to File#get if the file is not an image'
+    )
+  end
+
   def test_call_body
     Runo.client = 'root'
     sd = Runo::Set::Static::Folder.root.item('t_img', 'main')

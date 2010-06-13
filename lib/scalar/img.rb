@@ -68,6 +68,8 @@ class Runo::Img < Runo::File
       <<_html.chomp
 <span class="dummy_img" style="width: #{my[:width]}px; height: #{my[:height]}px;"></span>
 _html
+    elsif errors.include?(_('wrong file type: should be %{types}') % {:types => my[:options].join('/')})
+      super
     elsif arg[:sub_action] == :without_link
       <<_html.chomp
 <img src="#{path}/#{s_basename}" alt="#{basename}" />

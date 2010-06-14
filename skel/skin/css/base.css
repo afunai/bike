@@ -60,7 +60,11 @@ div.me {
   overflow: hidden;
   position: relative;
 }
-div.me .img {
+div.me img {
+  float: left;
+  margin-right: 1em;
+}
+div.me .dummy_img {
   float: left;
   margin-right: 1em;
 }

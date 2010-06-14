@@ -21,6 +21,26 @@ msgid_plural "items"
 msgstr[0] ""
 msgstr[1] ""
 
+#: lib/_workflow/_workflow.rb:41
+msgid "admin"
+msgstr ""
+
+#: lib/_workflow/_workflow.rb:41
+msgid "group"
+msgstr ""
+
+#: lib/_workflow/_workflow.rb:41
+msgid "owner"
+msgstr ""
+
+#: lib/_workflow/_workflow.rb:41
+msgid "user"
+msgstr ""
+
+#: lib/_workflow/_workflow.rb:41
+msgid "none"
+msgstr ""
+
 #: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
 msgid "create"
 msgstr ""

@@ -43,6 +43,29 @@ class TC_Workflow < Test::Unit::TestCase
     )
   end
 
+  def test_roles
+    assert_equal(
+      %w(none),
+      Runo::Workflow.roles(0b00001),
+      'Runo::Workflow.roles should return a human-readable string of the given roles'
+    )
+    assert_equal(
+      %w(owner),
+      Runo::Workflow.roles(0b00100),
+      'Runo::Workflow.roles should return a human-readable string of the given roles'
+    )
+    assert_equal(
+      %w(admin),
+      Runo::Workflow.roles(0b10000),
+      'Runo::Workflow.roles should return a human-readable string of the given roles'
+    )
+    assert_equal(
+      %w(admin owner user),
+      Runo::Workflow.roles(0b10110),
+      'Runo::Workflow.roles should return a human-readable string of the given roles'
+    )
+  end
+
   def test_wf_permit_guest?
     wf = Runo::Workflow::Foo.new(nil)
     assert(

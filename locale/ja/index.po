@@ -20,6 +20,26 @@ msgid_plural "items"
 msgstr[0] "アイテム"
 msgstr[1] "アイテム"
 
+#: lib/_workflow/_workflow.rb:41
+msgid "admin"
+msgstr "管理者"
+
+#: lib/_workflow/_workflow.rb:41
+msgid "group"
+msgstr "グループ"
+
+#: lib/_workflow/_workflow.rb:41
+msgid "owner"
+msgstr "所有者"
+
+#: lib/_workflow/_workflow.rb:41
+msgid "user"
+msgstr "ユーザ"
+
+#: lib/_workflow/_workflow.rb:41
+msgid "none"
+msgstr "なし"
+
 #: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
 msgid "create"
 msgstr "作成"

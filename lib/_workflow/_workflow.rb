@@ -34,6 +34,12 @@ class Runo::Workflow
     end
   end
 
+  def self.roles(roles)
+    %w(admin group owner user none).select {|r|
+      roles & const_get("ROLE_#{r.upcase}") > 0
+    }.collect{|r| Runo::I18n._ r }
+  end
+
   attr_reader :sd
 
   def initialize(sd)

@@ -431,6 +431,25 @@ _html
     )
   end
 
+  def test_g_signin
+    folder = Runo::Set::Static::Folder.root.item('t_contact')
+
+    Runo.client = nil
+    assert_equal(
+      <<'_html',
+<div class="action_signin"><a href="/_users/create.html">sign in</a></div>
+_html
+      folder.get(:action => :action_signin),
+      'Folder#_g_signin should return a link to sign-in if the current client is nobody'
+    )
+
+    Runo.client = 'frank'
+    assert_nil(
+      folder.get(:action => :action_signin),
+      'Folder#_g_signin should return nil unless the current client is nobody'
+    )
+  end
+
   def test_g_me
     folder = Runo::Set::Static::Folder.root.item('t_contact')
 

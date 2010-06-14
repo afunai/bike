@@ -15,6 +15,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
+#: lib/_widget/action_signin.rb:12
+msgid "sign in"
+msgstr ""
+
 #: lib/_workflow/_workflow.rb:11
 msgid "item"
 msgid_plural "items"

@@ -13,4 +13,5 @@ use Rack::ShowExceptions
 use Rack::Session::Pool #Cookie
 use Rack::Lock
 
+::Dir.chdir ::File.dirname(__FILE__)
 run Runo.new

@@ -453,6 +453,7 @@ _html
     <span class="dummy_img" style="width: 72px; height: 72px;"></span>
   </a>
   <div class="client">test</div>
+  <div class="roles">(user)</div>
   <div class="action_logout"><a href="/t_contact/logout.html?_token=#{Runo.token}">logout</a></div>
 </div>
 _html

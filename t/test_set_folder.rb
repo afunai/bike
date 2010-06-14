@@ -415,7 +415,7 @@ _html
     Runo.client = nil
     assert_equal(
       <<'_html',
-<div class="action_login"><a href="/t_contact/login.html">login...</a></div>
+<div class="action_login"><a href="/t_contact/login.html">login</a></div>
 _html
       folder.get(:action => :action_login),
       'Folder#_g_login should return a link to login/logout according to the current client'
@@ -438,7 +438,7 @@ _html
     assert_equal(
       <<'_html',
 <div class="me">
-  <div class="action_login"><a href="/t_contact/login.html">login...</a></div>
+  <div class="action_login"><a href="/t_contact/login.html">login</a></div>
 </div>
 _html
       folder.get(:action => :me),

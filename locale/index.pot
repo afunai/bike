@@ -232,10 +232,6 @@ msgstr ""
 msgid "update..."
 msgstr ""
 
-#: lib/set/static_folder.rb:52
-msgid "login..."
-msgstr ""
-
 #: lib/set/static_folder.rb:56
 msgid "logout"
 msgstr ""

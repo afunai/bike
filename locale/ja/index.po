@@ -231,10 +231,6 @@ msgstr "12"
 msgid "update..."
 msgstr "更新..."
 
-#: lib/set/static_folder.rb:52
-msgid "login..."
-msgstr "ログイン"
-
 #: lib/set/static_folder.rb:56
 msgid "logout"
 msgstr "ログアウト"

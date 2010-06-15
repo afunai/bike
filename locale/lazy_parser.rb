@@ -12,7 +12,7 @@ module GetText::LazyParser
   module_function
 
   def target?(file)
-    File.extname(file) == '.rb'
+    File.extname(file) == '.rb' || File.extname(file) == '.html'
   end
 
   def parse(file)
@@ -22,8 +22,9 @@ module GetText::LazyParser
     s = StringScanner.new code
     until s.eos?
       if (
-        s.scan(/_\('([^']+)'\)/)  ||
-        s.scan(/_ '([^']+)'/)     ||
+        s.scan(/_\('([^']+)'\)/) ||
+        s.scan(/_\(([\w \.\,\!\:]+)\)/)  ||
+        s.scan(/_ '([^']+)'/)    ||
         s.scan(/_ ([\w\.]+)/)
       )
         po = GetText::PoMessage.new :normal

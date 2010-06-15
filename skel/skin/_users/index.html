@@ -25,9 +25,9 @@
           <table title="user,users">
             <tr><th>_(ID)</th><td>$(_id = meta-id 16 1..16)</td></tr>
             <tr><th>_(Name)</th><td>$(name = text 1..64)</td></tr>
-            <tr><th>_(Email)</th><td>$(email = text 1..64)</td></tr>
+            <tr><th>_(Email)</th><td>$(email = text 0..64)</td></tr>
             <tr><th>_(Password)</th><td>$(password = password 12 8..32)</td></tr>
-            <tr><th>_(Avatar)</th><td>$(avatar = img 72*72 10 0..320000 crop)</td></tr>
+            <tr><th>_(Avatar)</th><td>$(avatar = img 72*72 crop 10 0..320000)</td></tr>
           </table>
         </div>
       </div>

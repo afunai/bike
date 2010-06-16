@@ -21,18 +21,19 @@ html a { text-decoration: none; }
   background: #000000;
   border-bottom: 3px solid #666699;
   padding-top: 1em;
-  padding-left: 2em;
+  padding-left: 20px;
 }
 #header h1 {
+  font-size: 40pt;
   color: white;
-  padding: 0.2em 0px;
+  padding: 0.2em 0 0.2em 0;
   margin: 0;
 }
 #header h1 > a { color: white; }
 #center {
   float: left;
-  width: 667px;
-  padding: 10px;
+  width: 647px;
+  padding: 20px;
   background: white;
   border-right: 3px solid #666699;
 }
@@ -56,21 +57,23 @@ html a { text-decoration: none; }
   position: relative;
   float: left;
 }
-.column h2 {
-  padding: 0;
-  margin: 0 0 -0.5em;
-  color: red;
-}
 .column ul {
   list-style-type: none;
   margin: 1em 0 0em 1em;
 }
+#center h2 {
+  padding: 0;
+  margin: 0;
+  color: red;
+}
+#center > p { margin: 1em 0 1em 0; }
+#center pre { margin: 0; }
 #center ul {
-  margin: 0.5em 1.2em 0.5em 1.2em;
+  margin: 0 0 1em 0;
   padding: 0;
 }
 #center li div.label {
-  margin-top: 1em;
+  margin: 0;
   padding: 0.5em 10px 0.5em 10px;
   width: 50%;
   -moz-border-radius-topleft: 0.5em;
@@ -89,8 +92,7 @@ html a { text-decoration: none; }
   -moz-border-radius: 0.2em;
 }
 #center li div.ibody {
-  margin-bottom: 0.5em;
-  margin: 0;
+  margin: 0 0 1em 0;
   padding: 0.5em 1em 0.5em 0.5em;
   border: solid black 2px;
   -moz-border-radius-topright: 0.5em;
@@ -117,11 +119,16 @@ html a { text-decoration: none; }
   padding: 1em 1em 1.5em 0em;
 }
 #center td img { vertical-align: top; }
+#center table.summary {
+  width: 100%;
+  margin: 0;
+}
 #center table.summary th {
   width: auto;
   text-align: left;
   vertical-align: top;
   padding: 0.5em 2.5em 0.5em 0.5em;
+  margin: 0;
   background: #000000;
   color: white;
 }

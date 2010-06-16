@@ -6,7 +6,7 @@
 @width: 950px;
 @right: 240px;
 @border: 3px;
-@left: @width - @right - @border - 40;
+@left: @width - @right - @border - 60;
 
 body, html {
   margin: 0;
@@ -28,10 +28,11 @@ body, html {
   background: @header-bg;
   border-bottom: @border solid @background;
   padding-top: 1em;
-  padding-left: 2em;
+  padding-left: 20px;
   h1 {
+    font-size: 40pt;
     color: @header-color;
-    padding: .2em 0px;
+    padding: .2em 0 .2em 0;
     margin:0;
     > a {
       color: @header-color;
@@ -42,7 +43,7 @@ body, html {
 #center {
   float: left;
   width: @left;
-  padding: 10px;
+  padding: 20px;
   background: @container-bg;
   border-right: @border solid @background;
 }
@@ -71,11 +72,6 @@ body, html {
 .column {
   position: relative;
   float: left;
-  h2 {
-    padding: 0;
-    margin: 0 0 -.5em;
-    color: red;
-  }
   ul {
     list-style-type: none;
     margin: 1em 0 0em 1em;
@@ -83,14 +79,28 @@ body, html {
 }
 
 #center {
+  h2 {
+    padding: 0;
+    margin: 0;
+    color: red;
+  }
+
+  > p {
+    margin: 1em 0 1em 0;
+  }
+
+  pre {
+    margin: 0;
+  }
+
   ul {
-    margin: .5em 1.2em .5em 1.2em;
+    margin: 0 0 1em 0;
     padding: 0;
   }
 
   li {
     div.label {
-      margin-top: 1em;
+      margin: 0;
       padding: .5em 10px .5em 10px;
       width: 50%;
       -moz-border-radius-topleft: .5em;
@@ -110,8 +120,7 @@ body, html {
     }
 
     div.ibody {
-      margin-bottom: .5em;
-      margin: 0;
+      margin: 0 0 1em 0;
       padding: .5em 1em .5em .5em;
       border: solid black 2px;
       -moz-border-radius-topright: .5em;
@@ -145,11 +154,14 @@ body, html {
   }
 
   table.summary {
+    width: 100%;
+    margin: 0;
     th {
       width: auto;
       text-align: left;
       vertical-align: top;
       padding: .5em 2.5em .5em .5em;
+      margin: 0;
       background: @header-bg;
       color: white;
     }

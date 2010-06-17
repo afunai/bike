@@ -43,14 +43,8 @@ module Runo::Parser
       html.sub!("$(#{id})", "$(#{id}.message)\\&") unless _include_menu?(html, tmpl, id, 'message')
     }
 
-    html.sub!(/\A((?:[^<]*<!--)?[^<]*<[^>]*title=")([^"]+)/, '\\1')
-    plural_msgs = $2.to_s.split(/,/).collect {|s| s.strip }
-    plural_msgs *= 4 if plural_msgs.size == 1
-    label = plural_msgs.first
-    Runo::I18n.msg[label] ||= plural_msgs
-
     {
-      :label => label,
+      :label => scrape_label(html),
       :item  => item,
       :tmpl  => {action => html},
     }
@@ -97,6 +91,16 @@ module Runo::Parser
       end
     end
     out
+  end
+
+  def scrape_label(html)
+    if html.sub!(/\A((?:[^<]*<!--)?[^<]*<[^>]*title=")([^"]+)/, '\\1')
+      label_plural = $2.to_s.split(/,/).collect {|s| s.strip }
+      label_plural *= 4 if label_plural.size == 1
+      label = label_plural.first
+      Runo::I18n.msg[label] ||= label_plural
+      label
+    end
   end
 
   def parse_block(open_tag, inner_html, close_tag, action = :index)

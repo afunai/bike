@@ -118,8 +118,7 @@ _html
   alias :_g_create :_g_update
 
   def _path(action)
-    (Runo.base ? Runo.base[:uri].to_s : '') +
-    ([:read, nil].include?(action) ? my[:path] : my[:tmp_path])
+    Runo.uri.to_s + ([:read, nil].include?(action) ? my[:path] : my[:tmp_path])
   end
 
   def val_cast(v)

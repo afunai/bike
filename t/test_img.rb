@@ -8,6 +8,8 @@ require "#{::File.dirname __FILE__}/t"
 class TC_Img < Test::Unit::TestCase
 
   def setup
+    Runo.current[:uri] = nil
+
     File.open('t/skin/t_img/test.jpg') {|f|
       @img  = f.read
       @file = Tempfile.open('tc_img')

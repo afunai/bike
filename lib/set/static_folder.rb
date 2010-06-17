@@ -43,7 +43,7 @@ class Runo::Set::Static::Folder < Runo::Set::Static
   end
 
   def meta_base_href
-    Runo.base ? "#{Runo.base[:uri]}#{my[:dir]}/" : "#{my[:dir]}/"
+    "#{Runo.uri}#{my[:dir]}/"
   end
 
   private

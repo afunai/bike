@@ -18,7 +18,7 @@ _html
       roles = Runo::Workflow.roles @item_object.values.first[:roles]
       <<_html
 <div class="me">
-  <a href="#{Runo.base[:uri] if Runo.base}/_users/id=#{Runo.client}/update.html">
+  <a href="#{Runo.uri}/_users/id=#{Runo.client}/update.html">
     #{img.send(:_get_by_self_reference, :sub_action => :without_link) if img}
   </a>
   <div class="client">#{Runo.client}</div>

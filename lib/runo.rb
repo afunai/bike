@@ -58,6 +58,10 @@ class Runo
     self.current[:base]
   end
 
+  def self.uri
+    self.current[:uri]
+  end
+
   def self.libdir
     ::File.dirname __FILE__
   end
@@ -97,6 +101,7 @@ class Runo
     Runo::I18n.lang = env['HTTP_ACCEPT_LANGUAGE']
 
     Runo.current[:env]     = env
+    Runo.current[:uri]     = uri
     Runo.current[:req]     = req
     Runo.current[:session] = env['rack.session']
 
@@ -107,7 +112,6 @@ class Runo
     end
     return response_not_found unless base
 
-    base[:uri] = uri
     base[:tid] = tid
     Runo.current[:base] = base
 
@@ -154,7 +158,7 @@ class Runo
     path   = Runo::Path.path_of params[:conds]
     action = (params['dest_action'] =~ /\A\w+\z/) ? params['dest_action'] : 'index'
     response_see_other(
-      :location => "#{base[:uri]}#{base[:path]}/#{path}#{action}.html"
+      :location => "#{Runo.uri}#{base[:path]}/#{path}#{action}.html"
     )
   end
 
@@ -162,7 +166,7 @@ class Runo
     Runo.client = nil
     path = Runo::Path.path_of params[:conds]
     response_see_other(
-      :location => "#{base[:uri]}#{base[:path]}/#{path}index.html"
+      :location => "#{Runo.uri}#{base[:path]}/#{path}index.html"
     )
   end
 
@@ -188,7 +192,7 @@ class Runo
       id_step = result_step(base, params)
       action = "preview_#{params[:sub_action]}"
       response_see_other(
-        :location => "#{base[:uri]}/#{base[:tid]}/#{id_step}#{action}.html"
+        :location => "#{Runo.uri}/#{base[:tid]}/#{id_step}#{action}.html"
       )
     else
       params = {:action => :update}
@@ -207,7 +211,7 @@ class Runo
         action = base.workflow.next_action base
         id_step = result_step(base, params) if base[:parent] == base[:folder] && action != :done
         response_see_other(
-          :location => "#{base[:uri]}/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
+          :location => "#{Runo.uri}/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
         )
       else
         params = {:action => :update}
@@ -218,7 +222,7 @@ class Runo
       base.commit :temp
       id_step = result_step(base, params)
       response_see_other(
-        :location => "#{base[:uri]}/#{base[:tid]}/#{id_step}update.html"
+        :location => "#{Runo.uri}/#{base[:tid]}/#{id_step}update.html"
       )
     end
   end

@@ -8,6 +8,8 @@ require "#{::File.dirname __FILE__}/t"
 class TC_File < Test::Unit::TestCase
 
   def setup
+    Runo.current[:uri] = nil
+
     @file = Class.new
     @file.stubs(:rewind).returns(nil)
     @file.stubs(:read).returns('this is file body')

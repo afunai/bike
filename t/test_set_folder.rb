@@ -10,6 +10,7 @@ class TC_Set_Folder < Test::Unit::TestCase
   def setup
     Runo.client = 'root'
     Runo.current[:base] = nil
+    Runo.current[:uri]  = nil
   end
 
   def teardown
@@ -57,19 +58,18 @@ class TC_Set_Folder < Test::Unit::TestCase
   def test_meta_base_href
     folder = Runo::Set::Static::Folder.root.item('t_summary')
 
-    Runo.current[:base] = folder.item('main')
-    Runo.current[:base][:uri] = 'http://example.com'
+    Runo.current[:uri] = 'http://example.com'
     assert_equal(
       'http://example.com/t_summary/',
       folder[:base_href],
-      'Folder#meta_base_href should return a full URI when Runo.base is available'
+      'Folder#meta_base_href should return a full URI when Runo.uri is available'
     )
 
-    Runo.current[:base] = nil
+    Runo.current[:uri] = nil
     assert_equal(
       '/t_summary/',
       folder[:base_href],
-      'Folder#meta_base_href should return [:dir] when Runo.base is not available'
+      'Folder#meta_base_href should return [:dir] when Runo.uri is not available'
     )
   end
 
@@ -290,8 +290,6 @@ _html
 
   def test_base_href
     folder = Runo::Set::Static::Folder.root.item('t_summary')
-    folder[:uri] = 'http://example.com'
-    Runo.current[:base] = folder
 
     assert_match(
       '<base href="@(base_href)" />',

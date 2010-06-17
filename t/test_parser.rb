@@ -272,6 +272,54 @@ _eos
     )
   end
 
+  def test_parse_meta_tag
+    result = Runo::Parser.parse_html <<'_html'
+<html>
+  <meta name="runo-owner" content="frank" />
+</html>
+_html
+    assert_equal(
+      {
+        :tmpl  => {
+          :index => <<'_html',
+<html>
+</html>
+_html
+        },
+        :item  => {},
+        :owner => 'frank',
+        :label => nil,
+      },
+      result,
+      'Parser.parse_html should scrape meta vals from <meta>'
+    )
+
+    result = Runo::Parser.parse_html <<'_html'
+<html>
+  <meta name="runo-owner" content="frank" />
+  <meta name="runo-group" content="bob,carl" />
+  <meta name="runo-foo" content="bar, baz" />
+</html>
+_html
+    assert_equal(
+      {
+        :tmpl  => {
+          :index => <<'_html',
+<html>
+</html>
+_html
+        },
+        :item  => {},
+        :owner => 'frank',
+        :group => %w(bob carl),
+        :foo   => %w(bar baz),
+        :label => nil,
+      },
+      result,
+      'Parser.parse_html should scrape meta vals from <meta>'
+    )
+  end
+
   def test_parse_duplicate_tag
     result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world $(foo=boo) $(foo)!')
     assert_equal(

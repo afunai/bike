@@ -43,11 +43,11 @@ module Runo::Parser
       html.sub!("$(#{id})", "$(#{id}.message)\\&") unless _include_menu?(html, tmpl, id, 'message')
     }
 
-    {
+    scrape_meta(html).merge(
       :label => scrape_label(html),
       :item  => item,
-      :tmpl  => {action => html},
-    }
+      :tmpl  => {action => html}
+    )
   end
 
   def _include_menu?(html, tmpl, id, action)
@@ -91,6 +91,15 @@ module Runo::Parser
       end
     end
     out
+  end
+
+  def scrape_meta(html)
+    meta = {}
+    html.gsub!(/(?:^\s+)?<meta[^>]*name="runo-([^"]+)[^>]*content="([^"]+).*?>\s*/i) {
+      meta[$1.intern] = $2.include?(',') ? $2.split(/\s*,\s*/) : $2
+      ''
+    }
+    meta
   end
 
   def scrape_label(html)

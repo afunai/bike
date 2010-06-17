@@ -55,21 +55,21 @@ class TC_Set_Folder < Test::Unit::TestCase
     )
   end
 
-  def test_meta_base_href
+  def test_meta_href
     folder = Runo::Set::Static::Folder.root.item('t_summary')
 
     Runo.current[:uri] = 'http://example.com'
     assert_equal(
       'http://example.com/t_summary/',
-      folder[:base_href],
-      'Folder#meta_base_href should return a full URI when Runo.uri is available'
+      folder[:href],
+      'Folder#meta_href should return a full URI when Runo.uri is available'
     )
 
     Runo.current[:uri] = nil
     assert_equal(
       '/t_summary/',
-      folder[:base_href],
-      'Folder#meta_base_href should return [:dir] when Runo.uri is not available'
+      folder[:href],
+      'Folder#meta_href should return [:dir] when Runo.uri is not available'
     )
   end
 
@@ -231,7 +231,7 @@ class TC_Set_Folder < Test::Unit::TestCase
     assert_equal(
       <<'_html',
 <html>
-<head><base href="@(base_href)" /><title>index</title></head>
+<head><base href="@(href)" /><title>index</title></head>
 <body>
 <h1>index</h1>
 $(main.message)$(main)</body>
@@ -243,7 +243,7 @@ _html
     assert_equal(
       <<'_html',
 <html>
-<head><base href="@(base_href)" /><title>summary</title></head>
+<head><base href="@(href)" /><title>summary</title></head>
 <body>
 <h1>summary</h1>
 $(main.message)$(main)</body>
@@ -288,16 +288,16 @@ _html
     )
   end
 
-  def test_base_href
+  def test_href
     folder = Runo::Set::Static::Folder.root.item('t_summary')
 
     assert_match(
-      '<base href="@(base_href)" />',
+      '<base href="@(href)" />',
       folder[:tmpl][:index],
       'Folder#initialize should supplement <base href=...> to [:tmpl][*]'
     )
     assert_match(
-      '<base href="@(base_href)" />',
+      '<base href="@(href)" />',
       folder[:tmpl][:summary],
       'Folder#initialize should supplement <base href=...> to [:tmpl][*]'
     )
@@ -406,7 +406,7 @@ _html
     assert_equal(
       <<'_html',
 <html>
-  <head><base href="@(base_href)" /><title>$(_label)</title></head>
+  <head><base href="@(href)" /><title>$(_label)</title></head>
   <body>
     <p>thank you!</p>
   </body>

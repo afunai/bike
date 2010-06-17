@@ -24,7 +24,7 @@ class Runo::Set::Static::Folder < Runo::Set::Static
 
     @meta[:tmpl].values.each {|tmpl|
       tmpl.sub!(/<head>([\s\n]*)/i) {
-        "#{$&}<base href=\"@(base_href)\" />#{$1}"
+        "#{$&}<base href=\"@(href)\" />#{$1}"
       }
     } if @meta[:tmpl]
 
@@ -34,16 +34,16 @@ class Runo::Set::Static::Folder < Runo::Set::Static
     load load_val(my[:dir], my[:parent])
   end
 
+  def meta_dir
+    @meta[:dir]
+  end
+
   def meta_html_dir
     if ::File.readable? ::File.join(Runo['skin_dir'], my[:dir], 'index.html')
       my[:dir]
     elsif my[:parent]
       my[:parent][:html_dir]
     end
-  end
-
-  def meta_base_href
-    "#{Runo.uri}#{my[:dir]}/"
   end
 
   private

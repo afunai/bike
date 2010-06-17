@@ -7,6 +7,24 @@ module Runo::Set
 
   include Enumerable
 
+  def meta_dir
+    my[:folder][:dir] if my[:folder]
+  end
+
+  def meta_path
+    ['main', nil].include?(my[:name]) ?
+      my[:dir] :
+      "#{my[:dir]}/#{my[:name].sub(/^main-?/, '').gsub('-', '/')}"
+  end
+
+  def meta_href
+    "#{Runo.uri}#{my[:dir]}/"
+  end
+
+  def meta_base_path
+    Runo.base ? Runo.base[:path] : my[:path]
+  end
+
   def val(*steps)
     if steps.empty?
       _val

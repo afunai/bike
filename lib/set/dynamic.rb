@@ -38,18 +38,6 @@ class Runo::Set::Dynamic < Runo::Field
     @meta[:tid]
   end
 
-  def meta_dir
-    my[:folder][:dir] if my[:folder]
-  end
-
-  def meta_path
-    (my[:name] == 'main') ? my[:dir] : "#{my[:dir]}/#{my[:name].sub(/^main-?/, '').gsub('-', '/')}"
-  end
-
-  def meta_base_path
-    Runo.base ? Runo.base[:path] : my[:path]
-  end
-
   def get(arg = {})
     if !arg[:conds].is_a?(::Hash) || arg[:conds].empty?
       arg[:conds] = my[:conds].is_a?(::Hash) ? my[:conds].dup : {}

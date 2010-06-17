@@ -14,7 +14,7 @@ class Runo::Set::Dynamic
     return unless uris && uris.size > 1
 
     year_tmpl = month_tmpl = nil
-    div = my[:tmpl_view_ym] || <<'_tmpl'
+    div = my[:tmpl][:view_ym] || <<'_tmpl'
 <div class="view_ym">
   <span class="y">
     $(.y) |

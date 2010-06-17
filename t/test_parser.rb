@@ -50,7 +50,7 @@ class TC_Parser < Test::Unit::TestCase
       'Parser.parse_html should be able to parse empty runo tags'
     )
     assert_equal(
-      'hello $(foo) world',
+      {:index => 'hello $(foo) world'},
       result[:tmpl],
       'Parser.parse_html[:tmpl] should be a proper template'
     )
@@ -68,7 +68,7 @@ _html
       'Parser.parse_html should be able to parse empty runo tags'
     )
     assert_equal(
-      <<'_html',
+      {:index => <<'_html'},
 <h1>$(foo)</h1>
 <p>$(bar)</p>
 _html
@@ -85,7 +85,7 @@ _html
       'Parser.parse_html should not parse nested empty tag'
     )
     assert_equal(
-      'hello $(foo) baz) world',
+      {:index => 'hello $(foo) baz) world'},
       result[:tmpl],
       'Parser.parse_html[:tmpl] should be a proper template'
     )
@@ -97,7 +97,7 @@ _html
       'Parser.parse_html should be able to parse a tag that is not closed'
     )
     assert_equal(
-      'hello $(foo)',
+      {:index => 'hello $(foo)'},
       result[:tmpl],
       'Parser.parse_html should be able to parse a tag that is not closed'
     )
@@ -109,7 +109,7 @@ _html
       'Parser.parse_html should be able to parse tokens without a delimiter'
     )
     assert_equal(
-      'hello $(foo)',
+      {:index => 'hello $(foo)'},
       result[:tmpl],
       'Parser.parse_html should be able to parse tokens without a delimiter'
     )
@@ -280,7 +280,7 @@ _eos
       'definition tags are overridden by a preceding definition'
     )
     assert_equal(
-      'hello $(foo) world $(foo) $(foo)!',
+      {:index => 'hello $(foo) world $(foo) $(foo)!'},
       result[:tmpl],
       'Parser.parse_html[:tmpl] should be a proper template'
     )
@@ -326,14 +326,16 @@ _html
         'foo' => {
           :klass    => 'set-dynamic',
           :workflow => 'blog',
-          :tmpl     => <<'_tmpl'.chomp,
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
 <ul class="runo-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+          },
           :item     => {
             'default' => {
               :label => nil,
-              :tmpl  => '<li>hello</li>',
+              :tmpl  => {:index => '<li>hello</li>'},
               :item  => {},
             },
           },
@@ -343,7 +345,7 @@ _tmpl
       'Parser.parse_html should be able to parse block runo tags'
     )
     assert_equal(
-      '$(foo.message)$(foo)',
+      {:index => '$(foo.message)$(foo)'},
       result[:tmpl],
       'Parser.parse_html[:tmpl] should be a proper template'
     )
@@ -358,15 +360,17 @@ _html
         'foo' => {
           :klass    => 'set-dynamic',
           :workflow => 'blog',
-          :tmpl     => <<'_tmpl'.chomp,
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
 <ul class="runo-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+          },
           :item     => {
             'default' => {
               :label => nil,
-              :tmpl  => "  <li>hello</li>\n",
+              :tmpl  => {:index => "  <li>hello</li>\n"},
               :item  => {},
             },
           }
@@ -376,7 +380,7 @@ _tmpl
       'Parser.parse_html should be able to parse block runo tags'
     )
     assert_equal(
-      '$(foo.message)$(foo)',
+      {:index => '$(foo.message)$(foo)'},
       result[:tmpl],
       'Parser.parse_html[:tmpl] should be a proper template'
     )
@@ -389,13 +393,15 @@ _html
         'foo' => {
           :klass    => 'set-dynamic',
           :workflow => 'blog',
-          :tmpl     => <<'_tmpl'.chomp,
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
  <ul class="runo-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
 _tmpl
+          },
           :item     => {
             'default' => {
               :label => nil,
-              :tmpl  => '<li>hello</li>',
+              :tmpl  => {:index => '<li>hello</li>'},
               :item  => {},
             },
           },
@@ -405,7 +411,7 @@ _tmpl
       'Parser.parse_html should be able to parse block runo tags'
     )
     assert_equal(
-      <<'_html',
+      {:index => <<'_html'},
 hello$(foo.message)$(foo) world
 _html
       result[:tmpl],
@@ -418,7 +424,7 @@ _html
 hello <ul class="not-runo-blog" id="foo"><li>hello</li></ul> world
 _html
     assert_equal(
-      <<'_tmpl',
+      {:index => <<'_tmpl'},
 hello <ul class="not-runo-blog" id="foo"><li>hello</li></ul> world
 _tmpl
       result[:tmpl],
@@ -443,18 +449,22 @@ _html
           :tokens   => ['barbaz'],
           :klass    => 'set-dynamic',
           :workflow => 'blog',
-          :tmpl     => <<'_tmpl'.chomp,
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
   <table class="runo-blog" id="@(name)">
     <!-- 1..20 barbaz -->
 $()  </table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+          },
           :item     => {
             'default' => {
               :label => nil,
-              :tmpl  => <<'_tmpl',
+              :tmpl  => {
+                :index => <<'_tmpl',
     <tbody class="body"><!-- qux --><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
+              },
               :item  => {
                 'bar' => {:klass => 'text'},
                 'baz' => {:klass => 'text'},
@@ -482,18 +492,22 @@ _html
         'foo' => {
           :klass    => 'set-dynamic',
           :workflow => 'blog',
-          :tmpl     => <<'_tmpl'.chomp,
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
   <table class="runo-blog" id="@(name)">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()  </table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+          },
           :item     => {
             'default' => {
               :label => nil,
-              :tmpl  => <<'_tmpl',
+              :tmpl  => {
+                :index => <<'_tmpl',
     <tbody class="body"><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
+              },
               :item  => {
                 'bar' => {:klass => 'text'},
                 'baz' => {:klass => 'text'},
@@ -506,7 +520,7 @@ _tmpl
       'Parser.parse_html should aware of <tbody class="body">'
     )
     assert_equal(
-      <<'_tmpl',
+      {:index => <<'_tmpl'},
 hello
 $(foo.message)$(foo)world
 _tmpl
@@ -601,18 +615,22 @@ _html
         'foo' => {
           :klass    => 'set-dynamic',
           :workflow => 'blog',
-          :tmpl     => <<'_tmpl'.chomp,
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
   <table class="runo-blog" id="@(name)">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()  </table>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+          },
           :item     => {
             'default' => {
               :label => nil,
-              :tmpl  => <<'_tmpl',
+              :tmpl  => {
+                :index => <<'_tmpl',
     <tbody class="body"><tbody><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody></tbody>
 _tmpl
+              },
               :item  => {
                 'bar' => {:klass => 'text'},
                 'baz' => {:klass => 'text'},
@@ -639,30 +657,36 @@ _html
         'foo' => {
           :klass    => 'set-dynamic',
           :workflow => 'blog',
-          :tmpl     => <<'_tmpl'.chomp,
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
 <ul class="runo-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+          },
           :item     => {
             'default' => {
               :label => nil,
-              :tmpl  => <<'_tmpl',
+              :tmpl  => {
+                :index => <<'_tmpl',
   <li>
 $(bar.message)$(.a_update)$(bar)$(.hidden)</a>  </li>
 _tmpl
+              },
               :item  => {
                 'bar' => {
                   :klass    => 'set-dynamic',
                   :workflow => 'blog',
-                  :tmpl     => <<'_tmpl'.chomp,
+                  :tmpl     => {
+                    :index => <<'_tmpl'.chomp,
     <ul class="runo-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+                  },
                   :item     => {
                     'default' => {
                       :label => nil,
-                      :tmpl  => '<li>baz</li>',
+                      :tmpl  => {:index => '<li>baz</li>'},
                       :item  => {},
                     },
                   },
@@ -676,7 +700,7 @@ _tmpl
       'Parser.parse_html should be able to parse nested block runo tags'
     )
     assert_equal(
-      '$(foo.message)$(foo)',
+      {:index => '$(foo.message)$(foo)'},
       result[:tmpl],
       'Parser.parse_html[:tmpl] should be a proper template'
     )
@@ -701,21 +725,25 @@ _html
         'foo'   => {
           :klass    => 'set-dynamic',
           :workflow => 'blog',
-          :tmpl     => <<'_tmpl'.chomp,
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
   <ul id="@(name)" class="runo-blog">
 $()  </ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+          },
           :item     => {
             'default' => {
               :label => nil,
-              :tmpl  => <<'_tmpl',
+              :tmpl  => {
+                :index => <<'_tmpl',
     <li>
       $(.a_update)$(subject)</a>
       $(body)$(.hidden)
       <ul><li>qux</li></ul>
     </li>
 _tmpl
+              },
               :item  => {
                 'body' => {
                   :width  => 72,
@@ -735,7 +763,7 @@ _tmpl
       'Parser.parse_html should be able to parse combination of mixed runo tags'
     )
     assert_equal(
-      <<'_tmpl',
+      {:index => <<'_tmpl'},
 <html>
   <h1>$(title)</h1>
 $(foo.message)$(foo)</html>
@@ -809,7 +837,7 @@ _tmpl
     assert_equal(
       {
         :id     => 'foo',
-        :action => 'navi',
+        :action => :navi,
         :tmpl   => '<div class="foo-navi">Foo</div>',
       },
       result,
@@ -825,7 +853,7 @@ _tmpl
     assert_equal(
       {
         :id     => 'foo',
-        :action => 'navi',
+        :action => :navi,
         :tmpl   => '<div class="bar foo-navi">Foo</div>',
       },
       result,
@@ -836,7 +864,7 @@ _tmpl
     assert_equal(
       {
         :id     => 'foo',
-        :action => 'navi',
+        :action => :navi,
         :tmpl   => '<div class="bar foo-navi baz">Foo</div>',
       },
       result,
@@ -847,7 +875,7 @@ _tmpl
     assert_equal(
       {
         :id     => 'foo',
-        :action => 'done',
+        :action => :done,
         :tmpl   => '<div class="bar foo-done baz">Foo</div>',
       },
       result,
@@ -860,7 +888,7 @@ _tmpl
     assert_equal(
       {
         :id     => nil,
-        :action => 'navi',
+        :action => :navi,
         :tmpl   => '<div class="navi">Foo</div>',
       },
       result,
@@ -871,7 +899,7 @@ _tmpl
     assert_equal(
       {
         :id     => nil,
-        :action => 'navi',
+        :action => :navi,
         :tmpl   => '<div class="foo navi">Foo</div>',
       },
       result,
@@ -882,7 +910,7 @@ _tmpl
     assert_equal(
       {
         :id     => nil,
-        :action => 'navi',
+        :action => :navi,
         :tmpl   => '<div class="foo navi baz">Foo</div>',
       },
       result,
@@ -902,7 +930,7 @@ _tmpl
     assert_equal(
       {
         :id     => nil,
-        :action => 'navi_bar',
+        :action => :navi_bar,
         :tmpl   => '<div class="navi_bar">Foo</div>',
       },
       result,
@@ -923,11 +951,11 @@ _html
       <<'_tmpl',
   <div class="foo-navi">bar</div>
 _tmpl
-      result[:item]['foo'][:tmpl_navi],
+      result[:item]['foo'][:tmpl][:navi],
       'Parser.parse_html should parse action templates in the html'
     )
     assert_equal(
-      <<'_tmpl',
+      {:index => <<'_tmpl'},
 <html>
 $(foo.message)$(foo)$(foo.navi)</html>
 _tmpl
@@ -949,11 +977,11 @@ _html
       <<'_tmpl',
   <div class="navi">bar</div>
 _tmpl
-      result[:item]['main'][:tmpl_navi],
+      result[:item]['main'][:tmpl][:navi],
       "Parser.parse_html should set action templates to item['main'] by default"
     )
     assert_equal(
-      <<'_tmpl',
+      {:index => <<'_tmpl'},
 <html>
 $(main.message)$(main)$(main.navi)</html>
 _tmpl
@@ -976,7 +1004,7 @@ _html
       'Parser.parse_html should ignore the action template without a corresponding SD'
     )
     assert_equal(
-      <<'_tmpl',
+      {:index => <<'_tmpl'},
 <html>
 $(main.message)$(main)  <div class="non_existent-navi">bar</div>
 </html>
@@ -999,12 +1027,27 @@ _html
       <<'_html',
   <div class="foo-navi">$(.navi_prev)</div>
 _html
-      result[:item]['foo'][:tmpl_navi],
+      result[:item]['foo'][:tmpl][:navi],
       'Parser.parse_html should parse nested action templates'
     )
     assert_equal(
       '<span class="navi_prev">prev</span>',
-      result[:item]['foo'][:tmpl_navi_prev],
+      result[:item]['foo'][:tmpl][:navi_prev],
+      'Parser.parse_html should parse nested action templates'
+    )
+    assert_equal(
+      {
+        :index     => <<'_html'.chomp,
+  <ul id="@(name)" class="runo-blog">
+$()  </ul>
+$(.submit)$(.action_create)
+_html
+        :navi      => <<'_html',
+  <div class="foo-navi">$(.navi_prev)</div>
+_html
+        :navi_prev => '<span class="navi_prev">prev</span>',
+      },
+      result[:item]['foo'][:tmpl],
       'Parser.parse_html should parse nested action templates'
     )
 
@@ -1018,7 +1061,7 @@ _html
 _html
     assert_equal(
       '<span class="bar-navi_prev">prev</span>',
-      result[:item]['foo'][:tmpl_navi_prev],
+      result[:item]['foo'][:tmpl][:navi_prev],
       'Parser.parse_html should ignore the id of a nested action template'
     )
   end
@@ -1034,12 +1077,12 @@ _html
       <<'_html',
   <div class="navi">bar</div>
 _html
-      result[:item]['foo'][:tmpl_navi],
+      result[:item]['foo'][:tmpl][:navi],
       'Parser.parse_html should parse action templates in sd[:tmpl]'
     )
     assert_match(
       %r{\$\(\.navi\)},
-      result[:item]['foo'][:tmpl],
+      result[:item]['foo'][:tmpl][:index],
       'Parser.parse_html should parse action templates in sd[:tmpl]'
     )
   end
@@ -1055,12 +1098,12 @@ _html
       <<'_html',
   <div class="navi">$(.navi_prev)</div>
 _html
-      result[:item]['foo'][:tmpl_navi],
+      result[:item]['foo'][:tmpl][:navi],
       'Parser.parse_html should parse nested action templates in sd[:tmpl]'
     )
     assert_equal(
       '<span class="navi_prev">prev</span>',
-      result[:item]['foo'][:tmpl_navi_prev],
+      result[:item]['foo'][:tmpl][:navi_prev],
       'Parser.parse_html should parse nested action templates in sd[:tmpl]'
     )
   end
@@ -1073,7 +1116,7 @@ _html
 _html
     assert_match(
       /\$\(\.navi\)/,
-      result[:item]['foo'][:tmpl],
+      result[:item]['foo'][:tmpl][:index],
       'Parser.parse_html should supplement sd[:tmpl] with default menus'
     )
 
@@ -1085,7 +1128,7 @@ _html
 _html
     assert_no_match(
       /\$\(\.navi\).*\$\(\.navi\)/m,
-      result[:item]['foo'][:tmpl],
+      result[:item]['foo'][:tmpl][:index],
       'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
     )
 
@@ -1097,7 +1140,7 @@ _html
 _html
     assert_no_match(
       /\$\(\.navi\)/,
-      result[:item]['foo'][:tmpl],
+      result[:item]['foo'][:tmpl][:index],
       'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
     )
   end

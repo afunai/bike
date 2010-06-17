@@ -215,7 +215,7 @@ _html
 </html>
 _html
       res.body,
-      'Runo#call() should use [:tmpl_summary] when available and appropriate'
+      'Runo#call() should use [:tmpl][:summary] when available and appropriate'
     )
 
     res = Rack::MockRequest.new(@runo).get(

@@ -214,11 +214,11 @@ class TC_Field < Test::Unit::TestCase
       'Field#get should relay the result of _g_*()'
     )
 
-    @f[:tmpl_foo] = 'foo foo'
+    @f[:tmpl] = {:foo => 'foo foo'}
     assert_equal(
       'hello',
       @f.get(:action => :foo),
-      'Field#get should not use [:tmpl_*]'
+      'Field#get should not use [:tmpl][*]'
     )
   end
 

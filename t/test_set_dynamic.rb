@@ -13,11 +13,13 @@ class TC_Set_Dynamic < Test::Unit::TestCase
       :klass    => 'set-dynamic',
       :workflow => 'blog',
       :group    => ['roy', 'don'],
-      :tmpl     => <<'_tmpl'.chomp,
+      :tmpl     => {
+        :index => <<'_tmpl'.chomp,
 <ul id="foo" class="runo-blog">
 $()</ul>
 $(.submit)
 _tmpl
+      },
       :item     => {
         'default' => Runo::Parser.parse_html(<<'_html')
   <li>$(name = text 16 0..16 :'nobody'): $(comment = text 64 :'hi.')$(.hidden)</li>
@@ -26,7 +28,7 @@ _html
     )
     @sd[:conds] = {}
     @sd[:order] = nil
-    @sd[:tmpl_action_create] = ''
+    @sd[:tmpl][:action_create] = ''
     def @sd._g_submit(arg)
       "[#{my[:id]}-#{arg[:orig_action]}#{arg[:sub_action] && ('.' + arg[:sub_action].to_s)}]\n"
     end
@@ -200,8 +202,8 @@ _html
       '20100131_1234' => {'name' => 'frank', 'comment' => 'bar'},
       '20100131_1235' => {'name' => 'carl', 'comment' => 'baz'}
     )
-    @sd[:tmpl_navi] = ''
-    @sd.each {|item| item[:tmpl_action_update] = '' }
+    @sd[:tmpl][:navi] = ''
+    @sd.each {|item| item[:tmpl][:action_update] = '' }
     assert_equal(
       <<'_html',
 <ul id="foo" class="runo-blog">
@@ -317,41 +319,41 @@ _html
     def sd._g_jawaka(arg)
       'JAWAKA'
     end
-    sd[:tmpl_navi] = ''
+    sd[:tmpl][:navi] = ''
 
-    sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
-    sd[:tmpl_jawaka] = nil
+    sd[:tmpl][:pipco]  = '<foo>$(.jawaka)</foo>'
+    sd[:tmpl][:jawaka] = nil
     assert_equal(
       '<ul class="runo-attachment"><foo>JAWAKA</foo></ul>',
       ss.get,
       'Set::Dynamic#_get_by_self_reference should work via [:parent]._get_by_tmpl()'
     )
 
-    sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
-    sd[:tmpl_jawaka] = 'via tmpl'
+    sd[:tmpl][:pipco]  = '<foo>$(.jawaka)</foo>'
+    sd[:tmpl][:jawaka] = 'via tmpl'
     assert_equal(
       '<ul class="runo-attachment"><foo>JAWAKA</foo></ul>',
       ss.get,
       'Set::Dynamic#_get_by_self_reference should not recur'
     )
 
-    sd[:tmpl_pipco]  = '<foo>$(.pipco)</foo>'
-    sd[:tmpl_jawaka] = nil
+    sd[:tmpl][:pipco]  = '<foo>$(.pipco)</foo>'
+    sd[:tmpl][:jawaka] = nil
     assert_nothing_raised(
       'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
     ) {
       ss.get
     }
 
-    sd[:tmpl_pipco]  = '<foo>$()</foo>'
+    sd[:tmpl][:pipco]  = '<foo>$()</foo>'
     assert_nothing_raised(
       'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
     ) {
       ss.get
     }
 
-    sd[:tmpl_pipco]  = '<foo>$(.jawaka)</foo>'
-    sd[:tmpl_jawaka] = '<bar>$(.pipco)</bar>'
+    sd[:tmpl][:pipco]  = '<foo>$(.jawaka)</foo>'
+    sd[:tmpl][:jawaka] = '<bar>$(.pipco)</bar>'
     assert_nothing_raised(
       'Set::Dynamic#_get_by_self_reference should not cause an infinite reference'
     ) {
@@ -369,7 +371,7 @@ _html
     def sd._g_action_pipco(arg)
       'PIPCO'
     end
-    sd[:tmpl_navi] = ''
+    sd[:tmpl][:navi] = ''
 
     assert_equal(
       'PIPCO<ul class="runo-attachment"></ul>',
@@ -391,7 +393,7 @@ _html
     def sd._g_pipco(arg)
       'PIPCO'
     end
-    sd[:tmpl_navi] = ''
+    sd[:tmpl][:navi] = ''
 
     assert_equal(
       '<ul class="runo-attachment">PIPCO</ul>',
@@ -459,7 +461,7 @@ _html
       'Set::Dynamic#_g_uri_prev should return nil if there is no previous conds'
     )
 
-    @sd[:tmpl_navi] = '$(.uri_prev)'
+    @sd[:tmpl][:navi] = '$(.uri_prev)'
     assert_equal(
       '200911/',
       @sd.send(
@@ -477,7 +479,7 @@ _html
       '20091128_0001' => {'name' => 'frank', 'comment' => 'bar'},
       '20091129_0001' => {'name' => 'frank', 'comment' => 'bar'}
     )
-    @sd[:tmpl_navi] = '$(.navi)'
+    @sd[:tmpl][:navi] = '$(.navi)'
 
     result = nil
     assert_nothing_raised(
@@ -496,8 +498,8 @@ _html
       'Set::Dynamic#_g_navi should ignore $(.navi)'
     )
 
-    @sd[:tmpl_navi] = nil
-    @sd[:tmpl_navi_next] = '$(.navi)'
+    @sd[:tmpl][:navi] = nil
+    @sd[:tmpl][:navi_next] = '$(.navi)'
     assert_nothing_raised(
       'Set::Dynamic#_g_navi should not call itself recursively'
     ) {
@@ -734,7 +736,7 @@ _html
     @sd = Runo::Set::Dynamic.new(
       :klass    => 'set-dynamic',
       :workflow => 'blog',
-      :tmpl     => '$(.submit)',
+      :tmpl     => {:index => '$(.submit)'},
       :item     => {
         'default' => Runo::Parser.parse_html(<<'_html')
   <li>$(name = text 32 :'nobody'): $(comment = text 64 :'hi.')$(.hidden)</li>

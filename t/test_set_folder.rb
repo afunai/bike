@@ -126,7 +126,7 @@ class TC_Set_Folder < Test::Unit::TestCase
     )
   end
 
-  def test_merge_meta
+  def test_merge_tmpl
     folder = Runo::Set::Static::Folder.root
 
     index = {
@@ -134,13 +134,13 @@ class TC_Set_Folder < Test::Unit::TestCase
         'main' => {
           :item => {
             'default' => {
-              :tmpl => '<li><ul>$(files)</ul></li>',
+              :tmpl => {:index => '<li><ul>$(files)</ul></li>'},
               :item => {
                 'files' => {
-                  :tmpl => '<ol>$()</ol>',
+                  :tmpl => {:index => '<ol>$()</ol>'},
                   :item => {
                     'default' => {
-                      :tmpl => '<li>$(file)</li>',
+                      :tmpl => {:index => '<li>$(file)</li>'},
                       :item => {'file' => {:klass => 'text'}},
                     },
                   },
@@ -148,10 +148,10 @@ class TC_Set_Folder < Test::Unit::TestCase
               },
             },
           },
-          :tmpl => '<ul>$()</ul>',
+          :tmpl => {:index => '<ul>$()</ul>'},
         },
       },
-      :tmpl => '<html>$(main)</html>',
+      :tmpl => {:index => '<html>$(main)</html>'},
     }
     summary = {
       :item => {
@@ -160,25 +160,25 @@ class TC_Set_Folder < Test::Unit::TestCase
           :item => {
             'default' => {
               :bar  => 'this should not be merged.',
-              :tmpl => '<li class ="s"><ul>$(files)</ul></li>',
+              :tmpl => {:summary => '<li class ="s"><ul>$(files)</ul></li>'},
               :item => {
                 'files' => {
                   :baz  => 'this should not be merged.',
-                  :tmpl => '<ol class ="s">$()</ol>',
+                  :tmpl => {:summary => '<ol class ="s">$()</ol>'},
                   :item => {
                     'default' => {
                       :qux  => 'this should not be merged.',
-                      :tmpl => '<li class ="s">$(file)</li>',
+                      :tmpl => {:summary => '<li class ="s">$(file)</li>'},
                     },
                   },
                 },
               },
             },
           },
-          :tmpl => '<ul class ="s">$()</ul>',
+          :tmpl => {:summary => '<ul class ="s">$()</ul>'},
         },
       },
-      :tmpl => '<html class ="s">$(main)</html>',
+      :tmpl => {:summary => '<html class ="s">$(main)</html>'},
     }
 
     assert_equal(
@@ -187,16 +187,22 @@ class TC_Set_Folder < Test::Unit::TestCase
           'main' => {
             :item => {
               'default' => {
-                :tmpl => '<li><ul>$(files)</ul></li>',
-                :tmpl_summary => '<li class ="s"><ul>$(files)</ul></li>',
+                :tmpl => {
+                  :index   => '<li><ul>$(files)</ul></li>',
+                  :summary => '<li class ="s"><ul>$(files)</ul></li>',
+                },
                 :item => {
                   'files' => {
-                    :tmpl => '<ol>$()</ol>',
-                    :tmpl_summary => '<ol class ="s">$()</ol>',
+                    :tmpl => {
+                      :index   => '<ol>$()</ol>',
+                      :summary => '<ol class ="s">$()</ol>',
+                    },
                     :item => {
                       'default' => {
-                        :tmpl => '<li>$(file)</li>',
-                        :tmpl_summary => '<li class ="s">$(file)</li>',
+                        :tmpl => {
+                          :index   => '<li>$(file)</li>',
+                          :summary => '<li class ="s">$(file)</li>',
+                        },
                         :item => {'file' => {:klass => 'text'}},
                       },
                     },
@@ -204,15 +210,19 @@ class TC_Set_Folder < Test::Unit::TestCase
                 },
               },
             },
-            :tmpl => '<ul>$()</ul>',
-            :tmpl_summary => '<ul class ="s">$()</ul>',
+            :tmpl => {
+              :index   => '<ul>$()</ul>',
+              :summary => '<ul class ="s">$()</ul>',
+            },
           },
         },
-        :tmpl => '<html>$(main)</html>',
-        :tmpl_summary => '<html class ="s">$(main)</html>',
+        :tmpl => {
+          :index   => '<html>$(main)</html>',
+          :summary => '<html class ="s">$(main)</html>',
+        },
       },
-      folder.send(:merge_meta, index, summary, :summary),
-      'Folder#merge_meta should merge parsed metas'
+      folder.send(:merge_tmpl, index, summary),
+      'Folder#merge_tmpl should merge parsed metas'
     )
   end
 
@@ -227,8 +237,8 @@ class TC_Set_Folder < Test::Unit::TestCase
 $(main.message)$(main)</body>
 </html>
 _html
-      folder[:tmpl],
-      'Folder#initialize should load [:tmpl] from [:dir]/index.html'
+      folder[:tmpl][:index],
+      'Folder#initialize should load [:tmpl][:index] from [:dir]/index.html'
     )
     assert_equal(
       <<'_html',
@@ -239,8 +249,8 @@ _html
 $(main.message)$(main)</body>
 </html>
 _html
-      folder[:tmpl_summary],
-      'Folder#initialize should load [:tmpl_summary] from [:dir]/summary.html'
+      folder[:tmpl][:summary],
+      'Folder#initialize should load [:tmpl][:summary] from [:dir]/summary.html'
     )
 
     assert_equal(
@@ -249,7 +259,7 @@ _html
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _html
-      folder[:item]['main'][:tmpl],
+      folder[:item]['main'][:tmpl][:index],
       'Folder#initialize should load [:tmpl] of the child items'
     )
     assert_equal(
@@ -258,23 +268,23 @@ _html
 $()</table>
 $(.navi)$(.submit)$(.action_create)
 _html
-      folder[:item]['main'][:tmpl_summary],
-      'Folder#initialize should load [:tmpl_summary] of the child items'
+      folder[:item]['main'][:tmpl][:summary],
+      'Folder#initialize should load [:tmpl][:summary] of the child items'
     )
 
     assert_equal(
       <<'_html',
   <li>$(.a_update)$(name)</a>: $(comment)$(.hidden)</li>
 _html
-      folder[:item]['main'][:item]['default'][:tmpl],
+      folder[:item]['main'][:item]['default'][:tmpl][:index],
       'Folder#initialize should load [:tmpl] of all the decendant items'
     )
     assert_equal(
       <<'_html',
   <tr><td><a href="$(.uri_detail)">$(name)</a></td><td>$(comment)</td></tr>
 _html
-      folder[:item]['main'][:item]['default'][:tmpl_summary],
-      'Folder#initialize should load [:tmpl_summary] of all the decendant items'
+      folder[:item]['main'][:item]['default'][:tmpl][:summary],
+      'Folder#initialize should load [:tmpl][:summary] of all the decendant items'
     )
   end
 
@@ -285,13 +295,13 @@ _html
 
     assert_match(
       '<base href="@(base_href)" />',
-      folder[:tmpl],
-      'Folder#initialize should supplement <base href=...> to [:tmpl]'
+      folder[:tmpl][:index],
+      'Folder#initialize should supplement <base href=...> to [:tmpl][*]'
     )
     assert_match(
       '<base href="@(base_href)" />',
-      folder[:tmpl_summary],
-      'Folder#initialize should supplement <base href=...> to [:tmpl_*]'
+      folder[:tmpl][:summary],
+      'Folder#initialize should supplement <base href=...> to [:tmpl][*]'
     )
   end
 
@@ -314,7 +324,7 @@ _html
       folder.get(
         'main' => {:conds => {:p => 1}}
       ),
-      'Set#get should use [:tmpl_summary] when available and appropriate'
+      'Set#get should use [:tmpl][:summary] when available and appropriate'
     )
     assert_equal(
       <<'_html',
@@ -334,7 +344,7 @@ _html
         :sub_action => :detail,
         'main' => {:action => :read, :sub_action => :detail, :conds => {:p => 1}}
       ),
-      'Set#get should not use [:tmpl_summary] for :read -> :detail'
+      'Set#get should not use [:tmpl][:summary] for :read -> :detail'
     )
 
     Runo.client = 'root'
@@ -364,7 +374,7 @@ _html
         :sub_action => :detail,
         'main' => {:action => :update, :sub_action => nil, :conds => {:p => 1}}
       ),
-      'Set#get should not use [:tmpl_summary] for :update'
+      'Set#get should not use [:tmpl][:summary] for :update'
     )
   end
 
@@ -389,7 +399,7 @@ _html
       folder.get(
         'main' => {:action => :create}
       ),
-      'Set#get should use [:tmpl_create] when available and appropriate'
+      'Set#get should use [:tmpl][:create] when available and appropriate'
     )
   end
 
@@ -404,8 +414,8 @@ _html
   </body>
 </html>
 _html
-      folder[:tmpl_done],
-      'Folder#initialize should load [:tmpl_done] from [:dir]/done.html'
+      folder[:tmpl][:done],
+      'Folder#initialize should load [:tmpl][:done] from [:dir]/done.html'
     )
   end
 

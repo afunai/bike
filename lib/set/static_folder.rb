@@ -18,15 +18,15 @@ class Runo::Set::Static::Folder < Runo::Set::Static
       action = ::File.basename(f, '.*').intern
       if action != :index
         html_action = load_html(my[:html_dir].to_s, my[:parent], action)
-        merge_meta(@meta, Runo::Parser.parse_html(html_action, action), action)
+        merge_tmpl(@meta, Runo::Parser.parse_html(html_action, action))
       end
     }
 
-    @meta.keys.each {|k|
-      @meta[k].sub!(/<head>([\s\n]*)/i) {
+    @meta[:tmpl].values.each {|tmpl|
+      tmpl.sub!(/<head>([\s\n]*)/i) {
         "#{$&}<base href=\"@(base_href)\" />#{$1}"
-      } if k.to_s =~ /^tmpl(?:_.+)?$/
-    }
+      }
+    } if @meta[:tmpl]
 
     my[:item]['_label'] = {:klass => 'text'}
     my[:item]['_owner'] = {:klass => 'meta-owner'}
@@ -49,7 +49,7 @@ class Runo::Set::Static::Folder < Runo::Set::Static
   private
 
   def _get(arg)
-    if arg['main'] && action_tmpl = my[:"tmpl_#{arg['main'][:action]}"]
+    if arg['main'] && action_tmpl = my[:tmpl][arg['main'][:action]]
       _get_by_tmpl(arg, action_tmpl)
     else
       super
@@ -68,7 +68,7 @@ class Runo::Set::Static::Folder < Runo::Set::Static
     super
   end
 
-  def load_html(dir, parent, action = 'index')
+  def load_html(dir, parent, action = :index)
     html_file = ::File.join Runo['skin_dir'], dir, "#{action}.html"
     if ::File.exists? html_file
       ::File.open(html_file) {|f| f.read }
@@ -86,10 +86,10 @@ class Runo::Set::Static::Folder < Runo::Set::Static
     }.merge(v) : v
   end
 
-  def merge_meta(meta, action_meta, action)
-    meta[:"tmpl_#{action}"] = action_meta[:tmpl]
+  def merge_tmpl(meta, action_meta)
+    meta[:tmpl].merge! action_meta[:tmpl]
     meta[:item].each {|id, val|
-      merge_meta(val, action_meta[:item][id], action) if action_meta[:item][id]
+      merge_tmpl(val, action_meta[:item][id]) if action_meta[:item][id]
     } if action_meta[:item]
     meta
   end

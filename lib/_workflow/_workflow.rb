@@ -66,7 +66,7 @@ class Runo::Workflow
     @sd.instance_eval {
       if arg[:action] == :create
         item_instance '_001'
-        _get_by_tmpl({:action => :create, :conds => {:id => '_001'}}, my[:tmpl])
+        _get_by_tmpl({:action => :create, :conds => {:id => '_001'}}, my[:tmpl][:index])
       end
     }
   end

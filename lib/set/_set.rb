@@ -78,12 +78,12 @@ module Runo::Set
   def _get(arg)
     if respond_to?("_g_#{arg[:action]}", true)
       _get_by_method arg
-    elsif my[:tmpl_summary] && summary?(arg)
-      _get_by_tmpl(arg, my[:tmpl_summary])
-    elsif action_tmpl = my[:"tmpl_#{arg[:action]}"]
+    elsif summary?(arg) && action_tmpl = my[:tmpl][:summary]
+      _get_by_tmpl(arg, action_tmpl)
+    elsif action_tmpl = my[:tmpl][arg[:sub_action]] || my[:tmpl][arg[:action]]
       _get_by_tmpl(arg, action_tmpl)
     else
-      _get_by_tmpl(arg, my[:tmpl])
+      _get_by_tmpl(arg, my[:tmpl][:index])
     end
   end
 
@@ -126,7 +126,7 @@ module Runo::Set
   end
 
   def _get_by_action_tmpl(arg)
-    return nil unless !arg[:recur] && action_tmpl = my["tmpl_#{arg[:action]}".intern]
+    return nil unless !arg[:recur] && action_tmpl = my[:tmpl][arg[:action]]
     _get_by_tmpl(arg.merge(:action => nil, :sub_action => nil, :recur => true), action_tmpl)
   end
 

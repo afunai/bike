@@ -32,21 +32,25 @@ _html
         'foo'   => {
           :klass    => 'set-dynamic',
           :workflow => 'blog',
-          :tmpl     => <<'_tmpl'.chomp,
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
   <ul id="@(name)" class="runo-blog">
 $()  </ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+          },
           :item     => {
             'default' => {
               :label => 'Diary',
-              :tmpl  => <<'_tmpl',
+              :tmpl  => {
+                :index => <<'_tmpl',
     <li title="">
       $(.a_update)$(subject)</a>
       $(body)$(.hidden)
       <ul><li>qux</li></ul>
     </li>
 _tmpl
+              },
               :item  => {
                 'body'    => {
                   :width  => 72,
@@ -133,7 +137,7 @@ _html
       {
         'default' => {
           :label => nil,
-          :tmpl  => "    <li>hi</li>\n",
+          :tmpl  => {:index => "    <li>hi</li>\n"},
           :item  => {},
         },
       },

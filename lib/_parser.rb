@@ -14,15 +14,16 @@ module Runo::Parser
       item[id] = parse_block(open, inner, close, action)
       "$(#{id})"
     }
-    html = gsub_action_tmpl(html) {|id, action, open, inner, close|
+    html = gsub_action_tmpl(html) {|id, act, open, inner, close|
       id ||= 'main'
       if item[id]
+        item[id][:tmpl] ||= {}
         inner = gsub_action_tmpl(inner) {|i, a, *t|
-          item[id]["tmpl_#{a}".intern] = t.join
+          item[id][:tmpl][a] = t.join
           "$(.#{a})"
         }
-        item[id]["tmpl_#{action}".intern] = open + inner + close
-        "$(#{id}.#{action})"
+        item[id][:tmpl][act] = open + inner + close
+        "$(#{id}.#{act})"
       else
         open + inner + close
       end
@@ -34,7 +35,7 @@ module Runo::Parser
 
     item.each {|id, meta|
       next unless meta[:klass] == 'set-dynamic'
-      tmpl = meta[:tmpl]
+      tmpl = meta[:tmpl][action]
       tmpl << '$(.navi)' unless _include_menu?(html, tmpl, id, 'navi')
       next if meta[:workflow].downcase == 'attachment'
       tmpl << '$(.submit)' unless _include_menu?(html, tmpl, id, 'submit')
@@ -51,7 +52,7 @@ module Runo::Parser
     {
       :label => label,
       :item  => item,
-      :tmpl  => html,
+      :tmpl  => {action => html},
     }
   end
 
@@ -64,7 +65,7 @@ module Runo::Parser
     gsub_block(html, rex_klass) {|open, inner, close|
       klass = open[/class=(?:"|"[^"]*?\s)(#{rex_klass})(?:"|\s)/, 1]
       id, action = (klass =~ /-/) ? klass.split('-', 2) : [nil, klass]
-      block.call(id, action, open, inner, close)
+      block.call(id, action.intern, open, inner, close)
     }
   end
 
@@ -113,28 +114,28 @@ module Runo::Parser
       sd_tmpl = '$()'
     end
 
-    action_tmpl = {}
-    sd_tmpl = gsub_action_tmpl(sd_tmpl) {|id, action, open, inner, close|
+    tmpl = {}
+    sd_tmpl = gsub_action_tmpl(sd_tmpl) {|id, act, open, inner, close|
       inner = gsub_action_tmpl(inner) {|i, a, *t|
-        action_tmpl["tmpl_#{a}".intern] = t.join
+        tmpl[a] = t.join
         "$(.#{a})"
       }
-      action_tmpl["tmpl_#{action}".intern] = open + inner + close
-      "$(.#{action})"
+      tmpl[act] = open + inner + close
+      "$(.#{act})"
     }
 
-    item_meta = Runo::Parser.parse_html item_html
+    item_meta = Runo::Parser.parse_html(item_html, action)
     if action == :summary
-      item_meta[:tmpl].sub!(
+      item_meta[:tmpl][action].sub!(
         /\$\(.*?\)/m,
         '<a href="$(.uri_detail)">\&</a>'
       ) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.uri_detail)')
     else
-      item_meta[:tmpl].sub!(
+      item_meta[:tmpl][action].sub!(
         /\$\([^\.]*?\)/m,
         '$(.a_update)\&</a>'
       ) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.action_update)')
-      item_meta[:tmpl].sub!(
+      item_meta[:tmpl][action].sub!(
         /.*\$\(.*?\)/m,
         '\&$(.hidden)'
       ) unless workflow.downcase == 'attachment' || item_meta[:tmpl].include?('$(.hidden)')
@@ -143,12 +144,11 @@ module Runo::Parser
     sd = {
       :klass    => 'set-dynamic',
       :workflow => workflow,
-      :tmpl     => "#{open_tag}#{sd_tmpl}#{close_tag}",
+      :tmpl     => tmpl.merge(action => "#{open_tag}#{sd_tmpl}#{close_tag}"),
       :item     => {
         'default' => item_meta,
       },
     }
-    sd.merge! action_tmpl
     (inner_html =~ /\A\s*<!--(.+?)-->/m) ? sd.merge(scan_tokens StringScanner.new($1)) : sd
   end
 

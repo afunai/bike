@@ -42,11 +42,13 @@ class TC_Set_Complex < Test::Unit::TestCase
       :klass    => 'set-dynamic',
       :workflow => 'pipco',
       :group    => ['roy', 'don'],
-      :tmpl     => <<'_tmpl'.chomp,
+      :tmpl     => {
+        :index => <<'_tmpl'.chomp,
 <ul id="@(name)" class="runo-pipco">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
+      },
       :item     => {
         'default' => Runo::Parser.parse_html(<<'_html')
   <li id="@(name)">
@@ -96,16 +98,16 @@ _html
       @sd.item('20091123_0002', 'files'),
       @sd.item('20091123_0002', 'replies'),
     ].each {|sd|
-      sd[:tmpl_action_create] = ''
-      sd[:tmpl_navi] = ''
-      sd[:tmpl_submit_create] = '[c]'
-      sd[:tmpl_submit_delete] = '[d]'
+      sd[:tmpl][:action_create] = ''
+      sd[:tmpl][:navi] = ''
+      sd[:tmpl][:submit_create] = '[c]'
+      sd[:tmpl][:submit_delete] = '[d]'
       def sd._g_submit(arg)
         "[#{my[:id]}-#{arg[:orig_action]}]\n"
       end
 
       sd.each {|item|
-        item[:tmpl_action_update] = ''
+        item[:tmpl][:action_update] = ''
       }
     }
   end

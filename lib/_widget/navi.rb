@@ -11,19 +11,19 @@ class Runo::Set::Dynamic
     arg[:navi] ||= @storage.navi(arg[:conds] || {})
     return unless (arg[:orig_action] == :read) && (arg[:navi][:prev] || arg[:navi][:next])
 
-    div = my[:tmpl_navi] || '<div class="navi">$(.navi_prev) | $(.navi_p)$(.navi_next)</div>'
+    div = my[:tmpl][:navi] || '<div class="navi">$(.navi_prev) | $(.navi_p)$(.navi_next)</div>'
     div.gsub(/\$\(\.(navi_prev|navi_next|navi_p|uri_prev|uri_next)\)/) {
       __send__("_g_#{$1}", arg)
     }
   end
 
   def _g_navi_prev(arg)
-    button = my[:tmpl_navi_prev] || _('prev')
+    button = my[:tmpl][:navi_prev] || _('prev')
     (uri = _g_uri_prev(arg)) ? "<a href=\"#{my[:path]}/#{uri}\">#{button}</a>" : button
   end
 
   def _g_navi_next(arg)
-    button = my[:tmpl_navi_next] || _('next')
+    button = my[:tmpl][:navi_next] || _('next')
     (uri = _g_uri_next(arg)) ? "<a href=\"#{my[:path]}/#{uri}\">#{button}</a>" : button
   end
 
@@ -32,7 +32,7 @@ class Runo::Set::Dynamic
     return unless uris && uris.size > 1
 
     item_tmpl = nil
-    div = my[:tmpl_navi_p] || '<span class="item">$() </span> | '
+    div = my[:tmpl][:navi_p] || '<span class="item">$() </span> | '
     div = Runo::Parser.gsub_block(div, 'item') {|open, inner, close|
       item_tmpl = open + inner + close
       '$(.items)'

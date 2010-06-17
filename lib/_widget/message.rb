@@ -8,7 +8,7 @@ class Runo::Set::Dynamic
   private
 
   def _g_message(arg)
-    return if arg[:orig_action] == :done && my[:tmpl_done]
+    return if arg[:orig_action] == :done && my[:tmpl][:done]
     return unless self == Runo.base
 
     if arg[:dest_action]

@@ -29,15 +29,15 @@ class Runo::Workflow::Attachment < Runo::Workflow
 
         item_outs = _g_default(arg) {|item, item_arg|
           action = item[:id][Runo::REX::ID_NEW] ? :create : :delete
-          button_tmpl = my["tmpl_submit_#{action}".intern] || <<_html.chomp
+          button_tmpl = my[:tmpl][:"submit_#{action}"] || <<_html.chomp
 <input type="submit" name="@(short_name).action-#{action}" value="#{_ action.to_s}" />
 _html
           button = item.send(:_get_by_tmpl, {}, button_tmpl)
           item_arg[:action] = :create if action == :create
-          item_tmpl = item[:tmpl].sub(/[\w\W]*\$\(.*?\)/, "\\&#{button}")
+          item_tmpl = item[:tmpl][:index].sub(/[\w\W]*\$\(.*?\)/, "\\&#{button}")
           item.send(:_get_by_tmpl, item_arg, item_tmpl)
         }
-        tmpl = my[:tmpl].gsub('$()', item_outs.join)
+        tmpl = my[:tmpl][:index].gsub('$()', item_outs.join)
         _get_by_tmpl({:p_action => arg[:p_action], :action => :update}, tmpl)
       end
     }

@@ -247,7 +247,7 @@ class Runo
     until f.is_a? Runo::Set::Static::Folder
       params = {
         :action     => (f.default_action == :read) ? :read : nil,
-        :sub_action => f.send(:summary?, params) ? nil : :detail,
+        :sub_action => f.send(:summary?, params) ? nil : (params[:sub_action] || :detail),
         f[:id]      => params,
       }
       params[:conds] = {:id => f[:id]} if f[:parent].is_a? Runo::Set::Dynamic

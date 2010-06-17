@@ -127,6 +127,19 @@ class TC_Timestamp < Test::Unit::TestCase
     )
   end
 
+  def test_get_rfc2822
+    @f.load(
+      'created'   => Time.local(2010, 4, 25),
+      'updated'   => Time.local(2010, 4, 27),
+      'published' => Time.local(2010, 4, 26, 20, 14, 45)
+    )
+    assert_match(
+      /^Mon, 26 Apr 2010 20:14:45 [\+\-]\d{4}$/,
+      @f.get(:action => :rfc2822),
+      'Timestamp#get should return proper string'
+    )
+  end
+
   def test_get_create
     @f.load_default
 

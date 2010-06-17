@@ -3,6 +3,8 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
+require 'time'
+
 class Runo::Meta::Timestamp < Runo::Field
 
   include Runo::Meta
@@ -32,6 +34,10 @@ class Runo::Meta::Timestamp < Runo::Field
     _date val['published']
   end
   alias :_g_published :_g_default
+
+  def _g_rfc2822(arg)
+    val['published'].rfc2822
+  end
 
   def _g_created(arg)
     _date val['created']

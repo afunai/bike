@@ -96,7 +96,7 @@ module Runo::Parser
 
   def scrape_meta(html)
     meta = {}
-    html.gsub!(/(?:^\s+)?<meta[^>]*name="runo-([^"]+)[^>]*content="([^"]+).*?>\s*/i) {
+    html.gsub!(/(?:^\s+)?<meta[^>]*name="runo-([^"]+)[^>]*content="([^"]+).*?>\n?/i) {
       meta[$1.intern] = $2.include?(',') ? $2.split(/\s*,\s*/) : $2
       ''
     }

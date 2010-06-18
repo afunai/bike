@@ -16,10 +16,11 @@ class Runo::Set::Static::Folder < Runo::Set::Static
 
     ::Dir.glob(::File.join Runo['skin_dir'], my[:html_dir].to_s, '*.html').each {|f|
       action = ::File.basename(f, '.*').intern
-      if action != :index
-        html_action = load_html(my[:html_dir].to_s, my[:parent], action)
-        merge_tmpl(@meta, Runo::Parser.parse_html(html_action, action))
-      end
+      merge_tmpl(@meta, Runo::Parser.parse_html(::File.read(f), action)) if action != :index
+    }
+    ::Dir.glob(::File.join Runo['skin_dir'], my[:html_dir].to_s, '*.xml').each {|f|
+      action = ::File.basename(f, '.*').intern
+      merge_tmpl(@meta, Runo::Parser.parse_xml(::File.read(f), action)) if action != :index
     }
 
     @meta[:tmpl].values.each {|tmpl|

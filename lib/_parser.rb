@@ -118,8 +118,8 @@ module Runo::Parser
     meta
   end
 
-  def supplement_ss(tmpl, action)
-    t = tmpl[action]
+  def supplement_ss(meta, action)
+    t = meta[:tmpl][action]
     if action == :summary
       t.sub!(
         /\$\(.*?\)/m,
@@ -135,6 +135,7 @@ module Runo::Parser
         '\&$(.hidden)'
       ) unless t.include? '$(.hidden)'
     end
+    meta
   end
 
   def _include_menu?(html, tmpl, id, action)
@@ -167,7 +168,7 @@ module Runo::Parser
     }
 
     item_meta = Runo::Parser.parse_html(item_html, action)
-    supplement_ss(item_meta[:tmpl], action) unless workflow.downcase == 'attachment'
+    supplement_ss(item_meta, action) unless workflow.downcase == 'attachment'
 
     sd = {
       :klass    => 'set-dynamic',

@@ -172,7 +172,7 @@ module Runo::Parser
 
     sd = {
       :klass    => 'set-dynamic',
-      :workflow => workflow,
+      :workflow => workflow.downcase,
       :tmpl     => tmpl.merge(action => "#{open_tag}#{sd_tmpl}#{close_tag}"),
       :item     => {
         'default' => item_meta,

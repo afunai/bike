@@ -15,7 +15,7 @@ class Runo::Set::Static::Folder
 _html
     else
       img   = Runo::Set::Static::Folder.root.item('_users', 'main', Runo.client, 'avatar')
-      roles = Runo::Workflow.roles @item_object.values.first[:roles]
+      roles = Runo::Workflow.roles my[:roles]
       <<_html
 <div class="me">
   <a href="#{Runo.uri}/_users/id=#{Runo.client}/update.html">

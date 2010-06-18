@@ -29,10 +29,7 @@ class Runo::Set::Static::Folder < Runo::Set::Static
       }
     } if @meta[:tmpl]
 
-    my[:item]['_label'] = {:klass => 'text'}
-    my[:item]['_owner'] = {:klass => 'meta-owner'}
-    my[:item]['_group'] = {:klass => 'meta-group'}
-    load load_val(my[:dir], my[:parent])
+    @meta.merge! load_yaml(my[:dir], my[:parent])
   end
 
   def meta_dir
@@ -72,19 +69,19 @@ class Runo::Set::Static::Folder < Runo::Set::Static
   def load_html(dir, parent, action = :index)
     html_file = ::File.join Runo['skin_dir'], dir, "#{action}.html"
     if ::File.exists? html_file
-      ::File.open(html_file) {|f| f.read }
+      ::File.read html_file
     elsif parent
       parent[:html]
     end
   end
 
-  def load_val(dir, parent)
-    val_file = ::File.join(Runo['skin_dir'], dir, 'index.yaml')
-    v = ::File.exists?(val_file) ? ::File.open(val_file) {|f| YAML.load f.read } : {}
-    parent ? {
-      '_label' => parent.val('_label'),
-      '_owner' => parent.val('_owner'),
-    }.merge(v) : v
+  def load_yaml(dir, parent)
+    yaml_file = ::File.join(Runo['skin_dir'], dir, 'index.yaml')
+    meta = ::File.exists?(yaml_file) ? YAML.load_file(yaml_file) : {}
+    meta.keys.inject({}) {|m, k|
+      m[k.intern] = meta[k]
+      m
+    }
   end
 
   def merge_tmpl(meta, action_meta)

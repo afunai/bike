@@ -7,11 +7,12 @@ module Runo::Parser
 
   module_function
 
-  def parse_html(html, action = :index)
+  def parse_html(html, action = :index, xml = false)
     item = {}
+
     html = gsub_block(html, 'runo-\w+') {|open, inner, close|
       id = open[/id="(.+?)"/i, 1] || 'main'
-      item[id] = parse_block(open, inner, close, action)
+      item[id] = parse_block(open, inner, close, action, xml)
       "$(#{id})"
     }
     html = gsub_action_tmpl(html) {|id, act, open, inner, close|
@@ -28,19 +29,17 @@ module Runo::Parser
         open + inner + close
       end
     }
+    item.each {|id, meta|
+      m = Proc.new {|a| html.include?("$(#{id}.#{a})") || meta[:tmpl][action].include?("$(.#{a})") }
+      supplement_sd(meta[:tmpl][action], meta[:workflow], m)
+      html.sub!("$(#{id})", "$(#{id}.message)\\&") unless (
+        meta[:workflow] == 'attachment' || m.call('message')
+      )
+    } unless xml
+
     html = gsub_scalar(html) {|id, meta|
       item[id] = meta
       "$(#{id})"
-    }
-
-    item.each {|id, meta|
-      if meta[:klass] == 'set-dynamic'
-        m = Proc.new {|a| html.include?("$(#{id}.#{a})") || meta[:tmpl][action].include?("$(.#{a})") }
-        supplement_sd(meta[:tmpl][action], meta[:workflow], m)
-        html.sub!("$(#{id})", "$(#{id}.message)\\&") unless (
-          meta[:workflow] == 'attachment' || m.call('message')
-        )
-      end
     }
 
     scrape_meta(html).merge(
@@ -48,6 +47,10 @@ module Runo::Parser
       :item  => item,
       :tmpl  => {action => html}
     )
+  end
+
+  def parse_xml(html, action = :index)
+    parse_html(html, action, xml = true)
   end
 
   def gsub_action_tmpl(html, &block)
@@ -136,7 +139,7 @@ module Runo::Parser
     tmpl
   end
 
-  def parse_block(open_tag, inner_html, close_tag, action = :index)
+  def parse_block(open_tag, inner_html, close_tag, action = :index, xml = false)
     open_tag.sub!(/id=".*?"/i, 'id="@(name)"')
     workflow = open_tag[/class=(?:"|".*?\s)runo-(\w+)/, 1]
 
@@ -161,8 +164,8 @@ module Runo::Parser
       "$(.#{act})"
     }
 
-    item_meta = Runo::Parser.parse_html(item_html, action)
-    supplement_ss(item_meta[:tmpl][action], action) unless workflow == 'attachment'
+    item_meta = Runo::Parser.parse_html(item_html, action, xml)
+    supplement_ss(item_meta[:tmpl][action], action) unless xml || workflow == 'attachment'
 
     sd = {
       :klass    => 'set-dynamic',

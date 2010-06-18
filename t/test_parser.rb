@@ -1193,4 +1193,28 @@ _html
     )
   end
 
+  def test_supplement_ss
+    result = Runo::Parser.parse_html <<'_html'
+<ul id="foo" class="runo-blog">
+  <li class="body">$(text)</li>
+</ul>
+_html
+    assert_match(
+      /\$\(\.a_update\)/,
+      result[:item]['foo'][:item]['default'][:tmpl][:index],
+      'Parser.supplement_ss should supplement ss[:tmpl] with default menus'
+    )
+
+    result = Runo::Parser.parse_html <<'_html'
+<ul id="foo" class="runo-blog">
+  <li class="body">$(text) $(.action_update)</li>
+</ul>
+_html
+    assert_no_match(
+      /\$\(\.a_update\)/,
+      result[:item]['foo'][:item]['default'][:tmpl][:index],
+      'Parser.supplement_ss should not supplement ss[:tmpl] when it already has the menu'
+    )
+  end
+
 end

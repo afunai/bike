@@ -41,6 +41,7 @@ module Runo::Parser
       item[id] = meta
       "$(#{id})"
     }
+    html.gsub!(/\s*class=".*?"/,'') if xml
 
     scrape_meta(html).merge(
       :label => scrape_label(html),
@@ -164,13 +165,16 @@ module Runo::Parser
       "$(.#{act})"
     }
 
+    tmpl[action] = "#{open_tag}#{sd_tmpl}#{close_tag}"
+    tmpl[action].gsub!(/\s*class=".*?"/,'') if xml
+
     item_meta = Runo::Parser.parse_html(item_html, action, xml)
     supplement_ss(item_meta[:tmpl][action], action) unless xml || workflow == 'attachment'
 
     sd = {
       :klass    => 'set-dynamic',
       :workflow => workflow.downcase,
-      :tmpl     => tmpl.merge(action => "#{open_tag}#{sd_tmpl}#{close_tag}"),
+      :tmpl     => tmpl,
       :item     => {
         'default' => item_meta,
       },

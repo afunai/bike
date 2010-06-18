@@ -577,6 +577,51 @@ _tmpl
     )
   end
 
+  def test_parse_xml
+    result = Runo::Parser.parse_xml <<'_html'
+<channel class="runo-rss">
+  <link>@(href)</link>
+  <item class="body">
+    <title>$(title)</title>
+  </item>
+</channel>
+_html
+    assert_equal(
+      {
+        :label => nil,
+        :tmpl  => {:index => '$(main)'},
+        :item  => {
+          'main' => {
+            :item => {
+              'default' => {
+                :label => nil,
+                :item  => {},
+                :tmpl  => {
+                    :index => <<'_xml'
+  <item>
+    <title>$(title)</title>
+  </item>
+_xml
+                },
+              },
+            },
+            :tmpl => {
+              :index => <<'_xml',
+<channel>
+  <link>@(href)</link>
+$()</channel>
+_xml
+            },
+            :klass => 'set-dynamic',
+            :workflow => 'rss',
+          }
+        },
+      },
+      result,
+      'Parser.parse_html should aware of <item>'
+    )
+  end
+
   def test_parse_item_label
     result = Runo::Parser.parse_html <<'_html'
 <ul class="runo-blog" id="foo"><li title="Greeting">hello</li></ul>

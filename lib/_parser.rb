@@ -34,13 +34,7 @@ module Runo::Parser
     }
 
     item.each {|id, meta|
-      next unless meta[:klass] == 'set-dynamic'
-      tmpl = meta[:tmpl][action]
-      tmpl << '$(.navi)' unless _include_menu?(html, tmpl, id, 'navi')
-      next if meta[:workflow].downcase == 'attachment'
-      tmpl << '$(.submit)' unless _include_menu?(html, tmpl, id, 'submit')
-      tmpl << '$(.action_create)' unless _include_menu?(html, tmpl, id, 'action_create')
-      html.sub!("$(#{id})", "$(#{id}.message)\\&") unless _include_menu?(html, tmpl, id, 'message')
+      supplement_sd(meta, action, id, html) if meta[:klass] == 'set-dynamic'
     }
 
     scrape_meta(html).merge(
@@ -48,10 +42,6 @@ module Runo::Parser
       :item  => item,
       :tmpl  => {action => html}
     )
-  end
-
-  def _include_menu?(html, tmpl, id, action)
-    html.include?("$(#{id}.#{action})") || tmpl.include?("$(.#{action})")
   end
 
   def gsub_action_tmpl(html, &block)
@@ -112,6 +102,17 @@ module Runo::Parser
     end
   end
 
+  def supplement_sd(meta, action, id, html)
+    t = meta[:tmpl][action]
+    t << '$(.navi)' unless _include_menu?(html, t, id, 'navi')
+
+    unless meta[:workflow].downcase == 'attachment'
+      t << '$(.submit)' unless _include_menu?(html, t, id, 'submit')
+      t << '$(.action_create)' unless _include_menu?(html, t, id, 'action_create')
+      html.sub!("$(#{id})", "$(#{id}.message)\\&") unless _include_menu?(html, t, id, 'message')
+    end
+  end
+
   def supplement_ss(tmpl, action)
     t = tmpl[action]
     if action == :summary
@@ -129,6 +130,10 @@ module Runo::Parser
         '\&$(.hidden)'
       ) unless t.include? '$(.hidden)'
     end
+  end
+
+  def _include_menu?(html, tmpl, id, action)
+    html.include?("$(#{id}.#{action})") || tmpl.include?("$(.#{action})")
   end
 
   def parse_block(open_tag, inner_html, close_tag, action = :index)

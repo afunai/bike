@@ -35,10 +35,10 @@ module Runo::Parser
 
     item.each {|id, meta|
       if meta[:klass] == 'set-dynamic'
-        supplement_sd(meta, action, id, html)
+        m = Proc.new {|a| html.include?("$(#{id}.#{a})") || meta[:tmpl][action].include?("$(.#{a})") }
+        supplement_sd(meta[:tmpl][action], meta[:workflow], m)
         html.sub!("$(#{id})", "$(#{id}.message)\\&") unless (
-          meta[:workflow].downcase == 'attachment' ||
-          _include_menu?(html, meta[:tmpl][action], id, 'message')
+          meta[:workflow] == 'attachment' || m.call('message')
         )
       end
     }
@@ -108,14 +108,13 @@ module Runo::Parser
     end
   end
 
-  def supplement_sd(meta, action, id, html)
-    t = meta[:tmpl][action]
-    t << '$(.navi)' unless _include_menu?(html, t, id, 'navi')
-    unless meta[:workflow].downcase == 'attachment'
-      t << '$(.submit)' unless _include_menu?(html, t, id, 'submit')
-      t << '$(.action_create)' unless _include_menu?(html, t, id, 'action_create')
+  def supplement_sd(tmpl, workflow, m)
+    tmpl << '$(.navi)' unless m.call 'navi'
+    unless workflow == 'attachment'
+      tmpl << '$(.submit)'        unless m.call 'submit'
+      tmpl << '$(.action_create)' unless m.call 'action_create'
     end
-    meta
+    tmpl
   end
 
   def supplement_ss(meta, action)
@@ -136,10 +135,6 @@ module Runo::Parser
       ) unless t.include? '$(.hidden)'
     end
     meta
-  end
-
-  def _include_menu?(html, tmpl, id, action)
-    html.include?("$(#{id}.#{action})") || tmpl.include?("$(.#{action})")
   end
 
   def parse_block(open_tag, inner_html, close_tag, action = :index)

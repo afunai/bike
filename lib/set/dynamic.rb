@@ -30,6 +30,10 @@ class Runo::Set::Dynamic < Runo::Field
     my[:order] = '-id' if meta[:tokens].to_a.include? 'desc'
   end
 
+  def meta_href
+    "#{Runo.uri}#{my[:path]}/"
+  end
+
   def meta_tid
     unless @meta[:tid]
       t = Time.now

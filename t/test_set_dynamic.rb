@@ -155,6 +155,31 @@ _html
     )
   end
 
+  def test_meta_href
+    Runo.current[:uri] = nil
+
+    sd = Runo::Set::Static::Folder.root.item('foo','main')
+    assert_equal(
+      '/foo/',
+      sd[:href],
+      'Set::Dynamic#meta_href should return the uri to itself'
+    )
+
+    sd = Runo::Set::Static::Folder.root.item('foo','sub')
+    assert_equal(
+      '/foo/sub/',
+      sd[:href],
+      "Set::Dynamic#meta_href should not omit steps other than 'main'"
+    )
+
+    sd = Runo::Set::Static::Folder.root.item('foo','main','20091120_0001','replies')
+    assert_equal(
+      '/foo/20091120_0001/replies/',
+      sd[:href],
+      'Set::Dynamic#meta_href should return the proper uri for a nested SD'
+    )
+  end
+
   def test_item
     @sd.load('20100131_1234' => {'name' => 'frank'})
     assert_instance_of(

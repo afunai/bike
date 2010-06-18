@@ -16,6 +16,10 @@ class Runo::Set::Static < Runo::Field
     @item_object = {}
   end
 
+  def meta_href
+    my[:sd] ? "#{my[:sd][:href]}id=#{my[:id]}/" : "#{Runo.uri}#{my[:dir]}/"
+  end
+
   def commit(type = :temp)
     items = pending_items
     items.each {|id, item| item.commit type }

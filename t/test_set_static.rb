@@ -71,6 +71,17 @@ _tmpl
     )
   end
 
+  def test_meta_href
+    Runo.current[:uri] = nil
+
+    ss = Runo::Set::Static::Folder.root.item('foo','main','20091120_0001','replies','20091201_0001')
+    assert_equal(
+      '/foo/20091120_0001/replies/id=20091201_0001/',
+      ss[:href],
+      'Set::Static#meta_href should return parent[:href] + an id cond'
+    )
+  end
+
   def test_empty?
     ss = Runo::Set::Static.new(:html => <<'_html')
 <html>

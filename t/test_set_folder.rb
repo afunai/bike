@@ -73,26 +73,21 @@ class TC_Set_Folder < Test::Unit::TestCase
     )
   end
 
-  def test_default_items
+  def test_load_yaml
     folder = Runo::Set::Static::Folder.new(:id => 'foo', :parent => nil)
-    assert_instance_of(
-      Runo::Text,
-      folder.item('_label'),
-      'Folder#initialize should always load the default items'
-    )
     assert_equal(
       'Foo Folder',
-      folder.val('_label'),
-      'Folder#initialize should load the val from [:dir].yaml'
+      folder[:label],
+      'Folder#initialize should load metas from index.yaml'
     )
     assert_equal(
       'frank',
-      folder.val('_owner'),
-      'Folder#initialize should load the val from [:dir].yaml'
+      folder[:owner],
+      'Folder#initialize should load metas from index.yaml'
     )
   end
 
-  def test_child_folder
+  def test_load_yaml_child_folder
     folder = Runo::Set::Static::Folder.new(:id => 'foo', :parent => nil)
     child  = folder.item('bar')
     assert_instance_of(
@@ -102,13 +97,13 @@ class TC_Set_Folder < Test::Unit::TestCase
     )
     assert_equal(
       'Bar Folder',
-      child.val('_label'),
-      'Folder#initialize should load the val from [:dir].yaml'
+      child[:label],
+      'Folder#initialize should load metas from index.yaml'
     )
     assert_equal(
       'frank',
-      child.val('_owner'),
-      'Folder#initialize should inherit the val of default items from [:parent]'
+      child[:owner],
+      'Folder#initialize should inherit metas from [:parent] unless overriden by index.yaml'
     )
   end
 
@@ -406,7 +401,7 @@ _html
     assert_equal(
       <<'_html',
 <html>
-  <head><base href="@(href)" /><title>$(_label)</title></head>
+  <head><base href="@(href)" /><title>@(label)</title></head>
   <body>
     <p>thank you!</p>
   </body>

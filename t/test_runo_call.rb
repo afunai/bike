@@ -95,9 +95,9 @@ class TC_Runo_Call < Test::Unit::TestCase
     assert_equal(
       <<_html,
 <html>
-  <head><base href="http:///t_contact/" /><title>Root Folder</title></head>
+  <head><base href="http:///t_contact/" /><title></title></head>
   <body>
-    <h1>Root Folder</h1>
+    <h1></h1>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_contact/1234567890.0123/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
     <ul id="main" class="runo-contact">
@@ -799,9 +799,9 @@ _html
     assert_equal(
       <<"_html",
 <html>
-  <head><base href="http://#{base_uri}/t_store/" /><title>Root Folder</title></head>
+  <head><base href="http://#{base_uri}/t_store/" /><title></title></head>
   <body>
-    <h1>Root Folder</h1>
+    <h1></h1>
 <ul class="message notice">
   <li>please confirm.</li>
 </ul>

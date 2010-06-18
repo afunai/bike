@@ -117,24 +117,23 @@ module Runo::Parser
     tmpl
   end
 
-  def supplement_ss(meta, action)
-    t = meta[:tmpl][action]
+  def supplement_ss(tmpl, action)
     if action == :summary
-      t.sub!(
+      tmpl.sub!(
         /\$\(.*?\)/m,
         '<a href="$(.uri_detail)">\&</a>'
-      ) unless t.include? '$(.uri_detail)'
+      ) unless tmpl.include? '$(.uri_detail)'
     else
-      t.sub!(
+      tmpl.sub!(
         /\$\([^\.]*?\)/m,
         '$(.a_update)\&</a>'
-      ) unless t.include? '$(.action_update)'
-      t.sub!(
+      ) unless tmpl.include? '$(.action_update)'
+      tmpl.sub!(
         /.*\$\(.*?\)/m,
         '\&$(.hidden)'
-      ) unless t.include? '$(.hidden)'
+      ) unless tmpl.include? '$(.hidden)'
     end
-    meta
+    tmpl
   end
 
   def parse_block(open_tag, inner_html, close_tag, action = :index)
@@ -163,7 +162,7 @@ module Runo::Parser
     }
 
     item_meta = Runo::Parser.parse_html(item_html, action)
-    supplement_ss(item_meta, action) unless workflow.downcase == 'attachment'
+    supplement_ss(item_meta[:tmpl][action], action) unless workflow == 'attachment'
 
     sd = {
       :klass    => 'set-dynamic',

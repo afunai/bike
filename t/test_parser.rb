@@ -1156,7 +1156,7 @@ _html
     )
   end
 
-  def test_supplement_menus_in_sd
+  def test_supplement_sd
     result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
   <li class="body">$(text)</li>
@@ -1165,7 +1165,7 @@ _html
     assert_match(
       /\$\(\.navi\)/,
       result[:item]['foo'][:tmpl][:index],
-      'Parser.parse_html should supplement sd[:tmpl] with default menus'
+      'Parser.supplement_sd should supplement sd[:tmpl] with default menus'
     )
 
     result = Runo::Parser.parse_html <<'_html'
@@ -1177,7 +1177,7 @@ _html
     assert_no_match(
       /\$\(\.navi\).*\$\(\.navi\)/m,
       result[:item]['foo'][:tmpl][:index],
-      'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
+      'Parser.supplement_sd should not supplement sd[:tmpl] when it already has the menu'
     )
 
     result = Runo::Parser.parse_html <<'_html'
@@ -1189,7 +1189,7 @@ _html
     assert_no_match(
       /\$\(\.navi\)/,
       result[:item]['foo'][:tmpl][:index],
-      'Parser.parse_html should not supplement sd[:tmpl] when it already has the menu'
+      'Parser.supplement_sd should not supplement sd[:tmpl] when it already has the menu'
     )
   end
 

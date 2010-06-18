@@ -34,7 +34,13 @@ module Runo::Parser
     }
 
     item.each {|id, meta|
-      supplement_sd(meta, action, id, html) if meta[:klass] == 'set-dynamic'
+      if meta[:klass] == 'set-dynamic'
+        supplement_sd(meta, action, id, html)
+        html.sub!("$(#{id})", "$(#{id}.message)\\&") unless (
+          meta[:workflow].downcase == 'attachment' ||
+          _include_menu?(html, meta[:tmpl][action], id, 'message')
+        )
+      end
     }
 
     scrape_meta(html).merge(
@@ -105,12 +111,11 @@ module Runo::Parser
   def supplement_sd(meta, action, id, html)
     t = meta[:tmpl][action]
     t << '$(.navi)' unless _include_menu?(html, t, id, 'navi')
-
     unless meta[:workflow].downcase == 'attachment'
       t << '$(.submit)' unless _include_menu?(html, t, id, 'submit')
       t << '$(.action_create)' unless _include_menu?(html, t, id, 'action_create')
-      html.sub!("$(#{id})", "$(#{id}.message)\\&") unless _include_menu?(html, t, id, 'message')
     end
+    meta
   end
 
   def supplement_ss(tmpl, action)

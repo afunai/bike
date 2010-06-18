@@ -299,6 +299,7 @@ _html
   <meta name="runo-owner" content="frank" />
   <meta name="runo-group" content="bob,carl" />
   <meta name="runo-foo" content="bar, baz" />
+  <meta name="runo-label" content="Qux" />
 </html>
 _html
     assert_equal(
@@ -313,7 +314,7 @@ _html
         :owner => 'frank',
         :group => %w(bob carl),
         :foo   => %w(bar baz),
-        :label => nil,
+        :label => 'Qux',
       },
       result,
       'Parser.parse_html should scrape meta vals from <meta>'

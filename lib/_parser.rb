@@ -43,8 +43,9 @@ module Runo::Parser
     }
     html.gsub!(/\s*class=".*?"/,'') if xml
 
-    scrape_meta(html).merge(
-      :label => scrape_label(html),
+    meta = scrape_meta html
+    meta.merge(
+      :label => meta[:label] || scrape_label(html),
       :item  => item,
       :tmpl  => {action => html}
     )

@@ -1,7 +1,7 @@
 ---
-_label: 'Foo Folder'
-_owner: frank
-_group:
+label: 'Foo Folder'
+owner: frank
+group:
   - roy
   - jim
 

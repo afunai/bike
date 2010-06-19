@@ -19,29 +19,30 @@ class TC_Role < Test::Unit::TestCase
       Runo::Set::Static::Folder.root[:owner],
       "Field#[:owner] should return 'root' for the root folder"
     )
+
     assert_equal(
       'frank',
-      Runo::Set::Static::Folder.root.item('foo')[:owner],
+      Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:owner],
       'Field#[:owner] should return @meta[:owner] if available'
     )
     assert_equal(
       'frank',
-      Runo::Set::Static::Folder.root.item('foo', 'main')[:owner],
+      Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001', 'replies')[:owner],
       'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
     )
     assert_equal(
-      'frank',
-      Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:owner],
-      'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
+      'carl',
+      Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001', 'replies', '20091201_0001')[:owner],
+      'Field#[:owner] should return @meta[:owner] if available'
     )
 
     assert_equal(
-      'frank',
+      'root',
       Runo::Set::Static::Folder.root.item('foo', 'bar')[:owner],
       'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
     )
     assert_equal(
-      'frank',
+      'root',
       Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')[:owner],
       'Field#[:owner] should return parent[:owner] if @meta[:owner] is nil'
     )
@@ -64,17 +65,17 @@ class TC_Role < Test::Unit::TestCase
       "Field#[:owners] should return ['root'] for the root folder"
     )
     assert_equal(
-      ['root', 'frank'],
+      ['root'],
       Runo::Set::Static::Folder.root.item('foo')[:owners],
       'Field#[:owners] should return all the owners of the ancestor fields'
     )
     assert_equal(
-      ['root', 'frank'],
-      Runo::Set::Static::Folder.root.item('foo', 'main')[:owners],
+      ['root'],
+      Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')[:owners],
       'Field#[:owners] should return all the owners of the ancestor fields'
     )
     assert_equal(
-      ['root', 'frank', 'carl'],
+      ['root', 'carl'],
       Runo::Set::Static::Folder.root.item('foo', 'bar', 'main', '20091120_0001')[:owners],
       'Field#[:owners] should return all the owners of the ancestor fields'
     )
@@ -87,30 +88,30 @@ class TC_Role < Test::Unit::TestCase
       "Field#[:admins] should return ['root'] for the root folder"
     )
     assert_equal(
-      ['root'],
+      ['root', 'frank'],
       Runo::Set::Static::Folder.root.item('foo')[:admins],
-      'Field#[:admins] should return @meta[:admins] if available'
+      'Field#[:admins] should include @meta[:admin] if available'
     )
     assert_equal(
       ['root', 'frank'],
       Runo::Set::Static::Folder.root.item('foo', 'main')[:admins],
-      'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
+      'Field#[:admins] should return parent[:admins] if @meta[:admin] is nil'
     )
     assert_equal(
       ['root', 'frank'],
       Runo::Set::Static::Folder.root.item('foo', 'main', '20091120_0001')[:admins],
-      'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
+      'Field#[:admins] should return parent[:admins] if @meta[:admin] is nil'
     )
 
     assert_equal(
       ['root', 'frank'],
       Runo::Set::Static::Folder.root.item('foo', 'bar')[:admins],
-      'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
+      'Field#[:admins] should return parent[:admins] if @meta[:admin] is nil'
     )
     assert_equal(
       ['root', 'frank'],
       Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')[:admins],
-      'Field#[:admins] should return parent[:admins] if @meta[:admins] is nil'
+      'Field#[:admins] should return parent[:admins] if @meta[:admin] is nil'
     )
     assert_equal(
       ['root', 'frank'],
@@ -195,12 +196,12 @@ class TC_Role < Test::Unit::TestCase
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b00110,
+      0b10010,
       Runo::Set::Static::Folder.root.item('foo')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b10110,
+      0b10010,
       Runo::Set::Static::Folder.root.item('foo', 'main')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )
@@ -210,7 +211,7 @@ class TC_Role < Test::Unit::TestCase
       'Field#[:roles] should return the roles of the client on the field'
     )
     assert_equal(
-      0b10110,
+      0b10010,
       Runo::Set::Static::Folder.root.item('foo', 'bar')[:roles],
       'Field#[:roles] should return the roles of the client on the field'
     )

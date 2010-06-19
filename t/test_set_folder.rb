@@ -82,7 +82,7 @@ class TC_Set_Folder < Test::Unit::TestCase
     )
     assert_equal(
       'frank',
-      folder[:owner],
+      folder[:admin],
       'Folder#initialize should load metas from index.yaml'
     )
   end
@@ -101,9 +101,9 @@ class TC_Set_Folder < Test::Unit::TestCase
       'Folder#initialize should load metas from index.yaml'
     )
     assert_equal(
-      'frank',
-      child[:owner],
-      'Folder#initialize should inherit metas from [:parent] unless overriden by index.yaml'
+      nil,
+      child[:admin],
+      'Folder#initialize should not inherit metas from [:parent]'
     )
   end
 

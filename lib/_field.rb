@@ -95,7 +95,7 @@ class Runo::Field
   end
 
   def meta_admins
-    (my[:parent] && my[:parent][:folder]) ? my[:parent][:folder][:owners] : ['root']
+    (my[:parent] ? my[:parent][:admins] : ['root']) | @meta[:admin].to_a
   end
 
   def meta_group

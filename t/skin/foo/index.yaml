@@ -1,6 +1,6 @@
 ---
 label: 'Foo Folder'
-owner: frank
+admin: frank
 group:
   - roy
   - jim

@@ -39,7 +39,9 @@ msgstr ""
 
 #: lib/_workflow/_workflow.rb:41
 msgid "user"
-msgstr ""
+msgid_plural "users"
+msgstr[0] ""
+msgstr[1] ""
 
 #: lib/_workflow/_workflow.rb:41
 msgid "none"

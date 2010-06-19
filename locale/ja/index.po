@@ -38,7 +38,9 @@ msgstr "所有者"
 
 #: lib/_workflow/_workflow.rb:41
 msgid "user"
-msgstr "ユーザ"
+msgid_plural "users"
+msgstr[0] "ユーザ"
+msgstr[1] "ユーザ"
 
 #: lib/_workflow/_workflow.rb:41
 msgid "none"

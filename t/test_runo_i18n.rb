@@ -262,6 +262,15 @@ _eos
     )
   end
 
+  def test_n_with__
+    Runo::I18n.lang = 'en-GB'
+    assert_equal(
+      'color',
+      n_('color', '%{n} colors', 1),
+      'Runo::I18n#n_() should return msgid if the msgid refer to sigular msgstr'
+    )
+  end
+
   def test_msgstr
     Runo::I18n.lang = 'en-GB'
 

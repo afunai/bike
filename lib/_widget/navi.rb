@@ -51,12 +51,12 @@ class Runo::Set::Dynamic
 
   def _g_uri_prev(arg)
     arg[:navi] ||= @storage.navi(arg[:conds] || {})
-    Runo::Path.path_of(arg[:navi][:prev]) if arg[:navi][:prev]
+    Runo::Path.path_of(arg[:navi][:prev]) + _uri_action(arg) if arg[:navi][:prev]
   end
 
   def _g_uri_next(arg)
     arg[:navi] ||= @storage.navi(arg[:conds] || {})
-    Runo::Path.path_of(arg[:navi][:next]) if arg[:navi][:next]
+    Runo::Path.path_of(arg[:navi][:next]) + _uri_action(arg) if arg[:navi][:next]
   end
 
   def _uri_p(arg)
@@ -70,8 +70,18 @@ class Runo::Set::Dynamic
         conds = conds & range
       end
       conds.collect {|cond|
-        Runo::Path.path_of base_conds.merge(:p => cond)
+        Runo::Path.path_of(base_conds.merge(:p => cond)) + _uri_action(arg)
       }
+    end
+  end
+
+  def _uri_action(arg)
+    if [nil, default_action].include?(arg[:orig_action]) && !arg[:sub_action]
+      ''
+    elsif arg[:sub_action]
+      "#{arg[:orig_action]}_#{arg[:sub_action]}.html"
+    else
+      "#{arg[:orig_action]}.html"
     end
   end
 

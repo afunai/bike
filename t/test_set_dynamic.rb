@@ -486,6 +486,31 @@ _html
       'Set::Dynamic#_g_uri_prev should return nil if there is no previous conds'
     )
 
+    assert_equal(
+      '200911/p=2/read_detail.html',
+      @sd.send(
+        :_g_uri_prev,
+        {
+          :conds       => {:d => '200912', :p => '1'},
+          :orig_action => :read,
+          :sub_action  => :detail,
+        }
+      ),
+      'Set::Dynamic#_g_uri_prev should include the original action if the action is special'
+    )
+    assert_equal(
+      '200912/read_detail.html',
+      @sd.send(
+        :_g_uri_next,
+        {
+          :conds       => {:d => '200911', :p => '2'},
+          :orig_action => :read,
+          :sub_action  => :detail,
+        }
+      ),
+      'Set::Dynamic#_g_uri_next should include the original action if the action is special'
+    )
+
     @sd[:tmpl][:navi] = '$(.uri_prev)'
     assert_equal(
       '200911/',

@@ -484,4 +484,32 @@ _html
     )
   end
 
+  def test_g_crumb
+    folder = Runo::Set::Static::Folder.root.item('foo','bar')
+    assert_equal(
+      <<'_html',
+<div class="crumb">
+  <a href="/">Root</a>
+  &raquo;
+  <a href="/foo/">Foo Folder</a>
+  &raquo;
+  <a href="/foo/bar/">Bar Folder</a>
+</div>
+_html
+      folder.get(:action => :crumb),
+      'Folder#_g_crumb should return crumbs from the root to the current folder'
+    )
+
+    folder = Runo::Set::Static::Folder.root
+    assert_equal(
+      <<'_html',
+<div class="crumb">
+  <a href="/">Root</a>
+</div>
+_html
+      folder.get(:action => :crumb),
+      'Folder#_g_crumb should return crumbs from the root to the current folder'
+    )
+  end
+
 end

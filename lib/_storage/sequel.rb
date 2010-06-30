@@ -29,10 +29,11 @@ class Runo::Storage::Sequel < Runo::Storage
     } unless @db.table_exists? :runo_main
     Runo::Storage::File.traverse('/', Runo['skin_dir']) {|entry|
       @db[:runo_main].insert(
-        :full_name => entry[:full_name],
-        :ext       => entry[:ext],
-        :owner     => entry[:val]['_owner'],
-        :body      => entry[:val].ya2yaml(:syck_compatible => true)
+        :full_name   => entry[:full_name],
+        :ext         => entry[:ext],
+        :owner       => entry[:val]['_owner'],
+        :body        => entry[:val].ya2yaml(:syck_compatible => true),
+        :binary_body => (entry[:ext] == 'yaml') ? nil : entry[:val].to_sequel_blob
       ) unless @db[:runo_main][:full_name => entry[:full_name]]
     }
   end

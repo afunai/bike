@@ -30,14 +30,15 @@ $(document).ready(function() {
   );
 
   $('.error_message').hide().css({
-    'color':              'white',
-    'background':         'red',
-    'opacity':            '0.5',
-    'position':           'absolute',
-    'margin-left':        '0',
-    'margin-top':         '2px',
-    'padding':            '.3em 1em .3em 1em',
-    '-moz-border-radius': '.3em'
+    'color':                 'white',
+    'background':            'red',
+    'opacity':               '0.9',
+    'position':              'absolute',
+    'margin-left':           '0',
+    'margin-top':            '2px',
+    'padding':               '.3em 1em .3em 1em',
+    '-moz-border-radius':    '.3em',
+    '-webkit-border-radius': '.3em'
   });
 
   if ($('span.error').length > 0) {

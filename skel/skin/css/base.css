@@ -3,6 +3,7 @@ ul.message {
   list-style-type: none;
   padding-left: 0.5em;
   -moz-border-radius: 0.5em;
+  -webkit-border-radius: 0.5em;
 }
 ul.message li { padding: 0.5em; }
 ul.notice { border: 2px solid blue; }

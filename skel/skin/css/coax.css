@@ -78,6 +78,8 @@ html a { text-decoration: none; }
   width: 50%;
   -moz-border-radius-topleft: 0.5em;
   -moz-border-radius-topright: 0.5em;
+  -webkit-border-top-left-radius: 0.5em;
+  -webkit-border-top-right-radius: 0.5em;
   background: black;
   color: white;
 }
@@ -90,6 +92,7 @@ html a { text-decoration: none; }
   padding: 1px 0.2em;
   border: none;
   -moz-border-radius: 0.2em;
+  -webkit-border-radius: 0.2em;
 }
 #center li div.ibody {
   margin: 0 0 1em 0;
@@ -98,10 +101,14 @@ html a { text-decoration: none; }
   -moz-border-radius-topright: 0.5em;
   -moz-border-radius-bottomleft: 0.5em;
   -moz-border-radius-bottomright: 0.5em;
+  -webkit-border-top-right-radius: 0.5em;
+  -webkit-border-bottom-left-radius: 0.5em;
+  -webkit-border-bottom-right-radius: 0.5em;
 }
 #center li div.ibody textarea {
   width: 100%;
   -moz-border-radius: 0.3em;
+  -webkit-border-radius: 0.3em;
 }
 #center li div.ibody ul {
   list-style-type: disc;

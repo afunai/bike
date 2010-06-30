@@ -7,9 +7,9 @@ class Runo::Set::Static::Folder
 
   private
 
-  def _g_action_signin(arg)
+  def _g_action_signup(arg)
     (_get_by_action_tmpl(arg) || <<_html) if Runo.client == 'nobody'
-<div class="action_signin"><a href="/_users/create.html">#{_ 'sign in'}</a></div>
+<div class="action_signup"><a href="/_users/create.html">#{_ 'signup'}</a></div>
 _html
   end
 

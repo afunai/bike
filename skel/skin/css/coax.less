@@ -179,4 +179,46 @@ body, html {
       padding: .5em 2.5em .5em .5em;
     }
   }
+
+  table.forum {
+    width: 100%;
+    padding: 0;
+    margin: 0 0 1em 0;
+    th {
+      width: 80px;
+      text-align: left;
+      vertical-align: top;
+      padding: .5em 2.5em .5em .5em;
+      margin: 0;
+      border: solid @header-bg 2px;
+      background: @header-bg;
+      color: white;
+      -moz-border-radius-topleft: .5em;
+      -moz-border-radius-bottomleft: .5em;
+      -webkit-border-top-left-radius: .5em;
+      -webkit-border-bottom-left-radius: .5em;
+    }
+    td {
+      width: auto;
+      text-align: left;
+      vertical-align: top;
+      padding: .5em 2.5em .5em .5em;
+      border: solid @header-bg 2px;
+      -moz-border-radius-topright: .5em;
+      -moz-border-radius-bottomright: .5em;
+      -webkit-border-top-right-radius: .5em;
+      -webkit-border-bottom-right-radius: .5em;
+      div.subject {
+        font-size: x-large;
+        font-weight: bold;
+        margin-bottom: 0.5px;
+      }
+      p.wiki {
+        margin-top: 0;
+      }
+      textarea {
+        width: 100%;
+      }
+    }
+  }
 }

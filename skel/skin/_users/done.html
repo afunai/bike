@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="_(en)" lang="_(en)">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>_(Account Created)</title>
+    <link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="/js/base.js"></script>
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="header">
+        <h1>_(Account Created)</h1>
+      </div>
+
+      <div id="center" class="column">
+        <h2>_(Thanks!)</h2>
+        <p>_(You can login with your new account now.)</p>
+        <form id="form_login" method="post" action="@(base_href)../login.html">
+          <div class="login">
+            <label for="login_id">_(ID)</label><input type="text" id="login_id" name="id" size="10" value="" />
+            <label for="login_pw">_(Password)</label><input type="password" id="login_pw" name="pw" size="10" value="" />
+            <input type="submit" value="_(login)" />
+          </div>
+        </form>
+      </div>
+
+      <div id="right" class="column">
+      </div>
+
+      <div id="footer"></div>
+    </div>
+  </body>
+
+</html>

@@ -81,6 +81,10 @@ _html
     end
   end
 
+  def _g_thumbnail(arg = {})
+    _g_default(arg.merge :sub_action => :without_link)
+  end
+
   def _thumbnail(tempfile)
     @error_thumbnail = nil
     begin

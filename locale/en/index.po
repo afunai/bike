@@ -1,0 +1,242 @@
+# Copyright (C) 2009-2010 Akira FUNAI
+# This file is distributed under the same license as the Runo package.
+# Akira FUNAI <akira@funai.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Runo 0.1\n"
+"POT-Creation-Date: 2010-05-09 17:07+0900\n"
+"PO-Revision-Date: 2010-06-29 22:51+0900\n"
+"Last-Translator: Akira FUNAI <akira@funai.com>\n"
+"Language-Team: English <en@translate.freefriends.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: lib/_widget/action_signin.rb:12
+msgid "sign in"
+msgstr "sign in"
+
+#: lib/_workflow/_workflow.rb:11
+msgid "item"
+msgid_plural "items"
+msgstr[0] "item"
+msgstr[1] "items"
+
+#: lib/_workflow/_workflow.rb:41
+msgid "admin"
+msgstr "admin"
+
+#: lib/_workflow/_workflow.rb:41
+msgid "group"
+msgstr "group"
+
+#: lib/_workflow/_workflow.rb:41
+msgid "owner"
+msgstr "owner"
+
+#: lib/_workflow/_workflow.rb:41
+msgid "user"
+msgid_plural "users"
+msgstr[0] "user"
+msgstr[1] "users"
+
+#: lib/_workflow/_workflow.rb:41
+msgid "none"
+msgstr "none"
+
+#: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
+msgid "create"
+msgstr "create"
+
+#: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
+msgid "update"
+msgstr "update"
+
+#: lib/_workflow/_workflow.rb:94 lib/_workflow/attachment.rb:32
+msgid "delete"
+msgstr "delete"
+
+#: lib/_workflow/_workflow.rb:99
+msgid "preview"
+msgstr "preview"
+
+#: lib/_workflow/_workflow.rb:112
+msgid "delete..."
+msgstr "delete..."
+
+#: lib/_workflow/attachment.rb:10
+msgid "attachment"
+msgid_plural "attachments"
+msgstr[0] "attachment"
+msgstr[1] "attachments"
+
+#: lib/_workflow/blog.rb:11
+msgid "entry"
+msgid_plural "entries"
+msgstr[0] "entry"
+msgstr[1] "entries"
+
+#: lib/_workflow/contact.rb:11
+msgid "answer"
+msgid_plural "answers"
+msgstr[0] "answer"
+msgstr[1] "answers"
+
+#: lib/meta/id.rb:23
+msgid "malformatted id"
+msgstr "malformatted id"
+
+#: lib/meta/id.rb:30
+msgid "duplicate id: %{id}"
+msgstr "duplicate id: %{id}"
+
+#: lib/meta/timestamp.rb:44
+msgid "%Y-%m-%dT%H:%M:%S"
+msgstr "%Y-%m-%d %H:%M:%S"
+
+#: lib/meta/timestamp.rb:63
+msgid "update the timestamp"
+msgstr "update the timestamp"
+
+#: lib/scalar/checkbox.rb:22 lib/scalar/file.rb:55 lib/scalar/radio.rb:15
+#: lib/scalar/select.rb:15 lib/scalar/text.rb:17 lib/scalar/textarea.rb:12
+msgid "mandatory"
+msgstr "mandatory"
+
+#: lib/scalar/checkbox.rb:24 lib/scalar/radio.rb:17 lib/scalar/select.rb:19
+msgid "no such option"
+msgstr "no such option"
+
+#: lib/scalar/file.rb:53
+msgid "wrong file type: should be %{types}"
+msgstr "wrong file type: should be %{types}"
+
+#: lib/scalar/file.rb:53
+msgid "too large: %{max} bytes maximum"
+msgstr "too large: %{max} bytes maximum"
+
+#: lib/scalar/file.rb:57
+msgid "too small: %{min} bytes minimum"
+msgstr "too small: %{min} bytes minimum"
+
+#: lib/scalar/select.rb:31
+msgid "please select"
+msgstr "please select"
+
+#: lib/scalar/text.rb:15 lib/scalar/textarea.rb:10
+msgid "too long: %{max} characters maximum"
+msgstr "too long: %{max} characters maximum"
+
+#: lib/scalar/text.rb:19 lib/scalar/textarea.rb:14
+msgid "too short: %{min} characters minimum"
+msgstr "too short: %{min} characters minimum"
+
+#: lib/set/dynamic.rb:112
+msgid "login"
+msgstr "login"
+
+#: lib/set/dynamic.rb:118
+msgid "done."
+msgstr "done."
+
+#: lib/set/dynamic.rb:125
+msgid "please login."
+msgstr "please login."
+
+#: lib/set/dynamic.rb:127
+msgid "please confirm."
+msgstr "please confirm."
+
+#: lib/set/dynamic.rb:129
+msgid "malformed input."
+msgstr "malformed input."
+
+#: lib/set/dynamic.rb:134
+msgid "%{result} %{n} %{item}."
+msgstr "%{result} %{n} %{item}."
+
+#: lib/set/dynamic.rb:136
+msgid "created"
+msgstr "created"
+
+#: lib/set/dynamic.rb:137
+msgid "updated"
+msgstr "updated"
+
+#: lib/set/dynamic.rb:138
+msgid "deleted"
+msgstr "deleted"
+
+#: lib/set/dynamic.rb:161
+msgid "create new %{item}..."
+msgstr "create new %{item}..."
+
+#: lib/set/dynamic.rb:181
+msgid "prev"
+msgstr "prev"
+
+#: lib/set/dynamic.rb:186
+msgid "next"
+msgstr "next"
+
+#: lib/set/dynamic.rb:294
+msgid "%{year}/%{month}"
+msgstr "%{year}/%{month}"
+
+#: lib/set/dynamic.rb:301
+msgid "Jan"
+msgstr "Jan"
+
+#: lib/set/dynamic.rb:301
+msgid "Feb"
+msgstr "Feb"
+
+#: lib/set/dynamic.rb:301
+msgid "Mar"
+msgstr "Mar"
+
+#: lib/set/dynamic.rb:301
+msgid "Apr"
+msgstr "Apr"
+
+#: lib/set/dynamic.rb:301
+msgid "May"
+msgstr "May"
+
+#: lib/set/dynamic.rb:301
+msgid "Jun"
+msgstr "Jun"
+
+#: lib/set/dynamic.rb:301
+msgid "Jul"
+msgstr "Jul"
+
+#: lib/set/dynamic.rb:301
+msgid "Aug"
+msgstr "Aug"
+
+#: lib/set/dynamic.rb:301
+msgid "Sep"
+msgstr "Sep"
+
+#: lib/set/dynamic.rb:301
+msgid "Oct"
+msgstr "Oct"
+
+#: lib/set/dynamic.rb:301
+msgid "Nov"
+msgstr "Nov"
+
+#: lib/set/dynamic.rb:301
+msgid "Dec"
+msgstr "Dec"
+
+#: lib/set/static.rb:40
+msgid "update..."
+msgstr "update..."
+
+#: lib/set/static_folder.rb:56
+msgid "logout"
+msgstr "logout"

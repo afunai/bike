@@ -1,3 +1,11 @@
 --- 
 _id: root
+_timestamp: 
+  updated: 2010-05-29 03:06:57.156802 +09:00
+avatar: 
+  basename: 091210.jpg
+  size: 5790
+  type: image/jpeg
+email: test@example.com
+name: "Root User"
 password: yln/Xsr4Tcv/s

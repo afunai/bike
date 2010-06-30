@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html 
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Contact Form</title>
+    <link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="/js/base.js"></script>
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="header">
+        <h1><a href="@(dir)/">Contact Form</a></h1>
+      </div>
+
+      <div id="center" class="column">
+        <div id="main" class="runo-contact">
+          <!-- 1..5 should_preview -->
+          <table>
+            <tr><th>Name</th><td>$(name = text 1..64)</td></tr>
+            <tr><th>Email</th><td>$(email = text 1..64)</td></tr>
+            <tr><th>Genre</th><td>$(genre = checkbox action,mystery,romance mandatory)</td></tr>
+            <tr><th>Rating</th><td>$(rating = radio excellent,good,neutral,bad mandatory)</td></tr>
+            <tr><th>Counrty</th><td>$(country = select 'United States',Germany,Japan)</td></tr>
+            <tr><th>Comment</th><td>$(comment = textarea-pre 76*6 1..4096)</td></tr>
+            <tr><th>Image</th><td>$(img = img 0..4096)</td></tr>
+            <tr><th>File</th><td>$(file = file 0..4096)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div id="right" class="column">
+        $(.me)
+      </div>
+
+      <div id="footer"></div>
+    </div>
+  </body>
+
+</html>

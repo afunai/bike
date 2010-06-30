@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html 
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Contact Form</title>
+    <link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="header">
+        <h1><a href="@(dir)/">Contact Form</a></h1>
+      </div>
+
+      <div id="center" class="column">
+        <table id="main" class="runo-contact summary" style="border: 1px solid black;">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Genre</th>
+            <th>Rating</th>
+          </tr>
+          <tr class="body">
+            <td>$(name)</td>
+            <td>$(email)</td>
+            <td>$(genre)</td>
+            <td>$(rating)</td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="right" class="column">
+        $(.me)
+      </div>
+
+      <div id="footer"></div>
+    </div>
+  </body>
+
+</html>

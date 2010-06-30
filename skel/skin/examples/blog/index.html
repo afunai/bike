@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html 
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="runo-label" content="Blog" />
+    <title>@(label)</title>
+    <link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="/js/base.js"></script>
+    <link rel="alternate" title="@(label) RSS" href="@(href)read_rss.xml" type="application/rss+xml">
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="header">
+        <h1><a href="@(dir)/">@(label)</a></h1>
+      </div>
+
+      <div id="center" class="column">
+        <ul id="main" class="runo-blog">
+          <!-- 1..5 may_preview -->
+          <li>
+            <div class="label">$(title = text 32 1..32)</div>
+            <div class="ibody">
+              $(body = textarea-wiki 60*10 1..)
+              <div id="a" class="runo-attachment">$(f = img 64*64 1..9000)<br/></div>
+              <div>by $(_owner) @ $(_timestamp meta-timestamp can_update)</div>
+              $(.action_update)
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div id="right" class="column">
+        $(.action_signin)
+        $(.me)
+        $(main.action_create)
+        $(main.view_ym)
+      </div>
+
+      <div id="footer"></div>
+    </div>
+  </body>
+
+</html>

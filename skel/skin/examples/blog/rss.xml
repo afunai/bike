@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel class="runo-xml">
+    <atom:link href="@(href)rss.xml" rel="self" type="application/rss+xml" />
+    <title>Blog</title>
+    <description></description>
+    <link>@(href)</link>
+    <language>_(en)</language>
+    <generator>Runo</generator>
+    <item class="body">
+      <title>$(title)</title>
+      <link>@(href)</link>
+      <description><![CDATA[$(body)]]></description>
+      <pubDate>$(_timestamp.rfc2822)</pubDate>
+      <guid>@(href)</guid>
+    </item>
+  </channel>
+</rss>

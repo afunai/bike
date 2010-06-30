@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html 
+  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Forum</title>
+    <link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="/js/base.js"></script>
+  </head>
+
+  <body>
+    <div id="container">
+      <div id="header">
+        <h1><a href="@(dir)/">Forum</a></h1>
+      </div>
+
+      <div id="center" class="column">
+        <div id="main" class="runo-forum">
+          <!-- 1..10 may_preview desc -->
+          <table class="forum post">
+            <tr>
+              <th>
+                <div>$(_owner)</div>
+                <div>$(_timestamp)</div>
+              </th>
+              <td>
+                <div class="subject">$(subject = text 1..64)</div>
+                $(post = textarea-wiki 76*6 1..4096)
+                $(.action_update)
+              </td>
+            </tr>
+          </table>
+          <table id="main" class="runo-forum forum response">
+            <tr title="comment,comments">
+              <th>
+                $(_owner)<br/>
+                $(_timestamp)
+              </th>
+              <td>
+                $(comment = textarea-wiki 76*6 1..4096)
+                $(.action_update)
+              </td>
+            <tr>
+          </table>
+          $(main.action_create)
+        </div>
+      </div>
+
+      <div id="right" class="column">
+        $(.action_signin)
+        $(.me)
+        $(main.action_create)
+        $(main.view_ym)
+      </div>
+
+      <div id="footer"></div>
+    </div>
+  </body>
+
+</html>

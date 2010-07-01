@@ -23,15 +23,14 @@
 
       <div id="center" class="column">
         <div id="main" class="runo-contact">
-          <!-- 1..5 should_preview -->
+          <!-- 1..100 should_preview -->
           <table>
             <tr><th>Name</th><td>$(name = text 1..64)</td></tr>
             <tr><th>Email</th><td>$(email = text 1..64)</td></tr>
-            <tr><th>Genre</th><td>$(genre = checkbox action,mystery,romance mandatory)</td></tr>
-            <tr><th>Rating</th><td>$(rating = radio excellent,good,neutral,bad mandatory)</td></tr>
+            <tr><th>Favorite</th><td>$(favorite = checkbox action,mystery,romance mandatory)</td></tr>
+            <tr><th>Rating</th><td>$(rating = radio 1..5 mandatory)</td></tr>
             <tr><th>Counrty</th><td>$(country = select 'United States',Germany,Japan)</td></tr>
             <tr><th>Comment</th><td>$(comment = textarea-pre 76*6 1..4096)</td></tr>
-            <tr><th>Image</th><td>$(img = img 0..4096)</td></tr>
             <tr><th>File</th><td>$(file = file 0..4096)</td></tr>
           </table>
         </div>

@@ -9,6 +9,8 @@
     <title>@(label)</title>
     <link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
     <link rel="stylesheet" href="/css/coax.css" type="text/css" media="screen" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="./js/contact.js"></script>
   </head>
 
   <body>
@@ -23,14 +25,20 @@
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Genre</th>
+            <th>Favorite</th>
             <th>Rating</th>
           </tr>
           <tr class="body">
             <td>$(name)</td>
             <td>$(email)</td>
-            <td>$(genre)</td>
-            <td>$(rating)</td>
+            <td>$(favorite)</td>
+            <td class="rating">$(rating)</td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="rating-avg">Average: ???</td>
           </tr>
         </table>
       </div>

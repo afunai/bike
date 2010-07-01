@@ -15,5 +15,13 @@ $LOAD_PATH.unshift t_dir
 $LOAD_PATH.unshift(::File.expand_path('../lib', t_dir))
 require 'runo'
 
-Runo.instance_eval { @config = YAML.load_file ::File.join(t_dir, 't.yaml') }
+Runo.config(
+  'skin_dir' => './t/skin',
+  'storage'  => {
+    'default' => 'File',
+    'File'    => {'data_dir' => './t/data'},
+    'Sequel'  => {'uri'      => 'sqlite:/'},
+  }
+)
+
 Runo::I18n.bindtextdomain('index', ::File.join(t_dir, 'locale'))

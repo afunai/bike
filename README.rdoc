@@ -35,7 +35,6 @@ This will create a "runo" directory/folder, which includes:
 
   runo/
     config.ru
-    runo.yaml
     skin/
 
 === Step 3 - Start a Test Server

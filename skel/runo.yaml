@@ -1,8 +1,0 @@
----
-skin_dir: './skin'
-storage:
-  default: File
-  File:
-    data_dir: './data'
-  Sequel:
-    uri: 'sqlite:/'

@@ -14,4 +14,14 @@ use Rack::Session::Pool #Cookie
 use Rack::Lock
 
 ::Dir.chdir ::File.dirname(__FILE__)
+
+Runo.config(
+  'skin_dir' => './skin',
+  'storage'  => {
+    'default' => 'File',
+    'File'    => {'data_dir' => './data'},
+    'Sequel'  => {'uri'      => 'sqlite:/'},
+  }
+)
+
 run Runo.new

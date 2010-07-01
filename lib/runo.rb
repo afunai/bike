@@ -25,8 +25,12 @@ class Runo
     DIR_STATIC = /css|js|img|imgs|image|images/
   end
 
+  def self.config(config)
+    @config = config
+  end
+
   def self.[](name)
-    @config ||= YAML.load_file './runo.yaml'
+    @config ||= {}
     @config[name]
   end
 

@@ -9,14 +9,14 @@ You can make various apps such like blog, forum, contact form by putting single 
 * Any block tags (<ul>, <table> etc.) can be an "app", by adding a workflow class like "runo-blog".
 * The contents inside the app tag will be the "model".
 * The model is defined by special tags, like "$(foo = text 1..32)" or "$(bar = select a,b,c)".
-* You can make nested apps inside an app (eg. blog comments inside a blog entry).
+* You can make nested apps inside an app (e.g. blog comments inside a blog entry).
 * Authentication / Authorization / User admin are built in by default.
 * Storage can be plain YAML files (default), or any RDB via Sequel.
 * Runo itself is a Rack application.
 
 == Quick Start
 
-This is a quick tutorial for making a simple web application using Runo. All you need is a command line terminal and a few minutes.
+This is a quick tutorial for making a simple web application using Runo.
 
 === Step 1 - Install Runo
 
@@ -24,14 +24,17 @@ Open a command line terminal. Type:
 
   gem install runo
 
+If you want to make thumbnails for submitted images, you have to install QuickMagick as well.
+http://rubyforge.org/projects/quickmagick/
+
 === Step 2 - Initialize a Runo Directory
 
-In a command line terminal, go to an empty directory/folder where you want to build Runo projects.
+In a command line terminal, go to an empty directory where you want to build Runo projects.
 Then type:
 
   runo init
 
-This will create a "runo" directory/folder, which includes:
+This will create a "runo" directory, which includes:
 
   runo/
     config.ru
@@ -39,7 +42,7 @@ This will create a "runo" directory/folder, which includes:
 
 === Step 3 - Start a Test Server
 
-In the terminal, change to the newly created "runo" directory/folder.
+In the terminal, change to the newly created "runo" directory.
 Type:
 
   runo run
@@ -51,12 +54,13 @@ Now open this URL with your browser.
   http://localhost:9292/
 
 You will see the default homepage of Runo.
-There is some links to examples such like Blog, Contact Form, Forum, etc. Just see what can be done by plain HTML files. When you need to login, the initial account/password is root/root.
+There is some links to examples such like Blog, Contact Form, Forum, etc. Just see what can be done by plain HTML files.
 
 === Step 5 - Create Your Own App
 
 Let's call our app "fab".
-It is a web-based forum where visitors can submit their own articles, and everybody can read them.
+It is a web-based forum where logged in users can submit their own articles, and everybody can read them.
+We put links to signup / login at bottom of the app.
 
 Create a new directory under runo/skin/:
 
@@ -66,7 +70,7 @@ Then create a new HTML file with your favorite editor:
 
   edit skin/fab/index.html
 
-The content is: (You can just copy & paste, off course)
+The content is: (You can just copy & paste, of course)
 
   <html>
     <head>
@@ -98,7 +102,7 @@ See the URL:
 
   http://localhost:9292/fab/
 
-You have just created your first application. Open a bottle of your favorite drink and make yourself comfortable.
+You have just created your first app. Open a bottle of your favorite drink and make yourself comfortable.
 When you need more complicated tricks, HTMLs under skin/examples/ will be your help. More detailed documents are on the way.
 
 == Note on Patches/Pull Requests

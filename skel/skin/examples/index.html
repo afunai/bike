@@ -30,7 +30,10 @@
           The first user is "root", the admin of the whole Runo app.
           The second user is "frank", who has no special privilege.
           Their initial passwords are same as their names (e.g. "root" for root, "frank" for frank).
-          And of course, you can create your own account from <a href="../_users/create.html">here</a>.
+          And of course, you can create your own account at <a href="../_users/create.html">here</a>.
+        </p>
+        <p>
+          The data are stored in plain YAML files under data/examples/ by default. You can store the data on any RDB by fiddling config.ru.
         </p>
         <dl>
           <dt><a href="./blog/">Blog</a></dt>
@@ -43,12 +46,13 @@
           <dd>
             This is an example of inheritance.
             By simply making an empty sub-directory (blog/frank/), all HTMLs are inherited from the upper directory (blog/).
-            Then blog/frank/index.yaml overrides the label ("Frank's Blog") and the admin (frank).
+            Then, blog/frank/index.yaml overrides the label ("Frank's Blog") and the admin (frank).
           </dd>
           <dt><a href="./contact/">Contact Form</a></dt>
           <dd>
             This is an "everybody -> admin" type app.
             Everybody other than root can post this form and only root can see the posted result.
+            The index.html should be a good sample of various items such like radio, select, checkbox etc.
           </dd>
           <dt><a href="./forum/">Forum</a></dt>
           <dd>

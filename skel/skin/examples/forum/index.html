@@ -32,24 +32,25 @@
               </th>
               <td>
                 <div class="subject">$(subject = text 1..64)</div>
-                $(post = textarea-wiki 76*6 1..4096)
+                $(post = textarea-pre 76*6 1..4096)
                 $(.action_update)
               </td>
             </tr>
           </table>
-          <table id="main" class="runo-forum forum response">
-            <tr title="comment,comments">
+          <table id="replies" class="runo-forum forum reply">
+            <!-- 1..3 -->
+            <tr title="reply,replies">
               <th>
                 $(_owner)<br/>
                 $(_timestamp)
               </th>
               <td>
-                $(comment = textarea-wiki 76*6 1..4096)
+                $(comment = textarea-pre 76*6 1..4096)
                 $(.action_update)
               </td>
             <tr>
           </table>
-          $(main.action_create)
+          $(replies.action_create)
         </div>
       </div>
 

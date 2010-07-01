@@ -22,6 +22,7 @@ class Runo::Storage::File < Runo::Storage
         val = nil
         ::File.open(file, 'r') {|f|
           f.flock ::File::LOCK_SH
+          f.binmode
           val = f.read
           f.flock ::File::LOCK_UN
         }
@@ -140,6 +141,7 @@ class Runo::Storage::File < Runo::Storage
     file = glob(id.to_a).sort.first
     ::File.open(::File.join(@dir, file), 'r') {|f|
       f.flock ::File::LOCK_SH
+      f.binmode
       v = f.read
       f.flock ::File::LOCK_UN
     } if file
@@ -168,6 +170,7 @@ class Runo::Storage::File < Runo::Storage
     end
     ::File.open(::File.join(@dir, file), 'a') {|f|
       f.flock ::File::LOCK_EX
+      f.binmode
       f.seek 0
       f.truncate 0
       f << val

@@ -172,12 +172,13 @@ class Runo
 
   def get(base, params)
     if base.is_a? Runo::File
+      body = (params[:sub_action] == :small) ? base.thumbnail : base.body
       response_ok(
         :headers => {
           'Content-Type'   => base.val['type'],
-          'Content-Length' => base.body.to_s.size.to_s,
+          'Content-Length' => body.to_s.size.to_s,
         },
-        :body    => (params[:sub_action] == :small) ? base.thumbnail : base.body
+        :body    => body
       )
     else
       response_ok :body => _get(base, params)

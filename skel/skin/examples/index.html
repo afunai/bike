@@ -15,19 +15,53 @@
   <body>
     <div id="container">
       <div id="header">
-        <h1><a href="@(dir)/">@(label)</a></h1>
+        <h1><a href=".">@(label)</a></h1>
         $(.crumb)
       </div>
 
       <div id="center" class="column">
         <h2>@(label)</h2>
         <p>
+          This directory contains some sample apps to show you how good Runo works.
+          When you don't need them any more, you can just remove skin/examples/ directory and they will be gone.
         </p>
+        <p>
+          You may have to login to try some features of the apps. By default, there are two users.
+          The first user is "root", the admin of the whole Runo app.
+          The second user is "frank", who has no special privilege.
+          Their initial passwords are same as their names (e.g. "root" for root, "frank" for frank).
+          And of course, you can create your own account from <a href="../_users/create.html">here</a>.
+        </p>
+        <dl>
+          <dt><a href="./blog/">Blog</a></dt>
+          <dd>
+            The admin (root) can post / update / delete entries and everybody can read them.
+            Typical features such as monthly archives or syndication by RSS are provided.
+            You have to login as "root" to post new articles.
+          </dd>
+          <dt><a href="./blog/frank/">Frank's Blog</a></dt>
+          <dd>
+            This is an example of inheritance.
+            By simply making an empty sub-directory (blog/frank/), all HTMLs are inherited from the upper directory (blog/).
+            Then blog/frank/index.yaml overrides the label ("Frank's Blog") and the admin (frank).
+          </dd>
+          <dt><a href="./contact/">Contact Form</a></dt>
+          <dd>
+            This is an "everybody -> admin" type app.
+            Everybody other than root can post this form and only root can see the posted result.
+          </dd>
+          <dt><a href="./forum/">Forum</a></dt>
+          <dd>
+            This is an example of a nested model.
+            The app will have many posts, and each post will have many comments.
+            Everybody who logged in can create a new post, or reply to a existing post.
+          </dd>
+        </dl>
         <div id="main" class="runo-blog"></div>
+        <!-- $(main.action_create) -->
       </div>
 
       <div id="right" class="column">
-        $(.me)
       </div>
 
       <div id="footer"></div>

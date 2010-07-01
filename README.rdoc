@@ -1,6 +1,106 @@
-= runo
+= Runo
 
-Description goes here.
+Runo is the easiest web application framework ever.
+You can make various apps such like blog, forum, contact form by putting single (or several) HTML file with a bit of special markups. The view rules. There is no model definition, no server restart, and no coding at all.
+
+== Features
+
+* Model / View / Controller defined dynamically by good old HTML.
+* Any block tags (<ul>, <table> etc.) can be an "app", by adding a workflow class like "runo-blog".
+* The contents inside the app tag will be the "model".
+* The model is defined by special tags, like "$(foo = text 1..32)" or "$(bar = select a,b,c)".
+* You can make nested apps inside an app (eg. blog comments inside a blog entry).
+* Authentication / Authorization / User admin are built in by default.
+* Storage can be plain YAML files (default), or any RDB via Sequel.
+* Runo itself is a Rack application.
+
+== Quick Start
+
+This is a quick tutorial for making a simple web application using Runo. All you need is a command line terminal and a few minutes.
+
+=== Step 1 - Install Runo
+
+Open a command line terminal. Type:
+
+  gem install runo
+
+=== Step 2 - Initialize a Runo Directory
+
+In a command line terminal, go to an empty directory/folder where you want to build Runo projects.
+Then type:
+
+  runo init
+
+This will create a "runo" directory/folder, which includes:
+
+  runo/
+    config.ru
+    runo.yaml
+    skin/
+
+=== Step 3 - Start a Test Server
+
+In the terminal, change to the newly created "runo" directory/folder.
+Type:
+
+  runo run
+
+=== Step 4 - Try some examples
+
+Now open this URL with your browser.
+
+  http://localhost:9292/
+
+You will see the default homepage of Runo.
+There is some links to examples such like Blog, Contact Form, Forum, etc. Just see what can be done by plain HTML files. When you need to login, the initial account/password is root/root.
+
+=== Step 5 - Create Your Own App
+
+Let's call our app "fab".
+It is a web-based forum where visitors can submit their own articles, and everybody can read them.
+
+Create a new directory under runo/skin/:
+
+  mkdir skin/fab/
+
+Then create a new HTML file with your favorite editor:
+
+  edit skin/fab/index.html
+
+The content is: (You can just copy & paste, off course)
+
+  <html>
+    <head>
+      <title>fab forum</title>
+      <link rel="stylesheet" href="/css/base.css" type="text/css" media="screen" />
+    </head>
+
+    <body>
+      <h1><a href=".">fab forum</a></h1>
+
+      <ul id="main" class="runo-forum">
+        <!-- 1..5 desc may_preview -->
+        <li>
+          <h2>$(title = text 32 1..32)</h2>
+          <div>
+            $(content = textarea-pre 60*10 1..)
+            <div>by $(_owner) @ $(_timestamp)</div>
+          </div>
+        </li>
+      </ul>
+
+      <p>$(.action_signup)$(.me)</p>
+    </body>
+  </html>
+
+=== Step 6 - That's it!
+
+See the URL:
+
+  http://localhost:9292/fab/
+
+You have just created your first application. Open a bottle of your favorite drink and make yourself comfortable.
+When you need more complicated tricks, HTMLs under skin/examples/ will be your help. More detailed documents are on the way.
 
 == Note on Patches/Pull Requests
  
@@ -14,4 +114,4 @@ Description goes here.
 
 == Copyright
 
-Copyright (c) 2010 Akira FUNAI. See LICENSE for details.
+Copyright (c) 2010 Akira FUNAI <akira -at- funai -dot- com>. See LICENSE for details.

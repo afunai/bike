@@ -1,0 +1,14 @@
+--- 
+_owner: root
+_timestamp: 
+  created: 2010-06-30 23:28:18.996299 +09:00
+  published: 2010-06-30 23:28:18.996299 +09:00
+  updated: 2010-07-01 16:42:28.030389 +09:00
+body: |-
+    Duis varius felis quis elit rutrum adipiscing.
+    * Nunc faucibus eros rhoncus diam pellentesque porta.
+    ** Duis fringilla sem sit amet sem sollicitudin non dapibus augue vulputate.
+    * Curabitur aliquet massa eget sem feugiat ac luctus velit faucibus.
+    * Proin et felis felis.
+    ==Aenean laoreet elit ac massa accumsan ornare.==
+title: "Duis varius felis"

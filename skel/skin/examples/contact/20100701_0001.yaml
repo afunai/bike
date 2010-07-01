@@ -1,0 +1,15 @@
+--- 
+comment: |
+    Hello!
+    Hello!
+country: "United States"
+email: john@example.com
+favorite: 
+  - mystery
+  - romance
+file: 
+  basename: t.txt
+  size: 7
+  type: text/plain
+name: John
+rating: "1"

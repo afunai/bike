@@ -1,0 +1,25 @@
+--- 
+_owner: frank
+_timestamp: 
+  created: 2010-07-01 15:08:51.596034 +09:00
+  published: 2010-07-01 15:08:51.596034 +09:00
+  updated: 2010-07-01 16:16:48.149488 +09:00
+post: "Suspendisse ut dui in velit scelerisque condimentum in id lectus. Aenean ut dolor ut sapien rhoncus faucibus. Morbi sed dictum velit. Duis mi erat, interdum quis tristique et, varius id urna. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos."
+replies: 
+  ? "20100701_0001"
+  : 
+    _owner: carl
+    _timestamp: 
+      created: 2010-07-01 15:09:16.205333 +09:00
+      published: 2010-07-01 15:09:16.205333 +09:00
+      updated: 2010-07-01 15:09:16.205333 +09:00
+    comment: "Nullam id felis pharetra mi posuere luctus et et nisi. Pellentesque facilisis mi laoreet ligula tristique et ultricies sapien consectetur. Duis rhoncus ullamcorper nisi at hendrerit. "
+  ? "20100701_0002"
+  : 
+    _owner: don
+    _timestamp: 
+      created: 2010-07-01 15:09:44.280047 +09:00
+      published: 2010-07-01 15:09:44.280047 +09:00
+      updated: 2010-07-01 15:09:44.280047 +09:00
+    comment: "Etiam rhoncus, dui et convallis consequat, nisi lorem consectetur lorem, quis varius tortor mauris accumsan mauris."
+subject: "Etiam posuere placerat orci in hendrerit"

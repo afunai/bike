@@ -1,0 +1,41 @@
+--- 
+_owner: root
+_timestamp: 
+  created: 2010-07-01 15:05:37.204824 +09:00
+  published: 2010-07-01 15:05:37.204824 +09:00
+  updated: 2010-07-01 15:05:37.204824 +09:00
+post: "consectetur adipiscing elit. Integer ornare varius sodales. Ut consequat odio a velit iaculis scelerisque. Mauris eget nibh lectus, sit amet condimentum ante. Vivamus at neque magna, sit amet ultricies nibh. Integer sed mi nec lacus scelerisque eleifend ut nec elit. Aliquam vitae nibh justo, eu pellentesque lorem. Vestibulum nisi leo, hendrerit nec placerat ac, pulvinar at erat. Cras justo purus, semper in elementum sed, vehicula bibendum arcu. Etiam quis lacus nec turpis luctus semper sit amet ut ipsum. Donec porta feugiat orci, in semper sapien aliquet sed. "
+replies: 
+  ? "20100701_0001"
+  : 
+    _owner: frank
+    _timestamp: 
+      created: 2010-07-01 15:06:06.811185 +09:00
+      published: 2010-07-01 15:06:06.811185 +09:00
+      updated: 2010-07-01 15:06:06.811185 +09:00
+    comment: "Pellentesque aliquet tortor in nibh scelerisque aliquet. In et sapien suscipit magna tristique egestas ac ac urna. Duis suscipit, tellus non ullamcorper eleifend, massa lorem ultrices massa, non vulputate purus lectus vitae est. Maecenas ut risus neque, malesuada volutpat felis. Maecenas euismod turpis in augue iaculis convallis."
+  ? "20100701_0002"
+  : 
+    _owner: root
+    _timestamp: 
+      created: 2010-07-01 15:06:31.375277 +09:00
+      published: 2010-07-01 15:06:31.375277 +09:00
+      updated: 2010-07-01 15:06:31.375277 +09:00
+    comment: "Etiam rhoncus, dui et convallis consequat, nisi lorem consectetur lorem, quis varius tortor mauris accumsan mauris. Cras pharetra aliquam tellus, ut dignissim nibh venenatis sed."
+  ? "20100701_0003"
+  : 
+    _owner: carl
+    _timestamp: 
+      created: 2010-07-01 15:06:59.319917 +09:00
+      published: 2010-07-01 15:06:59.319917 +09:00
+      updated: 2010-07-01 15:06:59.319917 +09:00
+    comment: "Aliquam quis lacus id dui congue vehicula. Phasellus dignissim ullamcorper arcu, ac pretium lorem scelerisque sit amet. Praesent eu neque libero. Morbi sodales convallis tellus sed sagittis. Ut consectetur, eros eget volutpat ultrices, nisl augue malesuada dui, hendrerit cursus orci urna a felis."
+  ? "20100701_0004"
+  : 
+    _owner: root
+    _timestamp: 
+      created: 2010-07-01 16:56:17.474677 +09:00
+      published: 2010-07-01 16:56:17.474677 +09:00
+      updated: 2010-07-01 16:56:17.474677 +09:00
+    comment: "Ut ante arcu, consectetur nec laoreet ut, lacinia quis nisi."
+subject: "Lorem ipsum"

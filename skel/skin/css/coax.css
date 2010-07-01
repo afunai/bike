@@ -119,6 +119,16 @@ html a { text-decoration: none; }
   list-style-type: disc;
   margin-left: 1.5em;
 }
+#center dl {
+  width: 80%;
+  margin: 0 0 1em 1em;
+  padding: 0;
+}
+#center dl dt {
+  font-size: large;
+  font-weight: bold;
+}
+#center dl dd { margin: 0.5em 0 1em 1em; }
 #center th {
   width: 20%;
   text-align: right;

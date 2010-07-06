@@ -115,7 +115,7 @@ _html
 
     case action
       when :create, :update
-        v.each_key.sort_by {|id| id.to_s }.each {|id|
+        v.keys.sort_by {|id| id.to_s }.each {|id|
           next unless id.is_a? ::String
 
           v[id][:action] ||= id[Runo::REX::ID_NEW] ? :create : :update

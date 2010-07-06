@@ -280,7 +280,7 @@ class Runo
   end
 
   def rebuild_params(src)
-    src.each_key.sort.reverse.inject({}) {|params, key|
+    src.keys.sort.reverse.inject({}) {|params, key|
       name, special = key.split('.', 2)
       steps = name.split '-'
 

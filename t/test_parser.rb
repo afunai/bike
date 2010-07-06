@@ -468,6 +468,35 @@ _html
     )
   end
 
+  def test_parse_block_tag_obsolete_body_class
+    result = Runo::Parser.parse_html <<'_html'
+<ul class="runo-blog" id="foo"><div>oops.</div><li class="body">hello</li></ul>
+_html
+    assert_equal(
+      {
+        'foo' => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => {
+            :index => <<'_html'.chomp,
+<ul class="runo-blog" id="@(name)"><div>oops.</div>$()</ul>
+$(.navi)$(.submit)$(.action_create)
+_html
+          },
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => {:index => '<li class="body">hello</li>'},
+              :item  => {},
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should be able to parse block runo tags'
+    )
+  end
+
   def test_look_a_like_block_tag
     result = Runo::Parser.parse_html <<'_html'
 hello <ul class="not-runo-blog" id="foo"><li>hello</li></ul> world
@@ -486,7 +515,7 @@ _tmpl
 hello
   <table class="runo-blog" id="foo">
     <!-- 1..20 barbaz -->
-    <tbody class="body"><!-- qux --><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
+    <tbody class="model"><!-- qux --><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
   </table>
 world
 _html
@@ -511,7 +540,7 @@ _tmpl
               :label => nil,
               :tmpl  => {
                 :index => <<'_tmpl',
-    <tbody class="body"><!-- qux --><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
+    <tbody class="model"><!-- qux --><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
               },
               :item  => {
@@ -523,7 +552,7 @@ _tmpl
         },
       },
       result[:item],
-      'Parser.parse_html should aware of <tbody class="body">'
+      'Parser.parse_html should aware of <tbody class="model">'
     )
   end
 
@@ -532,7 +561,7 @@ _tmpl
 hello
   <table class="runo-blog" id="foo">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-    <tbody class="body"><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
+    <tbody class="model"><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
   </table>
 world
 _html
@@ -554,7 +583,7 @@ _tmpl
               :label => nil,
               :tmpl  => {
                 :index => <<'_tmpl',
-    <tbody class="body"><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
+    <tbody class="model"><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody>
 _tmpl
               },
               :item  => {
@@ -566,7 +595,7 @@ _tmpl
         },
       },
       result[:item],
-      'Parser.parse_html should aware of <tbody class="body">'
+      'Parser.parse_html should aware of <tbody class="model">'
     )
     assert_equal(
       {:index => <<'_tmpl'},
@@ -582,7 +611,7 @@ _tmpl
     result = Runo::Parser.parse_xml <<'_html'
 <channel class="runo-rss">
   <link>@(href)</link>
-  <item class="body">
+  <item class="model">
     <title>$(title)</title>
   </item>
 </channel>
@@ -700,7 +729,7 @@ _html
 hello
   <table class="runo-blog" id="foo">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
-    <tbody class="body"><tbody><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody></tbody>
+    <tbody class="model"><tbody><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody></tbody>
   </table>
 world
 _html
@@ -722,7 +751,7 @@ _tmpl
               :label => nil,
               :tmpl  => {
                 :index => <<'_tmpl',
-    <tbody class="body"><tbody><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody></tbody>
+    <tbody class="model"><tbody><tr><th>$(.a_update)$(bar)</a></th><th>$(baz)$(.hidden)</th></tr></tbody></tbody>
 _tmpl
               },
               :item  => {
@@ -734,7 +763,7 @@ _tmpl
         },
       },
       result[:item],
-      'Parser.parse_html should aware of nested <tbody class="body">'
+      'Parser.parse_html should aware of nested <tbody class="model">'
     )
   end
 
@@ -1163,7 +1192,7 @@ _html
   def test_action_tmpl_in_sd
     result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
-  <li class="body">$(text)</li>
+  <li class="model">$(text)</li>
   <div class="navi">bar</div>
 </ul>
 _html
@@ -1184,7 +1213,7 @@ _html
   def test_action_tmpl_in_sd_with_nested_action_tmpl
     result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
-  <li class="body">$(text)</li>
+  <li class="model">$(text)</li>
   <div class="navi"><span class="navi_prev">prev</span></div>
 </ul>
 _html
@@ -1205,7 +1234,7 @@ _html
   def test_supplement_sd
     result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
-  <li class="body">$(text)</li>
+  <li class="model">$(text)</li>
 </ul>
 _html
     assert_match(
@@ -1217,7 +1246,7 @@ _html
     result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
   <div class="navi">bar</div>
-  <li class="body">$(text)</li>
+  <li class="model">$(text)</li>
 </ul>
 _html
     assert_no_match(
@@ -1229,7 +1258,7 @@ _html
     result = Runo::Parser.parse_html <<'_html'
 <div class="foo-navi">bar</div>
 <ul id="foo" class="runo-blog">
-  <li class="body">$(text)</li>
+  <li class="model">$(text)</li>
 </ul>
 _html
     assert_no_match(
@@ -1242,7 +1271,7 @@ _html
   def test_supplement_ss
     result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
-  <li class="body">$(text)</li>
+  <li class="model">$(text)</li>
 </ul>
 _html
     assert_match(
@@ -1253,7 +1282,7 @@ _html
 
     result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="runo-blog">
-  <li class="body">$(text) $(.action_update)</li>
+  <li class="model">$(text) $(.action_update)</li>
 </ul>
 _html
     assert_no_match(

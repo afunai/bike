@@ -7,7 +7,7 @@
     <link>@(href)</link>
     <language>_(en)</language>
     <generator>Runo</generator>
-    <item class="body">
+    <item class="model">
       <title>$(title)</title>
       <link>@(href)</link>
       <description><![CDATA[$(body)]]></description>

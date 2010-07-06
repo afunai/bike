@@ -332,7 +332,7 @@ _html
 
   def test_get_by_self_reference
     ss = Runo::Set::Static.new(
-      :html => '<ul class="runo-attachment"><li class="body"></li>$(.pipco)</ul>'
+      :html => '<ul class="runo-attachment"><li class="model"></li>$(.pipco)</ul>'
     )
     sd = ss.item('main')
     def sd._g_submit(arg)
@@ -412,7 +412,7 @@ _html
 
   def test_get_by_self_reference_multiple_vars
     ss = Runo::Set::Static.new(
-      :html => '<ul class="runo-attachment">$(.pipco)<li class="body">$(foo=text)</li></ul>'
+      :html => '<ul class="runo-attachment">$(.pipco)<li class="model">$(foo=text)</li></ul>'
     )
     sd = ss.item('main')
     def sd._g_pipco(arg)

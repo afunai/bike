@@ -145,9 +145,9 @@ module Runo::Parser
     open_tag.sub!(/id=".*?"/i, 'id="@(name)"')
     workflow = open_tag[/class=(?:"|".*?\s)runo-(\w+)/, 1]
 
-    if inner_html =~ /<(\w+).+?class=(?:"|"[^"]*?\s)body(?:"|\s)/i
+    if inner_html =~ /<(?:\w+).+?class=(?:"|"[^"]*?\s)(model|body)(?:"|\s)/i # "body" is obsolete at 0.1.1
       item_html = ''
-      sd_tmpl = gsub_block(inner_html, 'body') {|open, inner, close|
+      sd_tmpl = gsub_block(inner_html, Regexp.last_match(1)) {|open, inner, close|
         item_html = open + inner + close
         '$()'
       }

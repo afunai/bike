@@ -250,7 +250,7 @@ _html
 
     assert_equal(
       <<'_html'.chomp,
-<ul id="@(name)" class="runo-blog">
+<ul id="@(name)" class="app-blog">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _html
@@ -259,7 +259,7 @@ _html
     )
     assert_equal(
       <<'_html'.chomp,
-<table id="@(name)" class="runo-blog">
+<table id="@(name)" class="app-blog">
 $()</table>
 $(.navi)$(.submit)$(.action_create)
 _html
@@ -307,7 +307,7 @@ _html
 <head><base href="/t_summary/" /><title>summary</title></head>
 <body>
 <h1>summary</h1>
-<table id="main" class="runo-blog">
+<table id="main" class="app-blog">
   <tr><td><a href="/t_summary/20100326/1/read_detail.html">frank</a></td><td>hi.</td></tr>
 </table>
 <div class="action_create"><a href="/t_summary/create.html">create new entry...</a></div>
@@ -325,7 +325,7 @@ _html
 <head><base href="/t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
-<ul id="main" class="runo-blog">
+<ul id="main" class="app-blog">
   <li><a href="/t_summary/20100326/1/update.html">frank</a>: hi.</li>
 </ul>
 <div class="action_create"><a href="/t_summary/create.html">create new entry...</a></div>
@@ -351,7 +351,7 @@ _html
 <h1>index</h1>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_summary/12345.012/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
-<ul id="main" class="runo-blog">
+<ul id="main" class="app-blog">
   <li><a><span class="text"><input type="text" name="20100326_0001-name" value="frank" size="32" /></span></a>: <span class="text"><input type="text" name="20100326_0001-comment" value="hi." size="64" /></span></li>
 </ul>
 <div class="submit">
@@ -380,7 +380,7 @@ _html
 <head><base href="/t_summary/" /><title>create</title></head>
 <body>
 <h1>create</h1>
-<ul id="main" class="runo-blog">
+<ul id="main" class="app-blog">
   <li>main-create</li>
 </ul>
 <div class="submit">

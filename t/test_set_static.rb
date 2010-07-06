@@ -17,7 +17,7 @@ class TC_Set_Static < Test::Unit::TestCase
     ss = Runo::Set::Static.new(:html => <<'_html')
 <html>
   <h1>$(title text 32)</h1>
-  <ul id="foo" class="runo-blog">
+  <ul id="foo" class="app-blog">
     <li title="Diary">
       $(subject text 64)
       $(body textarea 72*10)
@@ -34,7 +34,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_tmpl'.chomp,
-  <ul id="@(name)" class="runo-blog">
+  <ul id="@(name)" class="app-blog">
 $()  </ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -111,7 +111,7 @@ _html
     ss = Runo::Set::Static.new(:html => <<'_html')
 <html>
   <h1>$(title = text 32)</h1>
-  <ul id="main" class="runo-attachment">
+  <ul id="main" class="app-attachment">
     <li>hi</li>
   </ul>
 </html>

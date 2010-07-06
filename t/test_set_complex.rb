@@ -44,7 +44,7 @@ class TC_Set_Complex < Test::Unit::TestCase
       :group    => ['roy', 'don'],
       :tmpl     => {
         :index => <<'_tmpl'.chomp,
-<ul id="@(name)" class="runo-pipco">
+<ul id="@(name)" class="app-pipco">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -53,10 +53,10 @@ _tmpl
         'default' => Runo::Parser.parse_html(<<'_html')
   <li id="@(name)">
     $(name = tomago 32 :'nobody'): $(comment = tomago 64 :'hello.')
-    <ul id="files" class="runo-attachment">
+    <ul id="files" class="app-attachment">
       <li id="@(name)">$(file = tomago :'foo.jpg')</li>
     </ul>
-    <ul id="replies" class="runo-pipco">
+    <ul id="replies" class="app-pipco">
       <li id="@(name)">$(reply = tomago :'hi.')</li>
     </ul>
     $(replies.vegetable)
@@ -127,24 +127,24 @@ _html
     )
     assert_equal(
       <<'_html',
-<ul id="main" class="runo-pipco">
+<ul id="main" class="app-pipco">
   <li id="main-20091123_0001">
     'CZ'(action=read, p_action=read): 'oops'(action=read, p_action=read)
-    <ul id="main-20091123_0001-files" class="runo-attachment">
+    <ul id="main-20091123_0001-files" class="app-attachment">
       <li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=read, p_action=read)</li>
       <li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read, p_action=read)</li>
     </ul>
-    <ul id="main-20091123_0001-replies" class="runo-pipco">
+    <ul id="main-20091123_0001-replies" class="app-pipco">
       <li id="main-20091123_0001-replies-20091125_0001"><a href="/20091123_0001/replies/20091125/1/update.html">'howdy.'(action=read, p_action=read)</a></li>
     </ul>
     'potato'
   </li>
   <li id="main-20091123_0002">
     'RE'(action=read, p_action=read): 'wee'(action=read, p_action=read)
-    <ul id="main-20091123_0002-files" class="runo-attachment">
+    <ul id="main-20091123_0002-files" class="app-attachment">
       <li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read, p_action=read)</li>
     </ul>
-    <ul id="main-20091123_0002-replies" class="runo-pipco">
+    <ul id="main-20091123_0002-replies" class="app-pipco">
       <li id="main-20091123_0002-replies-20091125_0001"><a href="/20091123_0002/replies/20091125/1/update.html">'ho ho.'(action=read, p_action=read)</a></li>
       <li id="main-20091123_0002-replies-20091125_0002"><a href="/20091123_0002/replies/20091125/2/update.html">'oops.'(action=read, p_action=read)</a></li>
     </ul>
@@ -183,10 +183,10 @@ _html
     )
     assert_equal(
       <<'_html',
-<ul id="main" class="runo-pipco">
+<ul id="main" class="app-pipco">
   <li id="main-20091123_0001">
     'CZ'(action=update, p_action=update): 'oops'(action=update, p_action=update)
-    <ul id="main-20091123_0001-files" class="runo-attachment">
+    <ul id="main-20091123_0001-files" class="app-attachment">
       <li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=update, p_action=update)[d]</li>
       <li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=update, p_action=update)[d]</li>
       <li id="main-20091123_0001-files-_001">'foo.jpg'(action=create, p_action=create)[c]</li>
@@ -194,7 +194,7 @@ _html
   </li>
   <li id="main-20091123_0002">
     'RE'(action=update, p_action=update): 'wee'(action=update, p_action=update)
-    <ul id="main-20091123_0002-files" class="runo-attachment">
+    <ul id="main-20091123_0002-files" class="app-attachment">
       <li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=update, p_action=update)[d]</li>
       <li id="main-20091123_0002-files-_001">'foo.jpg'(action=create, p_action=create)[c]</li>
     </ul>
@@ -243,26 +243,26 @@ _html
     )
     assert_equal(
       <<_html,
-<ul id="main" class="runo-pipco">
+<ul id="main" class="app-pipco">
   <li id="main-20091123_0001">
     'CZ'(action=read, p_action=read): 'oops'(action=read, p_action=read)
-    <ul id="main-20091123_0001-files" class="runo-attachment">
+    <ul id="main-20091123_0001-files" class="app-attachment">
       <li id="main-20091123_0001-files-20091123_0001">'carl1.jpg'(action=read, p_action=read)</li>
       <li id="main-20091123_0001-files-20091123_0002">'carl2.jpg'(action=read, p_action=read)</li>
     </ul>
-    <ul id="main-20091123_0001-replies" class="runo-pipco">
+    <ul id="main-20091123_0001-replies" class="app-pipco">
       <li id="main-20091123_0001-replies-20091125_0001"><a href="/20091123_0001/replies/20091125/1/update.html">'howdy.'(action=read, p_action=read)</a></li>
     </ul>
     'potato'
   </li>
   <li id="main-20091123_0002">
     'RE'(action=read, p_action=read): 'wee'(action=read, p_action=read)
-    <ul id="main-20091123_0002-files" class="runo-attachment">
+    <ul id="main-20091123_0002-files" class="app-attachment">
       <li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read, p_action=read)</li>
     </ul>
 <form id="form_main-20091123_0002-replies" method="post" enctype="multipart/form-data" action="/20091123_0002/replies/123.45/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
-    <ul id="main-20091123_0002-replies" class="runo-pipco">
+    <ul id="main-20091123_0002-replies" class="app-pipco">
       <li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update, p_action=update)</a></li>
     </ul>
 [replies-update]
@@ -286,15 +286,15 @@ _html
     )
     assert_equal(
       <<_html,
-<ul id="main" class="runo-pipco">
+<ul id="main" class="app-pipco">
   <li id="main-20091123_0002">
     'RE'(action=read, p_action=read): 'wee'(action=read, p_action=read)
-    <ul id="main-20091123_0002-files" class="runo-attachment">
+    <ul id="main-20091123_0002-files" class="app-attachment">
       <li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read, p_action=read)</li>
     </ul>
 <form id="form_main-20091123_0002-replies" method="post" enctype="multipart/form-data" action="/20091123_0002/replies/123.45/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
-    <ul id="main-20091123_0002-replies" class="runo-pipco">
+    <ul id="main-20091123_0002-replies" class="app-pipco">
       <li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update, p_action=update)</a></li>
     </ul>
 [replies-update]

@@ -2,13 +2,13 @@
   <head><title>@(label)</title></head>
   <body>
     <h1>@(label)</h1>
-    <ul id="main" class="runo-blog">
+    <ul id="main" class="app-blog">
       <li>
         $(name = text 32 1..32 :'foo'): $(comment = text 64 1..64 :'bar!')
-        <ul id="files" class="runo-attachment"><li>$(file=text)</li></ul>
-        <ul id="replies" class="runo-blog"><li>$(reply=text)</li></ul>
+        <ul id="files" class="app-attachment"><li>$(file=text)</li></ul>
+        <ul id="replies" class="app-blog"><li>$(reply=text)</li></ul>
       </li>
     </ul>
-    <ul id="sub" class="runo-blog"><li>$(article=text)</li></ul>
+    <ul id="sub" class="app-blog"><li>$(article=text)</li></ul>
   </body>
 </html>

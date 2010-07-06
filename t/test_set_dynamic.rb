@@ -15,7 +15,7 @@ class TC_Set_Dynamic < Test::Unit::TestCase
       :group    => ['roy', 'don'],
       :tmpl     => {
         :index => <<'_tmpl'.chomp,
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
 $()</ul>
 $(.submit)
 _tmpl
@@ -231,7 +231,7 @@ _html
     @sd.each {|item| item[:tmpl][:action_update] = '' }
     assert_equal(
       <<'_html',
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li>frank: bar</li>
   <li>carl: baz</li>
 </ul>
@@ -241,7 +241,7 @@ _html
     )
     assert_equal(
       <<'_html',
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li>carl: baz</li>
 </ul>
 _html
@@ -258,7 +258,7 @@ _html
     }
     assert_equal(
       <<'_html',
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li>moo!: moo!</li>
 </ul>
 [foo-update]
@@ -293,7 +293,7 @@ _html
 
     assert_equal(
       <<'_html',
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
 </ul>
 _html
       @sd.get(:action => :read),
@@ -302,7 +302,7 @@ _html
 
     assert_equal(
       <<'_html',
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li><span class="text"><input type="text" name="name" value="" size="16" /></span>: <span class="text"><input type="text" name="comment" value="" size="64" /></span></li>
 </ul>
 [foo-update]
@@ -320,7 +320,7 @@ _html
     )
     assert_equal(
       <<'_html',
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li>frank: bar<input type="hidden" name="20100330_1234.action" value="howdy" /></li>
 </ul>
 [foo-preview.howdy]
@@ -332,7 +332,7 @@ _html
 
   def test_get_by_self_reference
     ss = Runo::Set::Static.new(
-      :html => '<ul class="runo-attachment"><li class="model"></li>$(.pipco)</ul>'
+      :html => '<ul class="app-attachment"><li class="model"></li>$(.pipco)</ul>'
     )
     sd = ss.item('main')
     def sd._g_submit(arg)
@@ -349,7 +349,7 @@ _html
     sd[:tmpl][:pipco]  = '<foo>$(.jawaka)</foo>'
     sd[:tmpl][:jawaka] = nil
     assert_equal(
-      '<ul class="runo-attachment"><foo>JAWAKA</foo></ul>',
+      '<ul class="app-attachment"><foo>JAWAKA</foo></ul>',
       ss.get,
       'Set::Dynamic#_get_by_self_reference should work via [:parent]._get_by_tmpl()'
     )
@@ -357,7 +357,7 @@ _html
     sd[:tmpl][:pipco]  = '<foo>$(.jawaka)</foo>'
     sd[:tmpl][:jawaka] = 'via tmpl'
     assert_equal(
-      '<ul class="runo-attachment"><foo>JAWAKA</foo></ul>',
+      '<ul class="app-attachment"><foo>JAWAKA</foo></ul>',
       ss.get,
       'Set::Dynamic#_get_by_self_reference should not recur'
     )
@@ -388,7 +388,7 @@ _html
 
   def test_get_by_self_reference_via_parent_tmpl
     ss = Runo::Set::Static.new(
-      :html => '$(main.action_pipco)<ul class="runo-attachment"></ul>'
+      :html => '$(main.action_pipco)<ul class="app-attachment"></ul>'
     )
     sd = ss.item('main')
     def sd._g_submit(arg)
@@ -399,12 +399,12 @@ _html
     sd[:tmpl][:navi] = ''
 
     assert_equal(
-      'PIPCO<ul class="runo-attachment"></ul>',
+      'PIPCO<ul class="app-attachment"></ul>',
       ss.get,
       'Set::Dynamic#_get_by_self_reference should work via [:parent]._get_by_tmpl()'
     )
     assert_equal(
-      '<ul class="runo-attachment"></ul>',
+      '<ul class="app-attachment"></ul>',
       ss.get('main' => {:action => :create}),
       'Set::Dynamic#_get_by_self_reference should hide unused items via [:parent]._get_by_tmpl()'
     )
@@ -412,7 +412,7 @@ _html
 
   def test_get_by_self_reference_multiple_vars
     ss = Runo::Set::Static.new(
-      :html => '<ul class="runo-attachment">$(.pipco)<li class="model">$(foo=text)</li></ul>'
+      :html => '<ul class="app-attachment">$(.pipco)<li class="model">$(foo=text)</li></ul>'
     )
     sd = ss.item('main')
     def sd._g_pipco(arg)
@@ -421,7 +421,7 @@ _html
     sd[:tmpl][:navi] = ''
 
     assert_equal(
-      '<ul class="runo-attachment">PIPCO</ul>',
+      '<ul class="app-attachment">PIPCO</ul>',
       ss.get,
       'Set::Dynamic#_get_by_self_reference should not be affected by previous $(.action)'
     )

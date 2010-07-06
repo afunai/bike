@@ -100,7 +100,7 @@ class TC_Runo_Call < Test::Unit::TestCase
     <h1></h1>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_contact/1234567890.0123/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
-    <ul id="main" class="runo-contact">
+    <ul id="main" class="app-contact">
       <li><a><span class="text"><input type="text" name="_001-name" value="foo" size="32" /></span></a>: <span class="text"><input type="text" name="_001-comment" value="bar!" size="64" /></span></li>
     </ul>
 <div class="submit">
@@ -208,7 +208,7 @@ _html
 <head><base href="http:///t_summary/" /><title>summary</title></head>
 <body>
 <h1>summary</h1>
-<table id="main" class="runo-blog">
+<table id="main" class="app-blog">
   <tr><td><a href="/t_summary/20100326/1/read_detail.html">frank</a></td><td>hi.</td></tr>
 </table>
 </body>
@@ -227,7 +227,7 @@ _html
 <head><base href="http:///t_summary/" /><title>index</title></head>
 <body>
 <h1>index</h1>
-<ul id="main" class="runo-blog">
+<ul id="main" class="app-blog">
   <li><a>frank</a>: hi.</li>
 </ul>
 </body>
@@ -250,7 +250,7 @@ _html
 <h1>index</h1>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_summary/#{tid}/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
-<ul id="main" class="runo-blog">
+<ul id="main" class="app-blog">
   <li><a><span class="text"><input type="text" name="20100326_0001-name" value="frank" size="32" /></span></a>: <span class="text"><input type="text" name="20100326_0001-comment" value="hi." size="64" /></span></li>
 </ul>
 <div class="submit">
@@ -807,7 +807,7 @@ _html
 </ul>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/#{tid}/update.html">
 <input name="_token" type="hidden" value="#{Runo.token}" />
-    <ul id="main" class="runo-blog">
+    <ul id="main" class="app-blog">
       <li><a>fz</a>: howdy.<input type="hidden" name="_1.action" value="create" /></li>
     </ul>
 <div class="submit">

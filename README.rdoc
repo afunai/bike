@@ -10,7 +10,7 @@ http://wiki.github.com/afunai/runo/
 == Features
 
 * Model / View / Controller defined dynamically by good old HTML.
-* Any block tags (<ul>, <table> etc.) can be an "app", by adding a workflow class like "runo-blog".
+* Any block tags (<ul>, <table> etc.) can be an "app", by adding a workflow class like "app-blog".
 * The contents inside the app tag will be the "model".
 * The model is defined by special tags, like "$(foo = text 1..32)" or "$(bar = select a,b,c)".
 * You can make nested apps inside an app (e.g. blog comments inside a blog entry).
@@ -85,7 +85,7 @@ The content is: (You can just copy & paste, of course)
     <body>
       <h1><a href=".">fab forum</a></h1>
 
-      <ul id="main" class="runo-forum">
+      <ul id="main" class="app-forum">
         <!-- 1..5 desc may_preview -->
         <li>
           <h2>$(title = text 32 1..32)</h2>

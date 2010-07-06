@@ -368,7 +368,7 @@ _html
 
   def test_parse_block_tag
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo"><li>hello</li></ul>
+<ul class="app-blog" id="foo"><li>hello</li></ul>
 _html
     assert_equal(
       {
@@ -377,7 +377,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_tmpl'.chomp,
-<ul class="runo-blog" id="@(name)">$()</ul>
+<ul class="app-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
           },
@@ -400,7 +400,7 @@ _tmpl
     )
 
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo">
+<ul class="app-blog" id="foo">
   <li>hello</li>
 </ul>
 _html
@@ -411,7 +411,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_tmpl'.chomp,
-<ul class="runo-blog" id="@(name)">
+<ul class="app-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -435,7 +435,7 @@ _tmpl
     )
 
     result = Runo::Parser.parse_html <<'_html'
-hello <ul class="runo-blog" id="foo"><li>hello</li></ul> world
+hello <ul class="app-blog" id="foo"><li>hello</li></ul> world
 _html
     assert_equal(
       {
@@ -444,7 +444,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_tmpl'.chomp,
- <ul class="runo-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
+ <ul class="app-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
 _tmpl
           },
           :item     => {
@@ -468,9 +468,9 @@ _html
     )
   end
 
-  def test_parse_block_tag_obsolete_body_class
+  def test_parse_block_tag_obsolete_runo_class
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo"><div>oops.</div><li class="body">hello</li></ul>
+<ul class="runo-blog" id="foo"><li>hello</li></ul>
 _html
     assert_equal(
       {
@@ -479,7 +479,36 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_html'.chomp,
-<ul class="runo-blog" id="@(name)"><div>oops.</div>$()</ul>
+<ul class="runo-blog" id="@(name)">$()</ul>
+$(.navi)$(.submit)$(.action_create)
+_html
+          },
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => {:index => '<li>hello</li>'},
+              :item  => {},
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should be able to parse block runo tags'
+    )
+  end
+
+  def test_parse_block_tag_obsolete_body_class
+    result = Runo::Parser.parse_html <<'_html'
+<ul class="app-blog" id="foo"><div>oops.</div><li class="body">hello</li></ul>
+_html
+    assert_equal(
+      {
+        'foo' => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => {
+            :index => <<'_html'.chomp,
+<ul class="app-blog" id="@(name)"><div>oops.</div>$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _html
           },
@@ -499,11 +528,11 @@ _html
 
   def test_look_a_like_block_tag
     result = Runo::Parser.parse_html <<'_html'
-hello <ul class="not-runo-blog" id="foo"><li>hello</li></ul> world
+hello <ul class="not-app-blog" id="foo"><li>hello</li></ul> world
 _html
     assert_equal(
       {:index => <<'_tmpl'},
-hello <ul class="not-runo-blog" id="foo"><li>hello</li></ul> world
+hello <ul class="not-app-blog" id="foo"><li>hello</li></ul> world
 _tmpl
       result[:tmpl],
       "Parser.parse_html[:tmpl] should skip a class which does not start with 'runo'"
@@ -513,7 +542,7 @@ _tmpl
   def test_block_tags_with_options
     result = Runo::Parser.parse_html <<'_html'
 hello
-  <table class="runo-blog" id="foo">
+  <table class="app-blog" id="foo">
     <!-- 1..20 barbaz -->
     <tbody class="model"><!-- qux --><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
   </table>
@@ -529,7 +558,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_tmpl'.chomp,
-  <table class="runo-blog" id="@(name)">
+  <table class="app-blog" id="@(name)">
     <!-- 1..20 barbaz -->
 $()  </table>
 $(.navi)$(.submit)$(.action_create)
@@ -559,7 +588,7 @@ _tmpl
   def test_block_tags_with_tbody
     result = Runo::Parser.parse_html <<'_html'
 hello
-  <table class="runo-blog" id="foo">
+  <table class="app-blog" id="foo">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
     <tbody class="model"><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody>
   </table>
@@ -572,7 +601,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_tmpl'.chomp,
-  <table class="runo-blog" id="@(name)">
+  <table class="app-blog" id="@(name)">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()  </table>
 $(.navi)$(.submit)$(.action_create)
@@ -609,7 +638,7 @@ _tmpl
 
   def test_parse_xml
     result = Runo::Parser.parse_xml <<'_html'
-<channel class="runo-rss">
+<channel class="app-rss">
   <link>@(href)</link>
   <item class="model">
     <title>$(title)</title>
@@ -654,7 +683,7 @@ _xml
 
   def test_parse_item_label
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo"><li title="Greeting">hello</li></ul>
+<ul class="app-blog" id="foo"><li title="Greeting">hello</li></ul>
 _html
     assert_equal(
       'Greeting',
@@ -663,7 +692,7 @@ _html
     )
 
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo"><!-- foo --><li title="Greeting">hello</li></ul>
+<ul class="app-blog" id="foo"><!-- foo --><li title="Greeting">hello</li></ul>
 _html
     assert_equal(
       'Greeting',
@@ -672,7 +701,7 @@ _html
     )
 
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo"><!-- foo --><li><div title="Foo">hello</div></li></ul>
+<ul class="app-blog" id="foo"><!-- foo --><li><div title="Foo">hello</div></li></ul>
 _html
     assert_nil(
       result[:item]['foo'][:item]['default'][:label],
@@ -682,7 +711,7 @@ _html
 
   def test_parse_item_label_plural
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo"><li title="tEntry, tEntries">hello</li></ul>
+<ul class="app-blog" id="foo"><li title="tEntry, tEntries">hello</li></ul>
 _html
     assert_equal(
       'tEntry',
@@ -696,7 +725,7 @@ _html
     )
 
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo"><li title="tFooFoo, BarBar, BazBaz">hello</li></ul>
+<ul class="app-blog" id="foo"><li title="tFooFoo, BarBar, BazBaz">hello</li></ul>
 _html
     assert_equal(
       'tFooFoo',
@@ -710,7 +739,7 @@ _html
     )
 
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo"><li title="tQux">hello</li></ul>
+<ul class="app-blog" id="foo"><li title="tQux">hello</li></ul>
 _html
     assert_equal(
       'tQux',
@@ -727,7 +756,7 @@ _html
   def test_block_tags_with_nested_tbody
     result = Runo::Parser.parse_html <<'_html'
 hello
-  <table class="runo-blog" id="foo">
+  <table class="app-blog" id="foo">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
     <tbody class="model"><tbody><tr><th>$(bar=text)</th><th>$(baz=text)</th></tr></tbody></tbody>
   </table>
@@ -740,7 +769,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_tmpl'.chomp,
-  <table class="runo-blog" id="@(name)">
+  <table class="app-blog" id="@(name)">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
 $()  </table>
 $(.navi)$(.submit)$(.action_create)
@@ -769,9 +798,9 @@ _tmpl
 
   def test_nested_block_tags
     result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo">
+<ul class="app-blog" id="foo">
   <li>
-    <ul class="runo-blog" id="bar"><li>baz</li></ul>
+    <ul class="app-blog" id="bar"><li>baz</li></ul>
   </li>
 </ul>
 _html
@@ -782,7 +811,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_tmpl'.chomp,
-<ul class="runo-blog" id="@(name)">
+<ul class="app-blog" id="@(name)">
 $()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -802,7 +831,7 @@ _tmpl
                   :workflow => 'blog',
                   :tmpl     => {
                     :index => <<'_tmpl'.chomp,
-    <ul class="runo-blog" id="@(name)">$()</ul>
+    <ul class="app-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
                   },
@@ -833,7 +862,7 @@ _tmpl
     result = Runo::Parser.parse_html <<'_html'
 <html>
   <h1>$(title=text 32)</h1>
-  <ul id="foo" class="runo-blog">
+  <ul id="foo" class="app-blog">
     <li>
       $(subject=text 64)
       $(body=textarea 72*10)
@@ -850,7 +879,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_tmpl'.chomp,
-  <ul id="@(name)" class="runo-blog">
+  <ul id="@(name)" class="app-blog">
 $()  </ul>
 $(.navi)$(.submit)$(.action_create)
 _tmpl
@@ -1064,7 +1093,7 @@ _tmpl
   def test_action_tmpl_in_ss
     result = Runo::Parser.parse_html <<'_html'
 <html>
-  <ul id="foo" class="runo-blog">
+  <ul id="foo" class="app-blog">
     <li>$(subject=text)</li>
   </ul>
   <div class="foo-navi">bar</div>
@@ -1090,7 +1119,7 @@ _tmpl
   def test_action_tmpl_in_ss_with_nil_id
     result = Runo::Parser.parse_html <<'_html'
 <html>
-  <ul id="main" class="runo-blog">
+  <ul id="main" class="app-blog">
     <li>$(subject=text)</li>
   </ul>
   <div class="navi">bar</div>
@@ -1116,7 +1145,7 @@ _tmpl
   def test_action_tmpl_in_ss_with_non_existent_id
     result = Runo::Parser.parse_html <<'_html'
 <html>
-  <ul id="main" class="runo-blog">
+  <ul id="main" class="app-blog">
     <li>$(subject=text)</li>
   </ul>
   <div class="non_existent-navi">bar</div>
@@ -1140,7 +1169,7 @@ _tmpl
   def test_action_tmpl_in_ss_with_nested_action_tmpl
     result = Runo::Parser.parse_html <<'_html'
 <html>
-  <ul id="foo" class="runo-blog">
+  <ul id="foo" class="app-blog">
     <li>$(subject=text)</li>
   </ul>
   <div class="foo-navi"><span class="navi_prev">prev</span></div>
@@ -1161,7 +1190,7 @@ _html
     assert_equal(
       {
         :index     => <<'_html'.chomp,
-  <ul id="@(name)" class="runo-blog">
+  <ul id="@(name)" class="app-blog">
 $()  </ul>
 $(.submit)$(.action_create)
 _html
@@ -1176,7 +1205,7 @@ _html
 
     result = Runo::Parser.parse_html <<'_html'
 <html>
-  <ul id="foo" class="runo-blog">
+  <ul id="foo" class="app-blog">
     <li>$(subject=text)</li>
   </ul>
   <div class="foo-navi"><span class="bar-navi_prev">prev</span></div>
@@ -1191,7 +1220,7 @@ _html
 
   def test_action_tmpl_in_sd
     result = Runo::Parser.parse_html <<'_html'
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
   <div class="navi">bar</div>
 </ul>
@@ -1212,7 +1241,7 @@ _html
 
   def test_action_tmpl_in_sd_with_nested_action_tmpl
     result = Runo::Parser.parse_html <<'_html'
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
   <div class="navi"><span class="navi_prev">prev</span></div>
 </ul>
@@ -1233,7 +1262,7 @@ _html
 
   def test_supplement_sd
     result = Runo::Parser.parse_html <<'_html'
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
 </ul>
 _html
@@ -1244,7 +1273,7 @@ _html
     )
 
     result = Runo::Parser.parse_html <<'_html'
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <div class="navi">bar</div>
   <li class="model">$(text)</li>
 </ul>
@@ -1257,7 +1286,7 @@ _html
 
     result = Runo::Parser.parse_html <<'_html'
 <div class="foo-navi">bar</div>
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
 </ul>
 _html
@@ -1270,7 +1299,7 @@ _html
 
   def test_supplement_ss
     result = Runo::Parser.parse_html <<'_html'
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
 </ul>
 _html
@@ -1281,7 +1310,7 @@ _html
     )
 
     result = Runo::Parser.parse_html <<'_html'
-<ul id="foo" class="runo-blog">
+<ul id="foo" class="app-blog">
   <li class="model">$(text) $(.action_update)</li>
 </ul>
 _html

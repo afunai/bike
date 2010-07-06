@@ -3,6 +3,10 @@
 Runo is the easiest web application framework ever.
 You can make various apps such like blog, forum, contact form by putting single (or several) HTML file with a bit of special markups. The view rules. There is no model definition, no server restart, and no coding at all.
 
+== Wiki
+
+http://wiki.github.com/afunai/runo/
+
 == Features
 
 * Model / View / Controller defined dynamically by good old HTML.

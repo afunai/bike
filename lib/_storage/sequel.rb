@@ -24,7 +24,7 @@ class Runo::Storage::Sequel < Runo::Storage
       String :ext
       String :owner
       String :body
-      Blob   :binary_body
+      File   :binary_body
       primary_key :full_name
     } unless @db.table_exists? :runo_main
     Runo::Storage::File.traverse('/', Runo['skin_dir']) {|entry|

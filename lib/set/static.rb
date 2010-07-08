@@ -11,7 +11,7 @@ class Runo::Set::Static < Runo::Field
 
   def initialize(meta = {})
     @meta = meta
-    @meta.merge!(Runo::Parser.parse_html meta[:html]) if meta[:html]
+    @meta.merge!(Runo::Parser.parse_html(meta[:html])) if meta[:html]
     @meta[:item] ||= {}
     @item_object = {}
   end

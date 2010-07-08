@@ -86,7 +86,7 @@ module Runo::Parser
     s = StringScanner.new html
     until s.eos?
       if s.scan /\$\((\w+)(?:\s+|\s*=\s*)([\w\-]+)\s*/m
-        out << block.call(s[1], {:klass => s[2]}.merge(scan_tokens s))
+        out << block.call(s[1], {:klass => s[2]}.merge(scan_tokens(s)))
       else
         out << s.scan(/.+?(?=\$|\w|<|\z)/m)
       end
@@ -180,7 +180,7 @@ module Runo::Parser
         'default' => item_meta,
       },
     }
-    (inner_html =~ /\A\s*<!--(.+?)-->/m) ? sd.merge(scan_tokens StringScanner.new($1)) : sd
+    (inner_html =~ /\A\s*<!--(.+?)-->/m) ? sd.merge(scan_tokens(StringScanner.new($1))) : sd
   end
 
   def parse_token(prefix, token, meta = {})

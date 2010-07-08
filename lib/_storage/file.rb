@@ -11,7 +11,7 @@ require 'fileutils'
 class Runo::Storage::File < Runo::Storage
 
   def self.traverse(dir = '/', root = Runo['storage']['File']['data_dir'], &block)
-    ::Dir.glob(::File.join root, dir, '*').sort.collect {|file|
+    ::Dir.glob(::File.join(root, dir, '*')).sort.collect {|file|
       ftype     = ::File.ftype file
       base_name = ::File.basename file
       id, ext    = base_name.split('.', 2)

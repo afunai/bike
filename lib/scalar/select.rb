@@ -13,11 +13,11 @@ class Runo::Select < Runo::Field
 
   def errors
     if my[:mandatory] && val.empty?
-      [_ 'mandatory']
+      [_('mandatory')]
     elsif my[:options].include?(val) || val.empty?
       []
     else
-      [_ 'no such option']
+      [_('no such option')]
     end
   end
 

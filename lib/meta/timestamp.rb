@@ -48,7 +48,7 @@ class Runo::Meta::Timestamp < Runo::Field
   end
 
   def _date(time)
-    time.is_a?(::Time) ? time.strftime(_ '%Y-%m-%dT%H:%M:%S') : 'n/a'
+    time.is_a?(::Time) ? time.strftime(_('%Y-%m-%dT%H:%M:%S')) : 'n/a'
   end
 
   def _g_create(arg)

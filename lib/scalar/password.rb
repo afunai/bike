@@ -16,7 +16,7 @@ class Runo::Password < Runo::Field
     elsif (my[:max].to_i > 0) && (@size > my[:max])
       [_('too long: %{max} characters maximum') % {:max => my[:max]}]
     elsif (my[:min].to_i == 1) && (@size == 0)
-      [_ 'mandatory']
+      [_('mandatory')]
     elsif (my[:min].to_i > 0) && (@size < my[:min])
       [_('too short: %{min} characters minimum') % {:min => my[:min]}]
     else
@@ -44,7 +44,7 @@ _html
         @val = v
       when :create, :update
         if v.is_a?(::String) && !v.empty?
-          salt = ('a'..'z').to_a[rand 26] + ('a'..'z').to_a[rand 26]
+          salt = ('a'..'z').to_a[rand(26)] + ('a'..'z').to_a[rand(26)]
           @size = v.size
           @val = v.crypt salt
         elsif @val.nil?

@@ -13,9 +13,9 @@ class Runo::Radio < Runo::Field
 
   def errors
     if val.empty?
-      my[:mandatory] ? [_ 'mandatory'] : []
+      my[:mandatory] ? [_('mandatory')] : []
     else
-      my[:options].include?(val) ? [] : [_ 'no such option']
+      my[:options].include?(val) ? [] : [_('no such option')]
     end
   end
 

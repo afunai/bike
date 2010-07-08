@@ -14,11 +14,11 @@ class Runo::Set::Static::Folder < Runo::Set::Static
     meta[:html] = load_html(meta[:dir], meta[:parent])
     super
 
-    ::Dir.glob(::File.join Runo['skin_dir'], my[:html_dir].to_s, '*.html').each {|f|
+    ::Dir.glob(::File.join(Runo['skin_dir'], my[:html_dir].to_s, '*.html')).each {|f|
       action = ::File.basename(f, '.*').intern
       merge_tmpl(@meta, Runo::Parser.parse_html(::File.read(f), action)) if action != :index
     }
-    ::Dir.glob(::File.join Runo['skin_dir'], my[:html_dir].to_s, '*.xml').each {|f|
+    ::Dir.glob(::File.join(Runo['skin_dir'], my[:html_dir].to_s, '*.xml')).each {|f|
       action = ::File.basename(f, '.*').intern
       merge_tmpl(@meta, Runo::Parser.parse_xml(::File.read(f), action)) if action != :index
     }
@@ -59,7 +59,7 @@ class Runo::Set::Static::Folder < Runo::Set::Static
       return sd.instance_eval { collect_item(conds, &block) }
     elsif (
       conds[:id] =~ /\A\w+\z/ &&
-      ::File.directory?(::File.join Runo['skin_dir'], my[:dir], conds[:id])
+      ::File.directory?(::File.join(Runo['skin_dir'], my[:dir], conds[:id]))
     )
       my[:item][conds[:id]] = {:klass  => 'set-static-folder'}
     end

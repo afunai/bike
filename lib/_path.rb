@@ -19,7 +19,7 @@ module Runo::Path
   end
 
   def base_of(path)
-    base = Runo::Set::Static::Folder.root.item(steps_of path)
+    base = Runo::Set::Static::Folder.root.item steps_of(path)
     if base.is_a? Runo::Set::Static::Folder
       base.item 'main'
     else

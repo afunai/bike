@@ -19,9 +19,9 @@ class Runo::Checkbox < Runo::Field
 
   def errors
     if val.empty?
-      my[:mandatory] ? [_ 'mandatory'] : []
+      my[:mandatory] ? [_('mandatory')] : []
     else
-      (val - my[:options]).empty? ? [] : [_ 'no such option']
+      (val - my[:options]).empty? ? [] : [_('no such option')]
     end
   end
 

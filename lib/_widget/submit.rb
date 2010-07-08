@@ -36,7 +36,7 @@ _html
 
   def _g_submit_preview_delete(arg)
     if (
-      permit_get?(arg.merge :action => :delete) &&
+      permit_get?(arg.merge(:action => :delete)) &&
       collect_item(arg[:conds]).find {|item| item[:id] !~ Runo::REX::ID_NEW } &&
       arg[:orig_action] != :preview
     )

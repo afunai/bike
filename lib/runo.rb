@@ -110,7 +110,7 @@ class Runo
     Runo.current[:session] = env['rack.session']
 
     if Runo.transaction[tid].is_a? Runo::Field
-      base = Runo.transaction[tid].item(Runo::Path.steps_of path.sub(/\A.*#{Runo::REX::TID}/, ''))
+      base = Runo.transaction[tid].item Runo::Path.steps_of(path.sub(/\A.*#{Runo::REX::TID}/, ''))
     else
       base = Runo::Path.base_of path
     end
@@ -271,10 +271,10 @@ class Runo
       :action     => Runo::Path.action_of(req.path_info),
       :sub_action => Runo::Path.sub_action_of(req.path_info),
     }
-    params.merge!(rebuild_params req.params)
+    params.merge! rebuild_params(req.params)
 
     params[:conds] ||= {}
-    params[:conds].merge!(Runo::Path.conds_of req.path_info)
+    params[:conds].merge! Runo::Path.conds_of(req.path_info)
 
     params
   end

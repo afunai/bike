@@ -9,7 +9,7 @@ class Runo::Textarea < Runo::Field
     if (my[:max].to_i > 0) && (val.size > my[:max])
       [_('too long: %{max} characters maximum') % {:max => my[:max]}]
     elsif (my[:min].to_i == 1) && val.empty?
-      [_ 'mandatory']
+      [_('mandatory')]
     elsif (my[:min].to_i > 0) && (val.size < my[:min])
       [_('too short: %{min} characters minimum') % {:min => my[:min]}]
     else

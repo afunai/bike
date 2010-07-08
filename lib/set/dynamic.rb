@@ -168,7 +168,7 @@ _html
       if id[Runo::REX::ID_NEW]
         @item_object[id].load_default
       else
-        @item_object[id].load(@storage.val id)
+        @item_object[id].load @storage.val(id)
       end
     end
     @item_object[id]

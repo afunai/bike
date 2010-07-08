@@ -76,7 +76,7 @@ class Runo::Storage::Sequel < Runo::Storage
   end
 
   def delete(id)
-    @dataset.filter(_conds id).delete &&
+    @dataset.filter(_conds(id)).delete &&
     @dataset.grep(:full_name, _full_name("#{id}-%")).and(~:ext => 'yaml').delete &&
     id
   end
@@ -88,7 +88,7 @@ class Runo::Storage::Sequel < Runo::Storage
   private
 
   def _select_by_id(conds)
-    @dataset.filter(_conds conds[:id]).collect {|v| _id v[:full_name] }
+    @dataset.filter(_conds(conds[:id])).collect {|v| _id v[:full_name] }
   end
 
   def _select_by_d(conds)

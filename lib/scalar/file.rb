@@ -54,7 +54,7 @@ class Runo::File < Runo::Field
     elsif (my[:max].to_i > 0) && (val['size'].to_i > my[:max])
       [_('too large: %{max} bytes maximum') % {:max => my[:max]}]
     elsif (my[:min].to_i == 1) && val['size'].to_i < 1
-      [_ 'mandatory']
+      [_('mandatory')]
     elsif (my[:min].to_i > 0) && (val['size'].to_i < my[:min])
       [_('too small: %{min} bytes minimum') % {:min => my[:min]}]
     else

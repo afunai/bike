@@ -350,6 +350,13 @@ class TC_Runo < Test::Unit::TestCase
       "Runo::Path.base_of should return the item('main') if the given steps point at a folder"
     )
 
+    sd = Runo::Path.base_of '/foo/qux/index.html'
+    assert_instance_of(
+      Runo::Set::Dynamic,
+      sd,
+      "Runo::Path.base_of should return an available set_dynamic if there is no 'main' in the folder"
+    )
+
     sd = Runo::Path.base_of '/foo/bar/20091120_0001/comment/index.html'
     assert_instance_of(
       Runo::Text,

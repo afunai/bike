@@ -21,7 +21,7 @@ module Runo::Path
   def base_of(path)
     base = Runo::Set::Static::Folder.root.item steps_of(path)
     if base.is_a? Runo::Set::Static::Folder
-      base.item 'main'
+      base.item('main') || base.find {|item| item.is_a? Runo::Set::Dynamic }
     else
       base
     end

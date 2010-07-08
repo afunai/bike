@@ -1136,29 +1136,24 @@ _html
       'Runo#call should return both the base path and tid at :done'
     )
 
-    tid    = res.headers['Location'][Runo::REX::TID]
-    new_id = res.headers['Location'][Runo::REX::PATH_ID]
+    location = res.headers['Location']
+    location =~ Runo::REX::PATH_ID
+    new_id = sprintf('%.8d_%.4d', $1, $2)
 
-    res = Rack::MockRequest.new(@runo).get(
-      res.headers['Location']
-    )
+    res = Rack::MockRequest.new(@runo).get location
     assert_match(
       /created 1 entry\./,
       res.body,
       'Runo#call should include the current message'
     )
 
-    res = Rack::MockRequest.new(@runo).get(
-      "http://example.com/#{tid}/#{new_id}index.html"
-    )
+    res = Rack::MockRequest.new(@runo).get location
     assert_no_match(
       /created 1 entry\./,
       res.body,
       'Runo#call should not include the message twice'
     )
 
-    res.headers['Location'] =~ Runo::REX::PATH_ID
-    new_id = sprintf('%.8d_%.4d', $1, $2)
     res = Rack::MockRequest.new(@runo).post(
       'http://example.com/t_store/main/update.html',
       {

@@ -356,6 +356,11 @@ class TC_Runo < Test::Unit::TestCase
       sd,
       "Runo::Path.base_of should return an available set_dynamic if there is no 'main' in the folder"
     )
+    assert_equal(
+      '-foo-qux-abc',
+      sd[:full_name],
+      "Runo::Path.base_of should return the first set_dynamic if there is no 'main' in the folder"
+    )
 
     sd = Runo::Path.base_of '/foo/bar/20091120_0001/comment/index.html'
     assert_instance_of(

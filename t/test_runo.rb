@@ -388,6 +388,20 @@ class TC_Runo < Test::Unit::TestCase
     )
   end
 
+  def test_base_of_empty_folder
+    f = Runo::Path.base_of '/foo/qux/moo/index.html'
+    assert_instance_of(
+      Runo::Set::Static::Folder,
+      f,
+      'Runo::Path.base_of should return an folder if there is no SD in it'
+    )
+    assert_equal(
+      '-foo-qux-moo',
+      f[:full_name],
+      'Runo::Path.base_of should return an folder if there is no SD in it'
+    )
+  end
+
   def test_path_of
     assert_equal(
       '20091224/123/',

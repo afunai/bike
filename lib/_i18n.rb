@@ -84,7 +84,9 @@ module Runo::I18n
         range.sub(/-.*/, ''),
       ].uniq.each {|r|
         po_file = ::File.join(self.po_dir, r, "#{self.domain}.po")
-        return open(po_file, 'r:utf-8') {|f| self.parse_msg f } if ::File.readable? po_file
+        return ::File.open(po_file, ((RUBY_VERSION < '1.9') ? 'r' : 'r:utf-8')) {|f|
+          self.parse_msg f
+        } if ::File.readable? po_file
         return {} if r == 'en' # default
       }
     }

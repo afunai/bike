@@ -1,12 +1,12 @@
 # encoding: UTF-8
 
 # Author::    Akira FUNAI
-# Copyright:: Copyright (c) 2009 Akira FUNAI
+# Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
 require 'rubygems'
 require 'rack/utils'
 
-$KCODE = 'UTF8'
+$KCODE = 'UTF8' if RUBY_VERSION < '1.9.0'
 
 class Runo::Field
 

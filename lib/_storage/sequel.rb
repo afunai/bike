@@ -112,7 +112,7 @@ class Runo::Storage::Sequel < Runo::Storage
   end
 
   def _full_name(id)
-    "#{@dirname}-#{id}"
+    "#{@dirname}-#{id.is_a?(::Array) ? id.first : id}"
   end
 
   def _id(full_name)

@@ -165,6 +165,7 @@ class Runo::Storage::File < Runo::Storage
 
     file = "#{file_prefix}#{id}.#{ext}"
     if old_id && f = ::File.open(::File.join(@dir, file), 'a')
+      f.seek(0, IO::SEEK_END)
       return if f.pos != 0 # duplicate id
       move(old_id, id) unless old_id == :new_id
     end

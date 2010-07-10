@@ -102,6 +102,7 @@ class Runo::Storage
     ([:d, :id, :p] & conds.keys).each {|cid|
       case cid
         when :d
+          conds[:d] = conds[:d].first if conds[:d].is_a? ::Array
           conds[:d] = conds[:d].to_s
           conds[:d] = last(:d, conds) if conds[:d] =~ /9999(99)?(99)?/
           conds[:d] = nil unless conds[:d] =~ Runo::REX::COND_D
@@ -117,6 +118,7 @@ class Runo::Storage
             end
           }.uniq.compact
         when :p
+          conds[:p] = conds[:p].first if conds[:p].is_a? ::Array
           conds[:p] = conds[:p].to_s
           conds[:p] = last(:p, conds) if conds[:p] == 'last'
           conds[:p] = nil unless conds[:p] =~ /^\d+$/

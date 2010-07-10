@@ -186,7 +186,7 @@ class Runo::Field
   end
 
   def empty?
-    val.to_s == ''
+    val.respond_to?(:empty?) ? val.empty? : (val.to_s == '')
   end
 
   def errors

@@ -37,7 +37,7 @@ _html
           item_tmpl = item[:tmpl][:index].sub(/[\w\W]*\$\(.*?\)/, "\\&#{button}")
           item.send(:_get_by_tmpl, item_arg, item_tmpl)
         }
-        tmpl = my[:tmpl][:index].gsub('$()', item_outs.join)
+        tmpl = my[:tmpl][:index].gsub('$()', item_outs)
         _get_by_tmpl({:p_action => arg[:p_action], :action => :update}, tmpl)
       end
     }

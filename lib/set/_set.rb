@@ -149,7 +149,7 @@ module Runo::Set
       item_arg = item_arg(arg, item[:id])
       next if item.empty? && ![:create, :update].include?(item_arg[:action])
       block ? block.call(item, item_arg) : item.get(item_arg)
-    }
+    }.join
   end
 
   def _g_errors(arg)

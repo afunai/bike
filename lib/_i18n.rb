@@ -10,6 +10,7 @@ module Runo::I18n
       if args.first.is_a? ::Hash
         self.gsub(/%\{(\w+)\}/) { args.first[$1.intern].to_s }
       else
+        args = args.first if args.first.is_a? ::Array
         ::String.new(self.gsub(/%\{(\w+)\}/, '%s')) % args
       end
     end

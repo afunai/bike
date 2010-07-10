@@ -302,6 +302,13 @@ _eos
       "Runo::I18n::Msgstr#% should regard %{...} as '%s' if given a scalar"
     )
 
+    s = n_('one foo', '%{n} foo %{bar}', 2)
+    assert_equal(
+      '2 foo selected',
+      s % [2, 'selected'],
+      "Runo::I18n::Msgstr#% should regard %{...} as '%s' if given an array"
+    )
+
     s = n_('one color', '%{n} colors', 1)
     assert_instance_of(
       Runo::I18n::Msgstr,

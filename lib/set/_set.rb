@@ -179,7 +179,7 @@ module Runo::Set
       elsif id =~ Runo::REX::ID_NEW
         permit? :create
       else
-        item_action = v[:action] || :update
+        item_action = (v.is_a?(::Hash) && v[:action]) || :update
         item(id) && item(id).permit?(item_action)
       end
     }

@@ -86,7 +86,7 @@ _html
 
   def collect_item(conds = {}, &block)
     items = my[:item].keys
-    items &= conds[:id].to_a if conds[:id] # select item(s) by id
+    items &= Array(conds[:id]) if conds[:id] # select item(s) by id
     items.sort.collect {|id|
       item = @item_object[id] ||= Runo::Field.instance(
         my[:item][id].merge(:id => id, :parent => self)

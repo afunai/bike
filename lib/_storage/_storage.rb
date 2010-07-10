@@ -127,7 +127,7 @@ class Runo::Storage
 
   def _select(conds)
     if conds[:id]
-      _select_by_id(conds) | (@sd.instance_variable_get(:@item_object).keys & conds[:id].to_a)
+      _select_by_id(conds) | (@sd.instance_variable_get(:@item_object).keys & Array(conds[:id]))
     elsif cid = (conds.keys - [:order, :p]).first
       m = "_select_by_#{cid}"
       respond_to?(m, true) ? __send__(m, conds) : []
@@ -146,7 +146,7 @@ class Runo::Storage
 
     page = conds[:p].to_i
     page = 1 if page < 1
-    item_ids[(page - 1) * size, size].to_a
+    Array item_ids[(page - 1) * size, size]
   end
 
   def _sibs_id(conds)
@@ -174,7 +174,7 @@ class Runo::Storage
   end
 
   def cast_ids(ids)
-    ids.to_a.collect {|i|
+    Array(ids).collect {|i|
       id = (i =~ /^[a-z]/) ? "00000000_#{i}" : i
       id if id =~ Runo::REX::ID
     }.compact

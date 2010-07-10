@@ -13,8 +13,8 @@ class Runo::Meta::Timestamp < Runo::Field
 
   def initialize(meta = {})
     meta[:size]       = $&.to_i if meta[:tokens] && meta[:tokens].find {|t| t =~ /^\d+$/ }
-    meta[:can_edit]   = true if meta[:tokens].to_a.include? 'can_edit'
-    meta[:can_update] = true if meta[:tokens].to_a.include? 'can_update'
+    meta[:can_edit]   = true if Array(meta[:tokens]).include? 'can_edit'
+    meta[:can_update] = true if Array(meta[:tokens]).include? 'can_update'
     super
   end
 

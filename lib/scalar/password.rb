@@ -44,7 +44,7 @@ _html
         @val = v
       when :create, :update
         if v.is_a?(::String) && !v.empty?
-          salt = ('a'..'z').to_a[rand(26)] + ('a'..'z').to_a[rand(26)]
+          salt = Array('a'..'z')[rand(26)] + Array('a'..'z')[rand(26)]
           @size = v.size
           @val = v.crypt salt
         elsif @val.nil?

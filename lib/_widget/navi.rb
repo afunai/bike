@@ -66,7 +66,7 @@ class Runo::Set::Dynamic
       base_conds.delete :p
       conds = arg[:navi][:sibs].values.first
       if p = arg[:conds][:p]
-        range = ['1', conds.last] + ((p.to_i - 5)..(p.to_i + 5)).to_a.collect {|i| i.to_s }
+        range = ['1', conds.last] + Array((p.to_i - 5)..(p.to_i + 5)).collect {|i| i.to_s }
         conds = conds & range
       end
       conds.collect {|cond|

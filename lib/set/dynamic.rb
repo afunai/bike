@@ -24,10 +24,10 @@ class Runo::Set::Dynamic < Runo::Field
     }
 
     my[:p_size] = meta[:max] if meta[:max]
-    my[:preview] = :optional if meta[:tokens].to_a.include?('may_preview')
-    my[:preview] = :mandatory if meta[:tokens].to_a.include?('should_preview')
-    my[:order] = 'id'  if meta[:tokens].to_a.include? 'asc'
-    my[:order] = '-id' if meta[:tokens].to_a.include? 'desc'
+    my[:preview] = :optional if Array(meta[:tokens]).include?('may_preview')
+    my[:preview] = :mandatory if Array(meta[:tokens]).include?('should_preview')
+    my[:order] = 'id'  if Array(meta[:tokens]).include? 'asc'
+    my[:order] = '-id' if Array(meta[:tokens]).include? 'desc'
   end
 
   def meta_href

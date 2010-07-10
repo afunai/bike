@@ -157,7 +157,7 @@ module Runo::Set
   end
 
   def item_arg(arg, steps)
-    steps.to_a.inject(arg) {|a, s|
+    Array(steps).inject(arg) {|a, s|
       i = a[s] || {}
       i[:p_action] = a[:action]
       unless i[:action]

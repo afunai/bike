@@ -123,7 +123,7 @@ module Runo::I18n
   module_function
 
   def _(msgid)
-    Runo::I18n::Msgstr.new(Runo::I18n.msg[msgid].to_a.first || msgid)
+    Runo::I18n::Msgstr.new(Array(Runo::I18n.msg[msgid]).first || msgid)
   end
 
   def n_(msgid, msgid_plural, n)

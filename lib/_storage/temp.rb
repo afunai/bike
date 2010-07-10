@@ -58,7 +58,7 @@ class Runo::Storage::Temp < Runo::Storage
   private
 
   def _select_by_id(conds)
-    val.keys & conds[:id].to_a
+    val.keys & Array(conds[:id])
   end
 
   def _select_by_d(conds)

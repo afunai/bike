@@ -91,11 +91,11 @@ class Runo::Field
   end
 
   def meta_owners
-    (my[:parent] ? my[:parent][:owners] : ['root']) | @meta[:owner].to_a
+    (my[:parent] ? my[:parent][:owners] : ['root']) | Array(@meta[:owner])
   end
 
   def meta_admins
-    (my[:parent] ? my[:parent][:admins] : ['root']) | @meta[:admin].to_a
+    (my[:parent] ? my[:parent][:admins] : ['root']) | Array(@meta[:admin])
   end
 
   def meta_group

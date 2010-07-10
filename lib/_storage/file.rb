@@ -106,7 +106,7 @@ class Runo::Storage::File < Runo::Storage
   private
 
   def _select_by_id(conds)
-    glob(conds[:id].to_a).collect {|f| f[/\d.*/][Runo::REX::ID] }.compact
+    glob(Array(conds[:id])).collect {|f| f[/\d.*/][Runo::REX::ID] }.compact
   end
 
   def _select_by_d(conds)
@@ -138,7 +138,7 @@ class Runo::Storage::File < Runo::Storage
 
   def load(id)
     v = nil
-    file = glob(id.to_a).sort.first
+    file = glob(Array(id)).sort.first
     ::File.open(::File.join(@dir, file), 'r') {|f|
       f.flock ::File::LOCK_SH
       f.binmode
@@ -180,7 +180,7 @@ class Runo::Storage::File < Runo::Storage
   end
 
   def remove_file(id)
-    glob_pattern = "#{file_prefix}#{pattern_for id.to_a}[.-]*"
+    glob_pattern = "#{file_prefix}#{pattern_for Array(id)}[.-]*"
     files = ::Dir.chdir(@dir) { ::Dir.glob glob_pattern } # may include child files
     files.each {|file|
       ::File.unlink ::File.join(@dir, file)
@@ -188,7 +188,7 @@ class Runo::Storage::File < Runo::Storage
   end
 
   def rename_file(old_id, new_id)
-    glob_pattern = "#{file_prefix}#{pattern_for old_id.to_a}*"
+    glob_pattern = "#{file_prefix}#{pattern_for Array(old_id)}*"
     files = ::Dir.chdir(@dir) { ::Dir.glob glob_pattern } # may include child files
     rex = /^\A#{file_prefix}#{old_id}/
     files.each {|file|

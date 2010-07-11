@@ -40,10 +40,10 @@ class Runo::Set::Dynamic
     end
 
     message.keys.collect {|type|
-      lis = message[type].collect {|m| "  <li>#{Runo::Field.h m}</li>\n" }
+      lis = Array(message[type]).collect {|m| "  <li>#{Runo::Field.h m}</li>\n" }
       <<_html
 <ul class="message #{type}">
-#{lis}</ul>
+#{lis.join}</ul>
 _html
     }.join if message
   end

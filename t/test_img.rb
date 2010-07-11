@@ -211,7 +211,7 @@ _eos
       {
         :input           => input,
         'CONTENT_TYPE'   => 'multipart/form-data; boundary=-foobarbaz',
-        'CONTENT_LENGTH' => input.length,
+        'CONTENT_LENGTH' => input.respond_to?(:bytesize) ? input.bytesize : input.size,
       }
     )
     tid = res.headers['Location'][Runo::REX::TID]
@@ -236,8 +236,8 @@ _eos
       'Runo#call to a img item should return the mime type of the file'
     )
     assert_equal(
-      @img.size,
-      res.body.size,
+      @img.respond_to?(:bytesize) ? @img.bytesize : @img.size,
+      res.body.respond_to?(:bytesize) ? res.body.bytesize : res.body.size,
       'Runo#call to a img item should return the binary body of the file'
     )
 

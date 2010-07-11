@@ -128,7 +128,7 @@ _html
       {
         'basename' => File.basename(v[:filename]),
         'type'     => v[:type] || 'application/octet-stream',
-        'size'     => @body.size,
+        'size'     => @body.respond_to?(:bytesize) ? @body.bytesize : @body.size,
       }
     elsif v.is_a?(::Hash) && v['basename']
       {

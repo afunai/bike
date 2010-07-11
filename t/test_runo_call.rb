@@ -682,7 +682,7 @@ _html
     res = Rack::MockRequest.new(@runo).post(
       "http://example.com/t_attachment/main/update.html",
       {
-        :input => "_012-comment=abc&.status-public=create"
+        :input => "_012-comment=abc&.status-public=create&_token=#{Runo.token}"
       }
     )
     res.headers['Location'] =~ Runo::REX::PATH_ID

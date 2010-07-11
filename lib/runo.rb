@@ -326,7 +326,7 @@ class Runo
           'Content-Length' => body.size.to_s,
         }
       ),
-      body,
+      [body],
     ]
   end
 
@@ -349,7 +349,7 @@ _html
         'Content-Length' => body.size.to_s,
         'Location'       => result[:location],
       },
-      body
+      [body]
     ]
   end
 
@@ -361,7 +361,7 @@ _html
         'Content-Type'   => 'text/html',
         'Content-Length' => body.size.to_s,
       },
-      body,
+      [body],
     ]
   end
 
@@ -373,7 +373,7 @@ _html
         'Content-Type'   => 'text/html',
         'Content-Length' => body.size.to_s,
       },
-      body
+      [body]
     ]
   end
 
@@ -389,7 +389,7 @@ _html
           'Content-Length' => body.size.to_s,
         }
       ),
-      body,
+      [body],
     ]
   end
 

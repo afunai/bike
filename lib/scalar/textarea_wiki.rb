@@ -127,7 +127,7 @@ _html
 
     <<_html
 <#{ul_ol} class="wiki">
-#{items}</#{ul_ol}>
+#{items.join}</#{ul_ol}>
 _html
   end
 

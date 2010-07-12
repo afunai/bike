@@ -105,7 +105,7 @@ _html
   end
 
   def val_cast(v)
-    @thumbnail = _thumbnail(v[:tempfile]) if v && v[:tempfile]
+    @thumbnail = _thumbnail(v[:tempfile]) if v.is_a?(::Hash) && v[:tempfile]
     super
   end
 

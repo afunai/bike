@@ -122,7 +122,7 @@ _html
   end
 
   def val_cast(v)
-    if v && v[:tempfile]
+    if v.is_a?(::Hash) && v[:tempfile]
       v[:tempfile].rewind
       @body = v[:tempfile].read
       {

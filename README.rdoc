@@ -107,7 +107,7 @@ See the URL:
   http://localhost:9292/fab/
 
 You have just created your first app. Open a bottle of your favorite drink and make yourself comfortable.
-When you need more complicated tricks, HTMLs under skin/examples/ will be your help. More detailed documents are on the way.
+When you need more complicated tricks, HTMLs under skin/examples/ will be your help. Also, you should check out the wiki: http://wiki.github.com/afunai/runo/
 
 == Note on Patches/Pull Requests
  

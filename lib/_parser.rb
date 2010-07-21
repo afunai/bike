@@ -86,6 +86,7 @@ module Runo::Parser
     out = ''
     s = StringScanner.new html
     until s.eos?
+      out << skip_comment(s)
       if s.scan /\$\((\w+)(?:\s+|\s*=\s*)([\w\-]+)\s*/m
         out << block.call(s[1], {:klass => s[2]}.merge(scan_tokens(s)))
       else

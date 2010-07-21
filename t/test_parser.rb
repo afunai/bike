@@ -77,6 +77,34 @@ _html
     )
   end
 
+  def test_parse_empty_tag_in_comment
+    html = 'hello <!-- $(foo = bar "baz baz") --> world'
+    result = Runo::Parser.parse_html html
+    assert_equal(
+      {},
+      result[:item],
+      'Parser.parse_html should skip runo tags in a comment'
+    )
+    assert_equal(
+      {:index => html},
+      result[:tmpl],
+      'Parser.parse_html should skip runo tags in a comment'
+    )
+
+    html = '<script><![CDATA[ $(foo = bar "baz baz") ]]></script>'
+    result = Runo::Parser.parse_html html
+    assert_equal(
+      {},
+      result[:item],
+      'Parser.parse_html should skip runo tags in a comment'
+    )
+    assert_equal(
+      {:index => html},
+      result[:tmpl],
+      'Parser.parse_html should skip runo tags in a comment'
+    )
+  end
+
   def test_obscure_markup
     result = Runo::Parser.parse_html('hello $(foo = bar $(baz=1) baz) world')
     assert_equal(

@@ -75,7 +75,7 @@ module Runo::Parser
         close_tag << "\n" if s.scan /\n/
         out << block.call(open_tag, inner_html, close_tag)
       else
-        out << s.scan(/.+?(?=\t| |<|\z)/m)
+        out << s.scan(/.+?(?=\t| |<|\z)/m).to_s
       end
     end
     out

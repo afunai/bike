@@ -96,8 +96,8 @@ module Runo::Parser
   end
 
   def skip_comment(s)
-    if comment_tag = ['!--', '![CDATA['].find {|tag| s.scan /\s*<#{Regexp.quote(tag)}\n*/ }
-      s[0] + scan_inner_html(s, comment_tag).join + (s.scan(/\n/) || '')
+    if s.scan /\s*<(!--|!\[CDATA\[)\n*/
+      s[0] + scan_inner_html(s, s[1]).join + (s.scan(/\n/) || '')
     else
       ''
     end

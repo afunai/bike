@@ -1395,6 +1395,35 @@ _html
     )
   end
 
+  def test_action_tmpl_in_comment
+    result = Runo::Parser.parse_html <<'_html'
+<ul id="foo" class="app-blog">
+  <li class="model">$(text)</li>
+  <!--
+  <div class="navi"><span class="navi_prev">prev</span></div>
+  -->
+</ul>
+_html
+    assert_nil(
+      result[:item]['foo'][:tmpl][:navi],
+      'Parser.parse_html should skip action templates in a comment'
+    )
+
+    result = Runo::Parser.parse_html <<'_html'
+<ul id="foo" class="app-blog">
+  <li class="model">$(text)</li>
+  <div class="navi"><!--<span class="navi_prev">prev</span>--></div>
+</ul>
+_html
+    assert_equal(
+      <<'_html',
+  <div class="navi"><!--<span class="navi_prev">prev</span>--></div>
+_html
+      result[:item]['foo'][:tmpl][:navi],
+      'Parser.parse_html should skip action templates in a comment'
+    )
+  end
+
   def test_supplement_sd
     result = Runo::Parser.parse_html <<'_html'
 <ul id="foo" class="app-blog">

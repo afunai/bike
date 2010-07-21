@@ -366,6 +366,29 @@ _html
     )
   end
 
+  def test_scan_comment
+    s = StringScanner.new 'baz -->'
+    inner_html, close_tag = Runo::Parser.scan_inner_html(s, '!--')
+    assert_equal(
+      'baz',
+      inner_html,
+      'Parser.scan_inner_html should parse html comments'
+    )
+    assert_equal(
+      ' -->',
+      close_tag,
+      'Parser.scan_inner_html should parse html comments'
+    )
+
+    s = StringScanner.new "baz\n  <!--bar-->\n-->"
+    inner_html, close_tag = Runo::Parser.scan_inner_html(s, '!--')
+    assert_equal(
+      "baz\n  <!--bar-->\n",
+      inner_html,
+      'Parser.scan_inner_html should parse nested comments'
+    )
+  end
+
   def test_parse_block_tag
     result = Runo::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><li>hello</li></ul>

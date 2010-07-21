@@ -69,6 +69,7 @@ module Runo::Parser
     out = ''
     s = StringScanner.new html
     until s.eos?
+      out << skip_comment(s)
       if s.scan rex_open_tag
         open_tag = s[0]
         inner_html, close_tag = scan_inner_html(s, s[1])
@@ -92,6 +93,14 @@ module Runo::Parser
       end
     end
     out
+  end
+
+  def skip_comment(s)
+    if comment_tag = ['!--', '![CDATA['].find {|tag| s.scan /\s*<#{Regexp.quote(tag)}\n*/ }
+      s[0] + scan_inner_html(s, comment_tag).join + (s.scan(/\n/) || '')
+    else
+      ''
+    end
   end
 
   def scrape_meta(html)

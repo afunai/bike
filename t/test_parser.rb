@@ -504,6 +504,103 @@ _html
       result[:tmpl],
       'Parser.parse_html[:tmpl] should be a proper template'
     )
+
+    result = Runo::Parser.parse_html <<'_html'
+hello <!-- cruel --> <ul class="app-blog" id="foo"><li>hello</li></ul> world
+_html
+    assert_equal(
+      {
+        'foo' => {
+          :klass    => 'set-dynamic',
+          :workflow => 'blog',
+          :tmpl     => {
+            :index => <<'_tmpl'.chomp,
+ <ul class="app-blog" id="@(name)">$()</ul>$(.navi)$(.submit)$(.action_create)
+_tmpl
+          },
+          :item     => {
+            'default' => {
+              :label => nil,
+              :tmpl  => {:index => '<li>hello</li>'},
+              :item  => {},
+            },
+          },
+        },
+      },
+      result[:item],
+      'Parser.parse_html should be able to parse block runo tags'
+    )
+    assert_equal(
+      {:index => <<'_html'},
+hello <!-- cruel -->$(foo.message)$(foo) world
+_html
+      result[:tmpl],
+      'Parser.parse_html[:tmpl] should be a proper template'
+    )
+  end
+
+  def test_parse_block_tag_in_comment
+    [
+      <<'_html',
+hello <!--<ul class="app-blog" id="test1"><li>hello</li></ul>--> world
+_html
+      <<'_html',
+<!--
+<ul class="app-blog" id="test2">
+  <li>hello</li>
+</ul>
+-->
+_html
+      <<'_html',
+foo <!--
+<ul class="app-blog" id="test3">
+  <li>hello</li>
+</ul>
+--> bar
+_html
+      <<'_html',
+foo <!--
+<ul class="app-blog" id="test4">
+  <li>hello</li>
+</ul>
+--> bar
+_html
+      <<'_html',
+foo <!--
+<ul class="app-blog" id="test5">
+  <!-- may_preview -->
+  <li>hello</li>
+</ul>
+--> bar
+_html
+      <<'_html',
+<![CDATA[
+  <ul class="app-blog" id="test6">
+    <!-- may_preview -->
+    <li>hello</li>
+  </ul>
+]]>
+_html
+      <<'_html',
+<!--
+<ul class="app-blog" id="test7">
+  <!-- may_preview -->
+  <li>hello</li>
+</ul>
+_html
+    ].each {|html|
+      result = Runo::Parser.parse_html html
+      assert_equal(
+        {},
+        result[:item],
+        'Parser.parse_html should skip runo tags in a comment'
+      )
+      assert_equal(
+        {:index => html},
+        result[:tmpl],
+        'Parser.parse_html should skip runo tags in a comment'
+      )
+    }
   end
 
   def test_parse_block_tag_obsolete_runo_class

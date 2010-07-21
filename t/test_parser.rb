@@ -389,6 +389,21 @@ _html
     )
   end
 
+  def test_scan_cdata
+    s = StringScanner.new 'baz ]]>'
+    inner_html, close_tag = Runo::Parser.scan_inner_html(s, '<![CDATA[')
+    assert_equal(
+      'baz',
+      inner_html,
+      'Parser.scan_inner_html should parse CDATA section'
+    )
+    assert_equal(
+      ' ]]>',
+      close_tag,
+      'Parser.scan_inner_html should parse CDATA section'
+    )
+  end
+
   def test_parse_block_tag
     result = Runo::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><li>hello</li></ul>

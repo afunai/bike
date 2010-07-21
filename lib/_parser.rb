@@ -211,16 +211,17 @@ module Runo::Parser
 
   def scan_inner_html(s, name)
     open_tag  = "<#{name}"
-    close_tag = (name == '!--') ? '-->' : "</#{name}>"
+    close_tag = {'!--' => '-->', '<![CDATA[' => ']]>'}[name] || "</#{name}>"
     contents = ''
+    rex = /(.*?)(#{Regexp.quote(open_tag)}|#{Regexp.quote(close_tag)}|\z)/m
     gen = 1
     until s.eos? || (gen < 1)
-      contents << s.scan(/(.*?)(#{open_tag}|#{close_tag}|\z)/m)
+      contents << s.scan(rex)
       gen += 1 if s[2] == open_tag
       gen -= 1 if s[2] == close_tag
     end
     contents.gsub!(/\A\n+/, '')
-    contents.gsub!(/[\t ]*#{close_tag}\z/, '')
+    contents.gsub!(/[\t ]*#{Regexp.quote(close_tag)}\z/, '')
     [contents, $&]
   end
 

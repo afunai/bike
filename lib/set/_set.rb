@@ -110,7 +110,7 @@ module Runo::Set
     }.gsub(/_\((.+?)\)/) {
       _ $1
     }.gsub(/\$\((.*?)(?:\.([\w\-]+))?\)/) {
-      name, action = $1, $2
+      tag, name, action = $&, $1, $2
       if name == ''
         self_arg = action ?
           arg.merge(:orig_action => arg[:action], :action => action.intern) : arg
@@ -120,7 +120,7 @@ module Runo::Set
         item_arg = item_arg(arg, steps)
         item = item steps
         if item.nil?
-          '???'
+          tag
         elsif action
           item_arg = item_arg.merge(
             :orig_action => item_arg[:action],

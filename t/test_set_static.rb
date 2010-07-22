@@ -242,6 +242,15 @@ _html
     )
   end
 
+  def test_get_tmpl_non_existing_item
+    ss = Runo::Set::Static.new(:html => '')
+    assert_equal(
+      'foo $(foo) foo',
+      ss.send(:_get_by_tmpl, {}, 'foo $(foo) foo'),
+      'Set#_get_by_tmpl should keep non-existing $() as is'
+    )
+  end
+
   def test_recursive_tmpl
     ss = Runo::Set::Static.new(:html => <<'_html')
 <li>$()</li>

@@ -90,7 +90,7 @@ module Runo::Parser
       if s.scan /\$\((\w+)(?:\s+|\s*=\s*)([\w\-]+)\s*/m
         out << block.call(s[1], {:klass => s[2]}.merge(scan_tokens(s)))
       else
-        out << s.scan(/.+?(?=\$|\w|<|\z)/m).to_s
+        out << s.scan(/.+?(?=\$|<!|\z)/m).to_s
       end
     end
     out

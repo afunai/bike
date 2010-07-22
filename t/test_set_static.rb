@@ -242,6 +242,20 @@ _html
     )
   end
 
+  def test_get_tmpl_non_existing_meta
+    ss = Runo::Set::Static.new(:html => '')
+    assert_equal(
+      'foo @(foo-bar) foo',
+      ss.send(:_get_by_tmpl, {}, 'foo @(foo-bar) foo'),
+      'Set#_get_by_tmpl should keep @() of non-existing item as is'
+    )
+    assert_equal(
+      'foo  foo',
+      ss.send(:_get_by_tmpl, {}, 'foo @(bar) foo'),
+      'Set#_get_by_tmpl should evaluate non-existing @()'
+    )
+  end
+
   def test_get_tmpl_non_existing_item
     ss = Runo::Set::Static.new(:html => '')
     assert_equal(

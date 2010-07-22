@@ -103,10 +103,11 @@ module Runo::Set
 
   def _get_by_tmpl(arg, tmpl = '')
     tmpl.gsub(/@\((.+?)\)/) {
+      tag   = $&
       steps = $1.split '-'
       id    = steps.pop
       item  = item steps
-      item ? item[id.intern] : '???'
+      item ? item[id.intern] : tag
     }.gsub(/_\((.+?)\)/) {
       _ $1
     }.gsub(/\$\((.*?)(?:\.([\w\-]+))?\)/) {

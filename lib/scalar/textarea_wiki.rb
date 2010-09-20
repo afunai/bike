@@ -5,7 +5,7 @@
 
 require 'csv'
 
-class Runo::Textarea::Wiki < Runo::Textarea
+class Bike::Textarea::Wiki < Bike::Textarea
 
   private
 
@@ -20,7 +20,7 @@ class Runo::Textarea::Wiki < Runo::Textarea
     body = ''
     type = :p
 
-    Runo::Field.h(str).each_line {|line|
+    Bike::Field.h(str).each_line {|line|
       if line =~ /^---$/
         new_type = :hr
       else

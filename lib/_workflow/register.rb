@@ -3,13 +3,13 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Runo::Workflow::Register < Runo::Workflow
+class Bike::Workflow::Register < Bike::Workflow
 
   DEFAULT_META = {
     :p_size     => 0,
     :conds      => {:p => '1'},
     :order      => 'id',
-    :item_label => Runo::I18n.n_('item', 'items', 1),
+    :item_label => Bike::I18n.n_('item', 'items', 1),
   }
 
   DEFAULT_SUB_ITEMS = {
@@ -26,14 +26,14 @@ class Runo::Workflow::Register < Runo::Workflow
 
   def before_commit
     @sd.send(:pending_items).each {|id, item|
-      if id =~ Runo::REX::ID_NEW
+      if id =~ Bike::REX::ID_NEW
         item.item('_owner').instance_variable_set(:@val, item.item('_id').val)
       end
     }
   end
 
   def next_action(base)
-    (Runo.client == 'nobody') ? :done : super
+    (Bike.client == 'nobody') ? :done : super
   end
 
 end

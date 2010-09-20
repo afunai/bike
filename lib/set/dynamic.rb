@@ -3,16 +3,16 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Set::Dynamic < Runo::Field
+class Bike::Set::Dynamic < Bike::Field
 
-  include Runo::Set
+  include Bike::Set
 
   attr_reader :storage, :workflow
 
   def initialize(meta = {})
     @meta        = meta
-    @storage     = Runo::Storage.instance self
-    @workflow    = Runo::Workflow.instance self
+    @storage     = Bike::Storage.instance self
+    @workflow    = Bike::Workflow.instance self
     @meta        = @workflow.class.const_get(:DEFAULT_META).merge @meta
     @item_object = {}
 
@@ -31,7 +31,7 @@ class Runo::Set::Dynamic < Runo::Field
   end
 
   def meta_href
-    "#{Runo.uri}#{my[:path]}/"
+    "#{Bike.uri}#{my[:path]}/"
   end
 
   def meta_tid
@@ -57,7 +57,7 @@ class Runo::Set::Dynamic < Runo::Field
       item.commit(:temp) || next
       case type
         when :temp
-          store(id, item) if @storage.is_a? Runo::Storage::Temp
+          store(id, item) if @storage.is_a? Bike::Storage::Temp
         when :persistent
           store(id, item)
           item.commit :persistent
@@ -82,14 +82,14 @@ class Runo::Set::Dynamic < Runo::Field
   end
 
   def _get_by_tmpl(arg, tmpl = '')
-    if arg[:action] == :read || self != Runo.base
+    if arg[:action] == :read || self != Bike.base
       super
     else
-      base_path = Runo.transaction[my[:tid]].is_a?(Runo::Field) ? nil : my[:base_path]
+      base_path = Bike.transaction[my[:tid]].is_a?(Bike::Field) ? nil : my[:base_path]
       action = "#{base_path}/#{my[:tid]}/update.html"
       <<_html
 <form id="form_#{my[:name]}" method="post" enctype="multipart/form-data" action="#{action}">
-<input name="_token" type="hidden" value="#{Runo.token}" />
+<input name="_token" type="hidden" value="#{Bike.token}" />
 #{super}</form>
 _html
     end
@@ -101,7 +101,7 @@ _html
 
   def permit_get?(arg)
     permit?(arg[:action]) || collect_item(arg[:conds] || {}).all? {|item|
-      item[:id][Runo::REX::ID_NEW] ?
+      item[:id][Bike::REX::ID_NEW] ?
         item.permit?(:create) :
         item.send(:permit_get?, :action => arg[:action])
     }
@@ -118,7 +118,7 @@ _html
         v.keys.sort_by {|id| id.to_s }.each {|id|
           next unless id.is_a? ::String
 
-          v[id][:action] ||= id[Runo::REX::ID_NEW] ? :create : :update
+          v[id][:action] ||= id[Bike::REX::ID_NEW] ? :create : :update
           item_instance(id).post(v[id][:action], v[id])
         }
       when :load, :load_default
@@ -131,7 +131,7 @@ _html
   def store(id, item)
     case item.action
       when :create
-        return if id[Runo::REX::ID] || item.empty?
+        return if id[Bike::REX::ID] || item.empty?
         new_id = @storage.store(:new_id, item.val)
         item[:id] = new_id
         @item_object.delete id
@@ -158,14 +158,14 @@ _html
   def item_instance(id, type = 'default')
     unless @item_object[id]
       item_meta = my[:item][type] || my[:item]['default']
-      @item_object[id] = Runo::Field.instance(
+      @item_object[id] = Bike::Field.instance(
         item_meta.merge(
           :id     => id,
           :parent => self,
           :klass  => 'set-static'
         )
       )
-      if id[Runo::REX::ID_NEW]
+      if id[Bike::REX::ID_NEW]
         @item_object[id].load_default
       else
         @item_object[id].load @storage.val(id)

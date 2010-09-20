@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel class="runo-xml">
+  <channel class="bike-xml">
     <atom:link href="@(href)rss.xml" rel="self" type="application/rss+xml" />
     <title>@(label)</title>
     <description></description>
     <link>@(href)</link>
     <language>_(en)</language>
-    <generator>Runo</generator>
+    <generator>Bike</generator>
     <item class="model">
       <title>$(title)</title>
       <link>@(href)</link>

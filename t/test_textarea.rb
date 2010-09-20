@@ -9,11 +9,11 @@ class TC_Textarea < Test::Unit::TestCase
 
   def setup
     meta = nil
-    Runo::Parser.gsub_scalar('$(foo textarea 76*8 1..1024)') {|id, m|
+    Bike::Parser.gsub_scalar('$(foo textarea 76*8 1..1024)') {|id, m|
       meta = m
       ''
     }
-    @f = Runo::Field.instance meta
+    @f = Bike::Field.instance meta
   end
 
   def teardown

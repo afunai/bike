@@ -9,11 +9,11 @@ class TC_Timestamp < Test::Unit::TestCase
 
   def setup
     meta = nil
-    Runo::Parser.gsub_scalar('$(foo meta-timestamp 16)') {|id, m|
+    Bike::Parser.gsub_scalar('$(foo meta-timestamp 16)') {|id, m|
       meta = m
       ''
     }
-    @f = Runo::Field.instance meta
+    @f = Bike::Field.instance meta
   end
 
   def teardown
@@ -21,11 +21,11 @@ class TC_Timestamp < Test::Unit::TestCase
 
   def test_meta
     meta = nil
-    Runo::Parser.gsub_scalar('$(foo meta-timestamp can_edit)') {|id, m|
+    Bike::Parser.gsub_scalar('$(foo meta-timestamp can_edit)') {|id, m|
       meta = m
       ''
     }
-    f = Runo::Field.instance meta
+    f = Bike::Field.instance meta
     assert_equal(
       true,
       f[:can_edit],
@@ -33,11 +33,11 @@ class TC_Timestamp < Test::Unit::TestCase
     )
 
     meta = nil
-    Runo::Parser.gsub_scalar('$(foo meta-timestamp can_update)') {|id, m|
+    Bike::Parser.gsub_scalar('$(foo meta-timestamp can_update)') {|id, m|
       meta = m
       ''
     }
-    f = Runo::Field.instance meta
+    f = Bike::Field.instance meta
     assert_equal(
       true,
       f[:can_update],

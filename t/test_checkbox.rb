@@ -9,11 +9,11 @@ class TC_Checkbox < Test::Unit::TestCase
 
   def setup
     meta = nil
-    Runo::Parser.gsub_scalar("$(foo checkbox bar, baz, qux :'baz' mandatory)") {|id, m|
+    Bike::Parser.gsub_scalar("$(foo checkbox bar, baz, qux :'baz' mandatory)") {|id, m|
       meta = m
       ''
     }
-    @f = Runo::Field.instance meta
+    @f = Bike::Field.instance meta
   end
 
   def teardown
@@ -39,11 +39,11 @@ class TC_Checkbox < Test::Unit::TestCase
 
   def test_meta_single_option
     meta = nil
-    Runo::Parser.gsub_scalar("$(foo checkbox baz :on mandatory)") {|id, m|
+    Bike::Parser.gsub_scalar("$(foo checkbox baz :on mandatory)") {|id, m|
       meta = m
       ''
     }
-    f = Runo::Field.instance meta
+    f = Bike::Field.instance meta
 
     assert_equal(
       ['baz'],
@@ -64,11 +64,11 @@ class TC_Checkbox < Test::Unit::TestCase
 
   def test_meta_no_options
     meta = nil
-    Runo::Parser.gsub_scalar("$(foo checkbox :yes mandatory)") {|id, m|
+    Bike::Parser.gsub_scalar("$(foo checkbox :yes mandatory)") {|id, m|
       meta = m
       ''
     }
-    f = Runo::Field.instance meta
+    f = Bike::Field.instance meta
 
     assert_equal(
       ['_on'],
@@ -193,11 +193,11 @@ _html
 
   def test_get_single_option
     meta = nil
-    Runo::Parser.gsub_scalar("$(foo checkbox 'ok?' mandatory)") {|id, m|
+    Bike::Parser.gsub_scalar("$(foo checkbox 'ok?' mandatory)") {|id, m|
       meta = m
       ''
     }
-    f = Runo::Field.instance meta
+    f = Bike::Field.instance meta
 
     f.load ''
     assert_equal(
@@ -222,11 +222,11 @@ _html
 
   def test_get_no_options
     meta = nil
-    Runo::Parser.gsub_scalar("$(foo checkbox :yes mandatory)") {|id, m|
+    Bike::Parser.gsub_scalar("$(foo checkbox :yes mandatory)") {|id, m|
       meta = m
       ''
     }
-    f = Runo::Field.instance meta
+    f = Bike::Field.instance meta
 
     f.load ''
     assert_equal(

@@ -7,29 +7,29 @@
 require 'rubygems'
 
 $LOAD_PATH.unshift(::File.expand_path('../lib',::File.dirname(__FILE__)))
-require 'runo'
+require 'bike'
 
 case ARGV.shift
   when 'init'
-    runo_dir = ::File.expand_path './runo'
+    bike_dir = ::File.expand_path './bike'
 
-    if ::File.exists? runo_dir
-      $stderr.puts "#{runo_dir} already exists."
+    if ::File.exists? bike_dir
+      $stderr.puts "#{bike_dir} already exists."
       exit 1
     else
-      $stderr.puts "Setting up Runo files in #{runo_dir}..."
+      $stderr.puts "Setting up Bike files in #{bike_dir}..."
       ::FileUtils.cp_r(
-        ::File.expand_path('../skel',Runo.libdir),
-        './runo',
+        ::File.expand_path('../skel',Bike.libdir),
+        './bike',
         :verbose => :true
       )
     end
   when 'run'
-    ::Dir.chdir(File.exists?('./config.ru') ? '.' : './runo') {
-      $stderr.puts "Starting a server with Runo files in #{::File.expand_path '.'}..."
+    ::Dir.chdir(File.exists?('./config.ru') ? '.' : './bike') {
+      $stderr.puts "Starting a server with Bike files in #{::File.expand_path '.'}..."
       system('rackup',*ARGV)
     }
   else
-    $stderr.puts 'Usage: runo {init|run [Rack options]}'
+    $stderr.puts 'Usage: bike {init|run [Rack options]}'
     exit 1
 end

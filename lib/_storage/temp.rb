@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Storage::Temp < Runo::Storage
+class Bike::Storage::Temp < Bike::Storage
 
   def self.available?
     true

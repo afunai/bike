@@ -3,9 +3,9 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Meta::Owner < Runo::Field
+class Bike::Meta::Owner < Bike::Field
 
-  include Runo::Meta
+  include Bike::Meta
 
   private
 
@@ -13,7 +13,7 @@ class Runo::Meta::Owner < Runo::Field
     if action == :load
       @val = val_cast v
     elsif action == :create
-      @val = Runo.client
+      @val = Bike.client
     end
     nil
   end

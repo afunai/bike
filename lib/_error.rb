@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Runo::Error
+module Bike::Error
 
   class Forbidden < StandardError
   end

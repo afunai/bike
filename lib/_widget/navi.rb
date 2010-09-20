@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Runo::Set::Dynamic
+class Bike::Set::Dynamic
 
   private
 
@@ -33,7 +33,7 @@ class Runo::Set::Dynamic
 
     item_tmpl = nil
     div = my[:tmpl][:navi_p] || '<span class="item">$() </span> | '
-    div = Runo::Parser.gsub_block(div, 'item') {|open, inner, close|
+    div = Bike::Parser.gsub_block(div, 'item') {|open, inner, close|
       item_tmpl = open + inner + close
       '$(.items)'
     }
@@ -51,12 +51,12 @@ class Runo::Set::Dynamic
 
   def _g_uri_prev(arg)
     arg[:navi] ||= @storage.navi(arg[:conds] || {})
-    Runo::Path.path_of(arg[:navi][:prev]) + _uri_action(arg) if arg[:navi][:prev]
+    Bike::Path.path_of(arg[:navi][:prev]) + _uri_action(arg) if arg[:navi][:prev]
   end
 
   def _g_uri_next(arg)
     arg[:navi] ||= @storage.navi(arg[:conds] || {})
-    Runo::Path.path_of(arg[:navi][:next]) + _uri_action(arg) if arg[:navi][:next]
+    Bike::Path.path_of(arg[:navi][:next]) + _uri_action(arg) if arg[:navi][:next]
   end
 
   def _uri_p(arg)
@@ -70,7 +70,7 @@ class Runo::Set::Dynamic
         conds = conds & range
       end
       conds.collect {|cond|
-        Runo::Path.path_of(base_conds.merge(:p => cond)) + _uri_action(arg)
+        Bike::Path.path_of(base_conds.merge(:p => cond)) + _uri_action(arg)
       }
     end
   end

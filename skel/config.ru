@@ -7,7 +7,7 @@
 require 'rubygems'
 
 $LOAD_PATH.unshift(::File.expand_path('../lib',::File.dirname(__FILE__)))
-require 'runo'
+require 'bike'
 
 use Rack::ShowExceptions
 use Rack::Session::Pool #Cookie
@@ -15,7 +15,7 @@ use Rack::Lock
 
 ::Dir.chdir ::File.dirname(__FILE__)
 
-Runo.config(
+Bike.config(
   'skin_dir' => './skin',
   'storage'  => {
     'default' => 'File',
@@ -24,4 +24,4 @@ Runo.config(
   }
 )
 
-run Runo.new
+run Bike.new

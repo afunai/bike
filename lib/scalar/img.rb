@@ -8,7 +8,7 @@ begin
 rescue LoadError
 end
 
-class Runo::Img < Runo::File
+class Bike::Img < Bike::File
 
   DEFAULT_META = {
     :width   => 120,
@@ -26,7 +26,7 @@ class Runo::Img < Runo::File
   end
 
   def thumbnail
-    raise Runo::Error::Forbidden unless permit? :read
+    raise Bike::Error::Forbidden unless permit? :read
 
     if ps = my[:persistent_sd]
       @thumbnail ||= ps.storage.val "#{my[:persistent_name]}_small"
@@ -62,7 +62,7 @@ class Runo::Img < Runo::File
 
   def _g_default(arg = {})
     path       = _path arg[:action]
-    basename   = Runo::Field.h val['basename']
+    basename   = Bike::Field.h val['basename']
     s_basename = basename.sub(/\..+$/, '_small\\&')
     if val.empty?
       <<_html.chomp

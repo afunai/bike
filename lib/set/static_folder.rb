@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Set::Static::Folder < Runo::Set::Static
+class Bike::Set::Static::Folder < Bike::Set::Static
 
   def self.root
     self.new(:id => '')
@@ -14,13 +14,13 @@ class Runo::Set::Static::Folder < Runo::Set::Static
     meta[:html] = load_html(meta[:dir], meta[:parent])
     super
 
-    ::Dir.glob(::File.join(Runo['skin_dir'], my[:html_dir].to_s, '*.html')).each {|f|
+    ::Dir.glob(::File.join(Bike['skin_dir'], my[:html_dir].to_s, '*.html')).each {|f|
       action = ::File.basename(f, '.*').intern
-      merge_tmpl(@meta, Runo::Parser.parse_html(::File.read(f), action)) if action != :index
+      merge_tmpl(@meta, Bike::Parser.parse_html(::File.read(f), action)) if action != :index
     }
-    ::Dir.glob(::File.join(Runo['skin_dir'], my[:html_dir].to_s, '*.xml')).each {|f|
+    ::Dir.glob(::File.join(Bike['skin_dir'], my[:html_dir].to_s, '*.xml')).each {|f|
       action = ::File.basename(f, '.*').intern
-      merge_tmpl(@meta, Runo::Parser.parse_xml(::File.read(f), action)) if action != :index
+      merge_tmpl(@meta, Bike::Parser.parse_xml(::File.read(f), action)) if action != :index
     }
 
     @meta[:tmpl].values.each {|tmpl|
@@ -37,7 +37,7 @@ class Runo::Set::Static::Folder < Runo::Set::Static
   end
 
   def meta_html_dir
-    if ::File.readable? ::File.join(Runo['skin_dir'], my[:dir], 'index.html')
+    if ::File.readable? ::File.join(Bike['skin_dir'], my[:dir], 'index.html')
       my[:dir]
     elsif my[:parent]
       my[:parent][:html_dir]
@@ -55,11 +55,11 @@ class Runo::Set::Static::Folder < Runo::Set::Static
   end
 
   def collect_item(conds = {}, &block)
-    if conds[:id] =~ Runo::REX::ID && sd = item('main')
+    if conds[:id] =~ Bike::REX::ID && sd = item('main')
       return sd.instance_eval { collect_item(conds, &block) }
     elsif (
       conds[:id] =~ /\A\w+\z/ &&
-      ::File.directory?(::File.join(Runo['skin_dir'], my[:dir], conds[:id]))
+      ::File.directory?(::File.join(Bike['skin_dir'], my[:dir], conds[:id]))
     )
       my[:item][conds[:id]] = {:klass  => 'set-static-folder'}
     end
@@ -67,7 +67,7 @@ class Runo::Set::Static::Folder < Runo::Set::Static
   end
 
   def load_html(dir, parent, action = :index)
-    html_file = ::File.join Runo['skin_dir'], dir, "#{action}.html"
+    html_file = ::File.join Bike['skin_dir'], dir, "#{action}.html"
     if ::File.exists? html_file
       ::File.read html_file
     elsif parent
@@ -76,7 +76,7 @@ class Runo::Set::Static::Folder < Runo::Set::Static
   end
 
   def load_yaml(dir, parent)
-    yaml_file = ::File.join(Runo['skin_dir'], dir, 'index.yaml')
+    yaml_file = ::File.join(Bike['skin_dir'], dir, 'index.yaml')
     meta = ::File.exists?(yaml_file) ? YAML.load_file(yaml_file) : {}
     meta.keys.inject({}) {|m, k|
       m[k.intern] = meta[k]

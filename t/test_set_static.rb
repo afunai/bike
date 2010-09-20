@@ -14,7 +14,7 @@ class TC_Set_Static < Test::Unit::TestCase
   end
 
   def test_initialize
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <html>
   <h1>$(title text 32)</h1>
   <ul id="foo" class="app-blog">
@@ -72,9 +72,9 @@ _tmpl
   end
 
   def test_meta_href
-    Runo.current[:uri] = nil
+    Bike.current[:uri] = nil
 
-    ss = Runo::Set::Static::Folder.root.item('foo','main','20091120_0001','replies','20091201_0001')
+    ss = Bike::Set::Static::Folder.root.item('foo','main','20091120_0001','replies','20091201_0001')
     assert_equal(
       '/foo/20091120_0001/replies/id=20091201_0001/',
       ss[:href],
@@ -83,7 +83,7 @@ _tmpl
   end
 
   def test_empty?
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <html>
   <h1>$(title = text 32)</h1>
 </html>
@@ -108,7 +108,7 @@ _html
   end
 
   def test_item
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <html>
   <h1>$(title = text 32)</h1>
   <ul id="main" class="app-attachment">
@@ -118,7 +118,7 @@ _html
 _html
     title = ss.item('title')
     assert_instance_of(
-      Runo::Text,
+      Bike::Text,
       title,
       'Set::Static#item() should return the child item on the fly'
     )
@@ -135,7 +135,7 @@ _html
 
     main = ss.item('main')
     assert_instance_of(
-      Runo::Set::Static::Dynamic,
+      Bike::Set::Static::Dynamic,
       main,
       'Set::Static#item() should return the child item on the fly'
     )
@@ -167,7 +167,7 @@ _html
   end
 
   def test_val
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <li>
   $(name text): $(comment text)
 </li>
@@ -187,7 +187,7 @@ _html
   end
 
   def test_get
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <li>
   $(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -220,7 +220,7 @@ _html
   end
 
   def test_get_by_tmpl
-    ss = Runo::Set::Static.new(:html => '$(foo text)')
+    ss = Bike::Set::Static.new(:html => '$(foo text)')
     ss.item('foo').load 'hello'
     assert_equal(
       'foo hello foo',
@@ -243,7 +243,7 @@ _html
   end
 
   def test_get_tmpl_non_existing_meta
-    ss = Runo::Set::Static.new(:html => '')
+    ss = Bike::Set::Static.new(:html => '')
     assert_equal(
       'foo @(foo-bar) foo',
       ss.send(:_get_by_tmpl, {}, 'foo @(foo-bar) foo'),
@@ -257,7 +257,7 @@ _html
   end
 
   def test_get_tmpl_non_existing_item
-    ss = Runo::Set::Static.new(:html => '')
+    ss = Bike::Set::Static.new(:html => '')
     assert_equal(
       'foo $(foo) foo',
       ss.send(:_get_by_tmpl, {}, 'foo $(foo) foo'),
@@ -266,7 +266,7 @@ _html
   end
 
   def test_recursive_tmpl
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <li>$()</li>
 _html
     assert_nothing_raised(
@@ -277,7 +277,7 @@ _html
   end
 
   def test_g_a_update
-    ss = Runo::Set::Static.new(:html => '$(.a_update)', :parent => Runo::Set::Static.new)
+    ss = Bike::Set::Static.new(:html => '$(.a_update)', :parent => Bike::Set::Static.new)
 
     def ss.permit_get?(arg)
       true
@@ -319,7 +319,7 @@ _html
   end
 
   def test_post
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <li>
   $(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -346,7 +346,7 @@ _html
   end
 
   def test_load_default
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <li>
   $(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -365,7 +365,7 @@ _html
   end
 
   def test_load
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <li>
   $(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -391,7 +391,7 @@ _html
   end
 
   def test_create
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <li>
   $(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -405,7 +405,7 @@ _html
   end
 
   def test_update
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <li>
   $(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>
@@ -445,7 +445,7 @@ _html
   end
 
   def test_delete
-    ss = Runo::Set::Static.new(:html => <<'_html')
+    ss = Bike::Set::Static.new(:html => <<'_html')
 <li>
   $(name = text 32 :'nobody'): $(comment = text 128 :'peek a boo')
 </li>

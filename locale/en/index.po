@@ -1,10 +1,10 @@
 # Copyright (C) 2009-2010 Akira FUNAI
-# This file is distributed under the same license as the Runo package.
+# This file is distributed under the same license as the Bike package.
 # Akira FUNAI <akira@funai.com>, 2010.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Runo 0.1\n"
+"Project-Id-Version: Bike 0.1\n"
 "POT-Creation-Date: 2010-05-09 17:07+0900\n"
 "PO-Revision-Date: 2010-06-29 22:51+0900\n"
 "Last-Translator: Akira FUNAI <akira@funai.com>\n"

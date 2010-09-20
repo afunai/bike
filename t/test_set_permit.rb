@@ -7,7 +7,7 @@ require "#{::File.dirname __FILE__}/t"
 
 class TC_Set_Permit < Test::Unit::TestCase
 
-  class Runo::Workflow::Test_set_permit < Runo::Workflow
+  class Bike::Workflow::Test_set_permit < Bike::Workflow
     DEFAULT_SUB_ITEMS = {
       '_owner'   => {:klass => 'meta-owner'},
     }
@@ -20,7 +20,7 @@ class TC_Set_Permit < Test::Unit::TestCase
   end
 
   def setup
-    @sd = Runo::Set::Dynamic.new(
+    @sd = Bike::Set::Dynamic.new(
       :workflow => 'test_set_permit',
       :item_arg => {
         :item => {'foo' => {:klass => 'text'}}
@@ -37,7 +37,7 @@ class TC_Set_Permit < Test::Unit::TestCase
   end
 
   def test_permit_get_by_frank
-    Runo.client = 'frank'
+    Bike.client = 'frank'
     assert_equal(
       0b00110,
       @sd[:roles],
@@ -85,7 +85,7 @@ class TC_Set_Permit < Test::Unit::TestCase
   end
 
   def test_permit_get_by_carl
-    Runo.client = 'carl'
+    Bike.client = 'carl'
     assert_equal(
       0b00010,
       @sd[:roles],
@@ -143,7 +143,7 @@ class TC_Set_Permit < Test::Unit::TestCase
   end
 
   def test_permit_post_by_frank
-    Runo.client = 'frank'
+    Bike.client = 'frank'
     assert_equal(
       0b00110,
       @sd[:roles],
@@ -185,7 +185,7 @@ class TC_Set_Permit < Test::Unit::TestCase
   end
 
   def test_permit_post_by_carl
-    Runo.client = 'carl'
+    Bike.client = 'carl'
     assert_equal(
       0b00010,
       @sd[:roles],

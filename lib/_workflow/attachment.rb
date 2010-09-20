@@ -3,11 +3,11 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Workflow::Attachment < Runo::Workflow
+class Bike::Workflow::Attachment < Bike::Workflow
 
   DEFAULT_META = {
     :p_size     => 0,
-    :item_label => Runo::I18n.n_('attachment', 'attachments', 1),
+    :item_label => Bike::I18n.n_('attachment', 'attachments', 1),
   }
 
   PERM = {
@@ -28,7 +28,7 @@ class Runo::Workflow::Attachment < Runo::Workflow
         new_item = item_instance '_001'
 
         item_outs = _g_default(arg) {|item, item_arg|
-          action = item[:id][Runo::REX::ID_NEW] ? :create : :delete
+          action = item[:id][Bike::REX::ID_NEW] ? :create : :delete
           button_tmpl = my[:tmpl][:"submit_#{action}"] || <<_html.chomp
 <input type="submit" name="@(short_name).action-#{action}" value="#{_ action.to_s}" />
 _html

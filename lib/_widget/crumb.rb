@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Runo::Set::Static::Folder
+class Bike::Set::Static::Folder
 
   private
 
@@ -16,7 +16,7 @@ _html
 
   def _crumb
     crumb = <<_html
-  <a href="#{Runo.uri}#{my[:dir]}/">#{my[:label] || my[:id]}</a>
+  <a href="#{Bike.uri}#{my[:dir]}/">#{my[:label] || my[:id]}</a>
 _html
     my[:parent] ? [my[:parent].send(:_crumb), crumb].join("  &raquo;\n") : crumb
   end

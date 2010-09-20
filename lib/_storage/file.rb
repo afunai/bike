@@ -8,17 +8,17 @@ require 'yaml'
 require 'ya2yaml'
 require 'fileutils'
 
-class Runo::Storage::File < Runo::Storage
+class Bike::Storage::File < Bike::Storage
 
-  def self.traverse(dir = '/', root = Runo['storage']['File']['data_dir'], &block)
+  def self.traverse(dir = '/', root = Bike['storage']['File']['data_dir'], &block)
     ::Dir.glob(::File.join(root, dir, '*')).sort.collect {|file|
       ftype     = ::File.ftype file
       base_name = ::File.basename file
       id, ext    = base_name.split('.', 2)
-      id = "main-#{id}" if id =~ Runo::REX::ID
+      id = "main-#{id}" if id =~ Bike::REX::ID
       full_name = ::File.join(dir, id).gsub(::File::SEPARATOR, '-')
 
-      if ftype == 'file' && id.sub(/^([^\d\-]+-)+/, '') =~ Runo::REX::ID
+      if ftype == 'file' && id.sub(/^([^\d\-]+-)+/, '') =~ Bike::REX::ID
         val = nil
         ::File.open(file, 'r') {|f|
           f.flock ::File::LOCK_SH
@@ -33,19 +33,19 @@ class Runo::Storage::File < Runo::Storage
           :ext       => ext,
           :val       => (ext == 'yaml' ? YAML.load(val) : val)
         )
-      elsif ftype == 'directory' && base_name !~ /\A#{Runo::REX::DIR_STATIC}\z/
+      elsif ftype == 'directory' && base_name !~ /\A#{Bike::REX::DIR_STATIC}\z/
         self.traverse(::File.join(dir, base_name), root, &block)
       end
     }.compact.flatten
   end
 
   def self.load_skel
-    self.traverse('/', Runo['skin_dir']) {|entry|
-      dir = ::File.join(Runo['storage']['File']['data_dir'], entry[:dir])
+    self.traverse('/', Bike['skin_dir']) {|entry|
+      dir = ::File.join(Bike['storage']['File']['data_dir'], entry[:dir])
       unless ::File.exists? ::File.join(dir, entry[:base_name])
         ::FileUtils.mkpath(dir) unless ::File.directory? dir
         ::FileUtils.cp(
-          ::File.join(Runo['skin_dir'], entry[:dir], entry[:base_name]),
+          ::File.join(Bike['skin_dir'], entry[:dir], entry[:base_name]),
           ::File.join(dir, entry[:base_name]),
           {:preserve => true}
         )
@@ -54,17 +54,17 @@ class Runo::Storage::File < Runo::Storage
   end
 
   def self.available?
-    Runo['storage']['File'] && Runo['storage']['File']['data_dir']
+    Bike['storage']['File'] && Bike['storage']['File']['data_dir']
   end
 
   def initialize(sd)
     super
     unless @@loaded ||= false
-      entries = ::Dir.glob ::File.join(Runo['storage']['File']['data_dir'], '*')
+      entries = ::Dir.glob ::File.join(Bike['storage']['File']['data_dir'], '*')
       self.class.load_skel if entries.empty?
       @@loaded = true
     end
-    @dir = ::File.join(Runo['storage']['File']['data_dir'], @sd[:folder][:dir])
+    @dir = ::File.join(Bike['storage']['File']['data_dir'], @sd[:folder][:dir])
     ::FileUtils.mkpath(@dir) unless ::File.directory? @dir
   end
 
@@ -106,15 +106,15 @@ class Runo::Storage::File < Runo::Storage
   private
 
   def _select_by_id(conds)
-    glob(Array(conds[:id])).collect {|f| f[/\d.*/][Runo::REX::ID] }.compact
+    glob(Array(conds[:id])).collect {|f| f[/\d.*/][Bike::REX::ID] }.compact
   end
 
   def _select_by_d(conds)
-    glob(conds[:d].to_s).collect {|f| f[/\.yaml$/] && f[/\d.*/][Runo::REX::ID] }.compact
+    glob(conds[:d].to_s).collect {|f| f[/\.yaml$/] && f[/\d.*/][Bike::REX::ID] }.compact
   end
 
   def _select_all(conds)
-    glob.collect {|f| f[/\.yaml$/] && f[/\d.*/][Runo::REX::ID] }.compact
+    glob.collect {|f| f[/\.yaml$/] && f[/\d.*/][Bike::REX::ID] }.compact
   end
 
   def glob(id = :all)

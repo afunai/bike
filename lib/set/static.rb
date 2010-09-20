@@ -5,19 +5,19 @@
 
 require 'strscan'
 
-class Runo::Set::Static < Runo::Field
+class Bike::Set::Static < Bike::Field
 
-  include Runo::Set
+  include Bike::Set
 
   def initialize(meta = {})
     @meta = meta
-    @meta.merge!(Runo::Parser.parse_html(meta[:html])) if meta[:html]
+    @meta.merge!(Bike::Parser.parse_html(meta[:html])) if meta[:html]
     @meta[:item] ||= {}
     @item_object = {}
   end
 
   def meta_href
-    my[:sd] ? "#{my[:sd][:href]}id=#{my[:id]}/" : "#{Runo.uri}#{my[:dir]}/"
+    my[:sd] ? "#{my[:sd][:href]}id=#{my[:id]}/" : "#{Bike.uri}#{my[:dir]}/"
   end
 
   def commit(type = :temp)
@@ -52,20 +52,20 @@ class Runo::Set::Static < Runo::Field
   end
 
   def _g_uri_update(arg)
-    "#{my[:parent][:path]}/#{Runo::Path::path_of :id => my[:id]}update.html"
+    "#{my[:parent][:path]}/#{Bike::Path::path_of :id => my[:id]}update.html"
   end
 
   def _g_uri_delete(arg)
-    "#{my[:parent][:path]}/#{Runo::Path::path_of :id => my[:id]}preview_delete.html"
+    "#{my[:parent][:path]}/#{Bike::Path::path_of :id => my[:id]}preview_delete.html"
   end
 
   def _g_uri_detail(arg)
-    "#{my[:parent][:path]}/#{Runo::Path::path_of :id => my[:id]}read_detail.html"
+    "#{my[:parent][:path]}/#{Bike::Path::path_of :id => my[:id]}read_detail.html"
   end
 
   def _g_hidden(arg)
     if arg[:orig_action] == :preview
-      action = my[:id][Runo::REX::ID_NEW] ? :create : arg[:sub_action]
+      action = my[:id][Bike::REX::ID_NEW] ? :create : arg[:sub_action]
       <<_html.chomp
 <input type="hidden" name="#{my[:short_name]}.action" value="#{action}" />
 _html
@@ -75,9 +75,9 @@ _html
   def _post(action, v = {})
     each {|item|
       id = item[:id]
-      item_action = (item.is_a?(Runo::Set) && action == :create) ? :update : action
+      item_action = (item.is_a?(Bike::Set) && action == :create) ? :update : action
       item_action = v[id][:action] if v[id].is_a?(::Hash) && v[id][:action]
-      if [:load_default, :delete].include?(item_action) || v.key?(id) || item(id).is_a?(Runo::Meta)
+      if [:load_default, :delete].include?(item_action) || v.key?(id) || item(id).is_a?(Bike::Meta)
         item.post(item_action, v[id])
       end
     }
@@ -88,7 +88,7 @@ _html
     items = my[:item].keys
     items &= Array(conds[:id]) if conds[:id] # select item(s) by id
     items.sort.collect {|id|
-      item = @item_object[id] ||= Runo::Field.instance(
+      item = @item_object[id] ||= Bike::Field.instance(
         my[:item][id].merge(:id => id, :parent => self)
       )
       block ? block.call(item) : item

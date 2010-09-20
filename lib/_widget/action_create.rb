@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Runo::Set::Dynamic
+class Bike::Set::Dynamic
 
   private
 

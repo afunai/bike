@@ -5,10 +5,10 @@
 
 require 'rack/utils'
 
-class Runo::Textarea::Pre < Runo::Textarea
+class Bike::Textarea::Pre < Bike::Textarea
 
   def _g_default(arg)
-    '<pre>' + Runo::Field.h(val) + '</pre>'
+    '<pre>' + Bike::Field.h(val) + '</pre>'
   end
 
 end

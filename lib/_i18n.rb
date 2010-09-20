@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Runo::I18n
+module Bike::I18n
 
   class Msgstr < String
     def %(*args)
@@ -126,18 +126,18 @@ module Runo::I18n
   module_function
 
   def _(msgid)
-    Runo::I18n::Msgstr.new(Array(Runo::I18n.msg[msgid]).first || msgid)
+    Bike::I18n::Msgstr.new(Array(Bike::I18n.msg[msgid]).first || msgid)
   end
 
   def n_(msgid, msgid_plural, n)
-    msgstrs = Runo::I18n.msg[msgid].is_a?(::Array) ? Runo::I18n.msg[msgid] : [msgid, msgid_plural]
-    case v = Runo::I18n.msg[:plural] ? Runo::I18n.msg[:plural].call(n) : (n != 1)
+    msgstrs = Bike::I18n.msg[msgid].is_a?(::Array) ? Bike::I18n.msg[msgid] : [msgid, msgid_plural]
+    case v = Bike::I18n.msg[:plural] ? Bike::I18n.msg[:plural].call(n) : (n != 1)
       when true
-        Runo::I18n::Msgstr.new msgstrs[1]
+        Bike::I18n::Msgstr.new msgstrs[1]
       when false
-        Runo::I18n::Msgstr.new msgstrs[0]
+        Bike::I18n::Msgstr.new msgstrs[0]
       else
-        Runo::I18n::Msgstr.new msgstrs[v.to_i]
+        Bike::I18n::Msgstr.new msgstrs[v.to_i]
     end
   end
 

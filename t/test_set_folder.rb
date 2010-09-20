@@ -8,46 +8,46 @@ require "#{::File.dirname __FILE__}/t"
 class TC_Set_Folder < Test::Unit::TestCase
 
   def setup
-    Runo.client = 'root'
-    Runo.current[:base] = nil
-    Runo.current[:uri]  = nil
+    Bike.client = 'root'
+    Bike.current[:base] = nil
+    Bike.current[:uri]  = nil
   end
 
   def teardown
   end
 
   def test_root
-    root = Runo::Set::Static::Folder.root
+    root = Bike::Set::Static::Folder.root
     assert_instance_of(
-      Runo::Set::Static::Folder,
+      Bike::Set::Static::Folder,
       root,
       'Folder.root should return the root folder instance'
     )
   end
 
   def test_initialize
-    folder = Runo::Set::Static::Folder.new(:id => 'foo', :parent => nil)
+    folder = Bike::Set::Static::Folder.new(:id => 'foo', :parent => nil)
     assert_match(
       /^<html>/,
       folder[:html],
       'Folder#initialize should load [:html] from [:dir]/index.html'
     )
     assert_instance_of(
-      Runo::Set::Dynamic,
+      Bike::Set::Dynamic,
       folder.item('main'),
       'Folder#initialize should load the items according to [:html]'
     )
   end
 
   def test_meta_html_dir
-    folder = Runo::Set::Static::Folder.root.item('foo')
+    folder = Bike::Set::Static::Folder.root.item('foo')
     assert_equal(
       '/foo',
       folder[:html_dir],
       "Folder#meta_html_dir should return meta_dir if there is 'index.html'"
     )
 
-    folder = Runo::Set::Static::Folder.root.item('foo', 'bar')
+    folder = Bike::Set::Static::Folder.root.item('foo', 'bar')
     assert_equal(
       '/foo',
       folder[:html_dir],
@@ -56,25 +56,25 @@ class TC_Set_Folder < Test::Unit::TestCase
   end
 
   def test_meta_href
-    folder = Runo::Set::Static::Folder.root.item('t_summary')
+    folder = Bike::Set::Static::Folder.root.item('t_summary')
 
-    Runo.current[:uri] = 'http://example.com'
+    Bike.current[:uri] = 'http://example.com'
     assert_equal(
       'http://example.com/t_summary/',
       folder[:href],
-      'Folder#meta_href should return a full URI when Runo.uri is available'
+      'Folder#meta_href should return a full URI when Bike.uri is available'
     )
 
-    Runo.current[:uri] = nil
+    Bike.current[:uri] = nil
     assert_equal(
       '/t_summary/',
       folder[:href],
-      'Folder#meta_href should return [:dir] when Runo.uri is not available'
+      'Folder#meta_href should return [:dir] when Bike.uri is not available'
     )
   end
 
   def test_load_yaml
-    folder = Runo::Set::Static::Folder.new(:id => 'foo', :parent => nil)
+    folder = Bike::Set::Static::Folder.new(:id => 'foo', :parent => nil)
     assert_equal(
       'Foo Folder',
       folder[:label],
@@ -88,10 +88,10 @@ class TC_Set_Folder < Test::Unit::TestCase
   end
 
   def test_load_yaml_child_folder
-    folder = Runo::Set::Static::Folder.new(:id => 'foo', :parent => nil)
+    folder = Bike::Set::Static::Folder.new(:id => 'foo', :parent => nil)
     child  = folder.item('bar')
     assert_instance_of(
-      Runo::Set::Static::Folder,
+      Bike::Set::Static::Folder,
       child,
       'Folder#item should look the real directory for the child item'
     )
@@ -108,21 +108,21 @@ class TC_Set_Folder < Test::Unit::TestCase
   end
 
   def test_item
-    folder = Runo::Set::Static::Folder.root.item('foo')
+    folder = Bike::Set::Static::Folder.root.item('foo')
     assert_instance_of(
-      Runo::Set::Static,
+      Bike::Set::Static,
       folder.item('main', '20091120_0001'),
       'Folder#item should work just like any other sets'
     )
     assert_instance_of(
-      Runo::Set::Static,
+      Bike::Set::Static,
       folder.item('20091120_0001'),
       "Folder#item should delegate to item('main') if full-formatted :id is given"
     )
   end
 
   def test_merge_tmpl
-    folder = Runo::Set::Static::Folder.root
+    folder = Bike::Set::Static::Folder.root
 
     index = {
       :item => {
@@ -222,7 +222,7 @@ class TC_Set_Folder < Test::Unit::TestCase
   end
 
   def test_tmpl_summary
-    folder = Runo::Set::Static::Folder.root.item('t_summary')
+    folder = Bike::Set::Static::Folder.root.item('t_summary')
     assert_equal(
       <<'_html',
 <html>
@@ -284,7 +284,7 @@ _html
   end
 
   def test_href
-    folder = Runo::Set::Static::Folder.root.item('t_summary')
+    folder = Bike::Set::Static::Folder.root.item('t_summary')
 
     assert_match(
       '<base href="@(href)" />',
@@ -299,7 +299,7 @@ _html
   end
 
   def test_get_summary
-    folder = Runo::Set::Static::Folder.root.item('t_summary')
+    folder = Bike::Set::Static::Folder.root.item('t_summary')
 
     assert_equal(
       <<'_html',
@@ -340,8 +340,8 @@ _html
       'Set#get should not use [:tmpl][:summary] for :read -> :detail'
     )
 
-    Runo.client = 'root'
-    Runo.current[:base] = folder.item('main')
+    Bike.client = 'root'
+    Bike.current[:base] = folder.item('main')
     folder.item('main')[:tid] = '12345.012'
     assert_equal(
       <<_html,
@@ -350,7 +350,7 @@ _html
 <body>
 <h1>index</h1>
 <form id="form_main" method="post" enctype="multipart/form-data" action="/t_summary/12345.012/update.html">
-<input name="_token" type="hidden" value="#{Runo.token}" />
+<input name="_token" type="hidden" value="#{Bike.token}" />
 <ul id="main" class="app-blog">
   <li><a><span class="text"><input type="text" name="20100326_0001-name" value="frank" size="32" /></span></a>: <span class="text"><input type="text" name="20100326_0001-comment" value="hi." size="64" /></span></li>
 </ul>
@@ -372,7 +372,7 @@ _html
   end
 
   def test_tmpl_create
-    folder = Runo::Set::Static::Folder.root.item('t_summary')
+    folder = Bike::Set::Static::Folder.root.item('t_summary')
 
     assert_equal(
       <<'_html',
@@ -397,7 +397,7 @@ _html
   end
 
   def test_tmpl_done
-    folder = Runo::Set::Static::Folder.root.item('t_contact')
+    folder = Bike::Set::Static::Folder.root.item('t_contact')
     assert_equal(
       <<'_html',
 <html>
@@ -413,9 +413,9 @@ _html
   end
 
   def test_g_login
-    folder = Runo::Set::Static::Folder.root.item('t_contact')
+    folder = Bike::Set::Static::Folder.root.item('t_contact')
 
-    Runo.client = nil
+    Bike.client = nil
     assert_equal(
       <<'_html',
 <div class="action_login"><a href="/t_contact/login.html">login</a></div>
@@ -424,10 +424,10 @@ _html
       'Folder#_g_login should return a link to login/logout according to the current client'
     )
 
-    Runo.client = 'frank'
+    Bike.client = 'frank'
     assert_equal(
       <<_html,
-<div class="action_logout"><a href="/t_contact/logout.html?_token=#{Runo.token}">logout</a></div>
+<div class="action_logout"><a href="/t_contact/logout.html?_token=#{Bike.token}">logout</a></div>
 _html
       folder.get(:action => :action_login),
       'Folder#_g_login should return a link to login/logout according to the current client'
@@ -435,9 +435,9 @@ _html
   end
 
   def test_g_signup
-    folder = Runo::Set::Static::Folder.root.item('t_contact')
+    folder = Bike::Set::Static::Folder.root.item('t_contact')
 
-    Runo.client = nil
+    Bike.client = nil
     assert_equal(
       <<'_html',
 <div class="action_signup"><a href="/_users/create.html">signup</a></div>
@@ -446,7 +446,7 @@ _html
       'Folder#_g_signup should return a link to sign-up if the current client is nobody'
     )
 
-    Runo.client = 'frank'
+    Bike.client = 'frank'
     assert_nil(
       folder.get(:action => :action_signup),
       'Folder#_g_signup should return nil unless the current client is nobody'
@@ -454,9 +454,9 @@ _html
   end
 
   def test_g_me
-    folder = Runo::Set::Static::Folder.root.item('t_contact')
+    folder = Bike::Set::Static::Folder.root.item('t_contact')
 
-    Runo.client = nil
+    Bike.client = nil
     assert_equal(
       <<'_html',
 <div class="me">
@@ -467,7 +467,7 @@ _html
       'Folder#_g_me should return a link to login if the current client is nobody'
     )
 
-    Runo.client = 'test'
+    Bike.client = 'test'
     assert_equal(
       <<_html,
 <div class="me">
@@ -476,7 +476,7 @@ _html
   </a>
   <div class="client">test</div>
   <div class="roles">(user)</div>
-  <div class="action_logout"><a href="/t_contact/logout.html?_token=#{Runo.token}">logout</a></div>
+  <div class="action_logout"><a href="/t_contact/logout.html?_token=#{Bike.token}">logout</a></div>
 </div>
 _html
       folder.get(:action => :me),
@@ -485,7 +485,7 @@ _html
   end
 
   def test_g_crumb
-    folder = Runo::Set::Static::Folder.root.item('foo','bar')
+    folder = Bike::Set::Static::Folder.root.item('foo','bar')
     assert_equal(
       <<'_html',
 <div class="crumb">
@@ -500,7 +500,7 @@ _html
       'Folder#_g_crumb should return crumbs from the root to the current folder'
     )
 
-    folder = Runo::Set::Static::Folder.root
+    folder = Bike::Set::Static::Folder.root
     assert_equal(
       <<'_html',
 <div class="crumb">

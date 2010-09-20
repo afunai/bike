@@ -9,11 +9,11 @@ class TC_Select < Test::Unit::TestCase
 
   def setup
     meta = nil
-    Runo::Parser.gsub_scalar("$(foo select bar, baz, qux :'baz' mandatory)") {|id, m|
+    Bike::Parser.gsub_scalar("$(foo select bar, baz, qux :'baz' mandatory)") {|id, m|
       meta = m
       ''
     }
-    @f = Runo::Field.instance meta
+    @f = Bike::Field.instance meta
   end
 
   def teardown
@@ -39,11 +39,11 @@ class TC_Select < Test::Unit::TestCase
 
   def test_meta_options_from_range
     meta = nil
-    Runo::Parser.gsub_scalar("$(foo select 1..5)") {|id, m|
+    Bike::Parser.gsub_scalar("$(foo select 1..5)") {|id, m|
       meta = m
       ''
     }
-    f = Runo::Field.instance meta
+    f = Bike::Field.instance meta
     assert_equal(
       ['1', '2', '3', '4', '5'],
       f[:options],
@@ -51,11 +51,11 @@ class TC_Select < Test::Unit::TestCase
     )
 
     meta = nil
-    Runo::Parser.gsub_scalar("$(foo select ..5)") {|id, m|
+    Bike::Parser.gsub_scalar("$(foo select ..5)") {|id, m|
       meta = m
       ''
     }
-    f = Runo::Field.instance meta
+    f = Bike::Field.instance meta
     assert_equal(
       ['0', '1', '2', '3', '4', '5'],
       f[:options],
@@ -63,11 +63,11 @@ class TC_Select < Test::Unit::TestCase
     )
 
     meta = nil
-    Runo::Parser.gsub_scalar("$(foo select 1..)") {|id, m|
+    Bike::Parser.gsub_scalar("$(foo select 1..)") {|id, m|
       meta = m
       ''
     }
-    f = Runo::Field.instance meta
+    f = Bike::Field.instance meta
     assert_equal(
       nil,
       f[:options],

@@ -5,9 +5,9 @@
 
 require 'time'
 
-class Runo::Meta::Timestamp < Runo::Field
+class Bike::Meta::Timestamp < Bike::Field
 
-  include Runo::Meta
+  include Bike::Meta
 
   REX_DATE = /\A(\d+).(\d+).(\d+)(?:[T\s](\d+):(\d+)(?::(\d+))?)?\z/
 
@@ -62,9 +62,9 @@ _html
       v = @date_str
       v ||= val['published'].is_a?(::Time) ? val['published'].strftime('%Y-%m-%d %H:%M:%S') : ''
       <<_html.chomp
-<span class="#{_g_class arg}"><input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h v}" size="#{my[:size]}" />#{_g_errors arg}</span>
+<span class="#{_g_class arg}"><input type="text" name="#{my[:short_name]}" value="#{Bike::Field.h v}" size="#{my[:size]}" />#{_g_errors arg}</span>
 _html
-    elsif my[:can_update] && !find_ancestor {|f| f[:id] =~ Runo::REX::ID_NEW }
+    elsif my[:can_update] && !find_ancestor {|f| f[:id] =~ Bike::REX::ID_NEW }
       <<_html
 <span class="#{_g_class arg}">
   <input type="checkbox" id="timestamp_#{my[:short_name]}" name="#{my[:short_name]}" value="true" />

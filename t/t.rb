@@ -13,9 +13,9 @@ t_dir = ::File.dirname __FILE__
 
 $LOAD_PATH.unshift t_dir
 $LOAD_PATH.unshift(::File.expand_path('../lib', t_dir))
-require 'runo'
+require 'bike'
 
-Runo.config(
+Bike.config(
   'skin_dir' => './t/skin',
   'storage'  => {
     'default' => 'File',
@@ -24,4 +24,4 @@ Runo.config(
   }
 )
 
-Runo::I18n.bindtextdomain('index', ::File.join(t_dir, 'locale'))
+Bike::I18n.bindtextdomain('index', ::File.join(t_dir, 'locale'))

@@ -8,33 +8,33 @@ require 'sequel'
 require 'yaml'
 require 'ya2yaml'
 
-class Runo::Storage::Sequel < Runo::Storage
+class Bike::Storage::Sequel < Bike::Storage
 
   def self.db
-    if Runo['storage']['Sequel'] && Runo['storage']['Sequel']['uri']
-      @db ||= ::Sequel.connect Runo['storage']['Sequel']['uri']
-      self.load_skel unless @db.table_exists? :runo_main
+    if Bike['storage']['Sequel'] && Bike['storage']['Sequel']['uri']
+      @db ||= ::Sequel.connect Bike['storage']['Sequel']['uri']
+      self.load_skel unless @db.table_exists? :bike_main
     end
     @db
   end
 
   def self.load_skel
-    @db.create_table(:runo_main) {
+    @db.create_table(:bike_main) {
       String :full_name
       String :ext
       String :owner
       String :body
       File   :binary_body
       primary_key :full_name
-    } unless @db.table_exists? :runo_main
-    Runo::Storage::File.traverse('/', Runo['skin_dir']) {|entry|
-      @db[:runo_main].insert(
+    } unless @db.table_exists? :bike_main
+    Bike::Storage::File.traverse('/', Bike['skin_dir']) {|entry|
+      @db[:bike_main].insert(
         :full_name   => entry[:full_name],
         :ext         => entry[:ext],
         :owner       => entry[:val]['_owner'],
         :body        => entry[:val].ya2yaml(:syck_compatible => true),
         :binary_body => (entry[:ext] == 'yaml') ? nil : entry[:val].to_sequel_blob
-      ) unless @db[:runo_main][:full_name => entry[:full_name]]
+      ) unless @db[:bike_main][:full_name => entry[:full_name]]
     }
   end
 
@@ -44,7 +44,7 @@ class Runo::Storage::Sequel < Runo::Storage
 
   def initialize(sd)
     super
-    @dataset = Runo::Storage::Sequel.db[:runo_main]
+    @dataset = Bike::Storage::Sequel.db[:bike_main]
     @dirname = @sd[:full_name]
   end
 
@@ -126,7 +126,7 @@ class Runo::Storage::Sequel < Runo::Storage
   end
 
   def save(id, v, ext)
-    Runo::Storage::Sequel.db.transaction {
+    Bike::Storage::Sequel.db.transaction {
       if new_id?(id, v)
         old_id = id
         id = new_id v

@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009-2010 Akira FUNAI
 
-class Runo::Set::Dynamic
+class Bike::Set::Dynamic
 
   private
 
@@ -23,8 +23,8 @@ class Runo::Set::Dynamic
   </span>
 </div>
 _tmpl
-    div = Runo::Parser.gsub_block(div, 'y') {|open, inner, close|
-      inner = Runo::Parser.gsub_block(inner, 'm') {|*t|
+    div = Bike::Parser.gsub_block(div, 'y') {|open, inner, close|
+      inner = Bike::Parser.gsub_block(inner, 'm') {|*t|
         month_tmpl = t.join
         '$(.months)'
       }
@@ -59,7 +59,7 @@ _tmpl
 
   def _uri_ym(arg)
     @storage.__send__(:_sibs_d, :d => '000000').collect {|ym|
-      Runo::Path.path_of :d => ym
+      Bike::Path.path_of :d => ym
     }
   end
 

@@ -5,9 +5,9 @@
 
 require "#{::File.dirname __FILE__}/t"
 
-class Runo::Foo < Runo::Field
+class Bike::Foo < Bike::Field
   DEFAULT_META = {:foo => 'foo foo'}
-  class Bar < Runo::Field
+  class Bar < Bike::Field
     def _g_test(arg)
       'just a test.'
     end
@@ -17,7 +17,7 @@ end
 class TC_Field < Test::Unit::TestCase
 
   def setup
-    @f = Runo::Field.instance(
+    @f = Bike::Field.instance(
       :klass   => 'foo-bar',
       :baz     => 1234,
       :default => 'bar bar'
@@ -29,7 +29,7 @@ class TC_Field < Test::Unit::TestCase
 
   def test_instance
     assert_instance_of(
-      Runo::Foo::Bar,
+      Bike::Foo::Bar,
       @f,
       'Field#instance should return an instance of the class specified by :klass'
     )
@@ -37,11 +37,11 @@ class TC_Field < Test::Unit::TestCase
 
   def test_wrong_instance
     assert_nil(
-      Runo::Field.instance(:klass => 'set'),
+      Bike::Field.instance(:klass => 'set'),
       'Field#instance should not return an instance of other than Field'
     )
     assert_nil(
-      Runo::Field.instance(:klass => 'storage'),
+      Bike::Field.instance(:klass => 'storage'),
       'Field#instance should not return an instance of other than Field'
     )
   end
@@ -63,13 +63,13 @@ class TC_Field < Test::Unit::TestCase
   end
 
   def test_meta_name
-    item = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
+    item = Bike::Set::Static::Folder.root.item('foo', 'bar', 'main')
     assert_equal(
       'main',
       item[:name],
       'Field#[:name] should return the path name from the nearest folder'
     )
-    item = Runo::Set::Static::Folder.root.item('foo', 'bar')
+    item = Bike::Set::Static::Folder.root.item('foo', 'bar')
     assert_equal(
       'bar',
       item[:name],
@@ -78,13 +78,13 @@ class TC_Field < Test::Unit::TestCase
   end
 
   def test_meta_full_name
-    item = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
+    item = Bike::Set::Static::Folder.root.item('foo', 'bar', 'main')
     assert_equal(
       '-foo-bar-main',
       item[:full_name],
       'Field#[:full_name] should return the path name from the root folder'
     )
-    item = Runo::Set::Static::Folder.root.item('foo', 'bar')
+    item = Bike::Set::Static::Folder.root.item('foo', 'bar')
     assert_equal(
       '-foo-bar',
       item[:full_name],
@@ -93,25 +93,25 @@ class TC_Field < Test::Unit::TestCase
   end
 
   def test_meta_short_name
-    item = Runo::Set::Static::Folder.root.item(
+    item = Bike::Set::Static::Folder.root.item(
       'foo', 'bar', 'main', '20091120_0001', 'replies', '20091208_0001', 'reply'
     )
 
-    Runo.current[:base] = nil
+    Bike.current[:base] = nil
     assert_equal(
       'reply',
       item[:short_name],
       'Field#[:short_name] should return [:id] if no base SD is defined'
     )
 
-    Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
+    Bike.current[:base] = Bike::Set::Static::Folder.root.item('foo', 'bar', 'main')
     assert_equal(
       '20091120_0001-replies-20091208_0001-reply',
       item[:short_name],
       'Field#[:short_name] should return the path name from the base SD'
     )
 
-    Runo.current[:base] = Runo::Set::Static::Folder.root.item(
+    Bike.current[:base] = Bike::Set::Static::Folder.root.item(
       'foo', 'bar', 'main', '20091120_0001', 'replies'
     )
     assert_equal(
@@ -120,16 +120,16 @@ class TC_Field < Test::Unit::TestCase
       'Field#[:short_name] should return the path name from the base SD'
     )
 
-    Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
+    Bike.current[:base] = Bike::Set::Static::Folder.root.item('foo', 'bar', 'main')
     assert_equal(
       '',
-      Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')[:short_name],
+      Bike::Set::Static::Folder.root.item('foo', 'bar', 'main')[:short_name],
       'Field#[:short_name] should return empty string for the base SD itself'
     )
   end
 
   def test_meta_sd
-    sd = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
+    sd = Bike::Set::Static::Folder.root.item('foo', 'bar', 'main')
     assert_equal(
       sd,
       sd[:sd],
@@ -146,16 +146,16 @@ class TC_Field < Test::Unit::TestCase
       'Field#[:sd] should return the nearest set_dynamic'
     )
     assert_nil(
-      Runo::Set::Static::Folder.root[:sd],
+      Bike::Set::Static::Folder.root[:sd],
       'Field#[:sd] should return nil if there is no set_dynamic in the ancestors'
     )
   end
 
   def test_meta_client
-    Runo.client = 'frank'
+    Bike.client = 'frank'
     assert_equal(
       'frank',
-      Runo::Field.new[:client],
+      Bike::Field.new[:client],
       'Field#[:client] should return the client of the current thread'
     )
   end
@@ -175,21 +175,21 @@ class TC_Field < Test::Unit::TestCase
   end
 
   def test_default_meta
-    f = Runo::Field.instance(:klass => 'foo')
+    f = Bike::Field.instance(:klass => 'foo')
     assert_equal(
       'foo foo',
       f[:foo],
       'Field#[] should look for the default value in DEFAULT_META'
     )
 
-    f = Runo::Field.instance(:klass => 'foo', :foo => 'bar')
+    f = Bike::Field.instance(:klass => 'foo', :foo => 'bar')
     assert_equal(
       'bar',
       f[:foo],
       'Field.DEFAULT_META should be eclipsed by @meta'
     )
 
-    f = Runo::Field.instance(:klass => 'foo')
+    f = Bike::Field.instance(:klass => 'foo')
     def f.meta_foo
       'abc'
     end

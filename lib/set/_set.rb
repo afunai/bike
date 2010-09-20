@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Runo::Set
+module Bike::Set
 
   include Enumerable
 
@@ -18,7 +18,7 @@ module Runo::Set
   end
 
   def meta_base_path
-    Runo.base ? Runo.base[:path] : my[:path]
+    Bike.base ? Bike.base[:path] : my[:path]
   end
 
   def val(*steps)
@@ -47,9 +47,9 @@ module Runo::Set
 
   def errors
     return {} if
-      my[:id] =~ Runo::REX::ID_NEW &&
-      my[:parent].is_a?(Runo::Set::Dynamic) &&
-      my[:parent].workflow.is_a?(Runo::Workflow::Attachment)
+      my[:id] =~ Bike::REX::ID_NEW &&
+      my[:parent].is_a?(Bike::Set::Dynamic) &&
+      my[:parent].workflow.is_a?(Bike::Workflow::Attachment)
 
     errors = {}
     @item_object.each_pair {|id, item|
@@ -177,7 +177,7 @@ module Runo::Set
     super || val.all? {|id, v|
       if id.is_a? ::Symbol
         true # not a item value
-      elsif id =~ Runo::REX::ID_NEW
+      elsif id =~ Bike::REX::ID_NEW
         permit? :create
       else
         item_action = (v.is_a?(::Hash) && v[:action]) || :update

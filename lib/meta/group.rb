@@ -3,9 +3,9 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Meta::Group < Runo::Field
+class Bike::Meta::Group < Bike::Field
 
-  include Runo::Meta
+  include Bike::Meta
 
   private
 

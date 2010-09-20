@@ -8,7 +8,7 @@ require "#{::File.dirname __FILE__}/t"
 class TC_Set_Dynamic < Test::Unit::TestCase
 
   def setup
-    @sd = Runo::Set::Dynamic.new(
+    @sd = Bike::Set::Dynamic.new(
       :id       => 'foo',
       :klass    => 'set-dynamic',
       :workflow => 'blog',
@@ -21,7 +21,7 @@ $(.submit)
 _tmpl
       },
       :item     => {
-        'default' => Runo::Parser.parse_html(<<'_html')
+        'default' => Bike::Parser.parse_html(<<'_html')
   <li>$(name = text 16 0..16 :'nobody'): $(comment = text 64 :'hi.')$(.hidden)</li>
 _html
       }
@@ -33,46 +33,46 @@ _html
       "[#{my[:id]}-#{arg[:orig_action]}#{arg[:sub_action] && ('.' + arg[:sub_action].to_s)}]\n"
     end
     @sd[:item]['default'][:item].delete '_timestamp'
-    Runo.client = 'root'
-    Runo.current[:base] = nil
+    Bike.client = 'root'
+    Bike.current[:base] = nil
   end
 
   def teardown
-    Runo.client = nil
+    Bike.client = nil
   end
 
   def test_storage
     assert_kind_of(
-      Runo::Storage,
+      Bike::Storage,
       @sd.storage,
       'Set::Dynamic#instance should load an apropriate storage for the list'
     )
     assert_instance_of(
-      Runo::Storage::Temp,
+      Bike::Storage::Temp,
       @sd.storage,
       'Set::Dynamic#instance should load an apropriate storage for the list'
     )
   end
 
-  class Runo::Workflow::Default_meta < Runo::Workflow
+  class Bike::Workflow::Default_meta < Bike::Workflow
     DEFAULT_META = {:foo => 'FOO'}
   end
   def test_default_meta
-    sd = Runo::Set::Dynamic.new(:workflow  => 'default_meta')
+    sd = Bike::Set::Dynamic.new(:workflow  => 'default_meta')
     assert_equal(
       'FOO',
       sd[:foo],
       'Set::Dynamic#[] should look for the default value in the workflow'
     )
 
-    sd = Runo::Set::Dynamic.new(:workflow  => 'default_meta', :foo => 'BAR')
+    sd = Bike::Set::Dynamic.new(:workflow  => 'default_meta', :foo => 'BAR')
     assert_equal(
       'BAR',
       sd[:foo],
       'workflow.DEFAULT_META should be eclipsed by @meta'
     )
 
-    sd = Runo::Set::Dynamic.new(:workflow  => 'default_meta')
+    sd = Bike::Set::Dynamic.new(:workflow  => 'default_meta')
     def sd.meta_foo
       'abc'
     end
@@ -86,7 +86,7 @@ _html
   def test_meta_tid
     tid = @sd[:tid]
     assert_match(
-      Runo::REX::TID,
+      Bike::REX::TID,
       tid,
       'Set::Dynamic#meta_tid should return an unique id per an instance'
     )
@@ -97,22 +97,22 @@ _html
     )
     assert_not_equal(
       tid,
-      Runo::Set::Dynamic.new[:tid],
+      Bike::Set::Dynamic.new[:tid],
       'Set::Dynamic#meta_tid should be unique to an item'
     )
   end
 
   def test_meta_base_path
-    item = Runo::Set::Static::Folder.root.item('foo', 'main')
+    item = Bike::Set::Static::Folder.root.item('foo', 'main')
 
-    Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo', 'bar', 'sub')
+    Bike.current[:base] = Bike::Set::Static::Folder.root.item('foo', 'bar', 'sub')
     assert_equal(
       '/foo/bar/sub',
       item[:base_path],
       'Field#[:base_path] should return the path name of the base SD'
     )
 
-    Runo.current[:base] = Runo::Set::Static::Folder.root.item('foo', 'bar', 'main')
+    Bike.current[:base] = Bike::Set::Static::Folder.root.item('foo', 'bar', 'main')
     assert_equal(
       '/foo/bar',
       item[:base_path],
@@ -121,7 +121,7 @@ _html
   end
 
   def test_meta_order
-    sd = Runo::Set::Dynamic.new(
+    sd = Bike::Set::Dynamic.new(
       :id       => 'foo',
       :klass    => 'set-dynamic',
       :workflow => 'contact'
@@ -131,7 +131,7 @@ _html
       'Set::Dynamic#[:order] should be nil by default'
     )
 
-    sd = Runo::Set::Dynamic.new(
+    sd = Bike::Set::Dynamic.new(
       :id       => 'foo',
       :klass    => 'set-dynamic',
       :workflow => 'blog'
@@ -142,7 +142,7 @@ _html
       'Set::Dynamic#[:order] should refer to the default_meta[:order]'
     )
 
-    sd = Runo::Set::Dynamic.new(
+    sd = Bike::Set::Dynamic.new(
       :id       => 'foo',
       :klass    => 'set-dynamic',
       :workflow => 'blog',
@@ -156,23 +156,23 @@ _html
   end
 
   def test_meta_href
-    Runo.current[:uri] = nil
+    Bike.current[:uri] = nil
 
-    sd = Runo::Set::Static::Folder.root.item('foo','main')
+    sd = Bike::Set::Static::Folder.root.item('foo','main')
     assert_equal(
       '/foo/',
       sd[:href],
       'Set::Dynamic#meta_href should return the uri to itself'
     )
 
-    sd = Runo::Set::Static::Folder.root.item('foo','sub')
+    sd = Bike::Set::Static::Folder.root.item('foo','sub')
     assert_equal(
       '/foo/sub/',
       sd[:href],
       "Set::Dynamic#meta_href should not omit steps other than 'main'"
     )
 
-    sd = Runo::Set::Static::Folder.root.item('foo','main','20091120_0001','replies')
+    sd = Bike::Set::Static::Folder.root.item('foo','main','20091120_0001','replies')
     assert_equal(
       '/foo/20091120_0001/replies/',
       sd[:href],
@@ -183,7 +183,7 @@ _html
   def test_item
     @sd.load('20100131_1234' => {'name' => 'frank'})
     assert_instance_of(
-      Runo::Set::Static,
+      Bike::Set::Static,
       @sd.item('20100131_1234'),
       'Set::Dynamic#item should return the child set in the storage'
     )
@@ -313,7 +313,7 @@ _html
   end
 
   def test_get_preview
-    Runo.current[:base] = nil
+    Bike.current[:base] = nil
     @sd.load(
       '20100330_1234' => {'name' => 'frank', 'comment' => 'bar'},
       '20100330_1235' => {'name' => 'carl', 'comment' => 'baz'}
@@ -331,7 +331,7 @@ _html
   end
 
   def test_get_by_self_reference
-    ss = Runo::Set::Static.new(
+    ss = Bike::Set::Static.new(
       :html => '<ul class="app-attachment"><li class="model"></li>$(.pipco)</ul>'
     )
     sd = ss.item('main')
@@ -387,7 +387,7 @@ _html
   end
 
   def test_get_by_self_reference_via_parent_tmpl
-    ss = Runo::Set::Static.new(
+    ss = Bike::Set::Static.new(
       :html => '$(main.action_pipco)<ul class="app-attachment"></ul>'
     )
     sd = ss.item('main')
@@ -411,7 +411,7 @@ _html
   end
 
   def test_get_by_self_reference_multiple_vars
-    ss = Runo::Set::Static.new(
+    ss = Bike::Set::Static.new(
       :html => '<ul class="app-attachment">$(.pipco)<li class="model">$(foo=text)</li></ul>'
     )
     sd = ss.item('main')
@@ -782,13 +782,13 @@ _html
   end
 
   def test_g_submit
-    Runo.client = nil
-    @sd = Runo::Set::Dynamic.new(
+    Bike.client = nil
+    @sd = Bike::Set::Dynamic.new(
       :klass    => 'set-dynamic',
       :workflow => 'blog',
       :tmpl     => {:index => '$(.submit)'},
       :item     => {
-        'default' => Runo::Parser.parse_html(<<'_html')
+        'default' => Bike::Parser.parse_html(<<'_html')
   <li>$(name = text 32 :'nobody'): $(comment = text 64 :'hi.')$(.hidden)</li>
 _html
       }
@@ -947,8 +947,8 @@ _html
   end
 
   def test_post_multiple_attachments
-    Runo.client = 'root'
-    sd = Runo::Set::Static::Folder.root.item('t_attachment', 'main')
+    Bike.client = 'root'
+    sd = Bike::Set::Static::Folder.root.item('t_attachment', 'main')
     sd.storage.clear
 
     # create an attachment item
@@ -993,14 +993,14 @@ _html
     sd.commit :persistent
     baz_id = sd.result.values.first[:id]
 
-    item = Runo::Set::Static::Folder.root.item('t_attachment', 'main', baz_id, 'files', first_id, 'file')
+    item = Bike::Set::Static::Folder.root.item('t_attachment', 'main', baz_id, 'files', first_id, 'file')
     assert_equal(
       'foo',
       item.val,
       'Workflow::Attachment should store the body of the first file item'
     )
 
-    item = Runo::Set::Static::Folder.root.item('t_attachment', 'main', baz_id, 'files', second_id, 'file')
+    item = Bike::Set::Static::Folder.root.item('t_attachment', 'main', baz_id, 'files', second_id, 'file')
     assert_equal(
       'bar',
       item.val,
@@ -1283,11 +1283,11 @@ _html
       '20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
       '20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
     )
-    Runo.client = nil
+    Bike.client = nil
 
     arg = {:action => :update, :conds => {:d => '2009'}}
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Set::Dynamic#get should raise Error::Forbidden when sd[:client] is nobody'
     ) {
       @sd.get arg
@@ -1299,22 +1299,22 @@ _html
       '20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
       '20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
     )
-    Runo.client = nil
+    Bike.client = nil
 
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       "'nobody' should not create a new item"
     ) {
       @sd.update('_0001' => {'comment' => 'qux'})
     }
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       "'nobody' should not update frank's item"
     ) {
       @sd.update('20091122_0001' => {'comment' => 'qux'})
     }
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       "'nobody' should not delete frank's item"
     ) {
       @sd.update('20091122_0001' => {:action => :delete})
@@ -1326,7 +1326,7 @@ _html
       '20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
       '20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
     )
-    Runo.client = 'carl' # carl is not the member of the group
+    Bike.client = 'carl' # carl is not the member of the group
 
     arg = {}
     @sd.get arg
@@ -1338,7 +1338,7 @@ _html
 
     arg = {:action => :create}
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Set::Dynamic#get should raise Error::Forbidden when an action is given but forbidden'
     ) {
       @sd.get arg
@@ -1346,7 +1346,7 @@ _html
 
     arg = {:action => :update, :conds => {:d => '2009'}}
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Set::Dynamic#get should not keep the partially-permitted action'
     ) {
       @sd.get arg
@@ -1366,16 +1366,16 @@ _html
       '20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
       '20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
     )
-    Runo.client = 'carl' # carl is not the member of the group
+    Bike.client = 'carl' # carl is not the member of the group
 
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'carl should not create a new item'
     ) {
       @sd.update('_0001' => {'comment' => 'qux'})
     }
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       "carl should not update frank's item"
     ) {
       @sd.update('20091122_0001' => {'comment' => 'qux'})
@@ -1386,7 +1386,7 @@ _html
       @sd.update('20091122_0002' => {'comment' => 'qux'})
     }
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       "carl should not delete frank's item"
     ) {
       @sd.update('20091122_0001' => {:action => :delete})
@@ -1398,7 +1398,7 @@ _html
       '20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
       '20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
     )
-    Runo.client = 'roy' # roy belongs to the group
+    Bike.client = 'roy' # roy belongs to the group
 
     arg = {:action => :create}
     @sd.get arg
@@ -1410,7 +1410,7 @@ _html
 
     arg = {:action => :delete, :conds => {:d => '2009'}}
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Set::Dynamic#get should raise Error::Forbidden when an action is given but forbidden'
     ) {
       @sd.get arg
@@ -1422,7 +1422,7 @@ _html
       '20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
       '20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
     )
-    Runo.client = 'roy' # roy belongs to the group
+    Bike.client = 'roy' # roy belongs to the group
 
     assert_nothing_raised(
       'roy should be able to create a new item'
@@ -1430,13 +1430,13 @@ _html
       @sd.update('_0001' => {'comment' => 'qux'})
     }
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       "roy should not update frank's item"
     ) {
       @sd.update('20091122_0001' => {'comment' => 'qux'})
     }
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       "roy should not delete frank's item"
     ) {
       @sd.update('20091122_0001' => {:action => :delete})
@@ -1448,7 +1448,7 @@ _html
       '20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
       '20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
     )
-    Runo.client = 'root' # root is the admin
+    Bike.client = 'root' # root is the admin
 
     arg = {:action => :create, :db => 1}
     @sd.get arg
@@ -1472,7 +1472,7 @@ _html
       '20091122_0001' => {'_owner' => 'frank', 'comment' => 'bar'},
       '20091122_0002' => {'_owner' => 'carl', 'comment' => 'baz'}
     )
-    Runo.client = 'root' # root is the admin
+    Bike.client = 'root' # root is the admin
 
     assert_nothing_raised(
       'frank should be able to create a new item'

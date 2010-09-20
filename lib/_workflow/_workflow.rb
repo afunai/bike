@@ -3,12 +3,12 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Workflow
+class Bike::Workflow
 
-  include Runo::I18n
+  include Bike::I18n
 
   DEFAULT_META = {
-    :item_label => Runo::I18n.n_('item', 'items', 1),
+    :item_label => Bike::I18n.n_('item', 'items', 1),
   }
   DEFAULT_SUB_ITEMS = {}
 
@@ -37,7 +37,7 @@ class Runo::Workflow
   def self.roles(roles)
     %w(admin group owner user none).select {|r|
       roles & const_get("ROLE_#{r.upcase}") > 0
-    }.collect{|r| Runo::I18n._ r }
+    }.collect{|r| Bike::I18n._ r }
   end
 
   attr_reader :sd

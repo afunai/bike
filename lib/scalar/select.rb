@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Select < Runo::Field
+class Bike::Select < Bike::Field
 
   def initialize(meta = {})
     meta[:mandatory] = meta[:tokens] && meta[:tokens].include?('mandatory')
@@ -26,7 +26,7 @@ class Runo::Select < Runo::Field
   def _g_update(arg)
     options = my[:options].collect {|opt|
       selected = (opt == val) ? ' selected' : ''
-      "    <option#{selected}>#{Runo::Field.h opt}</option>\n"
+      "    <option#{selected}>#{Bike::Field.h opt}</option>\n"
     }.join
     unless my[:mandatory] && my[:options].include?(val)
       options = "    <option value=\"\">#{_ 'please select'}</option>\n#{options}"

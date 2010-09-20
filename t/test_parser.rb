@@ -16,38 +16,38 @@ class TC_Parser < Test::Unit::TestCase
   def test_scan_tokens
     assert_equal(
       {:tokens => ['foo', 'bar', 'baz']},
-      Runo::Parser.scan_tokens(StringScanner.new('foo bar baz')),
+      Bike::Parser.scan_tokens(StringScanner.new('foo bar baz')),
       'Parser.scan_tokens should be able to parse unquoted tokens into array'
     )
     assert_equal(
       {:tokens => ['foo', 'bar', 'baz baz']},
-      Runo::Parser.scan_tokens(StringScanner.new('foo "bar" "baz baz"')),
+      Bike::Parser.scan_tokens(StringScanner.new('foo "bar" "baz baz"')),
       'Parser.scan_tokens should be able to parse quoted tokens'
     )
     assert_equal(
       {:tokens => ['foo', 'bar', 'baz']},
-      Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz")),
+      Bike::Parser.scan_tokens(StringScanner.new("foo 'bar' baz")),
       'Parser.scan_tokens should be able to parse quoted tokens'
     )
 
     assert_equal(
       {:tokens => ['foo', 'bar', 'baz']},
-      Runo::Parser.scan_tokens(StringScanner.new("foo 'bar' baz) qux")),
+      Bike::Parser.scan_tokens(StringScanner.new("foo 'bar' baz) qux")),
       'Parser.scan_tokens should stop scanning at an ending bracket'
     )
     assert_equal(
       {:tokens => ['foo', 'bar (bar?)', 'baz']},
-      Runo::Parser.scan_tokens(StringScanner.new("foo 'bar (bar?)' baz) qux")),
+      Bike::Parser.scan_tokens(StringScanner.new("foo 'bar (bar?)' baz) qux")),
       'Parser.scan_tokens should ignore brackets inside quoted tokens'
     )
   end
 
   def test_parse_empty_tag
-    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world')
+    result = Bike::Parser.parse_html('hello $(foo = bar "baz baz") world')
     assert_equal(
       {'foo' => {:klass => 'bar', :tokens => ['baz baz']}},
       result[:item],
-      'Parser.parse_html should be able to parse empty runo tags'
+      'Parser.parse_html should be able to parse empty bike tags'
     )
     assert_equal(
       {:index => 'hello $(foo) world'},
@@ -55,7 +55,7 @@ class TC_Parser < Test::Unit::TestCase
       'Parser.parse_html[:tmpl] should be a proper template'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <h1>$(foo=bar "baz baz")</h1>
 <p>$(bar=a b c)</p>
 _html
@@ -65,7 +65,7 @@ _html
         'bar' => {:klass => 'a', :tokens => ['b', 'c']},
       },
       result[:item],
-      'Parser.parse_html should be able to parse empty runo tags'
+      'Parser.parse_html should be able to parse empty bike tags'
     )
     assert_equal(
       {:index => <<'_html'},
@@ -79,34 +79,34 @@ _html
 
   def test_parse_empty_tag_in_comment
     html = 'hello <!-- $(foo = bar "baz baz") --> world'
-    result = Runo::Parser.parse_html html
+    result = Bike::Parser.parse_html html
     assert_equal(
       {},
       result[:item],
-      'Parser.parse_html should skip runo tags in a comment'
+      'Parser.parse_html should skip bike tags in a comment'
     )
     assert_equal(
       {:index => html},
       result[:tmpl],
-      'Parser.parse_html should skip runo tags in a comment'
+      'Parser.parse_html should skip bike tags in a comment'
     )
 
     html = '<script><![CDATA[ $(foo = bar "baz baz") ]]></script>'
-    result = Runo::Parser.parse_html html
+    result = Bike::Parser.parse_html html
     assert_equal(
       {},
       result[:item],
-      'Parser.parse_html should skip runo tags in a comment'
+      'Parser.parse_html should skip bike tags in a comment'
     )
     assert_equal(
       {:index => html},
       result[:tmpl],
-      'Parser.parse_html should skip runo tags in a comment'
+      'Parser.parse_html should skip bike tags in a comment'
     )
   end
 
   def test_obscure_markup
-    result = Runo::Parser.parse_html('hello $(foo = bar $(baz=1) baz) world')
+    result = Bike::Parser.parse_html('hello $(foo = bar $(baz=1) baz) world')
     assert_equal(
       {'foo' => {:klass => 'bar', :tokens => ['$(baz=1']}},
       result[:item],
@@ -118,7 +118,7 @@ _html
       'Parser.parse_html[:tmpl] should be a proper template'
     )
 
-    result = Runo::Parser.parse_html('hello $(foo = bar baz world')
+    result = Bike::Parser.parse_html('hello $(foo = bar baz world')
     assert_equal(
       {'foo' => {:klass => 'bar', :tokens => ['baz', 'world']}},
       result[:item],
@@ -130,7 +130,7 @@ _html
       'Parser.parse_html should be able to parse a tag that is not closed'
     )
 
-    result = Runo::Parser.parse_html('hello $(foo = bar "baz"world)')
+    result = Bike::Parser.parse_html('hello $(foo = bar "baz"world)')
     assert_equal(
       {'foo' => {:klass => 'bar', :tokens => ['baz', 'world']}},
       result[:item],
@@ -142,7 +142,7 @@ _html
       'Parser.parse_html should be able to parse tokens without a delimiter'
     )
 
-    result = Runo::Parser.parse_html('hello $(foo = bar, "baz")')
+    result = Bike::Parser.parse_html('hello $(foo = bar, "baz")')
     assert_equal(
       {'foo' => {:klass => 'bar', :options => ['baz']}},
       result[:item],
@@ -153,61 +153,61 @@ _html
   def test_parse_token
     assert_equal(
       {:width => 160, :height => 120},
-      Runo::Parser.parse_token(nil, '160*120', {}),
+      Bike::Parser.parse_token(nil, '160*120', {}),
       'Parser.parse_token should be able to parse dimension tokens'
     )
     assert_equal(
       {:min => 1, :max => 32},
-      Runo::Parser.parse_token(nil, '1..32', {}),
+      Bike::Parser.parse_token(nil, '1..32', {}),
       'Parser.parse_token should be able to parse range tokens'
     )
     assert_equal(
       {:max => 32},
-      Runo::Parser.parse_token(nil, '..32', {}),
+      Bike::Parser.parse_token(nil, '..32', {}),
       'Parser.parse_token should be able to parse partial range tokens'
     )
     assert_equal(
       {:min => 1},
-      Runo::Parser.parse_token(nil, '1..', {}),
+      Bike::Parser.parse_token(nil, '1..', {}),
       'Parser.parse_token should be able to parse partial range tokens'
     )
     assert_equal(
       {:min => -32, :max => -1},
-      Runo::Parser.parse_token(nil, '-32..-1', {}),
+      Bike::Parser.parse_token(nil, '-32..-1', {}),
       'Parser.parse_token should be able to parse minus range tokens'
     )
 
     assert_equal(
       {:options => ['foo']},
-      Runo::Parser.parse_token(',', 'foo', {}),
+      Bike::Parser.parse_token(',', 'foo', {}),
       'Parser.parse_token should be able to parse option tokens'
     )
     assert_equal(
       {:options => ['foo', 'bar']},
-      Runo::Parser.parse_token(',', 'bar', {:options => ['foo']}),
+      Bike::Parser.parse_token(',', 'bar', {:options => ['foo']}),
       'Parser.parse_token should be able to parse option tokens'
     )
 
     assert_equal(
       {:default => 'bar'},
-      Runo::Parser.parse_token(':', 'bar', {}),
+      Bike::Parser.parse_token(':', 'bar', {}),
       'Parser.parse_token should be able to parse default tokens'
     )
     assert_equal(
       {:defaults => ['bar', 'baz']},
-      Runo::Parser.parse_token(';', 'baz', {:defaults => ['bar']}),
+      Bike::Parser.parse_token(';', 'baz', {:defaults => ['bar']}),
       'Parser.parse_token should be able to parse defaults tokens'
     )
   end
 
   def test_parse_options
-    result = Runo::Parser.parse_html('hello $(foo = bar , "baz baz", "world", hi qux)')
+    result = Bike::Parser.parse_html('hello $(foo = bar , "baz baz", "world", hi qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
       result[:item],
       'Parser.parse_html should be able to parse a sequence of CSV'
     )
-    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
+    result = Bike::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
       result[:item],
@@ -216,26 +216,26 @@ _html
   end
 
   def test_parse_options_with_spaces
-    result = Runo::Parser.parse_html('hello $(foo = bar world, qux)')
+    result = Bike::Parser.parse_html('hello $(foo = bar world, qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :options => ['world', 'qux']}},
       result[:item],
       'Parser.parse_html should allow spaces after the comma'
     )
-    result = Runo::Parser.parse_html('hello $(foo = bar world , qux)')
+    result = Bike::Parser.parse_html('hello $(foo = bar world , qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :options => ['qux'], :tokens => ['world']}},
       result[:item],
       'Parser.parse_html should not allow spaces before the comma'
     )
-    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
+    result = Bike::Parser.parse_html('hello $(foo = bar "baz baz", "world", hi qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :options => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
       result[:item],
       'Parser.parse_html should allow spaces after the comma'
     )
 
-    result = Runo::Parser.parse_html(<<'_eos')
+    result = Bike::Parser.parse_html(<<'_eos')
 hello $(foo =
   bar
   "baz baz",
@@ -251,13 +251,13 @@ _eos
   end
 
   def test_parse_defaults
-    result = Runo::Parser.parse_html('hello $(foo = bar ;"baz baz";"world";hi qux)')
+    result = Bike::Parser.parse_html('hello $(foo = bar ;"baz baz";"world";hi qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
       result[:item],
       'Parser.parse_html should be able to parse a sequence of CSV as [:defaults]'
     )
-    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz";"world";hi qux)')
+    result = Bike::Parser.parse_html('hello $(foo = bar "baz baz";"world";hi qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
       result[:item],
@@ -266,26 +266,26 @@ _eos
   end
 
   def test_parse_defaults_with_spaces
-    result = Runo::Parser.parse_html('hello $(foo=bar world; qux)')
+    result = Bike::Parser.parse_html('hello $(foo=bar world; qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :defaults => ['world', 'qux']}},
       result[:item],
       'Parser.parse_html should allow spaces after the semicolon'
     )
-    result = Runo::Parser.parse_html('hello $(foo=bar world ;qux)')
+    result = Bike::Parser.parse_html('hello $(foo=bar world ;qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :defaults => ['qux'], :tokens => ['world']}},
       result[:item],
       'Parser.parse_html should not allow spaces before the semicolon'
     )
-    result = Runo::Parser.parse_html('hello $(foo=bar "baz baz"; "world"; hi qux)')
+    result = Bike::Parser.parse_html('hello $(foo=bar "baz baz"; "world"; hi qux)')
     assert_equal(
       {'foo' => {:klass => 'bar', :defaults => ['baz baz', 'world', 'hi'], :tokens => ['qux']}},
       result[:item],
       'Parser.parse_html should allow spaces after the comma'
     )
 
-    result = Runo::Parser.parse_html(<<'_eos')
+    result = Bike::Parser.parse_html(<<'_eos')
 hello $(foo =
   bar
   "baz baz";
@@ -301,9 +301,9 @@ _eos
   end
 
   def test_parse_meta_tag
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <html>
-  <meta name="runo-owner" content="frank" />
+  <meta name="bike-owner" content="frank" />
 </html>
 _html
     assert_equal(
@@ -322,12 +322,12 @@ _html
       'Parser.parse_html should scrape meta vals from <meta>'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <html>
-  <meta name="runo-owner" content="frank" />
-  <meta name="runo-group" content="bob,carl" />
-  <meta name="runo-foo" content="bar, baz" />
-  <meta name="runo-label" content="Qux" />
+  <meta name="bike-owner" content="frank" />
+  <meta name="bike-group" content="bob,carl" />
+  <meta name="bike-foo" content="bar, baz" />
+  <meta name="bike-label" content="Qux" />
 </html>
 _html
     assert_equal(
@@ -350,7 +350,7 @@ _html
   end
 
   def test_parse_duplicate_tag
-    result = Runo::Parser.parse_html('hello $(foo = bar "baz baz") world $(foo=boo) $(foo)!')
+    result = Bike::Parser.parse_html('hello $(foo = bar "baz baz") world $(foo=boo) $(foo)!')
     assert_equal(
       {'foo' => {:klass => 'boo'}},
       result[:item],
@@ -365,7 +365,7 @@ _html
 
   def test_scan_inner_html
     s = StringScanner.new 'bar</foo>bar'
-    inner_html, close_tag = Runo::Parser.scan_inner_html(s, 'foo')
+    inner_html, close_tag = Bike::Parser.scan_inner_html(s, 'foo')
     assert_equal(
       'bar',
       inner_html,
@@ -378,7 +378,7 @@ _html
     )
 
     s = StringScanner.new '<foo>bar</foo></foo>'
-    inner_html, close_tag = Runo::Parser.scan_inner_html(s, 'foo')
+    inner_html, close_tag = Bike::Parser.scan_inner_html(s, 'foo')
     assert_equal(
       '<foo>bar</foo>',
       inner_html,
@@ -386,7 +386,7 @@ _html
     )
 
     s = StringScanner.new "baz\n  <foo>bar</foo>\n</foo>"
-    inner_html, close_tag = Runo::Parser.scan_inner_html(s, 'foo')
+    inner_html, close_tag = Bike::Parser.scan_inner_html(s, 'foo')
     assert_equal(
       "baz\n  <foo>bar</foo>\n",
       inner_html,
@@ -396,7 +396,7 @@ _html
 
   def test_scan_comment
     s = StringScanner.new 'baz -->'
-    inner_html, close_tag = Runo::Parser.scan_inner_html(s, '!--')
+    inner_html, close_tag = Bike::Parser.scan_inner_html(s, '!--')
     assert_equal(
       'baz',
       inner_html,
@@ -409,7 +409,7 @@ _html
     )
 
     s = StringScanner.new "baz\n  <!--bar-->\n-->"
-    inner_html, close_tag = Runo::Parser.scan_inner_html(s, '!--')
+    inner_html, close_tag = Bike::Parser.scan_inner_html(s, '!--')
     assert_equal(
       "baz\n  <!--bar-->\n",
       inner_html,
@@ -419,7 +419,7 @@ _html
 
   def test_scan_cdata
     s = StringScanner.new 'baz ]]>'
-    inner_html, close_tag = Runo::Parser.scan_inner_html(s, '<![CDATA[')
+    inner_html, close_tag = Bike::Parser.scan_inner_html(s, '<![CDATA[')
     assert_equal(
       'baz',
       inner_html,
@@ -433,7 +433,7 @@ _html
   end
 
   def test_parse_block_tag
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><li>hello</li></ul>
 _html
     assert_equal(
@@ -457,7 +457,7 @@ _tmpl
         },
       },
       result[:item],
-      'Parser.parse_html should be able to parse block runo tags'
+      'Parser.parse_html should be able to parse block bike tags'
     )
     assert_equal(
       {:index => '$(foo.message)$(foo)'},
@@ -465,7 +465,7 @@ _tmpl
       'Parser.parse_html[:tmpl] should be a proper template'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo">
   <li>hello</li>
 </ul>
@@ -492,7 +492,7 @@ _tmpl
         },
       },
       result[:item],
-      'Parser.parse_html should be able to parse block runo tags'
+      'Parser.parse_html should be able to parse block bike tags'
     )
     assert_equal(
       {:index => '$(foo.message)$(foo)'},
@@ -500,7 +500,7 @@ _tmpl
       'Parser.parse_html[:tmpl] should be a proper template'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 hello <ul class="app-blog" id="foo"><li>hello</li></ul> world
 _html
     assert_equal(
@@ -523,7 +523,7 @@ _tmpl
         },
       },
       result[:item],
-      'Parser.parse_html should be able to parse block runo tags'
+      'Parser.parse_html should be able to parse block bike tags'
     )
     assert_equal(
       {:index => <<'_html'},
@@ -533,7 +533,7 @@ _html
       'Parser.parse_html[:tmpl] should be a proper template'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 hello <!-- cruel --> <ul class="app-blog" id="foo"><li>hello</li></ul> world
 _html
     assert_equal(
@@ -556,7 +556,7 @@ _tmpl
         },
       },
       result[:item],
-      'Parser.parse_html should be able to parse block runo tags'
+      'Parser.parse_html should be able to parse block bike tags'
     )
     assert_equal(
       {:index => <<'_html'},
@@ -617,23 +617,23 @@ _html
 </ul>
 _html
     ].each {|html|
-      result = Runo::Parser.parse_html html
+      result = Bike::Parser.parse_html html
       assert_equal(
         {},
         result[:item],
-        'Parser.parse_html should skip runo tags in a comment'
+        'Parser.parse_html should skip bike tags in a comment'
       )
       assert_equal(
         {:index => html},
         result[:tmpl],
-        'Parser.parse_html should skip runo tags in a comment'
+        'Parser.parse_html should skip bike tags in a comment'
       )
     }
   end
 
-  def test_parse_block_tag_obsolete_runo_class
-    result = Runo::Parser.parse_html <<'_html'
-<ul class="runo-blog" id="foo"><li>hello</li></ul>
+  def test_parse_block_tag_obsolete_bike_class
+    result = Bike::Parser.parse_html <<'_html'
+<ul class="bike-blog" id="foo"><li>hello</li></ul>
 _html
     assert_equal(
       {
@@ -642,7 +642,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_html'.chomp,
-<ul class="runo-blog" id="@(name)">$()</ul>
+<ul class="bike-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _html
           },
@@ -656,12 +656,12 @@ _html
         },
       },
       result[:item],
-      'Parser.parse_html should be able to parse block runo tags'
+      'Parser.parse_html should be able to parse block bike tags'
     )
   end
 
   def test_parse_block_tag_obsolete_body_class
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><div>oops.</div><li class="body">hello</li></ul>
 _html
     assert_equal(
@@ -685,12 +685,12 @@ _html
         },
       },
       result[:item],
-      'Parser.parse_html should be able to parse block runo tags'
+      'Parser.parse_html should be able to parse block bike tags'
     )
   end
 
   def test_look_a_like_block_tag
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 hello <ul class="not-app-blog" id="foo"><li>hello</li></ul> world
 _html
     assert_equal(
@@ -698,12 +698,12 @@ _html
 hello <ul class="not-app-blog" id="foo"><li>hello</li></ul> world
 _tmpl
       result[:tmpl],
-      "Parser.parse_html[:tmpl] should skip a class which does not start with 'runo'"
+      "Parser.parse_html[:tmpl] should skip a class which does not start with 'bike'"
     )
   end
 
   def test_block_tags_with_options
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 hello
   <table class="app-blog" id="foo">
     <!-- 1..20 barbaz -->
@@ -749,7 +749,7 @@ _tmpl
   end
 
   def test_block_tags_with_tbody
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 hello
   <table class="app-blog" id="foo">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
@@ -800,7 +800,7 @@ _tmpl
   end
 
   def test_parse_xml
-    result = Runo::Parser.parse_xml <<'_html'
+    result = Bike::Parser.parse_xml <<'_html'
 <channel class="app-rss">
   <link>@(href)</link>
   <item class="model">
@@ -845,7 +845,7 @@ _xml
   end
 
   def test_parse_item_label
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><li title="Greeting">hello</li></ul>
 _html
     assert_equal(
@@ -854,7 +854,7 @@ _html
       'Parser.parse_html should pick up item labels from title attrs'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><!-- foo --><li title="Greeting">hello</li></ul>
 _html
     assert_equal(
@@ -863,7 +863,7 @@ _html
       'Parser.parse_html should pick up item labels from title attrs'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><!-- foo --><li><div title="Foo">hello</div></li></ul>
 _html
     assert_nil(
@@ -873,7 +873,7 @@ _html
   end
 
   def test_parse_item_label_plural
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><li title="tEntry, tEntries">hello</li></ul>
 _html
     assert_equal(
@@ -883,11 +883,11 @@ _html
     )
     assert_equal(
       ['tEntry', 'tEntries'],
-      Runo::I18n.msg['tEntry'],
+      Bike::I18n.msg['tEntry'],
       'Parser.parse_html should I18n.merge_msg! the plural item labels'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><li title="tFooFoo, BarBar, BazBaz">hello</li></ul>
 _html
     assert_equal(
@@ -897,11 +897,11 @@ _html
     )
     assert_equal(
       ['tFooFoo', 'BarBar', 'BazBaz'],
-      Runo::I18n.msg['tFooFoo'],
+      Bike::I18n.msg['tFooFoo'],
       'Parser.parse_html should I18n.merge_msg! the plural item labels'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo"><li title="tQux">hello</li></ul>
 _html
     assert_equal(
@@ -911,13 +911,13 @@ _html
     )
     assert_equal(
       ['tQux', 'tQux', 'tQux', 'tQux'],
-      Runo::I18n.msg['tQux'],
+      Bike::I18n.msg['tQux'],
       'Parser.parse_html should repeat a singular label to fill all possible plural forms'
     )
   end
 
   def test_block_tags_with_nested_tbody
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 hello
   <table class="app-blog" id="foo">
     <thead><tr><th>BAR</th><th>BAZ</th></tr></thead>
@@ -960,7 +960,7 @@ _tmpl
   end
 
   def test_nested_block_tags
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul class="app-blog" id="foo">
   <li>
     <ul class="app-blog" id="bar"><li>baz</li></ul>
@@ -1012,7 +1012,7 @@ _tmpl
         },
       },
       result[:item],
-      'Parser.parse_html should be able to parse nested block runo tags'
+      'Parser.parse_html should be able to parse nested block bike tags'
     )
     assert_equal(
       {:index => '$(foo.message)$(foo)'},
@@ -1022,7 +1022,7 @@ _tmpl
   end
 
   def test_combination
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <html>
   <h1>$(title=text 32)</h1>
   <ul id="foo" class="app-blog">
@@ -1075,7 +1075,7 @@ _tmpl
         },
       },
       result[:item],
-      'Parser.parse_html should be able to parse combination of mixed runo tags'
+      'Parser.parse_html should be able to parse combination of mixed bike tags'
     )
     assert_equal(
       {:index => <<'_tmpl'},
@@ -1090,7 +1090,7 @@ _tmpl
 
   def test_gsub_block
     match = nil
-    result = Runo::Parser.gsub_block('a<div class="foo">bar</div>c', 'foo') {|open, inner, close|
+    result = Bike::Parser.gsub_block('a<div class="foo">bar</div>c', 'foo') {|open, inner, close|
       match = [open, inner, close]
       'b'
     }
@@ -1105,7 +1105,7 @@ _tmpl
       'Parser.gsub_block should pass the matching element to its block'
     )
 
-    result = Runo::Parser.gsub_block('<p><div class="foo">bar</div></p>', 'foo') {|open, inner, close|
+    result = Bike::Parser.gsub_block('<p><div class="foo">bar</div></p>', 'foo') {|open, inner, close|
       match = [open, inner, close]
       'b'
     }
@@ -1120,7 +1120,7 @@ _tmpl
       'Parser.gsub_block should pass the matching element to its block'
     )
 
-    result = Runo::Parser.gsub_block('a<p><div class="foo">bar</div></p>c', 'foo') {|open, inner, close|
+    result = Bike::Parser.gsub_block('a<p><div class="foo">bar</div></p>c', 'foo') {|open, inner, close|
       match = [open, inner, close]
       'b'
     }
@@ -1138,7 +1138,7 @@ _tmpl
 
   def _test_gsub_action_tmpl(html)
     result = {}
-    html = Runo::Parser.gsub_action_tmpl(html) {|id, action, *tmpl|
+    html = Bike::Parser.gsub_action_tmpl(html) {|id, action, *tmpl|
       result[:id]     = id
       result[:action] = action
       result[:tmpl]   = tmpl.join
@@ -1254,7 +1254,7 @@ _tmpl
   end
 
   def test_action_tmpl_in_ss
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <html>
   <ul id="foo" class="app-blog">
     <li>$(subject=text)</li>
@@ -1280,7 +1280,7 @@ _tmpl
   end
 
   def test_action_tmpl_in_ss_with_nil_id
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <html>
   <ul id="main" class="app-blog">
     <li>$(subject=text)</li>
@@ -1306,7 +1306,7 @@ _tmpl
   end
 
   def test_action_tmpl_in_ss_with_non_existent_id
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <html>
   <ul id="main" class="app-blog">
     <li>$(subject=text)</li>
@@ -1330,7 +1330,7 @@ _tmpl
   end
 
   def test_action_tmpl_in_ss_with_nested_action_tmpl
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <html>
   <ul id="foo" class="app-blog">
     <li>$(subject=text)</li>
@@ -1366,7 +1366,7 @@ _html
       'Parser.parse_html should parse nested action templates'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <html>
   <ul id="foo" class="app-blog">
     <li>$(subject=text)</li>
@@ -1382,7 +1382,7 @@ _html
   end
 
   def test_action_tmpl_in_sd
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
   <div class="navi">bar</div>
@@ -1403,7 +1403,7 @@ _html
   end
 
   def test_action_tmpl_in_sd_with_nested_action_tmpl
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
   <div class="navi"><span class="navi_prev">prev</span></div>
@@ -1424,7 +1424,7 @@ _html
   end
 
   def test_action_tmpl_in_comment
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
   <!--
@@ -1437,7 +1437,7 @@ _html
       'Parser.parse_html should skip action templates in a comment'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
   <div class="navi"><!--<span class="navi_prev">prev</span>--></div>
@@ -1453,7 +1453,7 @@ _html
   end
 
   def test_supplement_sd
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
 </ul>
@@ -1464,7 +1464,7 @@ _html
       'Parser.supplement_sd should supplement sd[:tmpl] with default menus'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul id="foo" class="app-blog">
   <div class="navi">bar</div>
   <li class="model">$(text)</li>
@@ -1476,7 +1476,7 @@ _html
       'Parser.supplement_sd should not supplement sd[:tmpl] when it already has the menu'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <div class="foo-navi">bar</div>
 <ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
@@ -1490,7 +1490,7 @@ _html
   end
 
   def test_supplement_ss
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul id="foo" class="app-blog">
   <li class="model">$(text)</li>
 </ul>
@@ -1501,7 +1501,7 @@ _html
       'Parser.supplement_ss should supplement ss[:tmpl] with default menus'
     )
 
-    result = Runo::Parser.parse_html <<'_html'
+    result = Bike::Parser.parse_html <<'_html'
 <ul id="foo" class="app-blog">
   <li class="model">$(text) $(.action_update)</li>
 </ul>

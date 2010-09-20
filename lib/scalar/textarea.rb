@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Textarea < Runo::Field
+class Bike::Textarea < Bike::Field
 
   def errors
     if (my[:max].to_i > 0) && (val.size > my[:max])
@@ -22,7 +22,7 @@ class Runo::Textarea < Runo::Field
   def _g_update(arg)
     <<_html
 <span class="#{_g_class arg}">
-  <textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}">#{Runo::Field.h val}</textarea>
+  <textarea name="#{my[:short_name]}" cols="#{my[:width]}" rows="#{my[:height]}">#{Bike::Field.h val}</textarea>
 #{_g_errors arg}</span>
 _html
   end

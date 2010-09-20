@@ -14,13 +14,13 @@ class TC_Meta < Test::Unit::TestCase
   end
 
   def test_owner
-    ss = Runo::Set::Static.new(
+    ss = Bike::Set::Static.new(
       :item => {
         '_owner' => {:klass => 'meta-owner'},
       }
     )
     assert_instance_of(
-      Runo::Meta::Owner,
+      Bike::Meta::Owner,
       ss.item('_owner'),
       "Set::Static#item('_owner') should be an instance of the meta field"
     )

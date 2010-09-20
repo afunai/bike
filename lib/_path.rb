@@ -3,38 +3,38 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Runo::Path
+module Bike::Path
 
   module_function
 
   def tid_of(path)
-    path[Runo::REX::TID]
+    path[Bike::REX::TID]
   end
 
   def steps_of(path)
-    _dirname(path).gsub(Runo::REX::PATH_ID, '').split('/').select {|step_or_cond|
+    _dirname(path).gsub(Bike::REX::PATH_ID, '').split('/').select {|step_or_cond|
       step_or_cond != '' &&
-      step_or_cond !~ Regexp.union(Runo::REX::COND, Runo::REX::COND_D, Runo::REX::TID)
+      step_or_cond !~ Regexp.union(Bike::REX::COND, Bike::REX::COND_D, Bike::REX::TID)
     }
   end
 
   def base_of(path)
-    base = Runo::Set::Static::Folder.root.item steps_of(path)
-    if base.is_a? Runo::Set::Static::Folder
-      base.item('main') || base.find {|item| item.is_a? Runo::Set::Dynamic } || base
+    base = Bike::Set::Static::Folder.root.item steps_of(path)
+    if base.is_a? Bike::Set::Static::Folder
+      base.item('main') || base.find {|item| item.is_a? Bike::Set::Dynamic } || base
     else
       base
     end
   end
 
   def conds_of(path)
-    dir   = _dirname path.gsub(Runo::REX::PATH_ID, '')
+    dir   = _dirname path.gsub(Bike::REX::PATH_ID, '')
     conds = $& ? {:id => sprintf('%.8d_%.4d', $1, $2)} : {}
 
     dir.split('/').inject(conds) {|conds, step_or_cond|
-      if step_or_cond =~ Runo::REX::COND
+      if step_or_cond =~ Bike::REX::COND
         conds[$1.intern] = $2
-      elsif step_or_cond =~ Runo::REX::COND_D
+      elsif step_or_cond =~ Bike::REX::COND_D
         conds[:d] = $&
       end
       conds
@@ -59,9 +59,9 @@ module Runo::Path
     ).collect {|cid|
       if cid == :id
         ids = Array(conds[:id]).collect {|id|
-          (id =~ /_(#{Runo::REX::ID_SHORT})$/) ? $1 : (id if Runo::REX::ID)
+          (id =~ /_(#{Bike::REX::ID_SHORT})$/) ? $1 : (id if Bike::REX::ID)
         }.compact
-        if (ids.size == 1) && (ids.first =~ Runo::REX::ID)
+        if (ids.size == 1) && (ids.first =~ Bike::REX::ID)
           '%s/%d/' % [$1, $2.to_i]
         elsif ids.size > 0
           "id=#{ids.join ','}/"

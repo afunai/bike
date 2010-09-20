@@ -1,11 +1,11 @@
-= Runo
+= Bike
 
-Runo is the easiest web application framework ever.
+Bike is the easiest web application framework ever.
 You can make various apps such like blog, forum, contact form by putting single (or several) HTML file with a bit of special markups. The view rules. There is no model definition, no server restart, and no coding at all.
 
 == Wiki
 
-http://wiki.github.com/afunai/runo/
+http://wiki.github.com/afunai/bike/
 
 == Features
 
@@ -16,40 +16,40 @@ http://wiki.github.com/afunai/runo/
 * You can make nested apps inside an app (e.g. blog comments inside a blog entry).
 * Authentication / Authorization / User admin are built in by default.
 * Storage can be plain YAML files (default), or any RDB via Sequel.
-* Runo itself is a Rack application.
+* Bike itself is a Rack application.
 
 == Quick Start
 
-This is a quick tutorial for making a simple web application using Runo.
+This is a quick tutorial for making a simple web application using Bike.
 
-=== Step 1 - Install Runo
+=== Step 1 - Install Bike
 
 Open a command line terminal. Type:
 
-  gem install runo
+  gem install bike
 
 If you want to make thumbnails for submitted images, you have to install QuickMagick as well.
 http://rubyforge.org/projects/quickmagick/
 
-=== Step 2 - Initialize a Runo Directory
+=== Step 2 - Initialize a Bike Directory
 
-In a command line terminal, go to an empty directory where you want to build Runo projects.
+In a command line terminal, go to an empty directory where you want to build Bike projects.
 Then type:
 
-  runo init
+  bike init
 
-This will create a "runo" directory, which includes:
+This will create a "bike" directory, which includes:
 
-  runo/
+  bike/
     config.ru
     skin/
 
 === Step 3 - Start a Test Server
 
-In the terminal, change to the newly created "runo" directory.
+In the terminal, change to the newly created "bike" directory.
 Type:
 
-  runo run
+  bike run
 
 === Step 4 - Try some examples
 
@@ -57,7 +57,7 @@ Now open this URL with your browser.
 
   http://localhost:9292/
 
-You will see the default homepage of Runo.
+You will see the default homepage of Bike.
 There is some links to examples such like Blog, Contact Form, Forum, etc. Just see what can be done by plain HTML files.
 
 === Step 5 - Create Your Own App
@@ -66,7 +66,7 @@ Let's call our app "fab".
 It is a web-based forum where logged in users can submit their own articles, and everybody can read them.
 We put links to signup / login at bottom of the app.
 
-Create a new directory under runo/skin/:
+Create a new directory under bike/skin/:
 
   mkdir skin/fab/
 
@@ -107,7 +107,7 @@ See the URL:
   http://localhost:9292/fab/
 
 You have just created your first app. Open a bottle of your favorite drink and make yourself comfortable.
-When you need more complicated tricks, HTMLs under skin/examples/ will be your help. Also, you should check out the wiki: http://wiki.github.com/afunai/runo/
+When you need more complicated tricks, HTMLs under skin/examples/ will be your help. Also, you should check out the wiki: http://wiki.github.com/afunai/bike/
 
 == Note on Patches/Pull Requests
  

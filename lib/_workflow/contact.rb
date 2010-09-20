@@ -3,12 +3,12 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Workflow::Contact < Runo::Workflow
+class Bike::Workflow::Contact < Bike::Workflow
 
   DEFAULT_META = {
     :p_size     => 10,
     :conds      => {:p => 'last'},
-    :item_label => Runo::I18n.n_('item', 'items', 1),
+    :item_label => Bike::I18n.n_('item', 'items', 1),
   }
 
   DEFAULT_SUB_ITEMS = {}

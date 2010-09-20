@@ -8,7 +8,7 @@ require "#{::File.dirname __FILE__}/t"
 class TC_Password < Test::Unit::TestCase
 
   def setup
-    @f = Runo::Field.instance(
+    @f = Bike::Field.instance(
       :klass   => 'password',
       :default => 'secret',
       :size    => 16
@@ -115,7 +115,7 @@ _html
   end
 
   def test_errors_on_load
-    Runo.client = 'root'
+    Bike.client = 'root'
 
     @f[:min] = 1
     @f.load ''

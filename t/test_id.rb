@@ -9,13 +9,13 @@ class TC_Id < Test::Unit::TestCase
 
   def setup
     meta = nil
-    Runo::Parser.gsub_scalar('$(foo meta-id 3 1..5)') {|id, m|
+    Bike::Parser.gsub_scalar('$(foo meta-id 3 1..5)') {|id, m|
       meta = m
       ''
     }
-    @f = Runo::Field.instance meta
+    @f = Bike::Field.instance meta
 
-    Runo.current[:base] = nil
+    Bike.current[:base] = nil
   end
 
   def teardown
@@ -55,14 +55,14 @@ class TC_Id < Test::Unit::TestCase
   end
 
   def test_new_id?
-    @f[:parent] = Runo::Set::Static.new(:id => '20100526_0001')
+    @f[:parent] = Bike::Set::Static.new(:id => '20100526_0001')
     assert_equal(
       false,
       @f.send(:new_id?),
       'Meta::Id#new_id? should return whether the ancestors is new or not'
     )
 
-    @f[:parent] = Runo::Set::Static.new(:id => '_001')
+    @f[:parent] = Bike::Set::Static.new(:id => '_001')
     assert_equal(
       true,
       @f.send(:new_id?),
@@ -71,14 +71,14 @@ class TC_Id < Test::Unit::TestCase
   end
 
   def test_get
-    @f[:parent] = Runo::Set::Static.new(:id => '_001')
+    @f[:parent] = Bike::Set::Static.new(:id => '_001')
     assert_equal(
       '<span class="meta-id"><input type="text" name="" value="" size="3" /></span>',
       @f.get(:action => :create),
       'Meta::Id#_g_create should return <input> if the ancestor is new'
     )
 
-    @f[:parent] = Runo::Set::Static.new(:id => '20100526_0001')
+    @f[:parent] = Bike::Set::Static.new(:id => '20100526_0001')
     assert_equal(
       '',
       @f.get(:action => :create),
@@ -92,14 +92,14 @@ class TC_Id < Test::Unit::TestCase
       'Meta::Id#get should return proper string'
     )
 
-    @f[:parent] = Runo::Set::Static.new(:id => '_001')
+    @f[:parent] = Bike::Set::Static.new(:id => '_001')
     assert_equal(
       '<span class="meta-id"><input type="text" name="" value="bar" size="3" /></span>',
       @f.get(:action => :update),
       'Meta::Id#_g_update should return <input> if the ancestor is new'
     )
 
-    @f[:parent] = Runo::Set::Static.new(:id => '20100526_0001')
+    @f[:parent] = Bike::Set::Static.new(:id => '20100526_0001')
     assert_equal(
       'bar',
       @f.get(:action => :update),
@@ -113,7 +113,7 @@ class TC_Id < Test::Unit::TestCase
       'Meta::Id#get should escape the special characters'
     )
 
-    @f[:parent] = Runo::Set::Static.new(:id => '_001')
+    @f[:parent] = Bike::Set::Static.new(:id => '_001')
     @f.load '<bar>'
     assert_equal(
       '<span class="meta-id error"><input type="text" name="" value="&lt;bar&gt;" size="3" /><span class="error_message">malformatted id</span>' + "\n</span>",
@@ -123,7 +123,7 @@ class TC_Id < Test::Unit::TestCase
   end
 
   def test_post_new_ancestor
-    @f[:parent] = Runo::Set::Static.new(:id => '_001')
+    @f[:parent] = Bike::Set::Static.new(:id => '_001')
     @f.create 'frank'
     assert_equal(
       'frank',
@@ -140,7 +140,7 @@ class TC_Id < Test::Unit::TestCase
   end
 
   def test_post_old_ancestor
-    @f[:parent] = Runo::Set::Static.new(:id => '20100526_0001')
+    @f[:parent] = Bike::Set::Static.new(:id => '20100526_0001')
     @f.load 'frank'
 
     @f.update 'bobby'
@@ -182,8 +182,8 @@ class TC_Id < Test::Unit::TestCase
   end
 
   def test_errors_duplicate_id
-    Runo.client = 'root'
-    sd = Runo::Set::Static::Folder.root.item('_users', 'main')
+    Bike.client = 'root'
+    sd = Bike::Set::Static::Folder.root.item('_users', 'main')
 
     sd.update(
       '_001' => {:action => :create, '_id' => 'test'}
@@ -203,7 +203,7 @@ class TC_Id < Test::Unit::TestCase
       'Meta::Id#errors should return no error if the current val is unique in the sd'
     )
 
-    f = Runo::Set::Static::Folder.root.item('_users', 'main', 'test', '_id')
+    f = Bike::Set::Static::Folder.root.item('_users', 'main', 'test', '_id')
     f.update 'test'
     assert_equal(
       [],

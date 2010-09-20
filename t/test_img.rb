@@ -8,7 +8,7 @@ require "#{::File.dirname __FILE__}/t"
 class TC_Img < Test::Unit::TestCase
 
   def setup
-    Runo.current[:uri] = nil
+    Bike.current[:uri] = nil
 
     File.open('t/skin/t_img/test.jpg') {|f|
       @img  = f.read
@@ -17,11 +17,11 @@ class TC_Img < Test::Unit::TestCase
     }
 
     meta = nil
-    Runo::Parser.gsub_scalar('$(foo img 32*32 1..100000 jpg, gif, png crop)') {|id, m|
+    Bike::Parser.gsub_scalar('$(foo img 32*32 1..100000 jpg, gif, png crop)') {|id, m|
       meta = m
       ''
     }
-    @f = Runo::Field.instance meta.merge(:id => 'foo')
+    @f = Bike::Field.instance meta.merge(:id => 'foo')
   end
 
   def test_meta
@@ -117,10 +117,10 @@ _eos
   end
 
   def test_get
-    Runo.client = 'root'
+    Bike.client = 'root'
 
-    @f[:parent] = Runo::Set::Static::Folder.root.item('t_img', 'main')
-    Runo.current[:base] = @f[:parent]
+    @f[:parent] = Bike::Set::Static::Folder.root.item('t_img', 'main')
+    Bike.current[:base] = @f[:parent]
     tid = @f[:parent][:tid]
 
     @f.load({})
@@ -188,8 +188,8 @@ _eos
   end
 
   def test_call_body
-    Runo.client = 'root'
-    sd = Runo::Set::Static::Folder.root.item('t_img', 'main')
+    Bike.client = 'root'
+    sd = Bike::Set::Static::Folder.root.item('t_img', 'main')
     sd.storage.clear
 
     # post a multipart request
@@ -203,10 +203,10 @@ Content-Transfer-Encoding: binary
 ---foobarbaz
 Content-Disposition: form-data; name="_token"
 
-#{Runo.token}
+#{Bike.token}
 ---foobarbaz--
 _eos
-    res = Rack::MockRequest.new(Runo.new).post(
+    res = Rack::MockRequest.new(Bike.new).post(
       'http://example.com/t_img/main/update.html',
       {
         :input           => input,
@@ -214,70 +214,70 @@ _eos
         'CONTENT_LENGTH' => input.respond_to?(:bytesize) ? input.bytesize : input.size,
       }
     )
-    tid = res.headers['Location'][Runo::REX::TID]
+    tid = res.headers['Location'][Bike::REX::TID]
 
     # commit the base
-    res = Rack::MockRequest.new(Runo.new).post(
+    res = Rack::MockRequest.new(Bike.new).post(
       "http://example.com/#{tid}/update.html",
       {
-        :input => ".status-public=create&_token=#{Runo.token}",
+        :input => ".status-public=create&_token=#{Bike.token}",
       }
     )
 
-    res.headers['Location'] =~ Runo::REX::PATH_ID
+    res.headers['Location'] =~ Bike::REX::PATH_ID
     new_id = sprintf('%.8d_%.4d', $1, $2)
 
-    res = Rack::MockRequest.new(Runo.new).get(
+    res = Rack::MockRequest.new(Bike.new).get(
       "http://example.com/t_img/#{new_id}/foo/foo.jpg"
     )
     assert_equal(
       'image/jpeg',
       res.headers['Content-Type'],
-      'Runo#call to a img item should return the mime type of the file'
+      'Bike#call to a img item should return the mime type of the file'
     )
     assert_equal(
       @img.respond_to?(:bytesize) ? @img.bytesize : @img.size,
       res.body.respond_to?(:bytesize) ? res.body.bytesize : res.body.size,
-      'Runo#call to a img item should return the binary body of the file'
+      'Bike#call to a img item should return the binary body of the file'
     )
 
-    res = Rack::MockRequest.new(Runo.new).get(
+    res = Rack::MockRequest.new(Bike.new).get(
       "http://example.com/t_img/#{new_id}/foo/foo_small.jpg"
     )
     assert_equal(
       'image/jpeg',
       res.headers['Content-Type'],
-      "Runo#call to 'file-small.*' should return the thumbnail of the file"
+      "Bike#call to 'file-small.*' should return the thumbnail of the file"
     )
     @file.rewind
     assert_equal(
       @f.send(:_thumbnail, @file).size,
       res.body.size,
-      "Runo#call to 'file-small.*' should return the thumbnail of the file"
+      "Bike#call to 'file-small.*' should return the thumbnail of the file"
     )
 
     # delete
-    Rack::MockRequest.new(Runo.new).post(
+    Rack::MockRequest.new(Bike.new).post(
       'http://example.com/t_img/update.html',
       {
-        :input => "#{new_id}.action=delete&.status-public=delete&_token=#{Runo.token}",
+        :input => "#{new_id}.action=delete&.status-public=delete&_token=#{Bike.token}",
       }
     )
-    res = Rack::MockRequest.new(Runo.new).get(
+    res = Rack::MockRequest.new(Bike.new).get(
       "http://example.com/t_img/#{new_id}/foo/foo.jpg"
     )
     assert_equal(
       404,
       res.status,
-      'Runo#call should delete child files as well'
+      'Bike#call should delete child files as well'
     )
-    res = Rack::MockRequest.new(Runo.new).get(
+    res = Rack::MockRequest.new(Bike.new).get(
       "http://example.com/t_img/#{new_id}/foo/foo_small.jpg"
     )
     assert_equal(
       404,
       res.status,
-      'Runo#call should delete child files as well'
+      'Bike#call should delete child files as well'
     )
   end
 

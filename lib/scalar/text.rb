@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Text < Runo::Field
+class Bike::Text < Bike::Field
 
   def initialize(meta = {})
     meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].first =~ /^\d+$/
@@ -26,7 +26,7 @@ class Runo::Text < Runo::Field
 
   def _g_update(arg)
     <<_html.chomp
-<span class="#{_g_class arg}"><input type="text" name="#{my[:short_name]}" value="#{Runo::Field.h val}" size="#{my[:size]}" />#{_g_errors arg}</span>
+<span class="#{_g_class arg}"><input type="text" name="#{my[:short_name]}" value="#{Bike::Field.h val}" size="#{my[:size]}" />#{_g_errors arg}</span>
 _html
   end
   alias :_g_create :_g_update

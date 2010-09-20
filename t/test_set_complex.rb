@@ -7,13 +7,13 @@ require "#{::File.dirname __FILE__}/t"
 
 class TC_Set_Complex < Test::Unit::TestCase
 
-  class ::Runo::Set::Dynamic
+  class ::Bike::Set::Dynamic
     def _g_vegetable(arg)
       "'potato'"
     end
   end
 
-  class ::Runo::Workflow::Pipco < ::Runo::Workflow
+  class ::Bike::Workflow::Pipco < ::Bike::Workflow
     DEFAULT_SUB_ITEMS = {
       '_owner' => {:klass => 'meta-owner'},
     }
@@ -28,7 +28,7 @@ class TC_Set_Complex < Test::Unit::TestCase
     end
   end
 
-  class ::Runo::Tomago < ::Runo::Field
+  class ::Bike::Tomago < ::Bike::Field
     def _get(arg)
       args = arg.keys.collect {|k| "#{k}=#{arg[k]}" }.sort
       "'#{val}'(#{args.join ', '})"
@@ -37,7 +37,7 @@ class TC_Set_Complex < Test::Unit::TestCase
 
   def setup
     # Set::Dynamic of Set::Static of (Scalar and (Set::Dynamic of Set::Static of Scalar))
-    @sd = Runo::Set::Dynamic.new(
+    @sd = Bike::Set::Dynamic.new(
       :id       => 'main',
       :klass    => 'set-dynamic',
       :workflow => 'pipco',
@@ -50,7 +50,7 @@ $(.navi)$(.submit)$(.action_create)
 _tmpl
       },
       :item     => {
-        'default' => Runo::Parser.parse_html(<<'_html')
+        'default' => Bike::Parser.parse_html(<<'_html')
   <li id="@(name)">
     $(name = tomago 32 :'nobody'): $(comment = tomago 64 :'hello.')
     <ul id="files" class="app-attachment">
@@ -113,11 +113,11 @@ _html
   end
 
   def teardown
-    Runo.client = nil
+    Bike.client = nil
   end
 
   def test_get_default
-    Runo.client = 'root' #nil
+    Bike.client = 'root' #nil
     result = @sd.get
 
     assert_match(
@@ -158,7 +158,7 @@ _html
   end
 
   def test_get_with_parent_action
-    Runo.client = 'root'
+    Bike.client = 'root'
     result = @sd.get(:action => :update)
 
     assert_match(
@@ -208,10 +208,10 @@ _html
   end
 
   def test_get_with_partial_permission
-    Runo.client = 'carl' # can edit only his own item
+    Bike.client = 'carl' # can edit only his own item
 
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Field#get should raise Error::Forbidden when an action is given but forbidden'
     ) {
       @sd.get(:action => :update, :conds => {:id => '20091123_0002'})
@@ -220,7 +220,7 @@ _html
     @sd.item('20091123_0002', 'comment')[:owner] = 'carl' # enclave in roy's item
 
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Field#get should not allow partially permitted get'
     ) {
       @sd.get(:action => :update, :conds => {:id => '20091123_0002'})
@@ -228,10 +228,10 @@ _html
   end
 
   def test_get_with_partial_action
-    Runo.client = 'root'
+    Bike.client = 'root'
 
-    Runo.current[:base] = @sd.item('20091123_0002', 'replies')
-    Runo.base[:tid] = '123.45'
+    Bike.current[:base] = @sd.item('20091123_0002', 'replies')
+    Bike.base[:tid] = '123.45'
 
     result = @sd.get(
       '20091123_0002' => {
@@ -261,7 +261,7 @@ _html
       <li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read, p_action=read)</li>
     </ul>
 <form id="form_main-20091123_0002-replies" method="post" enctype="multipart/form-data" action="/20091123_0002/replies/123.45/update.html">
-<input name="_token" type="hidden" value="#{Runo.token}" />
+<input name="_token" type="hidden" value="#{Bike.token}" />
     <ul id="main-20091123_0002-replies" class="app-pipco">
       <li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update, p_action=update)</a></li>
     </ul>
@@ -293,7 +293,7 @@ _html
       <li id="main-20091123_0002-files-20091123_0001">'roy.png'(action=read, p_action=read)</li>
     </ul>
 <form id="form_main-20091123_0002-replies" method="post" enctype="multipart/form-data" action="/20091123_0002/replies/123.45/update.html">
-<input name="_token" type="hidden" value="#{Runo.token}" />
+<input name="_token" type="hidden" value="#{Bike.token}" />
     <ul id="main-20091123_0002-replies" class="app-pipco">
       <li id="main-20091123_0002-replies-20091125_0002"><a>'oops.'(action=update, p_action=update)</a></li>
     </ul>
@@ -309,7 +309,7 @@ _html
   end
 
   def test_get_partial_forbidden
-    Runo.client = 'carl'
+    Bike.client = 'carl'
     assert_match(
       /\(action=update/,
       @sd.item('20091123_0001', 'files').get(:action => :update)
@@ -321,15 +321,15 @@ _html
 
     @sd.instance_variable_set(:@item_object, {}) # remove item('_001')
 
-    Runo.client = nil
+    Bike.client = nil
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Field#get should not show an inner attachment when the parent is forbidden'
     ) {
       @sd.item('20091123_0001', 'files').get(:action => :update)
     }
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Field#get should not show an inner attachment when the parent is forbidden'
     ) {
       @sd.item('20091123_0001', 'files', '20091123_0001').get(:action => :update)
@@ -337,7 +337,7 @@ _html
   end
 
   def test_post_partial
-    Runo.client = 'don'
+    Bike.client = 'don'
     original_val = YAML.load @sd.val.to_yaml
     @sd.update(
       '20091123_0002' => {
@@ -360,9 +360,9 @@ _html
   end
 
   def test_post_attachment_forbidden
-    Runo.client = nil
+    Bike.client = nil
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Field#post to an inner attachment w/o the perm of the parent should be forbidden'
     ) {
       @sd.update(
@@ -374,7 +374,7 @@ _html
       )
     }
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Field#post to an inner attachment w/o the perm of the parent should be forbidden'
     ) {
       @sd.update(
@@ -386,7 +386,7 @@ _html
       )
     }
     assert_raise(
-      Runo::Error::Forbidden,
+      Bike::Error::Forbidden,
       'Field#post to an inner attachment w/o the perm of the parent should be forbidden'
     ) {
       @sd.item('20091123_0002', 'files', '20091123_0001').update('file' => 'evil.gif')
@@ -394,7 +394,7 @@ _html
   end
 
   def test_commit_partial
-    Runo.client = 'don'
+    Bike.client = 'don'
     @sd.update(
       '20091123_0002' => {
         'replies' => {
@@ -434,7 +434,7 @@ _html
   end
 
   def test_post_mixed
-    Runo.client = 'don'
+    Bike.client = 'don'
 
     # create a sub-item on the pending item
     @sd.update(

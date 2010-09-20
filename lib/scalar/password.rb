@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo::Password < Runo::Field
+class Bike::Password < Bike::Field
 
   def initialize(meta = {})
     meta[:size] = $&.to_i if meta[:tokens] && meta[:tokens].find {|t| t =~ /^\d+$/ }

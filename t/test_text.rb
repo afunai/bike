@@ -9,11 +9,11 @@ class TC_Text < Test::Unit::TestCase
 
   def setup
     meta = nil
-    Runo::Parser.gsub_scalar('$(foo text 3 1..5)') {|id, m|
+    Bike::Parser.gsub_scalar('$(foo text 3 1..5)') {|id, m|
       meta = m
       ''
     }
-    @f = Runo::Field.instance meta
+    @f = Bike::Field.instance meta
   end
 
   def teardown

@@ -3,7 +3,7 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-class Runo
+class Bike
 
   lib_dir = ::File.dirname __FILE__
 
@@ -71,15 +71,15 @@ class Runo
   end
 
   def self.static(env)
-    @static ||= Rack::Directory.new Runo['skin_dir']
+    @static ||= Rack::Directory.new Bike['skin_dir']
     response = @static.call env
 
     if response.first == 404
       until ::File.readable? ::File.join(
-        Runo['skin_dir'],
-        env['PATH_INFO'].sub(%r{(/#{Runo::REX::DIR_STATIC}/).*}, '\\1')
+        Bike['skin_dir'],
+        env['PATH_INFO'].sub(%r{(/#{Bike::REX::DIR_STATIC}/).*}, '\\1')
       )
-        env['PATH_INFO'].sub!(%r{/[^/]+(?=/#{Runo::REX::DIR_STATIC}/)}, '') || break
+        env['PATH_INFO'].sub!(%r{/[^/]+(?=/#{Bike::REX::DIR_STATIC}/)}, '') || break
       end
       @static.call env
     else
@@ -93,34 +93,34 @@ class Runo
     method = req.request_method.downcase
     params = params_from_request req
     path   = req.path_info
-    tid    = Runo::Path.tid_of path
+    tid    = Bike::Path.tid_of path
 
     static_path = ::File.expand_path path
-    return Runo.static(env) if (
-      static_path =~ %r{/#{Runo::REX::DIR_STATIC}/} &&
-      static_path !~ %r{/#{Runo::REX::TID}/} &&
-      static_path !~ %r{/#{Runo::REX::ID.to_s.sub('^','')}/}
+    return Bike.static(env) if (
+      static_path =~ %r{/#{Bike::REX::DIR_STATIC}/} &&
+      static_path !~ %r{/#{Bike::REX::TID}/} &&
+      static_path !~ %r{/#{Bike::REX::ID.to_s.sub('^','')}/}
     )
 
-    Runo::I18n.lang = env['HTTP_ACCEPT_LANGUAGE']
+    Bike::I18n.lang = env['HTTP_ACCEPT_LANGUAGE']
 
-    Runo.current[:env]     = env
-    Runo.current[:uri]     = uri
-    Runo.current[:req]     = req
-    Runo.current[:session] = env['rack.session']
+    Bike.current[:env]     = env
+    Bike.current[:uri]     = uri
+    Bike.current[:req]     = req
+    Bike.current[:session] = env['rack.session']
 
-    if Runo.transaction[tid].is_a? Runo::Field
-      base = Runo.transaction[tid].item Runo::Path.steps_of(path.sub(/\A.*#{Runo::REX::TID}/, ''))
+    if Bike.transaction[tid].is_a? Bike::Field
+      base = Bike.transaction[tid].item Bike::Path.steps_of(path.sub(/\A.*#{Bike::REX::TID}/, ''))
     else
-      base = Runo::Path.base_of path
+      base = Bike::Path.base_of path
     end
     return response_not_found unless base
 
     base[:tid] = tid
-    Runo.current[:base] = base
+    Bike.current[:base] = base
 
     begin
-      if params[:action] == :logout && params[:token] == Runo.token
+      if params[:action] == :logout && params[:token] == Bike.token
         logout(base, params)
       elsif method == 'get'
         get(base, params)
@@ -128,19 +128,19 @@ class Runo
         login(base, params)
       elsif params[:action] == :preview
         preview(base, params)
-      elsif params[:token] != Runo.token
+      elsif params[:token] != Bike.token
         response_forbidden(:body => 'invalid token')
-      elsif Runo.transaction[tid] && !Runo.transaction[tid].is_a?(Runo::Field)
+      elsif Bike.transaction[tid] && !Bike.transaction[tid].is_a?(Bike::Field)
         response_unprocessable_entity(:body => 'transaction expired')
       else
         begin
           post(base, params)
-        rescue Runo::Error::Forbidden
+        rescue Bike::Error::Forbidden
           response_forbidden
         end
       end
-    rescue Runo::Error::Forbidden
-      if params[:action] && Runo.client == 'nobody'
+    rescue Bike::Error::Forbidden
+      if params[:action] && Bike.client == 'nobody'
         params[:dest_action] = (method == 'post') ? :index : params[:action]
         params[:action] = :login
       end
@@ -152,30 +152,30 @@ class Runo
   private
 
   def login(base, params)
-    user = Runo::Set::Static::Folder.root.item('_users', 'main', params['id'].to_s)
+    user = Bike::Set::Static::Folder.root.item('_users', 'main', params['id'].to_s)
     if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
-      Runo.client = params['id']
+      Bike.client = params['id']
     else
-      Runo.client = nil
-      raise Runo::Error::Forbidden
+      Bike.client = nil
+      raise Bike::Error::Forbidden
     end
-    path   = Runo::Path.path_of params[:conds]
+    path   = Bike::Path.path_of params[:conds]
     action = (params['dest_action'] =~ /\A\w+\z/) ? params['dest_action'] : 'index'
     response_see_other(
-      :location => "#{Runo.uri}#{base[:path]}/#{path}#{action}.html"
+      :location => "#{Bike.uri}#{base[:path]}/#{path}#{action}.html"
     )
   end
 
   def logout(base, params)
-    Runo.client = nil
-    path = Runo::Path.path_of params[:conds]
+    Bike.client = nil
+    path = Bike::Path.path_of params[:conds]
     response_see_other(
-      :location => "#{Runo.uri}#{base[:path]}/#{path}index.html"
+      :location => "#{Bike.uri}#{base[:path]}/#{path}index.html"
     )
   end
 
   def get(base, params)
-    if base.is_a? Runo::File
+    if base.is_a? Bike::File
       body = (params[:sub_action] == :small) ? base.thumbnail : base.body
       response_ok(
         :headers => {
@@ -190,14 +190,14 @@ class Runo
   end
 
   def preview(base, params)
-    Runo.transaction[base[:tid]] ||= base if base[:tid] =~ Runo::REX::TID
+    Bike.transaction[base[:tid]] ||= base if base[:tid] =~ Bike::REX::TID
 
     base.update params
     if base.commit(:temp) || params[:sub_action] == :delete
       id_step = result_step(base, params)
       action = "preview_#{params[:sub_action]}"
       response_see_other(
-        :location => "#{Runo.uri}/#{base[:tid]}/#{id_step}#{action}.html"
+        :location => "#{Bike.uri}/#{base[:tid]}/#{id_step}#{action}.html"
       )
     else
       params = {:action => :update}
@@ -207,16 +207,16 @@ class Runo
   end
 
   def post(base, params)
-    Runo.transaction[base[:tid]] ||= base if base[:tid] =~ Runo::REX::TID
+    Bike.transaction[base[:tid]] ||= base if base[:tid] =~ Bike::REX::TID
 
     base.update params
     if params[:status]
       if base[:folder].commit :persistent
-        Runo.transaction[base[:tid]] = result_summary base
+        Bike.transaction[base[:tid]] = result_summary base
         action = base.workflow.next_action base
         id_step = result_step(base, params) if base[:parent] == base[:folder] && action != :done
         response_see_other(
-          :location => "#{Runo.uri}/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
+          :location => "#{Bike.uri}/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
         )
       else
         params = {:action => :update}
@@ -227,7 +227,7 @@ class Runo
       base.commit :temp
       id_step = result_step(base, params)
       response_see_other(
-        :location => "#{Runo.uri}/#{base[:tid]}/#{id_step}update.html"
+        :location => "#{Bike.uri}/#{base[:tid]}/#{id_step}update.html"
       )
     end
   end
@@ -245,36 +245,36 @@ class Runo
       id = base.result.values.collect {|item| item[:id] }
     else
       id = params.keys.select {|id|
-        id.is_a?(::String) && (id[Runo::REX::ID] || id[Runo::REX::ID_NEW])
+        id.is_a?(::String) && (id[Bike::REX::ID] || id[Bike::REX::ID_NEW])
       }
     end
-    Runo::Path.path_of(:id => id)
+    Bike::Path.path_of(:id => id)
   end
 
   def _get(f, params)
     params[:action] ||= f.default_action
-    until f.is_a? Runo::Set::Static::Folder
+    until f.is_a? Bike::Set::Static::Folder
       params = {
         :action     => (f.default_action == :read) ? :read : nil,
         :sub_action => f.send(:summary?, params) ? nil : (params[:sub_action] || :detail),
         f[:id]      => params,
       }
-      params[:conds] = {:id => f[:id]} if f[:parent].is_a? Runo::Set::Dynamic
+      params[:conds] = {:id => f[:id]} if f[:parent].is_a? Bike::Set::Dynamic
       f = f[:parent]
-    end if f.is_a? Runo::Set::Dynamic
+    end if f.is_a? Bike::Set::Dynamic
 
     f.get params
   end
 
   def params_from_request(req)
     params = {
-      :action     => Runo::Path.action_of(req.path_info),
-      :sub_action => Runo::Path.sub_action_of(req.path_info),
+      :action     => Bike::Path.action_of(req.path_info),
+      :sub_action => Bike::Path.sub_action_of(req.path_info),
     }
     params.merge! rebuild_params(req.params)
 
     params[:conds] ||= {}
-    params[:conds].merge! Runo::Path.conds_of(req.path_info)
+    params[:conds].merge! Bike::Path.conds_of(req.path_info)
 
     params
   end

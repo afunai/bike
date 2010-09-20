@@ -3,14 +3,14 @@
 # Author::    Akira FUNAI
 # Copyright:: Copyright (c) 2009 Akira FUNAI
 
-module Runo::Parser
+module Bike::Parser
 
   module_function
 
   def parse_html(html, action = :index, xml = false)
     item = {}
 
-    html = gsub_block(html, '(?:app|runo)-\w+') {|open, inner, close| # "runo" is obsolete at 0.1.1
+    html = gsub_block(html, '(?:app|bike)-\w+') {|open, inner, close| # "bike" is obsolete at 0.1.1
       id = open[/id="(.+?)"/i, 1] || 'main'
       item[id] = parse_block(open, inner, close, action, xml)
       "$(#{id})"
@@ -106,7 +106,7 @@ module Runo::Parser
 
   def scrape_meta(html)
     meta = {}
-    html.gsub!(/(?:^\s+)?<meta[^>]*name="runo-([^"]+)[^>]*content="([^"]+).*?>\n?/i) {
+    html.gsub!(/(?:^\s+)?<meta[^>]*name="bike-([^"]+)[^>]*content="([^"]+).*?>\n?/i) {
       meta[$1.intern] = $2.include?(',') ? $2.split(/\s*,\s*/) : $2
       ''
     }
@@ -118,7 +118,7 @@ module Runo::Parser
       label_plural = $2.to_s.split(/,/).collect {|s| s.strip }
       label_plural *= 4 if label_plural.size == 1
       label = label_plural.first
-      Runo::I18n.msg[label] ||= label_plural
+      Bike::I18n.msg[label] ||= label_plural
       label
     end
   end
@@ -153,7 +153,7 @@ module Runo::Parser
 
   def parse_block(open_tag, inner_html, close_tag, action = :index, xml = false)
     open_tag.sub!(/id=".*?"/i, 'id="@(name)"')
-    workflow = open_tag[/class=(?:"|".*?\s)(?:app|runo)-(\w+)/, 1] # "runo" is obsolete at 0.1.1
+    workflow = open_tag[/class=(?:"|".*?\s)(?:app|bike)-(\w+)/, 1] # "bike" is obsolete at 0.1.1
 
     if inner_html =~ /<(?:\w+).+?class=(?:"|"[^"]*?\s)(model|body)(?:"|\s)/i # "body" is obsolete at 0.1.1
       item_html = ''
@@ -179,7 +179,7 @@ module Runo::Parser
     tmpl[action] = "#{open_tag}#{sd_tmpl}#{close_tag}"
     tmpl[action].gsub!(/\s*class=".*?"/,'') if xml
 
-    item_meta = Runo::Parser.parse_html(item_html, action, xml)
+    item_meta = Bike::Parser.parse_html(item_html, action, xml)
     supplement_ss(item_meta[:tmpl][action], action) unless xml || workflow == 'attachment'
 
     sd = {

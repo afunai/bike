@@ -4,18 +4,18 @@ require 'rake'
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
-    gem.name              = 'runo'
-    gem.rubyforge_project = 'runo'
+    gem.name              = 'bike'
+    gem.rubyforge_project = 'bike'
     gem.summary           = 'The laziest web application framework'
     gem.description       = <<'_eos'
-Runo is a web application framework that can make feature-rich apps by HTML files only.
+Bike is a web application framework that can make feature-rich apps by HTML files only.
 You need no database setup (by default), no scheme definition, no command-line voodoo.
 Just put a good old HTML file under skin/, and your new app is already running.
 _eos
 
     gem.authors  = ['Akira FUNAI']
     gem.email    = 'akira@funai.com'
-    gem.homepage = 'http://github.com/afunai/runo'
+    gem.homepage = 'http://github.com/afunai/bike'
 
     gem.files = FileList[
       'bin/*',
@@ -28,7 +28,7 @@ _eos
       't/skin/**/*',
     ].to_a
     gem.test_files = FileList['t/test_*.rb']
-    gem.executables = ['runo']
+    gem.executables = ['bike']
 
     gem.add_dependency('rack',    '>= 0.9')
     gem.add_dependency('sequel',  '>= 3.0')
@@ -74,7 +74,7 @@ Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "runo #{version}"
+  rdoc.title = "bike #{version}"
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end

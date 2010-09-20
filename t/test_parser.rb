@@ -631,9 +631,9 @@ _html
     }
   end
 
-  def test_parse_block_tag_obsolete_bike_class
+  def test_parse_block_tag_obsolete_runo_class
     result = Bike::Parser.parse_html <<'_html'
-<ul class="bike-blog" id="foo"><li>hello</li></ul>
+<ul class="runo-blog" id="foo"><li>hello</li></ul>
 _html
     assert_equal(
       {
@@ -642,7 +642,7 @@ _html
           :workflow => 'blog',
           :tmpl     => {
             :index => <<'_html'.chomp,
-<ul class="bike-blog" id="@(name)">$()</ul>
+<ul class="runo-blog" id="@(name)">$()</ul>
 $(.navi)$(.submit)$(.action_create)
 _html
           },
@@ -656,7 +656,7 @@ _html
         },
       },
       result[:item],
-      'Parser.parse_html should be able to parse block bike tags'
+      'Parser.parse_html should be able to parse old runo tags'
     )
   end
 

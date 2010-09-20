@@ -10,7 +10,7 @@ module Bike::Parser
   def parse_html(html, action = :index, xml = false)
     item = {}
 
-    html = gsub_block(html, '(?:app|bike)-\w+') {|open, inner, close| # "bike" is obsolete at 0.1.1
+    html = gsub_block(html, '(?:app|runo)-\w+') {|open, inner, close| # "runo" is obsolete at 0.1.1
       id = open[/id="(.+?)"/i, 1] || 'main'
       item[id] = parse_block(open, inner, close, action, xml)
       "$(#{id})"
@@ -153,7 +153,7 @@ module Bike::Parser
 
   def parse_block(open_tag, inner_html, close_tag, action = :index, xml = false)
     open_tag.sub!(/id=".*?"/i, 'id="@(name)"')
-    workflow = open_tag[/class=(?:"|".*?\s)(?:app|bike)-(\w+)/, 1] # "bike" is obsolete at 0.1.1
+    workflow = open_tag[/class=(?:"|".*?\s)(?:app|runo)-(\w+)/, 1] # "runo" is obsolete at 0.1.1
 
     if inner_html =~ /<(?:\w+).+?class=(?:"|"[^"]*?\s)(model|body)(?:"|\s)/i # "body" is obsolete at 0.1.1
       item_html = ''

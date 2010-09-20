@@ -5,7 +5,7 @@ You can make various apps such like blog, forum, contact form by putting single 
 
 == Wiki
 
-http://wiki.github.com/afunai/bike/
+http://github.com/afunai/bike/wiki
 
 == Features
 
@@ -107,7 +107,7 @@ See the URL:
   http://localhost:9292/fab/
 
 You have just created your first app. Open a bottle of your favorite drink and make yourself comfortable.
-When you need more complicated tricks, HTMLs under skin/examples/ will be your help. Also, you should check out the wiki: http://wiki.github.com/afunai/bike/
+When you need more complicated tricks, HTMLs under skin/examples/ will be your help. Also, you should check out the wiki: http://github.com/afunai/bike/wiki
 
 == Note on Patches/Pull Requests
  

@@ -46,6 +46,35 @@ class Bike::Workflow
     @sd = sd
   end
 
+  def call(method, params)
+    if params[:action] == :logout && params[:token] == Bike.token
+      logout(params)
+    elsif method == 'get'
+      get(params)
+    elsif params[:action] == :login
+      login(params)
+    elsif params[:action] == :preview
+      preview(params)
+    elsif params[:token] != Bike.token
+      Bike::Response.forbidden(:body => 'invalid token')
+    elsif Bike.transaction[@sd[:tid]] && !Bike.transaction[@sd[:tid]].is_a?(Bike::Field)
+      Bike::Response.unprocessable_entity(:body => 'transaction expired')
+    else
+      begin
+        post(params)
+      rescue Bike::Error::Forbidden
+        Bike::Response.forbidden
+      end
+    end
+  rescue Bike::Error::Forbidden
+    if params[:action] && Bike.client == 'nobody'
+      params[:dest_action] = (method == 'post') ? :index : params[:action]
+      params[:action] = :login
+    end
+    Bike::Response.unprocessable_entity(:body => _g_default(params)) rescue Bike::Response.forbidden
+# TODO: rescue Error::System etc.
+  end
+
   def default_sub_items
     self.class.const_get :DEFAULT_SUB_ITEMS
   end
@@ -84,6 +113,124 @@ class Bike::Workflow
 
   def next_action(base)
     (!base.result || base.result.values.all? {|item| item.permit? :read }) ? :read_detail : :done
+  end
+
+  private
+
+  def login(params)
+    user = Bike::Set::Static::Folder.root.item('_users', 'main', params['id'].to_s)
+    if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
+      Bike.client = params['id']
+    else
+      Bike.client = nil
+      raise Bike::Error::Forbidden
+    end
+    path   = Bike::Path.path_of params[:conds]
+    action = (params['dest_action'] =~ /\A\w+\z/) ? params['dest_action'] : 'index'
+    Bike::Response.see_other(
+      :location => "#{Bike.uri}#{@sd[:path]}/#{path}#{action}.html"
+    )
+  end
+
+  def logout(params)
+    Bike.client = nil
+    path = Bike::Path.path_of params[:conds]
+    Bike::Response.see_other(
+      :location => "#{Bike.uri}#{@sd[:path]}/#{path}index.html"
+    )
+  end
+
+  def get(params)
+    if @sd.is_a? Bike::File
+      body = (params[:sub_action] == :small) ? @sd.thumbnail : @sd.body
+      Bike::Response.ok(
+        :headers => {
+          'Content-Type'   => @sd.val['type'],
+          'Content-Length' => body.to_s.size.to_s,
+        },
+        :body    => body
+      )
+    else
+      Bike::Response.ok :body => _g_default(params)
+    end
+  end
+
+  def _g_default(params)
+    f = @sd
+    params[:action] ||= f.default_action
+    until f.is_a? Bike::Set::Static::Folder
+      params = {
+        :action     => (f.default_action == :read) ? :read : nil,
+        :sub_action => f.send(:summary?, params) ? nil : (params[:sub_action] || :detail),
+        f[:id]      => params,
+      }
+      params[:conds] = {:id => f[:id]} if f[:parent].is_a? Bike::Set::Dynamic
+      f = f[:parent]
+    end if f.is_a? Bike::Set::Dynamic
+
+    f.get params
+  end
+
+  def preview(params)
+    Bike.transaction[@sd[:tid]] ||= @sd if @sd[:tid] =~ Bike::REX::TID
+
+    @sd.update params
+    if @sd.commit(:temp) || params[:sub_action] == :delete
+      id_step = result_step(params)
+      action = "preview_#{params[:sub_action]}"
+      Bike::Response.see_other(
+        :location => "#{Bike.uri}/#{@sd[:tid]}/#{id_step}#{action}.html"
+      )
+    else
+      params = {:action => :update}
+      params[:conds] = {:id => @sd.errors.keys}
+      return Bike::Response.unprocessable_entity(:body => _g_default(params))
+    end
+  end
+
+  def post(params)
+    Bike.transaction[@sd[:tid]] ||= @sd if @sd[:tid] =~ Bike::REX::TID
+
+    @sd.update params
+    if params[:status]
+      if @sd[:folder].commit :persistent
+        Bike.transaction[@sd[:tid]] = result_summary
+        action = @sd.workflow.next_action @sd
+        id_step = result_step(params) if @sd[:parent] == @sd[:folder] && action != :done
+        Bike::Response.see_other(
+          :location => "#{Bike.uri}/#{@sd[:tid]}#{@sd[:path]}/#{id_step}#{action}.html"
+        )
+      else
+        params = {:action => :update}
+        params[:conds] = {:id => @sd.errors.keys}
+        Bike::Response.unprocessable_entity :body => _g_default(params)
+      end
+    else
+      @sd.commit :temp
+      id_step = result_step(params)
+      Bike::Response.see_other(
+        :location => "#{Bike.uri}/#{@sd[:tid]}/#{id_step}update.html"
+      )
+    end
+  end
+
+  def result_summary
+    (@sd.result || {}).values.inject({}) {|summary, item|
+      item_result = item.result.is_a?(::Symbol) ? item.result : :update
+      summary[item_result] = summary[item_result].to_i + 1
+      summary
+    }
+  end
+
+  def result_step(params)
+    if @sd.result
+      id = @sd.result.values.collect {|item| item[:id] }
+    else
+      id = params.keys.select {|id|
+        id.is_a?(::String) && (id[Bike::REX::ID] || id[Bike::REX::ID_NEW])
+      }
+    end
+    Bike::Path.path_of(:id => id)
   end
 
 end

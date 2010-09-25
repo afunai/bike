@@ -25,12 +25,12 @@ class Bike::Workflow
     :delete => 0b11111,
   }
 
-  def self.instance(sd)
-    klass = sd[:workflow].to_s.capitalize
+  def self.instance(f)
+    klass = (f[:sd] && f[:sd][:workflow]).to_s.capitalize
     if klass != ''
-      self.const_get(klass).new sd
+      self.const_get(klass).new f
     else
-      self.new sd
+      self.new f
     end
   end
 

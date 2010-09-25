@@ -7,20 +7,19 @@ class Bike::Set::Dynamic < Bike::Field
 
   include Bike::Set
 
-  attr_reader :storage, :workflow
+  attr_reader :storage
 
   def initialize(meta = {})
     @meta        = meta
     @storage     = Bike::Storage.instance self
-    @workflow    = Bike::Workflow.instance self
-    @meta        = @workflow.class.const_get(:DEFAULT_META).merge @meta
+    @meta        = workflow.class.const_get(:DEFAULT_META).merge @meta
     @item_object = {}
 
     my[:item] ||= {
       'default' => {:item => {}}
     }
     my[:item].each {|type, item_meta|
-      item_meta[:item] = @workflow.default_sub_items.merge item_meta[:item]
+      item_meta[:item] = workflow.default_sub_items.merge item_meta[:item]
     }
 
     my[:p_size] = meta[:max] if meta[:max]
@@ -50,7 +49,7 @@ class Bike::Set::Dynamic < Bike::Field
   end
 
   def commit(type = :temp)
-    @workflow.before_commit
+    workflow.before_commit
 
     items = pending_items
     items.each {|id, item|
@@ -66,7 +65,7 @@ class Bike::Set::Dynamic < Bike::Field
     if valid?
       @result = (@action == :update) ? items : @action
       @action = nil if type == :persistent
-      @workflow.after_commit
+      workflow.after_commit
       self
     end
   end
@@ -78,7 +77,7 @@ class Bike::Set::Dynamic < Bike::Field
   end
 
   def _get(arg)
-    (@workflow._get(arg) || super) unless @workflow._hide? arg
+    (workflow._get(arg) || super) unless workflow._hide? arg
   end
 
   def _get_by_tmpl(arg, tmpl = '')
@@ -96,7 +95,7 @@ _html
   end
 
   def _get_by_self_reference(arg)
-    super unless @workflow._hide?(arg)
+    super unless workflow._hide?(arg)
   end
 
   def permit_get?(arg)

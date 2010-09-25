@@ -111,6 +111,10 @@ class Bike::Field
     roles
   end
 
+  def workflow
+    @workflow ||= Bike::Workflow.instance self
+  end
+
   def permit?(action)
     return false if action == :create && @result == :load
     return true unless my[:sd]

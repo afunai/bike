@@ -114,7 +114,7 @@ class Bike
     else
       base = Bike::Path.base_of path
     end
-    return response_not_found unless base
+    return Bike::Response.not_found unless base
 
     base[:tid] = tid
     Bike.current[:base] = base
@@ -129,14 +129,14 @@ class Bike
       elsif params[:action] == :preview
         preview(base, params)
       elsif params[:token] != Bike.token
-        response_forbidden(:body => 'invalid token')
+        Bike::Response.forbidden(:body => 'invalid token')
       elsif Bike.transaction[tid] && !Bike.transaction[tid].is_a?(Bike::Field)
-        response_unprocessable_entity(:body => 'transaction expired')
+        Bike::Response.unprocessable_entity(:body => 'transaction expired')
       else
         begin
           post(base, params)
         rescue Bike::Error::Forbidden
-          response_forbidden
+          Bike::Response.forbidden
         end
       end
     rescue Bike::Error::Forbidden
@@ -144,7 +144,7 @@ class Bike
         params[:dest_action] = (method == 'post') ? :index : params[:action]
         params[:action] = :login
       end
-      response_unprocessable_entity(:body => _get(base, params)) rescue response_forbidden
+      Bike::Response.unprocessable_entity(:body => _get(base, params)) rescue Bike::Response.forbidden
 # TODO: rescue Error::System etc.
     end
   end
@@ -161,7 +161,7 @@ class Bike
     end
     path   = Bike::Path.path_of params[:conds]
     action = (params['dest_action'] =~ /\A\w+\z/) ? params['dest_action'] : 'index'
-    response_see_other(
+    Bike::Response.see_other(
       :location => "#{Bike.uri}#{base[:path]}/#{path}#{action}.html"
     )
   end
@@ -169,7 +169,7 @@ class Bike
   def logout(base, params)
     Bike.client = nil
     path = Bike::Path.path_of params[:conds]
-    response_see_other(
+    Bike::Response.see_other(
       :location => "#{Bike.uri}#{base[:path]}/#{path}index.html"
     )
   end
@@ -177,7 +177,7 @@ class Bike
   def get(base, params)
     if base.is_a? Bike::File
       body = (params[:sub_action] == :small) ? base.thumbnail : base.body
-      response_ok(
+      Bike::Response.ok(
         :headers => {
           'Content-Type'   => base.val['type'],
           'Content-Length' => body.to_s.size.to_s,
@@ -185,7 +185,7 @@ class Bike
         :body    => body
       )
     else
-      response_ok :body => _get(base, params)
+      Bike::Response.ok :body => _get(base, params)
     end
   end
 
@@ -196,13 +196,13 @@ class Bike
     if base.commit(:temp) || params[:sub_action] == :delete
       id_step = result_step(base, params)
       action = "preview_#{params[:sub_action]}"
-      response_see_other(
+      Bike::Response.see_other(
         :location => "#{Bike.uri}/#{base[:tid]}/#{id_step}#{action}.html"
       )
     else
       params = {:action => :update}
       params[:conds] = {:id => base.errors.keys}
-      return response_unprocessable_entity(:body => _get(base, params))
+      return Bike::Response.unprocessable_entity(:body => _get(base, params))
     end
   end
 
@@ -215,18 +215,18 @@ class Bike
         Bike.transaction[base[:tid]] = result_summary base
         action = base.workflow.next_action base
         id_step = result_step(base, params) if base[:parent] == base[:folder] && action != :done
-        response_see_other(
+        Bike::Response.see_other(
           :location => "#{Bike.uri}/#{base[:tid]}#{base[:path]}/#{id_step}#{action}.html"
         )
       else
         params = {:action => :update}
         params[:conds] = {:id => base.errors.keys}
-        response_unprocessable_entity :body => _get(base, params)
+        Bike::Response.unprocessable_entity :body => _get(base, params)
       end
     else
       base.commit :temp
       id_step = result_step(base, params)
-      response_see_other(
+      Bike::Response.see_other(
         :location => "#{Bike.uri}/#{base[:tid]}/#{id_step}update.html"
       )
     end
@@ -312,85 +312,6 @@ class Bike
 
       params
     }
-  end
-
-  def response_ok(result = {})
-    body = result[:body].to_s
-    return response_not_found(result) if body.empty?
-    [
-      200,
-      (
-        result[:headers] ||
-        {
-          'Content-Type'   => 'text/html',
-          'Content-Length' => body.size.to_s,
-        }
-      ),
-      [body],
-    ]
-  end
-
-  def response_no_content(result = {})
-    [
-      204,
-      (result[:headers] || {}),
-      []
-    ]
-  end
-
-  def response_see_other(result = {})
-    body = <<_html
-<a href="#{result[:location]}">see other</a>
-_html
-    [
-      303,
-      {
-        'Content-Type'   => 'text/html',
-        'Content-Length' => body.size.to_s,
-        'Location'       => result[:location],
-      },
-      [body]
-    ]
-  end
-
-  def response_forbidden(result = {})
-    body = result[:body] || 'Forbidden'
-    [
-      403,
-      {
-        'Content-Type'   => 'text/html',
-        'Content-Length' => body.size.to_s,
-      },
-      [body],
-    ]
-  end
-
-  def response_not_found(result = {})
-    body = result[:body] || 'Not Found'
-    [
-      404,
-      {
-        'Content-Type'   => 'text/html',
-        'Content-Length' => body.size.to_s,
-      },
-      [body]
-    ]
-  end
-
-  def response_unprocessable_entity(result = {})
-    body = result[:body].to_s
-    return response_not_found(result) if body.empty?
-    [
-      422,
-      (
-        result[:headers] ||
-        {
-          'Content-Type'   => 'text/html',
-          'Content-Length' => body.size.to_s,
-        }
-      ),
-      [body],
-    ]
   end
 
 end

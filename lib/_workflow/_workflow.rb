@@ -114,10 +114,6 @@ class Bike::Workflow
   def after_commit
   end
 
-  def next_action(base)
-    (!base.result || base.result.values.all? {|item| item.permit? :read }) ? :read_detail : :done
-  end
-
   private
 
   def _g_default(params)
@@ -149,10 +145,9 @@ class Bike::Workflow
     if params[:status]
       if @sd[:folder].commit :persistent
         Bike.transaction[@sd[:tid]] = result_summary
-        action = @sd.workflow.next_action @sd
-        id_step = result_step(params) if @sd[:parent] == @sd[:folder] && action != :done
+        id_step = result_step(params) if @sd[:parent] == @sd[:folder] && next_action != :done
         Bike::Response.see_other(
-          :location => "#{Bike.uri}/#{@sd[:tid]}#{@sd[:path]}/#{id_step}#{action}.html"
+          :location => "#{Bike.uri}/#{@sd[:tid]}#{@sd[:path]}/#{id_step}#{next_action}.html"
         )
       else
         params = {:action => :update}
@@ -234,6 +229,10 @@ class Bike::Workflow
       }
     end
     Bike::Path.path_of(:id => id)
+  end
+
+  def next_action
+    (!@sd.result || @sd.result.values.all? {|item| item.permit? :read }) ? :read_detail : :done
   end
 
 end

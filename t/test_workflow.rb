@@ -367,8 +367,8 @@ class TC_Workflow < Test::Unit::TestCase
   def test_login
     Bike.client = nil
     res = Bike::Set::Static::Folder.root.item('foo', 'main').workflow.send(
-      :login,
-      {'id' => 'test', 'pw' => 'test', :conds => {:id => '20100222_0123'}, 'dest_action' => 'update'}
+      :_p_login,
+      {'id' => 'test', 'pw' => 'test', :conds => {:id => '20100222_0123'}, :dest_action => 'update'}
     )
     assert_equal(
       'test',
@@ -385,7 +385,7 @@ class TC_Workflow < Test::Unit::TestCase
   def test_login_default_action
     Bike.client = nil
     res = Bike::Set::Static::Folder.root.item('foo', 'main').workflow.send(
-      :login,
+      :_p_login,
       {'id' => 'test', 'pw' => 'test', :conds => {:id => '20100222_0123'}}
     )
     assert_match(
@@ -403,7 +403,7 @@ class TC_Workflow < Test::Unit::TestCase
       'Bike#login should raise Error::Forbidden given a non-existent user'
     ) {
       res = Bike::Set::Static::Folder.root.item('foo', 'main').workflow.send(
-        :login,
+        :_p_login,
         {'id' => 'non-existent', 'pw' => 'test'}
       )
     }
@@ -418,7 +418,7 @@ class TC_Workflow < Test::Unit::TestCase
       'Bike#login should raise Error::Forbidden given a empty password'
     ) {
       res = Bike::Set::Static::Folder.root.item('foo', 'main').workflow.send(
-        :login,
+        :_p_login,
         {'id' => 'test', 'pw' => nil}
       )
     }
@@ -433,12 +433,12 @@ class TC_Workflow < Test::Unit::TestCase
       'Bike#login should raise Error::Forbidden given a wrong password'
     ) {
       res = Bike::Set::Static::Folder.root.item('foo', 'main').workflow.send(
-        :login,
+        :_p_login,
         {
           'id' => 'test',
           'pw' => 'wrong',
           :conds => {:id => '20100222_0123'},
-          'dest_action' => 'update'
+          :dest_action => 'update'
         }
       )
     }
@@ -452,8 +452,8 @@ class TC_Workflow < Test::Unit::TestCase
   def test_logout
     Bike.client = 'frank'
     res = Bike::Set::Static::Folder.root.item('foo', 'main').workflow.send(
-      :logout,
-      {'id' => 'test', 'pw' => 'test', :conds => {:id => '20100222_0123'}}
+      :_p_logout,
+      {'id' => 'test', 'pw' => 'test', :conds => {:id => '20100222_0123'}, :token => Bike.token}
     )
     assert_equal(
       'nobody',

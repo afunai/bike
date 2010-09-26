@@ -772,7 +772,7 @@ _html
     res = Rack::MockRequest.new(@bike).post(
       "http://#{base_uri}/t_store/main/update.html",
       {
-        :input => ".action-preview_update=submit&_1-name=fz&_1-comment=howdy.&.status-public=create"
+        :input => ".action-preview_update=submit&_1-name=fz&_1-comment=howdy.&.status-public=create&_token=#{Bike.token}"
       }
     )
     tid = res.headers['Location'][Bike::REX::TID]
@@ -861,7 +861,7 @@ _html
     res = Rack::MockRequest.new(@bike).post(
       'http://example.com/t_store/main/update.html',
       {
-        :input => ".action-preview_update=submit&_1-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylong&_1-comment=howdy.&.status-public=create"
+        :input => ".action-preview_update=submit&_1-name=verrrrrrrrrrrrrrrrrrrrrrrrrrrrrrylong&_1-comment=howdy.&.status-public=create&_token=#{Bike.token}"
       }
     )
     assert_equal(
@@ -1053,6 +1053,16 @@ _html
       422,
       res.status,
       'Bike#call with :login action should return status 422 upon failure'
+    )
+    assert_match(
+      /^<html/,
+      res.body,
+      'Bike#call with :login action should return login form upon failure'
+    )
+    assert_match(
+      /name="dest_action" value="update"/,
+      res.body,
+      'Bike#call with :login action should keep the dest_action upon failure'
     )
   end
 

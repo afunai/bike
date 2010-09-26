@@ -47,32 +47,35 @@ class Bike::Workflow
   end
 
   def call(method, params)
-    if params[:action] == :logout && params[:token] == Bike.token
-      logout(params)
-    elsif method == 'get'
-      get(params)
-    elsif params[:action] == :login
-      login(params)
-    elsif params[:action] == :preview
-      preview(params)
-    elsif params[:token] != Bike.token
-      Bike::Response.forbidden(:body => 'invalid token')
-    elsif Bike.transaction[@sd[:tid]] && !Bike.transaction[@sd[:tid]].is_a?(Bike::Field)
-      Bike::Response.unprocessable_entity(:body => 'transaction expired')
-    else
-      begin
-        post(params)
-      rescue Bike::Error::Forbidden
-        Bike::Response.forbidden
-      end
-    end
+    (method == 'post') ? post(params) : get(params)
   rescue Bike::Error::Forbidden
     if params[:action] && Bike.client == 'nobody'
-      params[:dest_action] = (method == 'post') ? :index : params[:action]
+      params[:dest_action] ||= (method == 'post') ? :index : params[:action]
       params[:action] = :login
     end
-    Bike::Response.unprocessable_entity(:body => _g_default(params)) rescue Bike::Response.forbidden
+    Bike::Response.unprocessable_entity(:body => _g_default(params)[2]) rescue Bike::Response.forbidden
 # TODO: rescue Error::System etc.
+  end
+
+  def get(params)
+    if @sd.is_a? Bike::File
+      body = (params[:sub_action] == :small) ? @sd.thumbnail : @sd.body
+      Bike::Response.ok(
+        :headers => {
+          'Content-Type'   => @sd.val['type'],
+          'Content-Length' => body.to_s.size.to_s,
+        },
+        :body    => body
+      )
+    else
+      m = "_g_#{params[:action]}"
+      respond_to?(m, true) ? __send__(m, params) : _g_default(params)
+    end
+  end
+
+  def post(params)
+    m = "_p_#{params[:action]}"
+    respond_to?(m, true) ? __send__(m, params) : _p_default(params)
   end
 
   def default_sub_items
@@ -117,44 +120,6 @@ class Bike::Workflow
 
   private
 
-  def login(params)
-    user = Bike::Set::Static::Folder.root.item('_users', 'main', params['id'].to_s)
-    if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
-      Bike.client = params['id']
-    else
-      Bike.client = nil
-      raise Bike::Error::Forbidden
-    end
-    path   = Bike::Path.path_of params[:conds]
-    action = (params['dest_action'] =~ /\A\w+\z/) ? params['dest_action'] : 'index'
-    Bike::Response.see_other(
-      :location => "#{Bike.uri}#{@sd[:path]}/#{path}#{action}.html"
-    )
-  end
-
-  def logout(params)
-    Bike.client = nil
-    path = Bike::Path.path_of params[:conds]
-    Bike::Response.see_other(
-      :location => "#{Bike.uri}#{@sd[:path]}/#{path}index.html"
-    )
-  end
-
-  def get(params)
-    if @sd.is_a? Bike::File
-      body = (params[:sub_action] == :small) ? @sd.thumbnail : @sd.body
-      Bike::Response.ok(
-        :headers => {
-          'Content-Type'   => @sd.val['type'],
-          'Content-Length' => body.to_s.size.to_s,
-        },
-        :body    => body
-      )
-    else
-      Bike::Response.ok :body => _g_default(params)
-    end
-  end
-
   def _g_default(params)
     f = @sd
     params[:action] ||= f.default_action
@@ -168,27 +133,16 @@ class Bike::Workflow
       f = f[:parent]
     end if f.is_a? Bike::Set::Dynamic
 
-    f.get params
+    Bike::Response.ok :body => f.get(params)
   end
 
-  def preview(params)
-    Bike.transaction[@sd[:tid]] ||= @sd if @sd[:tid] =~ Bike::REX::TID
-
-    @sd.update params
-    if @sd.commit(:temp) || params[:sub_action] == :delete
-      id_step = result_step(params)
-      action = "preview_#{params[:sub_action]}"
-      Bike::Response.see_other(
-        :location => "#{Bike.uri}/#{@sd[:tid]}/#{id_step}#{action}.html"
-      )
-    else
-      params = {:action => :update}
-      params[:conds] = {:id => @sd.errors.keys}
-      return Bike::Response.unprocessable_entity(:body => _g_default(params))
+  def _p_default(params)
+    if params[:token] != Bike.token
+      return Bike::Response.forbidden(:body => 'invalid token')
+    elsif Bike.transaction[@sd[:tid]] && !Bike.transaction[@sd[:tid]].is_a?(Bike::Field)
+      return Bike::Response.unprocessable_entity(:body => 'transaction expired')
     end
-  end
 
-  def post(params)
     Bike.transaction[@sd[:tid]] ||= @sd if @sd[:tid] =~ Bike::REX::TID
 
     @sd.update params
@@ -203,7 +157,7 @@ class Bike::Workflow
       else
         params = {:action => :update}
         params[:conds] = {:id => @sd.errors.keys}
-        Bike::Response.unprocessable_entity :body => _g_default(params)
+        Bike::Response.unprocessable_entity :body => _g_default(params)[2]
       end
     else
       @sd.commit :temp
@@ -213,6 +167,55 @@ class Bike::Workflow
       )
     end
   end
+
+  def _p_preview(params)
+    if params[:token] != Bike.token
+      return Bike::Response.forbidden(:body => 'invalid token')
+    elsif Bike.transaction[@sd[:tid]] && !Bike.transaction[@sd[:tid]].is_a?(Bike::Field)
+      return Bike::Response.unprocessable_entity(:body => 'transaction expired')
+    end
+
+    Bike.transaction[@sd[:tid]] ||= @sd if @sd[:tid] =~ Bike::REX::TID
+
+    @sd.update params
+    if @sd.commit(:temp) || params[:sub_action] == :delete
+      id_step = result_step(params)
+      action = "preview_#{params[:sub_action]}"
+      Bike::Response.see_other(
+        :location => "#{Bike.uri}/#{@sd[:tid]}/#{id_step}#{action}.html"
+      )
+    else
+      params = {:action => :update}
+      params[:conds] = {:id => @sd.errors.keys}
+      Bike::Response.unprocessable_entity(:body => _g_default(params)[2])
+    end
+  end
+
+  def _p_login(params)
+    user = Bike::Set::Static::Folder.root.item('_users', 'main', params['id'].to_s)
+    if user && params['pw'].to_s.crypt(user.val('password')) == user.val('password')
+      Bike.client = params['id']
+    else
+      Bike.client = nil
+      raise Bike::Error::Forbidden
+    end
+    path   = Bike::Path.path_of params[:conds]
+    action = (params[:dest_action] =~ /\A\w+\z/) ? params[:dest_action] : 'index'
+    Bike::Response.see_other(
+      :location => "#{Bike.uri}#{@sd[:path]}/#{path}#{action}.html"
+    )
+  end
+
+  def _p_logout(params)
+    return Bike::Response.forbidden(:body => 'invalid token') unless params[:token] == Bike.token
+
+    Bike.client = nil
+    path = Bike::Path.path_of params[:conds]
+    Bike::Response.see_other(
+      :location => "#{Bike.uri}#{@sd[:path]}/#{path}index.html"
+    )
+  end
+  alias :_g_logout :_p_logout
 
   def result_summary
     (@sd.result || {}).values.inject({}) {|summary, item|

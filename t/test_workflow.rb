@@ -38,8 +38,8 @@ class TC_Workflow < Test::Unit::TestCase
 
     assert_equal(
       sd,
-      Bike::Workflow.instance(sd).sd,
-      'Bike::Workflow.instance should set @sd'
+      Bike::Workflow.instance(sd).f,
+      'Bike::Workflow.instance should set @f'
     )
   end
 

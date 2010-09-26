@@ -25,7 +25,7 @@ class Bike::Workflow::Register < Bike::Workflow
   }
 
   def before_commit
-    @sd.send(:pending_items).each {|id, item|
+    @f.send(:pending_items).each {|id, item|
       if id =~ Bike::REX::ID_NEW
         item.item('_owner').instance_variable_set(:@val, item.item('_id').val)
       end

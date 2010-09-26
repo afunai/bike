@@ -19,11 +19,11 @@ class Bike::Workflow::Attachment < Bike::Workflow
 
   def permit?(roles, action)
     (action == :login) ||
-    (@sd[:parent] && @sd[:parent].permit?(action))
+    (@f[:parent] && @f[:parent].permit?(action))
   end
 
   def _get(arg)
-    @sd.instance_eval {
+    @f.instance_eval {
       if arg[:action] == :create || arg[:action] == :update
         new_item = item_instance '_001'
 

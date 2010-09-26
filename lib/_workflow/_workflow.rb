@@ -53,7 +53,7 @@ class Bike::Workflow
       params[:dest_action] ||= (method == 'post') ? :index : params[:action]
       params[:action] = :login
     end
-    Bike::Response.unprocessable_entity(:body => _g_default(params)[2]) rescue Bike::Response.forbidden
+    Bike::Response.unprocessable_entity(:body => __g_default(params)) rescue Bike::Response.forbidden
 # TODO: rescue Error::System etc.
   end
 
@@ -117,6 +117,10 @@ class Bike::Workflow
   private
 
   def _g_default(params)
+    Bike::Response.ok :body => __g_default(params)
+  end
+
+  def __g_default(params)
     f = @f
     params[:action] ||= f.default_action
     until f.is_a? Bike::Set::Static::Folder
@@ -129,7 +133,7 @@ class Bike::Workflow
       f = f[:parent]
     end if f.is_a? Bike::Set::Dynamic
 
-    Bike::Response.ok :body => f.get(params)
+    f.get(params)
   end
 
   def _p_default(params)
@@ -152,7 +156,7 @@ class Bike::Workflow
       else
         params = {:action => :update}
         params[:conds] = {:id => @f.errors.keys}
-        Bike::Response.unprocessable_entity :body => _g_default(params)[2]
+        Bike::Response.unprocessable_entity :body => __g_default(params)
       end
     else
       @f.commit :temp
@@ -182,7 +186,7 @@ class Bike::Workflow
     else
       params = {:action => :update}
       params[:conds] = {:id => @f.errors.keys}
-      Bike::Response.unprocessable_entity(:body => _g_default(params)[2])
+      Bike::Response.unprocessable_entity(:body => __g_default(params))
     end
   end
 

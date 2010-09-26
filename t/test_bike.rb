@@ -89,6 +89,21 @@ class TC_Bike < Test::Unit::TestCase
 
     hash = bike.instance_eval {
       rebuild_params(
+        '_token'      => 'foo',
+        'dest_action' => 'bar'
+      )
+    }
+    assert_equal(
+      {
+        :token       => 'foo',
+        :dest_action => 'bar',
+      },
+      hash,
+      'Bike#rebuild_params should use symbols for special keys'
+    )
+
+    hash = bike.instance_eval {
+      rebuild_params(
         'moo.conds-p'                   => '9',
         'moo-4567-addr.conds-zip-upper' => '110'
       )

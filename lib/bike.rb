@@ -164,6 +164,8 @@ class Bike
         hash[item_id][:self] = val
       elsif item_id == '_token'
         hash[:token] = val
+      elsif item_id == 'dest_action'
+        hash[:dest_action] = val
       else
         hash[item_id] = val
       end

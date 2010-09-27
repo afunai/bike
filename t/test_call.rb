@@ -1288,4 +1288,26 @@ _html
     )
   end
 
+  def test_workflow_register
+    Bike.client = nil
+    Bike::Set::Static::Folder.root.item('_users', 'main').storage.delete('00000000_don')
+
+    res = Rack::MockRequest.new(@bike).post(
+      'http://example.com/_users/main/update.html',
+      {
+        :input => "_1-_id=don&_1-password=secret&.status-public=create&_token=#{Bike.token}"
+      }
+    )
+    assert_match(
+      /done\.html$/,
+      res.headers['Location'],
+      'Workflow::Register should have special next_action().'
+    )
+    assert_equal(
+      'don',
+      Bike::Set::Static::Folder.root.item('_users', 'main', 'don')[:owner],
+      'Workflow::Register should set special item[:owner]'
+    )
+  end
+
 end

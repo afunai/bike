@@ -137,15 +137,12 @@ class Bike::Workflow
   end
 
   def _p_default(params)
-    if params[:token] != Bike.token
-      return Bike::Response.forbidden(:body => 'invalid token')
-    elsif Bike.transaction[@f[:tid]] && !Bike.transaction[@f[:tid]].is_a?(Bike::Field)
-      return Bike::Response.unprocessable_entity(:body => 'transaction expired')
-    end
+    res = __p_validate params
+    return res if res
 
-    Bike.transaction[@f[:tid]] ||= @f if @f[:tid] =~ Bike::REX::TID
+    __p_set_transaction
+    __p_update params
 
-    @f.update params
     if params[:status]
       if @f[:folder].commit :persistent
         Bike.transaction[@f[:tid]] = result_summary
@@ -168,15 +165,12 @@ class Bike::Workflow
   end
 
   def _p_preview(params)
-    if params[:token] != Bike.token
-      return Bike::Response.forbidden(:body => 'invalid token')
-    elsif Bike.transaction[@f[:tid]] && !Bike.transaction[@f[:tid]].is_a?(Bike::Field)
-      return Bike::Response.unprocessable_entity(:body => 'transaction expired')
-    end
+    res = __p_validate params
+    return res if res
 
-    Bike.transaction[@f[:tid]] ||= @f if @f[:tid] =~ Bike::REX::TID
+    __p_set_transaction
+    __p_update params
 
-    @f.update params
     if @f.commit(:temp) || params[:sub_action] == :delete
       id_step = result_step(params)
       action = "preview_#{params[:sub_action]}"
@@ -215,6 +209,22 @@ class Bike::Workflow
     )
   end
   alias :_g_logout :_p_logout
+
+  def __p_validate(params)
+    if params[:token] != Bike.token
+      Bike::Response.forbidden(:body => 'invalid token')
+    elsif Bike.transaction[@f[:tid]] && !Bike.transaction[@f[:tid]].is_a?(Bike::Field)
+      Bike::Response.unprocessable_entity(:body => 'transaction expired')
+    end
+  end
+
+  def __p_set_transaction
+    Bike.transaction[@f[:tid]] ||= @f if @f[:tid] =~ Bike::REX::TID
+  end
+
+  def __p_update(params)
+    @f.update params
+  end
 
   def result_summary
     (@f.result || {}).values.inject({}) {|summary, item|

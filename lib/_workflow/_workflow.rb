@@ -108,12 +108,6 @@ class Bike::Workflow
     (arg[:orig_action] == :read && arg[:action] == :submit)
   end
 
-  def before_commit
-  end
-
-  def after_commit
-  end
-
   private
 
   def _g_default(params)

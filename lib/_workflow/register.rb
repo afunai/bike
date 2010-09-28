@@ -24,7 +24,10 @@ class Bike::Workflow::Register < Bike::Workflow
     :delete => 0b11100,
   }
 
-  def before_commit
+  private
+
+  def __p_update(params)
+    super
     @f.send(:pending_items).each {|id, item|
       if id =~ Bike::REX::ID_NEW
         item.item('_owner').instance_variable_set(:@val, item.item('_id').val)

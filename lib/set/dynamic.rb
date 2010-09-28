@@ -49,8 +49,6 @@ class Bike::Set::Dynamic < Bike::Field
   end
 
   def commit(type = :temp)
-    workflow.before_commit
-
     items = pending_items
     items.each {|id, item|
       item.commit(:temp) || next
@@ -65,7 +63,6 @@ class Bike::Set::Dynamic < Bike::Field
     if valid?
       @result = (@action == :update) ? items : @action
       @action = nil if type == :persistent
-      workflow.after_commit
       self
     end
   end

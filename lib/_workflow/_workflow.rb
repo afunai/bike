@@ -139,10 +139,10 @@ class Bike::Workflow
 
     if params[:status]
       if @f[:folder].commit :persistent
-        Bike.transaction[@f[:tid]] = result_summary
-        id_step = result_step(params) if @f[:parent] == @f[:folder] && next_action != :done
+        Bike.transaction[@f[:tid]] = __p_result_summary
+        id_step = __p_result_step(params) if @f[:parent] == @f[:folder] && __p_next_action != :done
         Bike::Response.see_other(
-          :location => "#{Bike.uri}/#{@f[:tid]}#{@f[:path]}/#{id_step}#{next_action}.html"
+          :location => "#{Bike.uri}/#{@f[:tid]}#{@f[:path]}/#{id_step}#{__p_next_action}.html"
         )
       else
         params = {:action => :update}
@@ -151,7 +151,7 @@ class Bike::Workflow
       end
     else
       @f.commit :temp
-      id_step = result_step(params)
+      id_step = __p_result_step(params)
       Bike::Response.see_other(
         :location => "#{Bike.uri}/#{@f[:tid]}/#{id_step}update.html"
       )
@@ -166,7 +166,7 @@ class Bike::Workflow
     __p_update params
 
     if @f.commit(:temp) || params[:sub_action] == :delete
-      id_step = result_step(params)
+      id_step = __p_result_step(params)
       action = "preview_#{params[:sub_action]}"
       Bike::Response.see_other(
         :location => "#{Bike.uri}/#{@f[:tid]}/#{id_step}#{action}.html"
@@ -220,7 +220,7 @@ class Bike::Workflow
     @f.update params
   end
 
-  def result_summary
+  def __p_result_summary
     (@f.result || {}).values.inject({}) {|summary, item|
       item_result = item.result.is_a?(::Symbol) ? item.result : :update
       summary[item_result] = summary[item_result].to_i + 1
@@ -228,7 +228,7 @@ class Bike::Workflow
     }
   end
 
-  def result_step(params)
+  def __p_result_step(params)
     if @f.result
       id = @f.result.values.collect {|item| item[:id] }
     else
@@ -239,7 +239,7 @@ class Bike::Workflow
     Bike::Path.path_of(:id => id)
   end
 
-  def next_action
+  def __p_next_action
     (!@f.result || @f.result.values.all? {|item| item.permit? :read }) ? :read_detail : :done
   end
 

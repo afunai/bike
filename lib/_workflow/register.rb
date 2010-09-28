@@ -35,7 +35,7 @@ class Bike::Workflow::Register < Bike::Workflow
     }
   end
 
-  def next_action
+  def __p_next_action
     (Bike.client == 'nobody') ? :done : super
   end
 

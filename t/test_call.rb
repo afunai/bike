@@ -1301,7 +1301,7 @@ _html
     assert_match(
       /done\.html$/,
       res.headers['Location'],
-      'Workflow::Register should have special next_action().'
+      'Workflow::Register should have special __p_next_action().'
     )
     assert_equal(
       'don',

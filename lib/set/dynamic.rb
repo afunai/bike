@@ -12,7 +12,7 @@ class Bike::Set::Dynamic < Bike::Field
   def initialize(meta = {})
     @meta        = meta
     @storage     = Bike::Storage.instance self
-    @meta        = workflow.class.const_get(:DEFAULT_META).merge @meta
+    @meta        = workflow.default_meta.merge @meta
     @item_object = {}
 
     self.extend workflow.sd_module

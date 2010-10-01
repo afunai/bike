@@ -72,6 +72,10 @@ class Bike::Workflow
     self.class.const_get :DEFAULT_SUB_ITEMS
   end
 
+  def default_meta
+    self.class.const_get :DEFAULT_META
+  end
+
   def sd_module
     self.class.const_get :SD
   end

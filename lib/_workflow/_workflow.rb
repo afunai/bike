@@ -68,6 +68,14 @@ class Bike::Workflow
     @f = f
   end
 
+  def default_sub_items
+    self.class.const_get :DEFAULT_SUB_ITEMS
+  end
+
+  def sd_module
+    self.class.const_get :SD
+  end
+
   def call(method, params)
     (method == 'post') ? post(params) : get(params)
   rescue Bike::Error::Forbidden
@@ -98,14 +106,6 @@ class Bike::Workflow
   def post(params)
     m = "_p_#{params[:action]}"
     respond_to?(m, true) ? __send__(m, params) : _p_default(params)
-  end
-
-  def default_sub_items
-    self.class.const_get :DEFAULT_SUB_ITEMS
-  end
-
-  def sd_module
-    self.class.const_get :SD
   end
 
   def permit?(roles, action)

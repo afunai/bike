@@ -15,6 +15,8 @@ class Bike::Set::Dynamic < Bike::Field
     @meta        = workflow.class.const_get(:DEFAULT_META).merge @meta
     @item_object = {}
 
+    self.extend workflow.sd_module
+
     my[:item] ||= {
       'default' => {:item => {}}
     }
@@ -73,10 +75,6 @@ class Bike::Set::Dynamic < Bike::Field
     @storage.val
   end
 
-  def _get(arg)
-    (workflow._get(arg) || super) unless workflow._hide? arg
-  end
-
   def _get_by_tmpl(arg, tmpl = '')
     if arg[:action] == :read || self != Bike.base
       super
@@ -89,10 +87,6 @@ class Bike::Set::Dynamic < Bike::Field
 #{super}</form>
 _html
     end
-  end
-
-  def _get_by_self_reference(arg)
-    super unless workflow._hide?(arg)
   end
 
   def permit_get?(arg)

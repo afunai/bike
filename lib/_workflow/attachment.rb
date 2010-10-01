@@ -17,14 +17,11 @@ class Bike::Workflow::Attachment < Bike::Workflow
     :delete => 0b00000,
   }
 
-  def permit?(roles, action)
-    (action == :login) ||
-    (@f[:parent] && @f[:parent].permit?(action))
-  end
-
-  def _get(arg)
-    @f.instance_eval {
-      if arg[:action] == :create || arg[:action] == :update
+  module SD
+    def _get(arg)
+      if _hide? arg
+        # hidden
+      elsif arg[:action] == :create || arg[:action] == :update
         new_item = item_instance '_001'
 
         item_outs = _g_default(arg) {|item, item_arg|
@@ -39,12 +36,23 @@ _html
         }
         tmpl = my[:tmpl][:index].gsub('$()', item_outs)
         _get_by_tmpl({:p_action => arg[:p_action], :action => :update}, tmpl)
+      else
+        super
       end
-    }
+    end
+
+    def _get_by_self_reference(arg)
+      super unless _hide? arg
+    end
+
+    def _hide?(arg)
+      arg[:action] == :submit
+    end
   end
 
-  def _hide?(arg)
-    arg[:action] == :submit
+  def permit?(roles, action)
+    (action == :login) ||
+    (@f[:parent] && @f[:parent].permit?(action))
   end
 
 end

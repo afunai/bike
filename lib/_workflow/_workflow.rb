@@ -25,6 +25,28 @@ class Bike::Workflow
     :delete => 0b11111,
   }
 
+  module SD
+    def _get(arg)
+      if _hide? arg
+        # hidden
+      elsif arg[:action] == :create
+        item_instance '_001'
+        _get_by_tmpl({:action => :create, :conds => {:id => '_001'}}, my[:tmpl][:index])
+      else
+        super
+      end
+    end
+
+    def _get_by_self_reference(arg)
+      super unless _hide? arg
+    end
+
+    def _hide?(arg)
+      (arg[:p_action] && arg[:p_action] != :read) ||
+      (arg[:orig_action] == :read && arg[:action] == :submit)
+    end
+  end
+
   def self.instance(f)
     klass = (f[:sd] && f[:sd][:workflow]).to_s.capitalize
     if klass != ''
@@ -82,6 +104,10 @@ class Bike::Workflow
     self.class.const_get :DEFAULT_SUB_ITEMS
   end
 
+  def sd_module
+    self.class.const_get :SD
+  end
+
   def permit?(roles, action)
     case action
       when :login, :done, :message
@@ -92,20 +118,6 @@ class Bike::Workflow
       else
         (roles & self.class.const_get(:PERM)[action].to_i) > 0
     end
-  end
-
-  def _get(arg)
-    @f.instance_eval {
-      if arg[:action] == :create
-        item_instance '_001'
-        _get_by_tmpl({:action => :create, :conds => {:id => '_001'}}, my[:tmpl][:index])
-      end
-    }
-  end
-
-  def _hide?(arg)
-    (arg[:p_action] && arg[:p_action] != :read) ||
-    (arg[:orig_action] == :read && arg[:action] == :submit)
   end
 
   private

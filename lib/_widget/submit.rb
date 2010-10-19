@@ -37,7 +37,7 @@ _html
   def _g_submit_preview_delete(arg)
     if (
       permit_get?(arg.merge(:action => :delete)) &&
-      collect_item(arg[:conds]).find {|item| item[:id] !~ Bike::REX::ID_NEW } &&
+      collect_item(arg[:conds]).any? {|item| item[:id] !~ Bike::REX::ID_NEW } &&
       arg[:orig_action] != :preview
     )
       <<_html

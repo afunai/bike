@@ -30,10 +30,6 @@ Open a command line terminal. Type:
 
   gem install bike
 
-If you want to make thumbnails for submitted images, you have to install QuickMagick as well.
-
-[[http://rubyforge.org/projects/quickmagick/]]
-
 === Step 2 - Initialize a Bike Directory
 
 In a command line terminal, go to an empty directory where you want to build Bike projects.
@@ -49,7 +45,6 @@ This will create a "bike" directory, which includes:
 
 === Step 3 - Start a Test Server
 
-In the terminal, change to the newly created "bike" directory.
 Type:
 
   bike run
@@ -61,21 +56,17 @@ Now open this URL with your browser.
 http://localhost:9292/
 
 You will see the default homepage of Bike.
-There is some links to examples such like Blog, Contact Form, Forum, etc. Just see what can be done by plain HTML files.
+There is some links to examples such like Blog, Contact Form, Forum, etc. See what can be done by plain HTML files.
 
 === Step 5 - Create Your Own App
 
-Let's call our app "fab".
-It is a web-based forum where logged in users can submit their own articles, and everybody can read them.
-We put links to signup / login at bottom of the app.
-
 Create a new directory under bike/skin/:
 
-  mkdir skin/fab/
+  mkdir skin/myapp/
 
 Then create a new HTML file with your favorite editor:
 
-  edit skin/fab/index.html
+  edit skin/myapp/index.html
 
 The content is: (You can just copy & paste, of course)
 
@@ -105,7 +96,7 @@ The content is: (You can just copy & paste, of course)
 
 === Step 6 - That's it!
 
-http://localhost:9292/fab/index.html
+http://localhost:9292/myapp/index.html
 
 You have just created your first app. Log in with root/root to try it out. Have a nice ride!
 

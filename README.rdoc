@@ -5,9 +5,9 @@ You can make various apps such like blog, forum, contact form by putting single 
 
 == Sites
 
-* Home: [[http://github.com/afunai/bike]]
-* Docs: [[http://github.com/afunai/bike/wiki]]
-* Demo: [[http://runo.heroku.com/examples/]]
+* Home: http://github.com/afunai/bike
+* Docs: http://github.com/afunai/bike/wiki
+* Demo: http://runo.heroku.com/examples/index.html
 
 == Features
 
@@ -58,7 +58,7 @@ Type:
 
 Now open this URL with your browser.
 
-[[http://localhost:9292/]]
+http://localhost:9292/
 
 You will see the default homepage of Bike.
 There is some links to examples such like Blog, Contact Form, Forum, etc. Just see what can be done by plain HTML files.
@@ -105,7 +105,7 @@ The content is: (You can just copy & paste, of course)
 
 === Step 6 - That's it!
 
-[[http://localhost:9292/fab/]]
+http://localhost:9292/fab/index.html
 
 You have just created your first app. Log in with root/root to try it out. Have a nice ride!
 

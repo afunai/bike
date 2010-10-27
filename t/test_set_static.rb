@@ -242,7 +242,7 @@ _html
     )
   end
 
-  def test_get_tmpl_non_existing_meta
+  def test_get_by_tmpl_non_existing_meta
     ss = Bike::Set::Static.new(:html => '')
     assert_equal(
       'foo @(foo-bar) foo',
@@ -256,7 +256,7 @@ _html
     )
   end
 
-  def test_get_tmpl_non_existing_item
+  def test_get_by_tmpl_non_existing_item
     ss = Bike::Set::Static.new(:html => '')
     assert_equal(
       'foo $(foo) foo',

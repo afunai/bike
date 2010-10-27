@@ -47,7 +47,7 @@ class Bike::Set::Static::Folder < Bike::Set::Static
   private
 
   def _get(arg)
-    if arg['main'] && action_tmpl = my[:tmpl][arg['main'][:action]]
+    if arg['main'] && action_tmpl = action_tmpl(arg['main'])
       _get_by_tmpl(arg, action_tmpl)
     else
       super

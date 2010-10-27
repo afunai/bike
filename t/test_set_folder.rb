@@ -412,6 +412,42 @@ _html
     )
   end
 
+  def test_get_by_tmpl_with_form_action
+    folder = Bike::Set::Static::Folder.root.item('t_tmpl_form')
+
+    [:create, :update, :delete, :login].each {|action|
+      assert_equal(
+        "<form>\n",
+        folder.get('main' => {:action => action}),
+        "Folder#_get_by_tmpl should use tmpl[:form] if arg['main'][:action] is :#{action}"
+      )
+    }
+
+    assert_equal(
+      "<index>\n",
+      folder.get('main' => {:action => :read}),
+      'Folder#_get_by_tmpl should not use tmpl[:form] for read actions'
+    )
+  end
+
+  def test_get_by_tmpl_with_read_action
+    folder = Bike::Set::Static::Folder.root.item('t_tmpl_read')
+
+    [:read, :summary, :foo, nil].each {|action|
+      assert_equal(
+        "<read>\n",
+        folder.get('main' => {:action => action}),
+        "Folder#_get_by_tmpl should use tmpl[:read] if arg['main'][:action] is :#{action}"
+      )
+    }
+
+    assert_equal(
+      "<index>\n",
+      folder.get('main' => {:action => :create}),
+      'Folder#_get_by_tmpl should not use tmpl[:read] for form actions'
+    )
+  end
+
   def test_g_login
     folder = Bike::Set::Static::Folder.root.item('t_contact')
 

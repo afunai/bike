@@ -265,6 +265,61 @@ _html
     )
   end
 
+  def test_get_by_tmpl_with_form_action
+    ss = Bike::Set::Static.new(:html => 'index')
+    ss[:tmpl][:form] = 'form'
+    class << ss
+      undef_method :_g_login # test purpose only
+    end
+
+    [:create, :update, :delete, :login].each {|action|
+      assert_equal(
+        'form',
+        ss.get(:action => action),
+        "Set#_get_by_tmpl should use tmpl[:form] for :#{action}"
+      )
+    }
+
+    ss[:tmpl][:read] = nil
+    assert_equal(
+      'index',
+      ss.get(:action => :read),
+      'Set#_get_by_tmpl should not use tmpl[:form] for read actions'
+    )
+    ss[:tmpl][:read] = 'read'
+    assert_equal(
+      'read',
+      ss.get(:action => :read),
+      'Set#_get_by_tmpl should not use tmpl[:form] for read actions'
+    )
+  end
+
+  def test_get_by_tmpl_with_read_action
+    ss = Bike::Set::Static.new(:html => 'index')
+    ss[:tmpl][:read] = 'read'
+
+    [:read, :summary, :foo, nil].each {|action|
+      assert_equal(
+        'read',
+        ss.get(:action => action),
+        "Set#_get_by_tmpl should use tmpl[:read] when available"
+      )
+    }
+
+    ss[:tmpl][:form] = nil
+    assert_equal(
+      'index',
+      ss.get(:action => :create),
+      'Set#_get_by_tmpl should not use tmpl[:read] for form actions'
+    )
+    ss[:tmpl][:form] = 'form'
+    assert_equal(
+      'form',
+      ss.get(:action => :create),
+      'Set#_get_by_tmpl should not use tmpl[:read] for form actions'
+    )
+  end
+
   def test_recursive_tmpl
     ss = Bike::Set::Static.new(:html => <<'_html')
 <li>$()</li>

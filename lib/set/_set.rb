@@ -92,12 +92,8 @@ module Bike::Set
   def _get(arg)
     if respond_to?("_g_#{arg[:action]}", true)
       _get_by_method arg
-    elsif summary?(arg) && action_tmpl = my[:tmpl][:summary]
-      _get_by_tmpl(arg, action_tmpl)
-    elsif action_tmpl = my[:tmpl][arg[:sub_action]] || my[:tmpl][arg[:action]]
-      _get_by_tmpl(arg, action_tmpl)
     else
-      _get_by_tmpl(arg, my[:tmpl][:index])
+      _get_by_tmpl(arg, action_tmpl(arg))
     end
   end
 
@@ -167,6 +163,18 @@ module Bike::Set
       end
       i
     }
+  end
+
+  def action_tmpl(arg)
+    if summary?(arg) && my[:tmpl][:summary]
+      my[:tmpl][:summary]
+    elsif action_tmpl = my[:tmpl][arg[:sub_action]] || my[:tmpl][arg[:action]]
+      action_tmpl
+    elsif [:create, :update, :delete, :login].include? arg[:action]
+      my[:tmpl][:form] || my[:tmpl][:index]
+    else
+      my[:tmpl][:read] || my[:tmpl][:index]
+    end
   end
 
   def summary?(arg)

@@ -39,22 +39,6 @@ class TC_Set_Folder < Test::Unit::TestCase
     )
   end
 
-  def test_meta_html_dir
-    folder = Bike::Set::Static::Folder.root.item('foo')
-    assert_equal(
-      '/foo',
-      folder[:html_dir],
-      "Folder#meta_html_dir should return meta_dir if there is 'index.html'"
-    )
-
-    folder = Bike::Set::Static::Folder.root.item('foo', 'bar')
-    assert_equal(
-      '/foo',
-      folder[:html_dir],
-      "Folder#meta_html_dir should return parent[:html_dir] if there is no 'index.html' in [:dir]"
-    )
-  end
-
   def test_meta_href
     folder = Bike::Set::Static::Folder.root.item('t_summary')
 

@@ -34,14 +34,6 @@ class Bike::Set::Static::Folder < Bike::Set::Static
     @meta[:dir]
   end
 
-  def meta_html_dir
-    if ::File.readable? ::File.join(Bike['skin_dir'], my[:dir], 'index.html')
-      my[:dir]
-    elsif my[:parent]
-      my[:parent][:html_dir]
-    end
-  end
-
   private
 
   def _get(arg)

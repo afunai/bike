@@ -22,12 +22,12 @@ class Bike::Set::Static::Folder < Bike::Set::Static
       action = ::File.basename(f, '.*').intern
       merge_tmpl(@meta, Bike::Parser.parse_xml(::File.read(f), action)) if action != :index
     }
+    @meta.merge! load_yaml
 
     @meta[:tmpl].values.each {|tmpl|
       tmpl.sub!(/<head>([\s\n]*)/i) { "#{$&}<base href=\"@(href)\" />#{$1}" }
     }
 
-    @meta.merge! load_yaml(my[:dir], my[:parent])
   end
 
   def meta_dir
@@ -65,8 +65,8 @@ class Bike::Set::Static::Folder < Bike::Set::Static
     end
   end
 
-  def load_yaml(dir, parent)
-    yaml_file = ::File.join(Bike['skin_dir'], dir, 'index.yaml')
+  def load_yaml
+    yaml_file = ::File.join(Bike['skin_dir'], my[:dir], 'index.yaml')
     meta = ::File.exists?(yaml_file) ? YAML.load_file(yaml_file) : {}
     meta.keys.inject({}) {|m, k|
       m[k.intern] = meta[k]

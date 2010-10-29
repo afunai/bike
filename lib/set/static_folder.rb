@@ -24,10 +24,8 @@ class Bike::Set::Static::Folder < Bike::Set::Static
     }
 
     @meta[:tmpl].values.each {|tmpl|
-      tmpl.sub!(/<head>([\s\n]*)/i) {
-        "#{$&}<base href=\"@(href)\" />#{$1}"
-      }
-    } if @meta[:tmpl]
+      tmpl.sub!(/<head>([\s\n]*)/i) { "#{$&}<base href=\"@(href)\" />#{$1}" }
+    }
 
     @meta.merge! load_yaml(my[:dir], my[:parent])
   end

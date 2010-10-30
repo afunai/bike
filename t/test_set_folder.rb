@@ -67,7 +67,11 @@ class TC_Set_Folder < Test::Unit::TestCase
     assert_equal(
       "<html>$(main.message)$(main)</html>\n",
       folder[:tmpl][:form],
-      'Folder#load_html should load [:tmpl][:form] from form.xml'
+      'Folder#load_html should load [:tmpl][:form] from form.html'
+    )
+    assert_nil(
+      folder[:tmpl][:index],
+      'Folder#load_html should leave [:tmpl][:index] empty if there is no index.html'
     )
     assert_equal(
       "<xml>boo</xml>\n",

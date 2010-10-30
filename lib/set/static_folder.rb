@@ -10,7 +10,6 @@ class Bike::Set::Static::Folder < Bike::Set::Static
   end
 
   def initialize(meta = {})
-    meta[:dir]  = meta[:parent] ? ::File.join(meta[:parent][:dir], meta[:id]) : meta[:id]
     @meta = meta
     @meta.merge! load_html
     @meta.merge! load_yaml
@@ -23,7 +22,7 @@ class Bike::Set::Static::Folder < Bike::Set::Static
   end
 
   def meta_dir
-    @meta[:dir]
+    my[:parent] ? ::File.join(my[:parent][:dir], my[:id]) : my[:id]
   end
 
   private

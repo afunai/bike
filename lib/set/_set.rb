@@ -98,7 +98,7 @@ module Bike::Set
   end
 
   def _get_by_tmpl(arg, tmpl = '')
-    tmpl.gsub(/@\((.+?)\)/) {
+    tmpl.to_s.gsub(/@\((.+?)\)/) {
       tag   = $&
       steps = $1.split '-'
       id    = steps.pop

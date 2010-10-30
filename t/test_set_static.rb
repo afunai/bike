@@ -294,6 +294,17 @@ _html
     )
   end
 
+  def test_get_by_tmpl_without_index_action
+    ss = Bike::Set::Static.new(:html => '')
+    ss[:tmpl] = {:form => 'form'}
+
+    assert_equal(
+      '',
+      ss.get(:action => :read),
+      'Set#_get_by_tmpl should not use tmpl[:form] for :read'
+    )
+  end
+
   def test_get_by_tmpl_with_read_action
     ss = Bike::Set::Static.new(:html => 'index')
     ss[:tmpl][:read] = 'read'

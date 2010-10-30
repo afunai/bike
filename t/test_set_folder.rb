@@ -57,6 +57,25 @@ class TC_Set_Folder < Test::Unit::TestCase
     )
   end
 
+  def test_load_html
+    folder = Bike::Set::Static::Folder.root.item('foo', 'boo')
+    assert_equal(
+      'boo',
+      folder[:item]['main'][:workflow],
+      'Folder#load_html should load [:item] from form.html if available'
+    )
+    assert_equal(
+      "<html>$(main.message)$(main)</html>\n",
+      folder[:tmpl][:form],
+      'Folder#load_html should load [:tmpl][:form] from form.xml'
+    )
+    assert_equal(
+      "<xml>boo</xml>\n",
+      folder[:tmpl][:rss],
+      'Folder#load_html should load [:tmpl] from *.xml if available'
+    )
+  end
+
   def test_load_yaml
     folder = Bike::Set::Static::Folder.new(:id => 'foo', :parent => nil)
     assert_equal(

@@ -11,23 +11,15 @@ class Bike::Set::Static::Folder < Bike::Set::Static
 
   def initialize(meta = {})
     meta[:dir]  = meta[:parent] ? ::File.join(meta[:parent][:dir], meta[:id]) : meta[:id]
-    meta[:html] = load_html(meta[:dir], meta[:parent])
-    super
-
-    ::Dir.glob(::File.join(Bike['skin_dir'], my[:html_dir].to_s, '*.html')).each {|f|
-      action = ::File.basename(f, '.*').intern
-      merge_tmpl(@meta, Bike::Parser.parse_html(::File.read(f), action)) if action != :index
-    }
-    ::Dir.glob(::File.join(Bike['skin_dir'], my[:html_dir].to_s, '*.xml')).each {|f|
-      action = ::File.basename(f, '.*').intern
-      merge_tmpl(@meta, Bike::Parser.parse_xml(::File.read(f), action)) if action != :index
-    }
+    @meta = meta
+    @meta.merge! load_html
     @meta.merge! load_yaml
 
     @meta[:tmpl].values.each {|tmpl|
       tmpl.sub!(/<head>([\s\n]*)/i) { "#{$&}<base href=\"@(href)\" />#{$1}" }
     }
 
+    @item_object = {}
   end
 
   def meta_dir
@@ -56,12 +48,37 @@ class Bike::Set::Static::Folder < Bike::Set::Static
     super
   end
 
-  def load_html(dir, parent, action = :index)
-    html_file = ::File.join Bike['skin_dir'], dir, "#{action}.html"
-    if ::File.exists? html_file
-      ::File.read html_file
-    elsif parent
-      parent[:html]
+  def load_html
+    files = ::Dir[::File.join Bike['skin_dir'], my[:dir], '*.{html,xml}'].sort
+
+    if model_file = files.find {|f| ['form', 'index'].include? ::File.basename(f, '.*') }
+      html   = ::File.read model_file
+      action = ::File.basename(model_file, '.*').intern
+      meta   = {:html => html}
+      meta.merge! Bike::Parser.parse_html(html, action)
+
+      files.delete model_file
+      files.each {|f|
+        html   = ::File.read f
+        action = ::File.basename(f, '.*').intern
+        merge_tmpl(
+          meta,
+          Bike::Parser.parse_html(html, action)
+        )
+      }
+
+      meta
+    elsif my[:parent]
+      {
+        :label => my[:parent][:label],
+        :item  => my[:parent][:item],
+        :tmpl  => my[:parent][:tmpl],
+      }
+    else
+      {
+        :item => {},
+        :tmpl => {},
+      }
     end
   end
 

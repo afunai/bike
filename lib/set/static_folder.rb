@@ -55,7 +55,7 @@ class Bike::Set::Static::Folder < Bike::Set::Static
       html   = ::File.read model_file
       action = ::File.basename(model_file, '.*').intern
       meta   = {:html => html}
-      meta.merge! Bike::Parser.parse_html(html, action)
+      meta.merge! Bike::Parser.parse_html(html, action, (::File.extname(model_file) == '.xml'))
 
       files.delete model_file
       files.each {|f|
@@ -63,7 +63,7 @@ class Bike::Set::Static::Folder < Bike::Set::Static
         action = ::File.basename(f, '.*').intern
         merge_tmpl(
           meta,
-          Bike::Parser.parse_html(html, action)
+          Bike::Parser.parse_html(html, action, (::File.extname(f) == '.xml'))
         )
       }
 
